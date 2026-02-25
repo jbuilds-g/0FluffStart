@@ -1,0 +1,296 @@
+/* modules.css */
+
+/* --- SEARCH BAR --- */
+.search-bar { 
+    display: flex; 
+    gap: 0; 
+    margin-bottom: 20px; 
+    height: 50px; 
+    position: relative;
+    background: var(--card-hover);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    transition: border-radius 0.3s ease;
+}
+
+/* Material 3 Override: Full Pill Shape */
+body.material .search-bar {
+    border-radius: 999px; /* Stadium shape */
+    padding-left: 8px; /* Offset for the extreme curve */
+}
+
+#searchInput { 
+    flex-grow: 1; 
+    height: 100%; 
+    padding: 0 16px; 
+    border: none; 
+    background: transparent; 
+    color: var(--text); 
+    font-size: 1rem;
+    box-sizing: border-box; 
+    font-family: var(--font-main);
+}
+#searchInput:focus { outline: none; }
+
+.search-icon { 
+    width: 50px; 
+    height: 100%; 
+    border-radius: 0 var(--radius) var(--radius) 0; 
+    background: transparent; 
+    color: var(--accent); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border: none;
+    cursor: pointer;
+}
+
+/* Material 3 Override: Fix icon radius due to pill shape */
+body.material .search-icon {
+    border-radius: 0 999px 999px 0;
+    padding-right: 10px;
+}
+
+/* --- ENGINE SWITCHER --- */
+.engine-switcher {
+    position: relative;
+    height: 100%;
+    border-right: 1px solid var(--border);
+}
+
+body.material .engine-switcher {
+    border-right: none; /* Remove border for cleaner look */
+    padding-left: 5px;
+}
+
+.engine-btn {
+    height: 100%;
+    padding: 0 15px;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-weight: bold;
+    font-family: var(--font-main);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1rem;
+}
+
+/* Engine Dropdown */
+.engine-dropdown {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 180px;
+    z-index: 9999; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.engine-dropdown.hidden { display: none; }
+
+.engine-option {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: calc(var(--radius) - 4px);
+    transition: background 0.2s;
+    font-size: 0.9rem;
+    color: var(--text);
+    display: flex;
+    justify-content: space-between;
+}
+
+.engine-option:hover {
+    background: var(--card-hover);
+    color: var(--accent);
+}
+
+.engine-option.selected {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+/* --- SUGGESTIONS DROPDOWN --- */
+.suggestions-container {
+    position: absolute;
+    top: 58px; 
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    z-index: 999; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    max-height: 250px; 
+    overflow-y: auto;
+    padding: 0; 
+}
+
+/* M3 Override for suggestions alignment with Pill shape */
+body.material .suggestions-container {
+    border-radius: 20px; /* Slightly less than pill */
+    margin: 0 10px; /* Indent slightly */
+    width: calc(100% - 20px);
+}
+
+.suggestion-item { 
+    padding: 12px 15px; 
+    cursor: pointer; 
+    font-size: 0.95rem; 
+    color: var(--text); 
+    transition: background 0.1s; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    border-bottom: 1px solid var(--card-hover); 
+}
+
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover { background: var(--card-hover); }
+
+.suggestion-type { 
+    font-size: 0.75rem; 
+    color: var(--dim); 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
+    background: var(--card-hover); 
+    padding: 3px 8px; 
+    border-radius: 6px; 
+}
+
+/* --- LINK GRID --- */
+.link-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 15px;
+    justify-content: center;
+}
+
+.link-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.link-item:active { transform: scale(0.96); }
+
+.link-icon-circle {
+    width: 56px;
+    height: 56px;
+    background: var(--card);
+    border-radius: 40%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, border-radius 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid var(--border); 
+    box-shadow: var(--shadow);
+}
+
+/* Theme specific overrides */
+body.cyberpunk .link-icon-circle { border-radius: 0; }
+body.sunset .link-icon-circle { border-radius: 50%; }
+
+/* Material 3 Expressive Logic */
+body.material .link-icon-circle { 
+    border-radius: 22px; /* Super Squircle */
+    background: var(--card-hover); /* Lighter container */
+    border: none; /* No borders in M3, just elevation/tone */
+}
+
+/* The Morphing Interaction */
+body.material .link-item:hover .link-icon-circle {
+    border-radius: 50%; /* Morph to circle on hover */
+    background: var(--text); /* High contrast interaction */
+    transform: rotate(3deg) scale(1.05); /* Playful tilt */
+}
+/* Invert text color on hover for contrast */
+body.material .link-item:hover .link-icon-circle span {
+    color: var(--bg) !important;
+}
+
+.link-icon-circle img { width: 100%; height: 100%; object-fit: cover; }
+.link-name { color: var(--text); font-size: 0.75rem; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.9; }
+
+/* The link edit overlay (pencil icon) - **CRITICAL FIX ZONE** */
+.link-edit-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    padding: 2px;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--card-hover);
+    border-radius: 50%;
+    
+    /* --- HIDE & DISABLE BY DEFAULT - FORCED FIX --- */
+    opacity: 0 !important; 
+    visibility: hidden !important;
+    pointer-events: none !important; /* Block interaction when invisible */
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 10;
+}
+
+/* Show on Hover (Desktop) */
+.link-item:hover .link-edit-overlay {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: all !important; /* Allow click on hover */
+}
+
+.link-edit-overlay .edit-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--text);
+}
+
+/* Force show on smaller screens for better touch target */
+@media (max-width: 480px) {
+    .link-edit-overlay {
+        opacity: 0.8 !important;
+        visibility: visible !important;
+        pointer-events: all !important;
+    }
+}
+
+
+/* --- DESKTOP OPTIMIZATIONS (Modules) --- */
+@media (min-width: 768px) {
+    .search-bar { height: 60px; }
+    .engine-btn { padding: 0 20px; }
+    #searchInput { font-size: 1.1rem; }
+    
+    .suggestions-container { top: 68px; }
+    
+    .link-grid { grid-template-columns: repeat(6, 1fr); gap: 20px; }
+    .link-icon-circle { width: 64px; height: 64px; border-radius: calc(var(--radius) + 2px); }
+    
+    /* Desktop M3 adjustments */
+    body.material .link-icon-circle { border-radius: 26px; } 
+
+    .link-name { font-size: 0.8rem; }
+}
+
+@media (max-width: 400px) {
+    .link-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+}
