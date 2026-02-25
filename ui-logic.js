@@ -62,7 +62,7 @@ function bindStaticEvents() {
     searchInput.addEventListener('keypress', handleSearch);
 
     // Repointed GitHub Button to main repo
-    document.getElementById('githubBtn').addEventListener('click', () => window.open('https://github.com/Raw-JSON/0FluffStart', '_blank'));
+    document.getElementById('githubBtn').addEventListener('click', () => window.open('https://github.com/jbuilds-g/0FluffStart', '_blank'));
     
     document.getElementById('addLinkBtn').addEventListener('click', () => openEditor());
     document.getElementById('saveLinkBtn').addEventListener('click', saveLink);
