@@ -22,7 +22,7 @@
 
 ### Desktop (Browser Extension)
 Install 0FluffStart locally to override your "New Tab" page.
-1.  **Download** the latest source code from the [Releases](https://github.com/Raw-JSON/0FluffStart/releases) page.
+1.  **Download** the latest source code from the [Releases](https://github.com/jbuilds-g/0FluffStart/releases) page.
 2.  **Extract** the archive to a local directory.
 3.  Navigate to your browser's extension management page (`chrome://extensions` or `edge://extensions`).
 4.  Enable **Developer Mode** in the top-right corner.
