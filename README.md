@@ -34,7 +34,7 @@ Since mobile browsers typically do not support local extensions, use the hosted 
 #### Android (Chrome)
 1.  Navigate to **Settings** > **Homepage**.
 2.  Toggle to **On**.
-3.  Select **Enter custom web address** and input: `https://raw-json.github.io/0FluffStart/`
+3.  Select **Enter custom web address** and input: `https://jbuilds-g.github.io/0FluffStart/`
 
 #### iOS (Safari)
 1.  Open the URL in Safari.
