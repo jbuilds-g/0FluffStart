@@ -15,8 +15,8 @@
 
 Stay connected with 0FluffStart:  
 
-- **Official Update Channel:** [NOFluffStart](https://t.me/NOFluffStart)  
-- **Community Discussion Group:** [NOFluffStart Chat](https://t.me/NOFluffStartChat)  
+- **Official Update Channel:** [NOFluffStart](https://t.me/0FluffStart)  
+- **Community Discussion Group:** [NOFluffStart Chat](https://t.me/0FluffStartChat)
 
 Join the channel for the latest releases and news, and hop into the group to ask questions, share tips, and discuss features.
 
