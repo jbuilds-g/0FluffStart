@@ -46,14 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- CSP EVENT BINDING ---
 function bindStaticEvents() {
-    // Header & Settings
     document.getElementById('settingsToggleBtn').addEventListener('click', toggleSettings);
     document.getElementById('closeSettingsBtn').addEventListener('click', () => closeModal('settingsModal'));
     document.getElementById('settingsModal').addEventListener('click', (e) => {
         if (e.target === document.getElementById('settingsModal')) closeModal('settingsModal');
     });
 
-    // Search Bar
     document.getElementById('engineDropdownBtn').addEventListener('click', toggleEngineDropdown);
     document.getElementById('searchSubmitBtn').addEventListener('click', () => handleSearch({ key: 'Enter', type: 'click', preventDefault: () => {} }));
     
@@ -61,7 +59,6 @@ function bindStaticEvents() {
     searchInput.addEventListener('input', handleSuggestions);
     searchInput.addEventListener('keypress', handleSearch);
 
-    // Repointed GitHub Button to main repo
     document.getElementById('githubBtn').addEventListener('click', () => window.open('https://github.com/Raw-JSON/0FluffStart', '_blank'));
     
     document.getElementById('addLinkBtn').addEventListener('click', () => openEditor());
@@ -70,18 +67,15 @@ function bindStaticEvents() {
     document.getElementById('userNameInput').addEventListener('input', autoSaveSettings);
     document.getElementById('themeSelect').addEventListener('change', autoSaveSettings);
     
-    // Background Inputs
     const bgInput = document.getElementById('bgImageInput');
     bgInput.addEventListener('change', () => handleImageUpload(bgInput));
     document.getElementById('resetBgBtn').addEventListener('click', clearBackground);
 
-    // Advanced Settings
     document.getElementById('advancedToggleBtn').addEventListener('click', toggleAdvanced);
     document.getElementById('externalSuggestToggle').addEventListener('change', autoSaveSettings);
     document.getElementById('historyEnabledToggle').addEventListener('change', autoSaveSettings);
     document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
     
-    // Backup & Restore
     document.getElementById('backupDataBtn').addEventListener('click', backupData);
     document.getElementById('restoreDataBtn').addEventListener('click', () => document.getElementById('restoreInput').click());
     document.getElementById('restoreInput').addEventListener('change', restoreData);
@@ -130,25 +124,39 @@ function restoreData(e) {
     reader.onload = (event) => {
         try {
             const data = JSON.parse(event.target.result);
-            if (!data.links && !data.settings) {
+            
+            // Fallbacks for various backup formats
+            const linksData = data.links || data['0fluff_links'];
+            const settingsData = data.settings || data['0fluff_settings'];
+            const historyData = data.history || data['0fluff_history'];
+
+            if (!linksData && !settingsData) {
                 alert("Invalid backup file. Missing core data.");
                 return;
             }
 
             if (confirm("This will overwrite your current settings, links, and history. Are you sure?")) {
-                if(data.links) localStorage.setItem('0fluff_links', JSON.stringify(data.links));
                 
-                // v1.1.0 Fix: Merge imported settings robustly 
-                if(data.settings) {
-                    let importedSettings = data.settings;
-                    if(typeof importedSettings === 'string') {
-                        try { importedSettings = JSON.parse(importedSettings); } catch(e){}
+                if(linksData) {
+                    let parsedLinks = linksData;
+                    while(typeof parsedLinks === 'string') { try { parsedLinks = JSON.parse(parsedLinks); } catch(err){break;} }
+                    localStorage.setItem('0fluff_links', JSON.stringify(parsedLinks));
+                }
+                
+                if(settingsData) {
+                    let importedSettings = settingsData;
+                    while(typeof importedSettings === 'string') { 
+                        try { importedSettings = JSON.parse(importedSettings); } catch(err){break;} 
                     }
                     const mergedSettings = { ...settings, ...importedSettings };
                     localStorage.setItem('0fluff_settings', JSON.stringify(mergedSettings));
                 }
                 
-                if(data.history) localStorage.setItem('0fluff_history', JSON.stringify(data.history));
+                if(historyData) {
+                    let parsedHistory = historyData;
+                    while(typeof parsedHistory === 'string') { try { parsedHistory = JSON.parse(parsedHistory); } catch(err){break;} }
+                    localStorage.setItem('0fluff_history', JSON.stringify(parsedHistory));
+                }
                 
                 alert("Restore successful! Reloading...");
                 window.location.reload();
@@ -167,7 +175,6 @@ function renderLinks() {
     if(!grid) return;
     grid.innerHTML = '';
     
-    // v1.1.0 Optimization: DocumentFragment
     const fragment = document.createDocumentFragment();
     
     links.forEach(link => {
@@ -228,7 +235,6 @@ function renderLinkManager() {
         return;
     }
     
-    // v1.1.0 Optimization: DocumentFragment
     const fragment = document.createDocumentFragment();
     const editIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>`;
     const deleteIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
@@ -323,19 +329,28 @@ function deleteLink(id, e) {
 
 // --- SETTINGS ---
 async function loadSettings() {
-    document.body.className = settings.theme; 
+    // 1. POPULATE DOM FIRST (Prevents autoSave from overwriting restored data)
+    document.getElementById('themeSelect').value = settings.theme || 'dark';
+    document.getElementById('userNameInput').value = settings.userName || '';
+    const radios = document.getElementsByName('clockFormat');
+    for(let r of radios) { if(r.value === (settings.clockFormat || '24h')) r.checked = true; }
+    document.getElementById('externalSuggestToggle').checked = !!settings.externalSuggest;
+    document.getElementById('historyEnabledToggle').checked = settings.historyEnabled !== false;
+
+    // Apply class to body
+    document.body.className = settings.theme || 'dark'; 
+
     const overlay = document.getElementById('bgOverlay');
     const resetBtn = document.getElementById('resetBgBtn');
     const fileNameInfo = document.getElementById('bgFileName');
 
-    // --- BACKGROUND MIGRATION & LOAD ---
-    // Zero-data-loss migration: Detect legacy base64 format and move it to IndexedDB
+    // 2. BACKGROUND MIGRATION & LOAD
     if (settings.backgroundImage && settings.backgroundImage.length > 100 && settings.backgroundImage !== 'indexeddb') {
         console.log("0fluf DB Action: Migrating background from LocalStorage to IndexedDB.");
         try {
-            await saveBgToDB(settings.backgroundImage); // Store the legacy DataURL in IDB
-            settings.backgroundImage = 'indexeddb'; // Clean up localStorage pointer
-            autoSaveSettings(); 
+            await saveBgToDB(settings.backgroundImage); 
+            settings.backgroundImage = 'indexeddb'; 
+            autoSaveSettings(); // Safe now, because DOM reflects true state
         } catch(e) {
             console.error("Migration failed:", e);
         }
@@ -345,7 +360,6 @@ async function loadSettings() {
         try {
             const bgData = await getBgFromDB();
             if (bgData) {
-                // Determine if it's a native File/Blob or a migrated Base64 string
                 const url = (bgData instanceof Blob || bgData instanceof File) 
                     ? URL.createObjectURL(bgData) 
                     : bgData;
@@ -371,14 +385,6 @@ async function loadSettings() {
         if(resetBtn) resetBtn.style.display = 'none';
         if(fileNameInfo) fileNameInfo.innerText = "No image selected.";
     }
-
-    document.getElementById('themeSelect').value = settings.theme;
-    document.getElementById('userNameInput').value = settings.userName || '';
-    const radios = document.getElementsByName('clockFormat');
-    for(let r of radios) { if(r.value === settings.clockFormat) r.checked = true; }
-    
-    document.getElementById('externalSuggestToggle').checked = settings.externalSuggest;
-    document.getElementById('historyEnabledToggle').checked = settings.historyEnabled;
     
     updateClock(); 
     renderEngineDropdown();
@@ -393,7 +399,9 @@ function autoSaveSettings() {
     settings.historyEnabled = document.getElementById('historyEnabledToggle').checked;
     
     localStorage.setItem('0fluff_settings', JSON.stringify(settings));
-    loadSettings();
+    
+    // Quick apply theme changes without full reload
+    document.body.className = settings.theme;
 }
 
 function toggleSettings() { 
