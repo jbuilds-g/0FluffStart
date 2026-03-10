@@ -1,6 +1,106 @@
-/* 0flufThemes.css - Extension Pack 01 */
+/* OflufThemes.css - Consolidated Theme Engine */
 
-/* Nord (Frosty & Professional) */
+/* --- GLOBAL VARIABLES (DEFAULT: OLED DARK) --- */
+:root {
+    --bg: #000000;
+    --card: #141418;
+    --card-hover: #1e1e24;
+    --text: #ffffff;
+    --accent: #00aaff;
+    --dim: #888;
+    --border: #333;
+    --delete: #ff4d4d;
+    --radius: 12px;
+    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --shadow: none;
+}
+
+/* --- THEME OVERRIDES --- */
+
+body.light {
+    --bg: #f2f2f7;
+    --card: #ffffff;
+    --card-hover: #e5e5ea;
+    --text: #000000;
+    --accent: #007aff;
+    --dim: #8e8e93;
+    --border: #d1d1d6;
+    --radius: 12px;
+    --shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+body.cyberpunk {
+    --bg: #050505;
+    --card: #121212;
+    --card-hover: #1a1a1a;
+    --text: #00ff41;
+    --accent: #f0e600;
+    --dim: #008f11;
+    --border: #333;
+    --delete: #ff003c;
+    --radius: 0px;
+    --font-main: "Courier New", Courier, monospace;
+    --shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+}
+
+body.sunset {
+    --bg: #2d1b2e;
+    --card: #442646;
+    --card-hover: #58335a;
+    --text: #ffd5e5;
+    --accent: #ff9a76;
+    --dim: #b08ea2;
+    --border: #58335a;
+    --delete: #ff5e78;
+    --radius: 20px;
+    --font-main: "Trebuchet MS", sans-serif;
+    --shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+body.forest {
+    --bg: #1B1B1B;
+    --card: #1F6F50;
+    --card-hover: #2E8B57;
+    --text: #F4EAD5;
+    --accent: #F4C430;
+    --dim: #8b9c92;
+    --border: #2E8B57;
+    --delete: #FFB703;
+    --radius: 16px;
+    --shadow: 4px 4px 0px #151515;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: -0.5px;
+}
+
+body.paper {
+    --bg: #fdfbf7;
+    --card: #fff;
+    --card-hover: #f0eee9;
+    --text: #2c2c2c;
+    --accent: #2c2c2c;
+    --dim: #999;
+    --border: #2c2c2c;
+    --delete: #d32f2f;
+    --radius: 4px;
+    --font-main: "Times New Roman", Times, serif;
+    --shadow: 4px 4px 0px rgba(0,0,0,0.1);
+}
+
+body.material {
+    --bg: #0f0d13;
+    --card: #2b2930;
+    --card-hover: #36343b;
+    --text: #e6e0e9;
+    --accent: #d0bcff;
+    --dim: #cac4d0;
+    --border: #49454f;
+    --delete: #f2b8b5;
+    --radius: 28px;
+    --font-main: "Google Sans", "Product Sans", "Roboto", sans-serif;
+    --shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
 body.nord {
     --bg: #2e3440;
     --card: #3b4252;
@@ -12,7 +112,6 @@ body.nord {
     --radius: 8px;
 }
 
-/* Dracula (Vibrant Dark) */
 body.dracula {
     --bg: #282a36;
     --card: #44475a;
@@ -24,7 +123,6 @@ body.dracula {
     --radius: 12px;
 }
 
-/* Retro Amber (Terminal Vibe) */
 body.retro {
     --bg: #0d0202;
     --card: #1a0505;
@@ -37,7 +135,6 @@ body.retro {
     --font-main: "Courier New", Courier, monospace;
 }
 
-/* Rose Pine (Soft & Muted) */
 body.rose {
     --bg: #191724;
     --card: #1f1d2e;
@@ -47,4 +144,26 @@ body.rose {
     --dim: #908caa;
     --border: #403d52;
     --radius: 16px;
+}
+
+/* --- BACKGROUND IMAGE SUPPORT --- */
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.3s, color 0.3s;
+    position: relative;
+    z-index: 1;
+}
+
+.bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s;
 }
