@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "0flufStart",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Zero-Fluff. All Speed. A privacy-first, minimalist start page.",
   "chrome_url_overrides": {
     "newtab": "index.html"
@@ -10,10 +10,11 @@
     "storage"
   ],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "script-src 'self'; object-src 'self';"
   },
   "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
     "128": "icon.png"
   }
-
 }
