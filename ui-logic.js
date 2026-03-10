@@ -123,39 +123,62 @@ function restoreData(e) {
     const reader = new FileReader();
     reader.onload = (event) => {
         try {
-            const data = JSON.parse(event.target.result);
+            const rawText = event.target.result;
+            const data = JSON.parse(rawText);
             
-            // Fallbacks for various backup formats
-            const linksData = data.links || data['0fluff_links'];
-            const settingsData = data.settings || data['0fluff_settings'];
-            const historyData = data.history || data['0fluff_history'];
-
-            if (!linksData && !settingsData) {
-                alert("Invalid backup file. Missing core data.");
-                return;
-            }
-
             if (confirm("This will overwrite your current settings, links, and history. Are you sure?")) {
                 
-                if(linksData) {
+                // --- 1. Aggressively Hunt & Restore Links ---
+                let linksData = data.links || data['0fluff_links'];
+                if (!linksData && Array.isArray(data)) linksData = data; // Fallback if backup was pure array
+                
+                if (linksData) {
                     let parsedLinks = linksData;
                     while(typeof parsedLinks === 'string') { try { parsedLinks = JSON.parse(parsedLinks); } catch(err){break;} }
-                    localStorage.setItem('0fluff_links', JSON.stringify(parsedLinks));
+                    if (Array.isArray(parsedLinks)) {
+                        localStorage.setItem('0fluff_links', JSON.stringify(parsedLinks));
+                    }
                 }
                 
-                if(settingsData) {
+                // --- 2. Aggressively Hunt & Restore Settings ---
+                let settingsData = data.settings || data['0fluff_settings'];
+                
+                // If nested settings don't exist, check if settings are floating at the root of the file
+                if (!settingsData && (data.theme || data.userName || data.clockFormat)) {
+                    settingsData = data;
+                }
+
+                if (settingsData) {
                     let importedSettings = settingsData;
+                    // Keep un-stringifying until it's an actual object
                     while(typeof importedSettings === 'string') { 
                         try { importedSettings = JSON.parse(importedSettings); } catch(err){break;} 
                     }
-                    const mergedSettings = { ...settings, ...importedSettings };
-                    localStorage.setItem('0fluff_settings', JSON.stringify(mergedSettings));
+                    
+                    if (typeof importedSettings === 'object' && importedSettings !== null) {
+                        // Extract only known safe settings to avoid corrupting local storage
+                        const validKeys = ['theme', 'userName', 'clockFormat', 'externalSuggest', 'historyEnabled', 'searchEngine'];
+                        const cleanSettings = {};
+                        
+                        validKeys.forEach(key => {
+                            if (importedSettings[key] !== undefined) {
+                                cleanSettings[key] = importedSettings[key];
+                            }
+                        });
+
+                        const mergedSettings = { ...settings, ...cleanSettings };
+                        localStorage.setItem('0fluff_settings', JSON.stringify(mergedSettings));
+                    }
                 }
                 
-                if(historyData) {
+                // --- 3. Aggressively Hunt & Restore History ---
+                let historyData = data.history || data['0fluff_history'];
+                if (historyData) {
                     let parsedHistory = historyData;
                     while(typeof parsedHistory === 'string') { try { parsedHistory = JSON.parse(parsedHistory); } catch(err){break;} }
-                    localStorage.setItem('0fluff_history', JSON.stringify(parsedHistory));
+                    if (Array.isArray(parsedHistory)) {
+                        localStorage.setItem('0fluff_history', JSON.stringify(parsedHistory));
+                    }
                 }
                 
                 alert("Restore successful! Reloading...");
@@ -329,7 +352,7 @@ function deleteLink(id, e) {
 
 // --- SETTINGS ---
 async function loadSettings() {
-    // 1. POPULATE DOM FIRST (Prevents autoSave from overwriting restored data)
+    // 1. POPULATE DOM FIRST (Safeguard values)
     document.getElementById('themeSelect').value = settings.theme || 'dark';
     document.getElementById('userNameInput').value = settings.userName || '';
     const radios = document.getElementsByName('clockFormat');
@@ -337,20 +360,19 @@ async function loadSettings() {
     document.getElementById('externalSuggestToggle').checked = !!settings.externalSuggest;
     document.getElementById('historyEnabledToggle').checked = settings.historyEnabled !== false;
 
-    // Apply class to body
+    // Apply classes
     document.body.className = settings.theme || 'dark'; 
 
     const overlay = document.getElementById('bgOverlay');
     const resetBtn = document.getElementById('resetBgBtn');
     const fileNameInfo = document.getElementById('bgFileName');
 
-    // 2. BACKGROUND MIGRATION & LOAD
+    // 2. BACKGROUND LOGIC
     if (settings.backgroundImage && settings.backgroundImage.length > 100 && settings.backgroundImage !== 'indexeddb') {
-        console.log("0fluf DB Action: Migrating background from LocalStorage to IndexedDB.");
         try {
             await saveBgToDB(settings.backgroundImage); 
             settings.backgroundImage = 'indexeddb'; 
-            autoSaveSettings(); // Safe now, because DOM reflects true state
+            autoSaveSettings(); 
         } catch(e) {
             console.error("Migration failed:", e);
         }
@@ -399,8 +421,6 @@ function autoSaveSettings() {
     settings.historyEnabled = document.getElementById('historyEnabledToggle').checked;
     
     localStorage.setItem('0fluff_settings', JSON.stringify(settings));
-    
-    // Quick apply theme changes without full reload
     document.body.className = settings.theme;
 }
 
