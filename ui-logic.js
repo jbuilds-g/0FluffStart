@@ -62,7 +62,7 @@ function bindStaticEvents() {
     searchInput.addEventListener('keypress', handleSearch);
 
     // Repointed GitHub Button to main repo
-    document.getElementById('githubBtn').addEventListener('click', () => window.open('https://github.com/jbuilds-g/0FluffStart', '_blank'));
+    document.getElementById('githubBtn').addEventListener('click', () => window.open('https://github.com/Raw-JSON/0FluffStart', '_blank'));
     
     document.getElementById('addLinkBtn').addEventListener('click', () => openEditor());
     document.getElementById('saveLinkBtn').addEventListener('click', saveLink);
@@ -137,7 +137,17 @@ function restoreData(e) {
 
             if (confirm("This will overwrite your current settings, links, and history. Are you sure?")) {
                 if(data.links) localStorage.setItem('0fluff_links', JSON.stringify(data.links));
-                if(data.settings) localStorage.setItem('0fluff_settings', JSON.stringify(data.settings));
+                
+                // v1.1.0 Fix: Merge imported settings robustly 
+                if(data.settings) {
+                    let importedSettings = data.settings;
+                    if(typeof importedSettings === 'string') {
+                        try { importedSettings = JSON.parse(importedSettings); } catch(e){}
+                    }
+                    const mergedSettings = { ...settings, ...importedSettings };
+                    localStorage.setItem('0fluff_settings', JSON.stringify(mergedSettings));
+                }
+                
                 if(data.history) localStorage.setItem('0fluff_history', JSON.stringify(data.history));
                 
                 alert("Restore successful! Reloading...");
@@ -156,6 +166,9 @@ function renderLinks() {
     const grid = document.getElementById('linkGrid');
     if(!grid) return;
     grid.innerHTML = '';
+    
+    // v1.1.0 Optimization: DocumentFragment
+    const fragment = document.createDocumentFragment();
     
     links.forEach(link => {
         const words = link.name.split(' ').filter(w => w.length > 0);
@@ -199,18 +212,24 @@ function renderLinks() {
             openEditor(link.id);
         });
 
-        grid.appendChild(item);
+        fragment.appendChild(item);
     });
+    
+    grid.appendChild(fragment);
 }
 
 function renderLinkManager() {
     const linkManagerContent = document.getElementById('linkManagerContent');
     if(!linkManagerContent) return;
     linkManagerContent.innerHTML = '';
+    
     if (links.length === 0) {
         linkManagerContent.innerHTML = '<div style="color:var(--dim); text-align:center; padding:10px;">No links yet.</div>';
         return;
     }
+    
+    // v1.1.0 Optimization: DocumentFragment
+    const fragment = document.createDocumentFragment();
     const editIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>`;
     const deleteIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
     
@@ -242,8 +261,10 @@ function renderLinkManager() {
         item.appendChild(nameSpan);
         item.appendChild(actionsDiv);
         
-        linkManagerContent.appendChild(item);
+        fragment.appendChild(item);
     });
+    
+    linkManagerContent.appendChild(fragment);
 }
 
 function openEditor(id = null) {
