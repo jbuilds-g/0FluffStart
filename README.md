@@ -61,26 +61,6 @@ Join the channel for the latest releases and news, and hop into the group to ask
   
 ---
 
-## 🎨 Themes & OflufThemes.css
-
-0FluffStart supports extended themes via `OflufThemes.css`.  
-
-- **How it works:**  
-  The main HTML file links to `OflufThemes.css` to load extra themes beyond the defaults.  
-
-- **For Desktop / Local Users (Extension or Local HTML):**  
-When a new theme file is released (e.g., `OflufThemesv2.css`):  
-1. **Add it:** Download the new CSS file to the same folder as your HTML file.
-2. **Link it:** Update your HTML to include a `<link>` to the new CSS file.  
-  *Old CSS files stay; you just add new ones.*
-
-- **For Web Version Users:**  
-  No action needed. The app automatically loads the latest theme files since they’re hosted online.  
-
-> 💡 To know when new theme files are available, join our Telegram channel: [NOFluffStart](https://t.me/NOFluffStart)
-
----
-
 ## 💾 Data Management
 Settings are stored in browser `localStorage`. To transfer between devices:
 
