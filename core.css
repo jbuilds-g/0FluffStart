@@ -70,6 +70,32 @@ h1 {
     display: none !important; 
 }
 
+/* --- FLOATING SETTINGS BUTTON (v1.1.0) --- */
+.floating-settings {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 50;
+}
+
+.floating-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, background 0.3s;
+}
+
+.floating-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    background: var(--card-hover);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
 /* --- DESKTOP OPTIMIZATIONS (Core Layout) --- */
 @media (min-width: 768px) {
     .container { 
