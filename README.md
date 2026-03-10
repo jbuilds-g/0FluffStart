@@ -5,7 +5,7 @@
 ![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-blue)
 ![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
 
-> 0FluffStart is a lightweight, local-first start page that replaces bloated default homepages. All data — links, settings, search history — stays on your device.
+> 0FluffStart is a lightweight, local-first start page that replaces bloated default homepages. All data, links, settings, search history stays on your device.
 
 [**🚀 Launch Web Version**](https://jbuilds-g.github.io/0FluffStart/)
 
