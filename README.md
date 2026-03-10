@@ -58,9 +58,10 @@ Join the channel for the latest releases and news, and hop into the group to ask
 - **Data Portability:** Backup & restore your settings
 - **Smart Search:** Instant engine switching, optional DuckDuckGo suggestions
 - **Blazing Performance:** Pure Vanilla JS/CSS, sub-second load times
+  
+---
 
-
-  ## 🎨 Themes & OflufThemes.css
+## 🎨 Themes & OflufThemes.css
 
 0FluffStart supports extended themes via `OflufThemes.css`.  
 
