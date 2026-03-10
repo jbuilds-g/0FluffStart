@@ -68,10 +68,10 @@ Join the channel for the latest releases and news, and hop into the group to ask
 - **How it works:**  
   The main HTML file links to `OflufThemes.css` to load extra themes beyond the defaults.  
 
-- **Adding new themes:**  
-  When a new theme file is released (e.g., `OflufThemesv2.css`), you can:  
-  1. **Add it:** Download the new CSS file and place it in the same folder as your HTML file.  
-  2. **Link it:** Update your HTML to include a `<link>` to the new CSS file.
+- **Adding new themes:**
+When a new theme file is released (e.g., `OflufThemesv2.css`), you can:  
+1. **Add it:** Download the new CSS file and place it in the same folder as your HTML file.  
+2. **Link it:** Update your HTML to include a `<link>` to the new CSS file.
 
 > 💡 To know when new theme files are available, join our Telegram channel: [0FluffStart](https://t.me/NOFluffStart)
 
