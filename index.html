@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>0FluffStart</title>
     
-    <link rel="stylesheet" href="themes.css">
+    <link rel="stylesheet" href="0flufThemes.css">
+    
     <link rel="stylesheet" href="core.css">
     <link rel="stylesheet" href="modules.css">
     <link rel="stylesheet" href="settings.css">
-    <link rel="stylesheet" href="0flufThemes.css">
 </head>
 <body class="dark">
 
@@ -17,11 +17,6 @@
 
 <div class="container">
     <header>
-        <div class="header-row">
-            <button id="settingsToggleBtn" class="icon-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-            </button>
-        </div>
         <div id="clockDisplay" class="clock">00:00:00</div>
         <div id="greetingDisplay" class="greeting">Hello, User.</div>
     </header>
@@ -48,28 +43,35 @@
 
 </div>
 
+<div class="floating-settings">
+    <button id="settingsToggleBtn" class="icon-btn floating-btn" title="Settings">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+    </button>
+</div>
+
 <div class="modal" id="settingsModal">
     <div class="modal-content">
         <div class="modal-header">
             <h2>Settings</h2>
             <div class="header-actions" style="display:flex; gap:10px; align-items:center;">
-                <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--dim); font-weight: 600;">v1.0.0</span>
+                <span style="font-family: var(--font-main); font-size: 0.8rem; color: var(--dim); font-weight: 600;">v1.1.0</span>
                 <button id="githubBtn" class="icon-btn" title="View Source on GitHub">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 3c0 0-1.03-.39-3.41 1.05A16.3 16.3 0 0 0 12 2.88 16.3 16.3 0 0 0 7.4 4.04c-2.38-1.44-3.41-1.05-3.41-1.05A5.07 5.07 0 0 0 3.91 4.77 5.44 5.44 0 0 0 4 9.47c0 5.42 3.3 6.61 6.44 7.37-.4.34-.78 1-1.15 2.06v4.31"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7.37-.4.34-.78 1-1.15 2.06v4.31"></path></svg>
                 </button>
                 <div style="width: 1px; height: 20px; background-color: var(--border); margin: 0 5px;"></div>
                 <button id="closeSettingsBtn" class="icon-btn" title="Close Settings">
-                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
         </div>
-        
+
         <div class="setting-group">
             <h3>Quick Link Management</h3>
             <div id="linkListContainer">
                 <button id="addLinkBtn" class="add-link-btn" style="margin-bottom: 15px;">+ Add New Link</button>
                 <div id="linkManagerContent" class="link-manager-list"></div>
             </div>
+            
             <div id="linkEditorContainer" class="hidden" style="background: var(--card-hover); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border);">
                 <h4 id="editorTitle" style="margin: 0 0 15px 0; color: var(--accent);">Add New Link</h4>
                 <input type="text" id="editName" placeholder="Name (e.g. YouTube)">
@@ -80,12 +82,12 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="setting-group">
             <h3>Your Name</h3>
             <input type="text" id="userNameInput" placeholder="Name for greeting...">
         </div>
-        
+
         <div class="setting-group">
             <h3>Vibe (Theme)</h3>
             <select id="themeSelect">
@@ -93,22 +95,22 @@
                 <option value="light">Clean Light</option>
                 <option value="cyberpunk">Cyberpunk</option>
                 <option value="sunset">Sunset Drive</option>
+                <option value="forest">Forest Hike</option>
                 <option value="paper">Paper & Ink</option>
                 <option value="material">Material 3 Expressive</option>
-                <option value="forest">Forest Hike</option>
                 <option value="nord">Nord Frost</option>
                 <option value="dracula">Dracula</option>
                 <option value="retro">Retro Amber</option>
                 <option value="rose">Rose Pine</option>
             </select>
         </div>
-
+        
         <div class="setting-group">
             <h3>Custom Background</h3>
             <div class="bg-control-row">
                 <input type="file" id="bgImageInput" accept="image/*" class="hidden-input">
                 <label for="bgImageInput" class="custom-file-btn">Choose Image</label>
-                <button id="resetBgBtn" class="secondary small-btn" style="display:none;">Reset</button>
+                <button id="resetBgBtn" class="secondary small-btn" style="display:none; width:auto; padding: 10px 15px;">Reset</button>
             </div>
             <p id="bgFileName" style="font-size: 0.8rem; color: var(--dim); margin-top: 8px;">No image selected.</p>
         </div>
