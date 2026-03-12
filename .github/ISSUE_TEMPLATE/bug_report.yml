@@ -14,7 +14,7 @@ body:
     id: steps
     attributes:
       label: Steps to Reproduce
-      description: Step by step instructions to reproduce the bug. You can attach files/screenshots here.
+      description: Step by step instructions to reproduce the bug.
       placeholder: "1. Go to Settings > Advanced\n2. Click Backup\n3. Restore backup\n4. Observe issue"
 
   - type: textarea
