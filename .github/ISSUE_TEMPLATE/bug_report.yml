@@ -41,15 +41,8 @@ body:
         - Moderate
         - Critical
 
-  - type: input
-    id: device
-    attributes:
-      label: Device / Browser
-      description: Device, OS, or browser where the bug occurred
-      placeholder: "Pixel 9 Pro, Android 16, Chrome 111"
-
-  - type: input
-    id: app_version
+ - type: input
+    id: version
     attributes:
       label: 0FluffStart Version
       description: The version you are currently using
