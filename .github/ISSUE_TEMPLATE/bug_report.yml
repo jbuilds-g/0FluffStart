@@ -1,26 +1,62 @@
----
-name: Bug Report
-about: Report a bug or unexpected behavior in 0FluffStart
-title: "[BUG] "
-labels: bug
-assignees: 
----
+name: Bug or Feature Request
+description: Use this template to report bugs or request new features for 0FluffStart.
+title: "[Issue Type] "
+labels: ["needs triage"]
+assignees: []
 
-## Describe the bug
-A clear and concise description of what the bug is.
+body:
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: "Type of issue"
+      description: "Select whether this is a bug report or a feature request/suggestion"
+      options:
+        - Bug
+        - Feature Request
+    validations:
+      required: true
 
-## Steps to Reproduce
-1. Step one
-2. Step two
-3. Step three
+  - type: input
+    id: summary
+    attributes:
+      label: "Summary"
+      description: "Short summary of the bug or feature request"
+      placeholder: "E.g., Quick links not restoring after backup"
+    validations:
+      required: true
 
-## Expected behavior
-What you expected to happen.
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: "Describe the issue in detail or explain the feature request"
+      placeholder: "Add all relevant details, steps to reproduce, screenshots, etc."
+    validations:
+      required: true
 
-## Screenshots / Logs
-Add screenshots or logs to help explain your problem.
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severity / Priority"
+      description: "Choose the severity for bugs, or importance for feature requests"
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
 
-## Environment
-- OS / Device:
-- Browser:
-- 0FluffStart Version:
+  - type: input
+    id: version
+    attributes:
+      label: "0FluffStart version"
+      description: "Current version where the issue occurs or feature is requested"
+      placeholder: "E.g., v1.2.0"
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: "Browser / Platform"
+      description: "Which browser, OS, or device you are using"
+      placeholder: "E.g., Chrome Desktop, Android Chrome"
