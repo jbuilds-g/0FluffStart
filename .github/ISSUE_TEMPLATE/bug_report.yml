@@ -58,9 +58,3 @@ body:
       placeholder: "E.g., Chrome Desktop, Android Chrome"
     validations:
       required: true
-
-  - type: screenshot
-    id: screenshot
-    attributes:
-      label: "Screenshot (optional)"
-      description: "Upload a screenshot if available to help illustrate the bug"
