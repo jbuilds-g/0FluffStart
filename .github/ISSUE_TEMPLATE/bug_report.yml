@@ -1,37 +1,49 @@
 name: Bug Report🐛
-description: Report a bug or issue with 0FluffStart
-title: "[BUG] "
+description: Report a bug you encountered in 0FluffStart
+title: "[Bug] "
 labels: bug
 body:
-  - type: input
+  - type: textarea
     id: describe
     attributes:
-      label: Describe the issue
-      placeholder: "Explain what went wrong. You can add a screenshot as well—it would be helpful."
+      label: Describe the Bug
+      description: Please describe the bug in detail. You can add a screenshot as well. It would be helpful.
+      placeholder: "e.g., When I try to restore a backup, only quick links restore and other settings do not."
+
   - type: textarea
     id: steps
     attributes:
       label: Steps to Reproduce
-      description: "List the steps to reproduce the bug. Screenshots/files can be added here."
-      placeholder: "1. Open 0FluffStart\n2. Click on Settings\n3. Observe the issue..."
+      description: Step by step instructions to reproduce the bug. You can attach files/screenshots here.
+      placeholder: "1. Go to Settings > Advanced\n2. Click Backup\n3. Restore backup\n4. Observe issue"
+
   - type: textarea
     id: expected
     attributes:
       label: Expected Behavior
-      placeholder: "Explain what you expected to happen."
+      description: What did you expect to happen?
+      placeholder: "All settings should be restored correctly."
+
   - type: textarea
     id: actual
     attributes:
       label: Actual Behavior
-      placeholder: "Explain what actually happened."
-  - type: input
-    id: version
+      description: What actually happened?
+      placeholder: "Only quick links were restored; all other settings were missing."
+
+  - type: dropdown
+    id: severity
     attributes:
-      label: Version
-      placeholder: "e.g., 1.2.0"
+      label: Severity
+      description: How bad is this bug?
+      options:
+        - Minor
+        - Moderate
+        - Critical
+
   - type: input
-    id: additional
+    id: app_version
     attributes:
-      label: Additional Context
-      description: "Any other information that might help, like relevant settings or environment."
-      placeholder: "Optional"
+      label: 0FluffStart Version
+      description: The version you are currently using
+      placeholder: "e.g., 1.1.0"      placeholder: "Optional"
