@@ -46,4 +46,4 @@ body:
     attributes:
       label: 0FluffStart Version
       description: The version you are currently using
-      placeholder: "e.g., 1.1.0"      placeholder: "Optional"
+      placeholder: "e.g., 1.1.0"
