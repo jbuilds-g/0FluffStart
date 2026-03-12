@@ -1,40 +1,32 @@
-name: Suggestion / Feature Request
-description: Use this template to propose improvements, new features, or ideas for 0FluffStart.
-title: "[Suggestion] "
-labels: ["needs triage"]
-assignees: []
-
+name: Feature/Suggestion
+description: Suggest a new feature or improvement for 0FluffStart
+title: "[Feature] "
+labels: enhancement
 body:
-  - type: input
-    id: summary
+  - type: textarea
+    id: describe
     attributes:
-      label: "Summary"
-      description: "Short summary of your suggestion"
-      placeholder: "E.g., Add focus mode to homepage"
-    validations:
-      required: true
+      label: Describe the Feature
+      description: Explain your idea or suggestion in detail. You can add a screenshot or mockup if helpful.
+      placeholder: "e.g., Add a focus mode that hides all UI elements except the search bar."
 
   - type: textarea
-    id: description
+    id: benefits
     attributes:
-      label: "Description"
-      description: "Explain your suggestion in detail. Include why it's useful or how it could work."
-      placeholder: "Add all relevant details, mockups, or examples here"
-    validations:
-      required: true
+      label: Benefits
+      description: What problem does this solve or what benefit does it provide?
+      placeholder: "e.g., Helps users concentrate without distraction."
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples / References
+      description: Any reference, inspiration, or example of this feature.
+      placeholder: "e.g., Similar focus mode in other dashboards or apps."
 
   - type: input
     id: version
     attributes:
-      label: "0FluffStart version"
-      description: "Version where you want this improvement or suggestion applied"
-      placeholder: "E.g., v1.3.0"
-    validations:
-      required: true
-
-  - type: input
-    id: platform
-    attributes:
-      label: "Browser / Platform"
-      description: "Which browser, OS, or device this suggestion is most relevant to"
-      placeholder: "E.g., Chrome Desktop, Android Chrome"
+      label: 0FluffStart Version
+      description: The version you are currently using
+      placeholder: "e.g., 1.1.0"
