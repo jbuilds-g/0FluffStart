@@ -7,7 +7,7 @@ body:
     id: describe
     attributes:
       label: Describe the Feature
-      description: Explain your idea or suggestion in detail. You can add a screenshot or mockup if helpful.
+      description: Explain your idea or suggestion in detail.
       placeholder: "e.g., Add a focus mode that hides all UI elements except the search bar."
 
   - type: textarea
@@ -21,7 +21,7 @@ body:
     id: examples
     attributes:
       label: Examples / References
-      description: Any reference, inspiration, or example of this feature.
+      description: Any reference, inspiration, or example of this feature. Provide a screenshot if possible.
       placeholder: "e.g., Similar focus mode in other dashboards or apps."
 
   - type: input
