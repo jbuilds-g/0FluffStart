@@ -87,7 +87,7 @@ body.paper {
     --shadow: 4px 4px 0px rgba(0,0,0,0.1);
 }
 
-body.material {
+body.luminous {
     --bg: #0f0d13;
     --card: #2b2930;
     --card-hover: #36343b;
