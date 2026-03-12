@@ -1,49 +1,37 @@
-name: Report Bug 🐛
-description: Report a bug you encountered in 0FluffStart
-title: "[Bug] "
+name: Bug Report🐛
+description: Report a bug or issue with 0FluffStart
+title: "[BUG] "
 labels: bug
 body:
-  - type: textarea
+  - type: input
     id: describe
     attributes:
-      label: Describe the Bug
-      description: Please describe the bug in detail. You can add a screenshot as well. It would be helpful.
-      placeholder: "e.g., When I try to restore a backup, only quick links restore and other settings do not."
-
+      label: Describe the issue
+      placeholder: "Explain what went wrong. You can add a screenshot as well—it would be helpful."
   - type: textarea
     id: steps
     attributes:
       label: Steps to Reproduce
-      description: Step by step instructions to reproduce the bug.
-      placeholder: "1. Go to Settings > Advanced\n2. Click Backup\n3. Restore backup\n4. Observe issue"
-
+      description: "List the steps to reproduce the bug. Screenshots/files can be added here."
+      placeholder: "1. Open 0FluffStart\n2. Click on Settings\n3. Observe the issue..."
   - type: textarea
     id: expected
     attributes:
       label: Expected Behavior
-      description: What did you expect to happen?
-      placeholder: "All settings should be restored correctly."
-
+      placeholder: "Explain what you expected to happen."
   - type: textarea
     id: actual
     attributes:
       label: Actual Behavior
-      description: What actually happened?
-      placeholder: "Only quick links were restored; all other settings were missing."
-
-  - type: dropdown
-    id: severity
-    attributes:
-      label: Severity
-      description: How bad is this bug?
-      options:
-        - Minor
-        - Moderate
-        - Critical
-
- - type: input
+      placeholder: "Explain what actually happened."
+  - type: input
     id: version
     attributes:
-      label: 0FluffStart Version
-      description: The version you are currently using
-      placeholder: "e.g., 1.1.0"
+      label: Version
+      placeholder: "e.g., 1.2.0"
+  - type: input
+    id: additional
+    attributes:
+      label: Additional Context
+      description: "Any other information that might help, like relevant settings or environment."
+      placeholder: "Optional"
