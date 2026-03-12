@@ -1,62 +1,66 @@
-name: Bug or Feature Request
-description: Use this template to report bugs or request new features for 0FluffStart.
-title: "[Issue Type] "
-labels: ["needs triage"]
+name: Bug Report 🐛
+description: Use this template to report bugs or unexpected behavior in 0FluffStart.
+title: "[Bug] "
+labels: ["bug"]
 assignees: []
 
 body:
-  - type: dropdown
-    id: issue_type
-    attributes:
-      label: "Type of issue"
-      description: "Select whether this is a bug report or a feature request/suggestion"
-      options:
-        - Bug
-        - Feature Request
-    validations:
-      required: true
-
   - type: input
     id: summary
     attributes:
       label: "Summary"
-      description: "Short summary of the bug or feature request"
-      placeholder: "E.g., Quick links not restoring after backup"
+      description: "Short summary of the bug"
+      placeholder: "E.g., Quick links fail to restore after backup"
     validations:
       required: true
 
   - type: textarea
-    id: description
+    id: steps
     attributes:
-      label: "Description"
-      description: "Describe the issue in detail or explain the feature request"
-      placeholder: "Add all relevant details, steps to reproduce, screenshots, etc."
+      label: "Steps to Reproduce"
+      description: "Describe step by step how to reproduce the bug"
+      placeholder: "1. Go to Settings > Backup\n2. Restore previous backup\n3. Observe quick links not restoring"
     validations:
       required: true
 
-  - type: dropdown
-    id: severity
+  - type: textarea
+    id: expected
     attributes:
-      label: "Severity / Priority"
-      description: "Choose the severity for bugs, or importance for feature requests"
-      options:
-        - Low
-        - Medium
-        - High
-        - Critical
+      label: "Expected Behavior"
+      description: "What you expected to happen"
+      placeholder: "All settings including quick links should be restored"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: "Actual Behavior"
+      description: "What actually happened"
+      placeholder: "Only quick links were restored, all other settings failed"
+    validations:
+      required: true
 
   - type: input
     id: version
     attributes:
       label: "0FluffStart version"
-      description: "Current version where the issue occurs or feature is requested"
+      description: "The version where this bug occurred"
       placeholder: "E.g., v1.2.0"
     validations:
       required: true
 
   - type: input
-    id: browser
+    id: platform
     attributes:
       label: "Browser / Platform"
-      description: "Which browser, OS, or device you are using"
+      description: "The browser, OS, or device where this bug happened"
       placeholder: "E.g., Chrome Desktop, Android Chrome"
+    validations:
+      required: true
+
+  - type: input
+    id: screenshot
+    attributes:
+      label: "n: "Provide a link to a screenshot if available to help illustrate the bug"
+      placeholder: "E.g., https://imgur.com/your_screenshot.png"
