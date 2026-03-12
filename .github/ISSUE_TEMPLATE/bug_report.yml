@@ -1,58 +1,70 @@
-name: Bug Report 🐛
-description: Use this template to report bugs or unexpected behavior in 0FluffStart.
+name: Report bug 🐛
+description: Report a bug you encountered in 0FluffStart
 title: "[Bug] "
-labels: ["bug"]
-assignees: []
-
+labels: bug
 body:
   - type: textarea
     id: describe
     attributes:
-      label: Describe
-      description: Please describe the issue in detail. You can add a screenshot as well. It would be helpful.
-      placeholder: "What is happening?"
+      label: Describe the Bug
+      description: Please describe the bug in detail. You can add a screenshot as well. It would be helpful.
+      placeholder: "e.g., When I try to restore a backup, only quick links restore and other settings do not."
+      validations:
+        min_length: 1
 
   - type: textarea
     id: steps
     attributes:
-      label: "Steps to Reproduce"
-      description: "Describe step by step how to reproduce the bug"
-      placeholder: "1. Go to Settings > Backup\n2. Restore previous backup\n3. Observe quick links not restoring"
-    validations:
-      required: true
+      label: Steps to Reproduce
+      description: Step by step instructions to reproduce the bug. You can attach files/screenshots here.
+      placeholder: "1. Go to Settings > Advanced\n2. Click Backup\n3. Restore backup\n4. Observe issue"
+      validations:
+        min_length: 1
 
   - type: textarea
     id: expected
     attributes:
-      label: "Expected Behavior"
-      description: "What you expected to happen"
-      placeholder: "All settings including quick links should be restored"
-    validations:
-      required: true
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: "All settings should be restored correctly."
+      validations:
+        min_length: 1
 
   - type: textarea
     id: actual
     attributes:
-      label: "Actual Behavior"
-      description: "What actually happened"
-      placeholder: "Only quick links were restored, all other settings failed"
-    validations:
-      required: true
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: "Only quick links were restored; all other settings were missing."
+      validations:
+        min_length: 1
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How bad is this bug?
+      options:
+        - Minor
+        - Moderate
+        - Critical
+      validations:
+        required: true
 
   - type: input
-    id: version
+    id: device
     attributes:
-      label: "0FluffStart version"
-      description: "The version where this bug occurred"
-      placeholder: "E.g., v1.2.0"
-    validations:
-      required: true
+      label: Device / Browser
+      description: Device, OS, or browser where the bug occurred
+      placeholder: "Pixel 9 Pro, Android 16, Chrome 111"
+      validations:
+        min_length: 1
 
   - type: input
-    id: platform
+    id: app_version
     attributes:
-      label: "Browser / Platform"
-      description: "The browser, OS, or device where this bug happened"
-      placeholder: "E.g., Chrome Desktop, Android Chrome"
-    validations:
-      required: true
+      label: 0FluffStart Version
+      description: The version you are currently using
+      placeholder: "e.g., 1.1.0"
+      validations:
+        min_length: 1
