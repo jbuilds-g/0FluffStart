@@ -59,8 +59,8 @@ body:
     validations:
       required: true
 
-  - type: input
+  - type: screenshot
     id: screenshot
     attributes:
-      label: "n: "Provide a link to a screenshot if available to help illustrate the bug"
-      placeholder: "E.g., https://imgur.com/your_screenshot.png"
+      label: "Screenshot (optional)"
+      description: "Upload a screenshot if available to help illustrate the bug"
