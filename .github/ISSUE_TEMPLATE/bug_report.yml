@@ -1,4 +1,4 @@
-name: Report bug 🐛
+name: Report Bug 🐛
 description: Report a bug you encountered in 0FluffStart
 title: "[Bug] "
 labels: bug
@@ -9,8 +9,6 @@ body:
       label: Describe the Bug
       description: Please describe the bug in detail. You can add a screenshot as well. It would be helpful.
       placeholder: "e.g., When I try to restore a backup, only quick links restore and other settings do not."
-      validations:
-        min_length: 1
 
   - type: textarea
     id: steps
@@ -18,8 +16,6 @@ body:
       label: Steps to Reproduce
       description: Step by step instructions to reproduce the bug. You can attach files/screenshots here.
       placeholder: "1. Go to Settings > Advanced\n2. Click Backup\n3. Restore backup\n4. Observe issue"
-      validations:
-        min_length: 1
 
   - type: textarea
     id: expected
@@ -27,8 +23,6 @@ body:
       label: Expected Behavior
       description: What did you expect to happen?
       placeholder: "All settings should be restored correctly."
-      validations:
-        min_length: 1
 
   - type: textarea
     id: actual
@@ -36,8 +30,6 @@ body:
       label: Actual Behavior
       description: What actually happened?
       placeholder: "Only quick links were restored; all other settings were missing."
-      validations:
-        min_length: 1
 
   - type: dropdown
     id: severity
@@ -48,8 +40,6 @@ body:
         - Minor
         - Moderate
         - Critical
-      validations:
-        required: true
 
   - type: input
     id: device
@@ -57,8 +47,6 @@ body:
       label: Device / Browser
       description: Device, OS, or browser where the bug occurred
       placeholder: "Pixel 9 Pro, Android 16, Chrome 111"
-      validations:
-        min_length: 1
 
   - type: input
     id: app_version
@@ -66,5 +54,3 @@ body:
       label: 0FluffStart Version
       description: The version you are currently using
       placeholder: "e.g., 1.1.0"
-      validations:
-        min_length: 1
