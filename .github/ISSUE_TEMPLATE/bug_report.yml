@@ -5,13 +5,12 @@ labels: ["bug"]
 assignees: []
 
 body:
-  - type: input
-    id: summary
+  - type: textarea
+    id: describe
     attributes:
-      label: "Summary"
-      description: "Short summary of the bug"
-      placeholder: "E.g., Quick links fail to restore after backup"
-    validations:
+      label: Describe
+      description: Please describe the issue in detail. You can add a screenshot as well. It would be helpful.
+      placeholder: "What is happening?"
       required: true
 
   - type: textarea
