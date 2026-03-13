@@ -54,7 +54,7 @@
         <div class="modal-header">
             <h2>Settings</h2>
             <div class="header-actions" style="display:flex; gap:10px; align-items:center;">
-                <span style="font-family: var(--font-main); font-size: 0.8rem; color: var(--dim); font-weight: 600;">v1.1.0</span>
+                <span style="font-family: var(--font-main); font-size: 0.8rem; color: var(--dim); font-weight: 600;">v1.2.0</span>
                 <button id="githubBtn" class="icon-btn" title="View Source on GitHub">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7.37-.4.34-.78 1-1.15 2.06v4.31"></path></svg>
                 </button>
@@ -65,103 +65,154 @@
             </div>
         </div>
 
-        <div class="setting-group">
-            <h3>Quick Link Management</h3>
-            <div id="linkListContainer">
-                <button id="addLinkBtn" class="add-link-btn" style="margin-bottom: 15px;">+ Add New Link</button>
-                <div id="linkManagerContent" class="link-manager-list"></div>
-            </div>
-            
-            <div id="linkEditorContainer" class="hidden" style="background: var(--card-hover); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border);">
-                <h4 id="editorTitle" style="margin: 0 0 15px 0; color: var(--accent);">Add New Link</h4>
-                <input type="text" id="editName" placeholder="Name (e.g. YouTube)">
-                <input type="url" id="editUrl" placeholder="URL (e.g. youtube.com)">
-                <div style="display:flex; gap:10px;">
-                    <button id="saveLinkBtn" class="save-btn" style="margin-top:0;">Save</button>
-                    <button id="cancelEditBtn" class="secondary" style="margin-top:0; width:100%; border-radius: var(--radius); font-weight:bold; border:1px solid var(--border);">Cancel</button>
+        <details class="category-panel" open>
+            <summary>Dashboard Links <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="category-content">
+                <div class="setting-group">
+                    <div class="setting-header">
+                        <h3>Quick Link Management</h3>
+                        <button class="help-btn">?</button>
+                    </div>
+                    <div class="help-text">Add, edit, or remove the shortcut icons on your main dashboard. You can also right-click icons on the dashboard to edit them directly.</div>
+                    
+                    <div id="linkListContainer">
+                        <button id="addLinkBtn" class="add-link-btn" style="margin-bottom: 15px;">+ Add New Link</button>
+                        <div id="linkManagerContent" class="link-manager-list"></div>
+                    </div>
+                    
+                    <div id="linkEditorContainer" class="hidden" style="background: var(--card-hover); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border);">
+                        <h4 id="editorTitle" style="margin: 0 0 15px 0; color: var(--accent);">Add New Link</h4>
+                        <input type="text" id="editName" placeholder="Name (e.g. YouTube)">
+                        <input type="url" id="editUrl" placeholder="URL (e.g. youtube.com)">
+                        <div style="display:flex; gap:10px;">
+                            <button id="saveLinkBtn" class="save-btn" style="margin-top:0;">Save</button>
+                            <button id="cancelEditBtn" class="secondary" style="margin-top:0; width:100%; border-radius: var(--radius); font-weight:bold; border:1px solid var(--border);">Cancel</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </details>
 
-        <div class="setting-group">
-            <h3>Your Name</h3>
-            <input type="text" id="userNameInput" placeholder="Name for greeting...">
-        </div>
+        <details class="category-panel">
+            <summary>Personalization <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="category-content">
+                <div class="setting-group">
+                    <div class="setting-header">
+                        <h3>Your Name</h3>
+                        <button class="help-btn">?</button>
+                    </div>
+                    <div class="help-text">The display name used for the greeting in the header (e.g., "Hello, User"). Leave blank to hide the greeting.</div>
+                    <input type="text" id="userNameInput" placeholder="Name for greeting...">
+                </div>
 
-        <div class="setting-group">
-            <h3>Vibe (Theme)</h3>
-            <select id="themeSelect">
-                <option value="dark">OLED Dark (Default)</option>
-                <option value="light">Clean Light</option>
-                <option value="cyberpunk">Cyberpunk</option>
-                <option value="sunset">Sunset Drive</option>
-                <option value="forest">Forest Hike</option>
-                <option value="paper">Paper & Ink</option>
-                <option value="luminous">Luminous</option>
-                <option value="nord">Nord Frost</option>
-                <option value="dracula">Dracula</option>
-                <option value="retro">Retro Amber</option>
-                <option value="rose">Rose Pine</option>
-            </select>
-        </div>
-        
-        <div class="setting-group">
-            <h3>Custom Background</h3>
-            <div class="bg-control-row">
-                <input type="file" id="bgImageInput" accept="image/*" class="hidden-input">
-                <label for="bgImageInput" class="custom-file-btn">Choose Image</label>
-                <button id="resetBgBtn" class="secondary small-btn" style="display:none; width:auto; padding: 10px 15px;">Reset</button>
+                <div class="setting-group">
+                    <div class="setting-header">
+                        <h3>Vibe (Theme)</h3>
+                        <button class="help-btn">?</button>
+                    </div>
+                    <div class="help-text">Changes the color scheme, borders, and general aesthetic of the dashboard.</div>
+                    <select id="themeSelect">
+                        <option value="dark">OLED Dark (Default)</option>
+                        <option value="light">Clean Light</option>
+                        <option value="cyberpunk">Cyberpunk</option>
+                        <option value="sunset">Sunset Drive</option>
+                        <option value="forest">Forest Hike</option>
+                        <option value="paper">Paper & Ink</option>
+                        <option value="luminous">Luminous</option>
+                        <option value="nord">Nord Frost</option>
+                        <option value="dracula">Dracula</option>
+                        <option value="retro">Retro Amber</option>
+                        <option value="rose">Rose Pine</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <div class="setting-header">
+                        <h3>Custom Background</h3>
+                        <button class="help-btn">?</button>
+                    </div>
+                    <div class="help-text">Upload an image from your device to use as a wallpaper. It is stored completely locally in your browser's database.</div>
+                    <div class="bg-control-row">
+                        <input type="file" id="bgImageInput" accept="image/*" class="hidden-input">
+                        <label for="bgImageInput" class="custom-file-btn">Choose Image</label>
+                        <button id="resetBgBtn" class="secondary small-btn" style="display:none; width:auto; padding: 10px 15px;">Reset</button>
+                    </div>
+                    <p id="bgFileName" style="font-size: 0.8rem; color: var(--dim); margin-top: 8px;">No image selected.</p>
+                </div>
             </div>
-            <p id="bgFileName" style="font-size: 0.8rem; color: var(--dim); margin-top: 8px;">No image selected.</p>
-        </div>
+        </details>
 
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 25px 0;">
-
-        <button id="advancedToggleBtn" class="advanced-toggle">
-            <span>Advanced Settings</span>
-            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
-
-        <div id="advancedSettings" class="advanced-content">
-            <div class="setting-group">
-                <h3>Clock Format</h3>
-                <div class="radio-row">
-                    <label class="radio-option">
-                        <input type="radio" name="clockFormat" value="12h" class="clock-radio"> 12-Hour
+        <details class="category-panel">
+            <summary>Search & Preferences <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="category-content">
+                <div class="setting-group">
+                    <div class="setting-header">
+                        <h3>Clock Format</h3>
+                        <button class="help-btn">?</button>
+                    </div>
+                    <div class="help-text">Switch the main header clock between standard 12-hour (AM/PM) and 24-hour military time formats.</div>
+                    <div class="radio-row">
+                        <label class="radio-option">
+                            <input type="radio" name="clockFormat" value="12h" class="clock-radio"> 12-Hour
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="clockFormat" value="24h" class="clock-radio"> 24-Hour
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <div class="setting-header">
+                        <h3>External Search Suggestions</h3>
+                        <button class="help-btn">?</button>
+                    </div>
+                    <div class="help-text">When enabled, sends your search bar keystrokes to DuckDuckGo to provide real-time autocomplete suggestions. Disable for 100% offline local typing.</div>
+                    <label class="radio-option" style="justify-content: flex-start;">
+                        <input type="checkbox" id="externalSuggestToggle"> Enable Live Suggestions
                     </label>
-                    <label class="radio-option">
-                        <input type="radio" name="clockFormat" value="24h" class="clock-radio"> 24-Hour
+                </div>
+                
+                <div class="setting-group">
+                    <div class="setting-header">
+                        <h3>Search History Control</h3>
+                        <button class="help-btn">?</button>
+                    </div>
+                    <div class="help-text">Locally caches your past searches so you can quickly find them in the search dropdown again.</div>
+                    <button id="clearHistoryBtn" class="secondary" style="width:100%; margin-bottom: 10px; font-weight:bold; border:1px solid var(--delete); color: var(--delete);">Clear All Search History</button>
+                    <label class="radio-option" style="justify-content: flex-start;">
+                        <input type="checkbox" id="historyEnabledToggle"> Enable Local Search History
                     </label>
                 </div>
             </div>
-            
-            <div class="setting-group">
-                <h3>External Search Suggestions</h3>
-                <p style="font-size:0.8rem; color:var(--dim); margin-bottom: 10px;">
-                    ⚠️ Sends keystrokes to **DuckDuckGo**. Disabling keeps search 100% local.
-                </p>
-                <label class="radio-option" style="justify-content: flex-start;">
-                    <input type="checkbox" id="externalSuggestToggle"> Enable Live Suggestions
-                </label>
-            </div>
-            
-            <div class="setting-group">
-                <h3>Search History Control</h3>
-                <button id="clearHistoryBtn" class="secondary" style="width:100%; margin-bottom: 10px; font-weight:bold; border:1px solid var(--delete); color: var(--delete);">Clear All Search History</button>
-                <label class="radio-option" style="justify-content: flex-start;">
-                    <input type="checkbox" id="historyEnabledToggle"> Enable Local Search History
-                </label>
-            </div>
+        </details>
 
-            <div class="setting-group">
-                <h3 style="margin-top:20px;">Data Backup & Restore</h3>
-                <div style="display:flex; gap:10px;">
-                    <button id="backupDataBtn" class="secondary" style="flex:1;">Backup (Save)</button>
-                    <button id="restoreDataBtn" class="secondary" style="flex:1;">Restore (Load)</button>
+        <details class="category-panel">
+            <summary>Data Management <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="category-content">
+                
+                <div class="setting-group">
+                    <div class="setting-header">
+                        <h3>Reset Preferences</h3>
+                        <button class="help-btn">?</button>
+                    </div>
+                    <div class="help-text">Wipes all your configuration settings (themes, toggles, names) back to default. This does NOT delete your custom quick links or search history.</div>
+                    <button id="resetSettingsBtn" class="secondary" style="width:100%; font-weight:bold; border:1px solid var(--delete); color: var(--delete);">Factory Reset Settings</button>
                 </div>
-                <input type="file" id="restoreInput" accept=".json" style="display:none;">
+
+                <div class="setting-group">
+                    <div class="setting-header">
+                        <h3 style="margin-top:0;">Data Backup & Restore</h3>
+                        <button class="help-btn">?</button>
+                    </div>
+                    <div class="help-text">Export your entire setup (Links, Themes, History) into a downloadable .json file. You can restore this file on another browser or device to clone your dashboard.</div>
+                    <div style="display:flex; gap:10px;">
+                        <button id="backupDataBtn" class="secondary" style="flex:1;">Backup (Save)</button>
+                        <button id="restoreDataBtn" class="secondary" style="flex:1;">Restore (Load)</button>
+                    </div>
+                    <input type="file" id="restoreInput" accept=".json" style="display:none;">
+                </div>
             </div>
-        </div>
+        </details>
         
     </div>
 </div>
