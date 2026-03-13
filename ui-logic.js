@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- CSP EVENT BINDING ---
 function bindStaticEvents() {
+    // Standard UI binds
     document.getElementById('settingsToggleBtn').addEventListener('click', toggleSettings);
     document.getElementById('closeSettingsBtn').addEventListener('click', () => closeModal('settingsModal'));
     document.getElementById('settingsModal').addEventListener('click', (e) => {
@@ -71,7 +72,6 @@ function bindStaticEvents() {
     bgInput.addEventListener('change', () => handleImageUpload(bgInput));
     document.getElementById('resetBgBtn').addEventListener('click', clearBackground);
 
-    document.getElementById('advancedToggleBtn').addEventListener('click', toggleAdvanced);
     document.getElementById('externalSuggestToggle').addEventListener('change', autoSaveSettings);
     document.getElementById('historyEnabledToggle').addEventListener('change', autoSaveSettings);
     document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
@@ -83,17 +83,42 @@ function bindStaticEvents() {
     document.querySelectorAll('.clock-radio').forEach(radio => {
         radio.addEventListener('change', autoSaveSettings);
     });
+
+    // --- v1.2.0: HELP TOOLTIPS LOGIC ---
+    document.querySelectorAll('.help-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const textEl = btn.parentElement.nextElementSibling;
+            if (textEl && textEl.classList.contains('help-text')) {
+                textEl.classList.toggle('show');
+                btn.classList.toggle('active');
+            }
+        });
+    });
+
+    // --- v1.2.0: RESET SETTINGS LOGIC ---
+    document.getElementById('resetSettingsBtn').addEventListener('click', () => {
+        const warning = "Are you sure? This is going to delete all your preferences in settings. This action cannot be undone.";
+        if (confirm(warning)) {
+            // Delete only preferences, leave links/history alone
+            localStorage.removeItem('0fluff_settings');
+            alert("Settings have been reset to default.");
+            window.location.reload();
+        }
+    });
 }
 
 function toggleAdvanced() {
     const content = document.getElementById('advancedSettings');
     const btn = document.getElementById('advancedToggleBtn');
-    if (content.classList.contains('open')) {
-        content.classList.remove('open');
-        btn.classList.remove('active');
-    } else {
-        content.classList.add('open');
-        btn.classList.add('active');
+    if (content && btn) {
+        if (content.classList.contains('open')) {
+            content.classList.remove('open');
+            btn.classList.remove('active');
+        } else {
+            content.classList.add('open');
+            btn.classList.add('active');
+        }
     }
 }
 
@@ -297,8 +322,11 @@ function renderLinkManager() {
 }
 
 function openEditor(id = null) {
-    document.getElementById('linkListContainer').classList.add('hidden');
-    document.getElementById('linkEditorContainer').classList.remove('hidden');
+    const linkListContainer = document.getElementById('linkListContainer');
+    const linkEditorContainer = document.getElementById('linkEditorContainer');
+    if (linkListContainer) linkListContainer.classList.add('hidden');
+    if (linkEditorContainer) linkEditorContainer.classList.remove('hidden');
+    
     const titleEl = document.getElementById('editorTitle');
     const nameInput = document.getElementById('editName');
     const urlInput = document.getElementById('editUrl');
@@ -306,26 +334,32 @@ function openEditor(id = null) {
     if (id) {
         const link = links.find(l => l.id === id);
         if(link) {
-            titleEl.innerText = "Edit Link";
-            nameInput.value = link.name;
-            urlInput.value = link.url;
+            if(titleEl) titleEl.innerText = "Edit Link";
+            if(nameInput) nameInput.value = link.name;
+            if(urlInput) urlInput.value = link.url;
         }
     } else {
-        titleEl.innerText = "Add New Link";
-        nameInput.value = '';
-        urlInput.value = '';
+        if(titleEl) titleEl.innerText = "Add New Link";
+        if(nameInput) nameInput.value = '';
+        if(urlInput) urlInput.value = '';
     }
 }
 
 function cancelEdit() {
-    document.getElementById('linkEditorContainer').classList.add('hidden');
-    document.getElementById('linkListContainer').classList.remove('hidden');
+    const linkEditorContainer = document.getElementById('linkEditorContainer');
+    const linkListContainer = document.getElementById('linkListContainer');
+    if (linkEditorContainer) linkEditorContainer.classList.add('hidden');
+    if (linkListContainer) linkListContainer.classList.remove('hidden');
     isEditingId = null;
 }
 
 function saveLink() {
-    const name = document.getElementById('editName').value.trim();
-    const url = document.getElementById('editUrl').value.trim();
+    const nameInput = document.getElementById('editName');
+    const urlInput = document.getElementById('editUrl');
+    if (!nameInput || !urlInput) return;
+    
+    const name = nameInput.value.trim();
+    const url = urlInput.value.trim();
     if (!name || !url) return alert("Please fill in both name and URL.");
     if (isEditingId) {
         const idx = links.findIndex(l => l.id === isEditingId);
@@ -353,12 +387,20 @@ function deleteLink(id, e) {
 // --- SETTINGS ---
 async function loadSettings() {
     // 1. POPULATE DOM FIRST (Safeguard values)
-    document.getElementById('themeSelect').value = settings.theme || 'dark';
-    document.getElementById('userNameInput').value = settings.userName || '';
+    const themeSelect = document.getElementById('themeSelect');
+    if (themeSelect) themeSelect.value = settings.theme || 'dark';
+    
+    const userNameInput = document.getElementById('userNameInput');
+    if (userNameInput) userNameInput.value = settings.userName || '';
+    
     const radios = document.getElementsByName('clockFormat');
     for(let r of radios) { if(r.value === (settings.clockFormat || '24h')) r.checked = true; }
-    document.getElementById('externalSuggestToggle').checked = !!settings.externalSuggest;
-    document.getElementById('historyEnabledToggle').checked = settings.historyEnabled !== false;
+    
+    const externalSuggestToggle = document.getElementById('externalSuggestToggle');
+    if (externalSuggestToggle) externalSuggestToggle.checked = !!settings.externalSuggest;
+    
+    const historyEnabledToggle = document.getElementById('historyEnabledToggle');
+    if (historyEnabledToggle) historyEnabledToggle.checked = settings.historyEnabled !== false;
 
     // Apply classes
     document.body.className = settings.theme || 'dark'; 
@@ -413,12 +455,20 @@ async function loadSettings() {
 }
 
 function autoSaveSettings() {
-    settings.theme = document.getElementById('themeSelect').value;
-    settings.userName = document.getElementById('userNameInput').value.trim();
+    const themeSelect = document.getElementById('themeSelect');
+    if (themeSelect) settings.theme = themeSelect.value;
+    
+    const userNameInput = document.getElementById('userNameInput');
+    if (userNameInput) settings.userName = userNameInput.value.trim();
+    
     const radios = document.getElementsByName('clockFormat');
     for(let r of radios) if(r.checked) settings.clockFormat = r.value;
-    settings.externalSuggest = document.getElementById('externalSuggestToggle').checked;
-    settings.historyEnabled = document.getElementById('historyEnabledToggle').checked;
+    
+    const externalSuggestToggle = document.getElementById('externalSuggestToggle');
+    if (externalSuggestToggle) settings.externalSuggest = externalSuggestToggle.checked;
+    
+    const historyEnabledToggle = document.getElementById('historyEnabledToggle');
+    if (historyEnabledToggle) settings.historyEnabled = historyEnabledToggle.checked;
     
     localStorage.setItem('0fluff_settings', JSON.stringify(settings));
     document.body.className = settings.theme;
@@ -427,10 +477,15 @@ function autoSaveSettings() {
 function toggleSettings() { 
     cancelEdit(); 
     renderLinkManager(); 
-    document.getElementById('userNameInput').value = settings.userName;
-    document.getElementById('settingsModal').classList.add('active'); 
+    const userNameInput = document.getElementById('userNameInput');
+    if (userNameInput) userNameInput.value = settings.userName;
+    const settingsModal = document.getElementById('settingsModal');
+    if (settingsModal) settingsModal.classList.add('active'); 
 }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function closeModal(id) { 
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.remove('active'); 
+}
 
 // --- SEARCH ---
 function renderEngineDropdown() {
@@ -450,7 +505,10 @@ function renderEngineDropdown() {
     });
 }
 
-function toggleEngineDropdown() { document.getElementById('engineDropdown').classList.toggle('hidden'); }
+function toggleEngineDropdown() { 
+    const dropdown = document.getElementById('engineDropdown');
+    if (dropdown) dropdown.classList.toggle('hidden'); 
+}
 function selectEngine(name) {
     settings.searchEngine = name;
     autoSaveSettings(); 
@@ -460,7 +518,9 @@ function selectEngine(name) {
 
 function handleSearch(e) {
     if (e.key === 'Enter' || e.type === 'click') {
-        const val = document.getElementById('searchInput').value.trim();
+        const searchInput = document.getElementById('searchInput');
+        if (!searchInput) return;
+        const val = searchInput.value.trim();
         if (!val) return;
         logSearch(val); 
         const engine = searchEngines.find(s => s.name === settings.searchEngine) || searchEngines[0];
@@ -474,12 +534,13 @@ function handleSearch(e) {
 
 function selectSuggestion(suggestion) {
     const inputEl = document.getElementById('searchInput');
-    inputEl.value = suggestion.name;
+    if (inputEl) inputEl.value = suggestion.name;
     if (suggestion.type === 'Link') {
         const finalUrl = suggestion.url.startsWith('http') ? suggestion.url : `https://${suggestion.url}`;
         window.location.href = finalUrl;
     } else {
-        document.getElementById('suggestionsContainer').classList.add('hidden');
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
+        if (suggestionsContainer) suggestionsContainer.classList.add('hidden');
         handleSearch({ key: 'Enter', type: 'synthetic', preventDefault: () => {} });
     }
 }
