@@ -41,7 +41,7 @@ Since mobile browsers typically do not support local extensions, use the hosted 
 2.  Tap the **Share** icon and select **Add to Home Screen**.
 3.  The dashboard will now launch in full-screen mode without the browser UI.
 
- >[NOTE]
+ > [!IMPORTANT]
 >
 > 0FluffStart does **not** auto-update. To make sure you're running the latest version:
 >
