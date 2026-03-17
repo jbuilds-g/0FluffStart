@@ -30,13 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('settingsModal')?.classList.remove('active');
             document.getElementById('engineDropdown')?.classList.add('hidden');
             document.getElementById('suggestionsContainer')?.classList.add('hidden');
-            
-            const advContent = document.getElementById('advancedSettings');
-            const advBtn = document.getElementById('advancedToggleBtn');
-            if(advContent?.classList.contains('open')) {
-                advContent.classList.remove('open');
-                advBtn.classList.remove('active');
-            }
             if(!document.getElementById('linkEditorContainer')?.classList.contains('hidden')) {
                 cancelEdit();
             }
@@ -46,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- CSP EVENT BINDING ---
 function bindStaticEvents() {
-    // Standard UI binds
     document.getElementById('settingsToggleBtn').addEventListener('click', toggleSettings);
     document.getElementById('closeSettingsBtn').addEventListener('click', () => closeModal('settingsModal'));
     document.getElementById('settingsModal').addEventListener('click', (e) => {
@@ -67,6 +59,7 @@ function bindStaticEvents() {
     document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
     document.getElementById('userNameInput').addEventListener('input', autoSaveSettings);
     document.getElementById('themeSelect').addEventListener('change', autoSaveSettings);
+    document.getElementById('clockStyleSelect').addEventListener('change', autoSaveSettings);
     
     const bgInput = document.getElementById('bgImageInput');
     bgInput.addEventListener('change', () => handleImageUpload(bgInput));
@@ -84,7 +77,7 @@ function bindStaticEvents() {
         radio.addEventListener('change', autoSaveSettings);
     });
 
-    // --- v1.2.0: HELP TOOLTIPS LOGIC ---
+    // Tooltips
     document.querySelectorAll('.help-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -96,11 +89,10 @@ function bindStaticEvents() {
         });
     });
 
-    // --- v1.2.0: RESET SETTINGS LOGIC ---
+    // Reset settings
     document.getElementById('resetSettingsBtn').addEventListener('click', () => {
         const warning = "Are you sure? This is going to delete all your preferences in settings. This action cannot be undone.";
         if (confirm(warning)) {
-            // Delete only preferences, leave links/history alone
             localStorage.removeItem('0fluff_settings');
             alert("Settings have been reset to default.");
             window.location.reload();
@@ -108,17 +100,15 @@ function bindStaticEvents() {
     });
 }
 
-function toggleAdvanced() {
-    const content = document.getElementById('advancedSettings');
-    const btn = document.getElementById('advancedToggleBtn');
-    if (content && btn) {
-        if (content.classList.contains('open')) {
-            content.classList.remove('open');
-            btn.classList.remove('active');
-        } else {
-            content.classList.add('open');
-            btn.classList.add('active');
-        }
+// v1.3.1 - Accordion control handled implicitly by right-click logic
+function toggleAdvanced() {}
+
+// --- v1.3.0: APPLY CLOCK STYLE LOGIC ---
+function applyClockStyle() {
+    const clock = document.getElementById('clockDisplay');
+    if(clock) {
+        clock.className = 'clock'; // Reset
+        clock.classList.add(`clock-style-${settings.clockStyle || 'default'}`);
     }
 }
 
@@ -153,65 +143,38 @@ function restoreData(e) {
             
             if (confirm("This will overwrite your current settings, links, and history. Are you sure?")) {
                 
-                // --- 1. Aggressively Hunt & Restore Links ---
                 let linksData = data.links || data['0fluff_links'];
-                if (!linksData && Array.isArray(data)) linksData = data; // Fallback if backup was pure array
-                
+                if (!linksData && Array.isArray(data)) linksData = data; 
                 if (linksData) {
                     let parsedLinks = linksData;
                     while(typeof parsedLinks === 'string') { try { parsedLinks = JSON.parse(parsedLinks); } catch(err){break;} }
-                    if (Array.isArray(parsedLinks)) {
-                        localStorage.setItem('0fluff_links', JSON.stringify(parsedLinks));
-                    }
+                    if (Array.isArray(parsedLinks)) localStorage.setItem('0fluff_links', JSON.stringify(parsedLinks));
                 }
                 
-                // --- 2. Aggressively Hunt & Restore Settings ---
                 let settingsData = data.settings || data['0fluff_settings'];
-                
-                // If nested settings don't exist, check if settings are floating at the root of the file
-                if (!settingsData && (data.theme || data.userName || data.clockFormat)) {
-                    settingsData = data;
-                }
-
+                if (!settingsData && (data.theme || data.userName || data.clockFormat)) settingsData = data;
                 if (settingsData) {
                     let importedSettings = settingsData;
-                    // Keep un-stringifying until it's an actual object
-                    while(typeof importedSettings === 'string') { 
-                        try { importedSettings = JSON.parse(importedSettings); } catch(err){break;} 
-                    }
-                    
+                    while(typeof importedSettings === 'string') { try { importedSettings = JSON.parse(importedSettings); } catch(err){break;} }
                     if (typeof importedSettings === 'object' && importedSettings !== null) {
-                        // Extract only known safe settings to avoid corrupting local storage
-                        const validKeys = ['theme', 'userName', 'clockFormat', 'externalSuggest', 'historyEnabled', 'searchEngine'];
+                        const validKeys = ['theme', 'clockStyle', 'userName', 'clockFormat', 'externalSuggest', 'historyEnabled', 'searchEngine'];
                         const cleanSettings = {};
-                        
-                        validKeys.forEach(key => {
-                            if (importedSettings[key] !== undefined) {
-                                cleanSettings[key] = importedSettings[key];
-                            }
-                        });
-
-                        const mergedSettings = { ...settings, ...cleanSettings };
-                        localStorage.setItem('0fluff_settings', JSON.stringify(mergedSettings));
+                        validKeys.forEach(key => { if (importedSettings[key] !== undefined) cleanSettings[key] = importedSettings[key]; });
+                        localStorage.setItem('0fluff_settings', JSON.stringify({ ...settings, ...cleanSettings }));
                     }
                 }
                 
-                // --- 3. Aggressively Hunt & Restore History ---
                 let historyData = data.history || data['0fluff_history'];
                 if (historyData) {
                     let parsedHistory = historyData;
                     while(typeof parsedHistory === 'string') { try { parsedHistory = JSON.parse(parsedHistory); } catch(err){break;} }
-                    if (Array.isArray(parsedHistory)) {
-                        localStorage.setItem('0fluff_history', JSON.stringify(parsedHistory));
-                    }
+                    if (Array.isArray(parsedHistory)) localStorage.setItem('0fluff_history', JSON.stringify(parsedHistory));
                 }
                 
                 alert("Restore successful! Reloading...");
                 window.location.reload();
             }
-        } catch (err) {
-            alert("Error parsing backup file: " + err.message);
-        }
+        } catch (err) { alert("Error parsing backup file: " + err.message); }
     };
     reader.readAsText(file);
     e.target.value = '';
@@ -224,13 +187,10 @@ function renderLinks() {
     grid.innerHTML = '';
     
     const fragment = document.createDocumentFragment();
-    
     links.forEach(link => {
         const words = link.name.split(' ').filter(w => w.length > 0);
         let acronym = words.map(word => word.charAt(0).toUpperCase()).join('');
-        if (words.length === 1 && acronym.length === 1 && link.name.length > 1) {
-             acronym = link.name.substring(0, 2).toUpperCase();
-        }
+        if (words.length === 1 && acronym.length === 1 && link.name.length > 1) acronym = link.name.substring(0, 2).toUpperCase();
         const display = acronym.substring(0, 3);
         
         let fontSize = '1.5rem';
@@ -241,6 +201,7 @@ function renderLinks() {
 
         const item = document.createElement('div');
         item.className = 'link-item';
+        item.dataset.id = link.id;
         
         item.innerHTML = `
             <div class="link-icon-circle">
@@ -256,20 +217,34 @@ function renderLinks() {
             <div class="link-name">${link.name}</div>
         `;
         
-        item.addEventListener('click', () => {
-            const finalUrl = link.url.startsWith('http') ? link.url : `https://${link.url}`;
-            window.location.href = finalUrl; 
-        });
+        item.addEventListener('click', () => { window.location.href = link.url.startsWith('http') ? link.url : `https://${link.url}`; });
 
+        // --- v1.3.1: Complete Right-Click Integration ---
         item.addEventListener('contextmenu', (e) => {
             e.preventDefault(); 
-            toggleSettings();
-            openEditor(link.id);
+            
+            // 1. Force Advanced Section accordion expand and open settings modal
+            const advContent = document.getElementById('advancedSettings');
+            const advBtn = document.getElementById('advancedToggleBtn');
+            if(advContent && advBtn) {
+                advContent.classList.add('open');
+                advBtn.classList.add('active');
+            }
+            toggleSettings(); 
+
+            // 2. Locate the "Dashboard Links" details panel and force it open
+            const linkListContainer = document.getElementById('linkListContainer');
+            if (linkListContainer) {
+                const parentDetails = linkListContainer.closest('details');
+                if (parentDetails) parentDetails.open = true;
+            }
+            
+            // 3. Trigger Edit Mode for the link
+            editLink(link.id);
         });
 
         fragment.appendChild(item);
     });
-    
     grid.appendChild(fragment);
 }
 
@@ -314,10 +289,8 @@ function renderLinkManager() {
         actionsDiv.appendChild(deleteBtn);
         item.appendChild(nameSpan);
         item.appendChild(actionsDiv);
-        
         fragment.appendChild(item);
     });
-    
     linkManagerContent.appendChild(fragment);
 }
 
@@ -368,9 +341,7 @@ function saveLink() {
         links.push({ id: Date.now().toString(), name, url });
     }
     localStorage.setItem('0fluff_links', JSON.stringify(links));
-    renderLinks();       
-    renderLinkManager(); 
-    cancelEdit();        
+    renderLinks(); renderLinkManager(); cancelEdit();        
 }
 
 function editLink(id, e) { if(e) e.stopPropagation(); openEditor(id); }
@@ -379,22 +350,23 @@ function deleteLink(id, e) {
     if(confirm("Delete this link?")) {
         links = links.filter(l => l.id !== id);
         localStorage.setItem('0fluff_links', JSON.stringify(links));
-        renderLinks();
-        renderLinkManager();
+        renderLinks(); renderLinkManager();
     }
 }
 
 // --- SETTINGS ---
 async function loadSettings() {
-    // 1. POPULATE DOM FIRST (Safeguard values)
     const themeSelect = document.getElementById('themeSelect');
     if (themeSelect) themeSelect.value = settings.theme || 'dark';
     
+    const clockStyleSelect = document.getElementById('clockStyleSelect');
+    if (clockStyleSelect) clockStyleSelect.value = settings.clockStyle || 'default';
+
     const userNameInput = document.getElementById('userNameInput');
     if (userNameInput) userNameInput.value = settings.userName || '';
     
     const radios = document.getElementsByName('clockFormat');
-    for(let r of radios) { if(r.value === (settings.clockFormat || '24h')) r.checked = true; }
+    for(let r of radios) if(r.value === (settings.clockFormat || '24h')) r.checked = true;
     
     const externalSuggestToggle = document.getElementById('externalSuggestToggle');
     if (externalSuggestToggle) externalSuggestToggle.checked = !!settings.externalSuggest;
@@ -402,47 +374,27 @@ async function loadSettings() {
     const historyEnabledToggle = document.getElementById('historyEnabledToggle');
     if (historyEnabledToggle) historyEnabledToggle.checked = settings.historyEnabled !== false;
 
-    // Apply classes
     document.body.className = settings.theme || 'dark'; 
+    applyClockStyle();
 
     const overlay = document.getElementById('bgOverlay');
     const resetBtn = document.getElementById('resetBgBtn');
     const fileNameInfo = document.getElementById('bgFileName');
 
-    // 2. BACKGROUND LOGIC
-    if (settings.backgroundImage && settings.backgroundImage.length > 100 && settings.backgroundImage !== 'indexeddb') {
-        try {
-            await saveBgToDB(settings.backgroundImage); 
-            settings.backgroundImage = 'indexeddb'; 
-            autoSaveSettings(); 
-        } catch(e) {
-            console.error("Migration failed:", e);
-        }
-    }
-
     if (settings.backgroundImage === 'indexeddb') {
         try {
             const bgData = await getBgFromDB();
             if (bgData) {
-                const url = (bgData instanceof Blob || bgData instanceof File) 
-                    ? URL.createObjectURL(bgData) 
-                    : bgData;
-                
+                const url = (bgData instanceof Blob || bgData instanceof File) ? URL.createObjectURL(bgData) : bgData;
                 document.body.style.backgroundImage = `url('${url}')`;
                 document.body.style.backgroundSize = 'cover';
                 document.body.style.backgroundPosition = 'center';
                 document.body.style.backgroundAttachment = 'fixed';
-                
                 if(overlay) overlay.style.opacity = '1';
                 if(resetBtn) resetBtn.style.display = 'block';
                 if(fileNameInfo) fileNameInfo.innerText = "Custom image active";
-            } else {
-                settings.backgroundImage = null;
-                autoSaveSettings();
-            }
-        } catch(e) {
-            console.error("Failed to load background from DB:", e);
-        }
+            } else { settings.backgroundImage = null; autoSaveSettings(); }
+        } catch(e) { console.error("Failed to load background from DB:", e); }
     } else {
         document.body.style.backgroundImage = ''; 
         if(overlay) overlay.style.opacity = '0';
@@ -450,14 +402,19 @@ async function loadSettings() {
         if(fileNameInfo) fileNameInfo.innerText = "No image selected.";
     }
     
-    updateClock(); 
-    renderEngineDropdown();
+    updateClock(); renderEngineDropdown();
 }
 
 function autoSaveSettings() {
     const themeSelect = document.getElementById('themeSelect');
     if (themeSelect) settings.theme = themeSelect.value;
     
+    const clockStyleSelect = document.getElementById('clockStyleSelect');
+    if (clockStyleSelect) {
+        settings.clockStyle = clockStyleSelect.value;
+        applyClockStyle();
+    }
+
     const userNameInput = document.getElementById('userNameInput');
     if (userNameInput) settings.userName = userNameInput.value.trim();
     
@@ -475,8 +432,7 @@ function autoSaveSettings() {
 }
 
 function toggleSettings() { 
-    cancelEdit(); 
-    renderLinkManager(); 
+    cancelEdit(); renderLinkManager(); 
     const userNameInput = document.getElementById('userNameInput');
     if (userNameInput) userNameInput.value = settings.userName;
     const settingsModal = document.getElementById('settingsModal');
@@ -511,9 +467,7 @@ function toggleEngineDropdown() {
 }
 function selectEngine(name) {
     settings.searchEngine = name;
-    autoSaveSettings(); 
-    renderEngineDropdown(); 
-    toggleEngineDropdown(); 
+    autoSaveSettings(); renderEngineDropdown(); toggleEngineDropdown(); 
 }
 
 function handleSearch(e) {
@@ -524,11 +478,8 @@ function handleSearch(e) {
         if (!val) return;
         logSearch(val); 
         const engine = searchEngines.find(s => s.name === settings.searchEngine) || searchEngines[0];
-        if (val.includes('.') && !val.includes(' ')) {
-            window.location.href = val.startsWith('http') ? val : `https://${val}`;
-        } else {
-            window.location.href = `${engine.url}${encodeURIComponent(val)}`;
-        }
+        if (val.includes('.') && !val.includes(' ')) { window.location.href = val.startsWith('http') ? val : `https://${val}`; } 
+        else { window.location.href = `${engine.url}${encodeURIComponent(val)}`; }
     }
 }
 
