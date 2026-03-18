@@ -1,6 +1,11 @@
 /* core.css */
 
 /* --- BASE LAYOUT --- */
+* {
+    /* Disable the default mobile tap highlight flash */
+    -webkit-tap-highlight-color: transparent; 
+}
+
 body {
     font-family: var(--font-main);
     margin: 0;
