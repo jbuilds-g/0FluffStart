@@ -163,13 +163,18 @@ body.rose {
 
 /* Override rigid themes: Keep square, add border (Cyberpunk, Retro) */
 body.cyberpunk .link-item:hover .link-icon-circle,
-body.retro .link-item:hover .link-icon-circle {
+body.retro .link-item:hover .link-icon-circle,
+body.cyberpunk .link-item:active .link-icon-circle,
+body.retro .link-item:active .link-icon-circle {
     background-color: transparent;
     border: 2px solid var(--accent);
-    border-radius: 0%; /* Keep 100% rigid square */
+    border-radius: 0% !important; /* Force 100% rigid square */
 }
+
 body.cyberpunk .link-item:hover .link-icon-circle span,
-body.retro .link-item:hover .link-icon-circle span {
+body.retro .link-item:hover .link-icon-circle span,
+body.cyberpunk .link-item:active .link-icon-circle span,
+body.retro .link-item:active .link-icon-circle span {
     color: var(--accent) !important;
 }
 
