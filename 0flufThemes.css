@@ -135,7 +135,15 @@ body.rose {
 .clock-style-lcd { font-family: 'Courier New', monospace; text-shadow: 0 0 5px var(--accent); color: var(--accent); }
 .clock-style-neon { text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent); color: #fff; }
 .clock-style-minimal { font-weight: 100; opacity: 0.7; }
-.clock-style-block { background: var(--card); padding: 5px 20px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); }
+.clock-style-block { 
+    background: var(--card); 
+    padding: 5px 20px; 
+    border-radius: var(--radius); 
+    border: 1px solid var(--border); 
+    box-shadow: var(--shadow); 
+    width: max-content; 
+    display: inline-block;
+}
 
 /* --- THEME-SPECIFIC HOVER MORPHING (UNIFORM INTERACTION ENGINE v1.3.1) --- */
 .link-item {
