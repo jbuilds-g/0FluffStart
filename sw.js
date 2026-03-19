@@ -1,6 +1,6 @@
-// sw.js - v1.3.2 PWA Cache
+// sw.js - v2 PWA Cache
 
-const CACHE_NAME = '0fluff-cache-v1.3.2';
+const CACHE_NAME = '0fluff';
 const ASSETS = [
     './',
     './index.html',
