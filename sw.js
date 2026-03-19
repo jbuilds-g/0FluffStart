@@ -1,4 +1,4 @@
-// sw.js - v3 PWA Cache
+// sw.js - v4 PWA Cache
 
 const CACHE_NAME = '0fluff';
 const ASSETS = [
@@ -12,7 +12,7 @@ const ASSETS = [
     './utilities.js',
     './ui-logic.js',
     './icon.png'
-    './manifest.json'
+    
 ];
 
 self.addEventListener('install', (e) => {
