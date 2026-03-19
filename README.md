@@ -2,10 +2,10 @@
 **The Final Minimalist Dashboard for Desktop & Mobile.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Version: 1.3.1](https://img.shields.io/badge/Version-1.3.1-blue)
+![Version: 1.3.2](https://img.shields.io/badge/Version-1.3.2-blue)
 ![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
 
-> 0FluffStart is a high-performance, privacy-focused start page designed to replace bloated default homepages. It operates as a local-first application, ensuring that your data links, settings, and search history never leaves your device.
+> 0FluffStart is a high-performance, privacy-focused start page designed to replace bloated default homepages. It operates as a local-first application, ensuring that your data links, settings, and search history never leave your device.
 
 [**🚀 Launch Web Version**](https://jbuilds-g.github.io/0FluffStart/)
 
@@ -14,7 +14,7 @@
 ## 📖 Overview
 0FluffStart is built on a "Zero-Fluff" philosophy: no trackers, no backend latency, and zero dependencies. It serves a dual purpose:
 1.  **Desktop:** A fully integrated browser extension (Manifest V3).
-2.  **Mobile:** A lightweight web-based homepage for browsers that lack extension support.
+2.  **Mobile & Web:** A high-performance **Progressive Web App (PWA)** that works offline and installs natively on mobile devices.
 
 ---
 
@@ -28,37 +28,33 @@ Install 0FluffStart locally to override your "New Tab" page.
 4.  Enable **Developer Mode** in the top-right corner.
 5.  Select **Load Unpacked** and point to the extracted folder.
 
-### Mobile (Web Homepage)
-Since mobile browsers typically do not support local extensions, use the hosted version as your primary entry point.
+### Mobile & Live Web (PWA)
+The hosted version is now a fully compliant **PWA**, meaning it can be installed as a standalone app that works even without an internet connection.
 
 #### Android (Chrome)
-1.  Navigate to **Settings** > **Homepage**.
-2.  Toggle to **On**.
-3.  Select **Enter custom web address** and input: `https://jbuilds-g.github.io/0FluffStart/`
+1.  Navigate to the [Live URL](https://jbuilds-g.github.io/0FluffStart/).
+2.  Tap the three dots (Menu) and select **Add to Home Screen**.
+3.  The dashboard will appear in your app drawer as a native application.
 
 #### iOS (Safari)
-1.  Open the URL in Safari.
+1.  Open the [Live URL](https://jbuilds-g.github.io/0FluffStart/) in Safari.
 2.  Tap the **Share** icon and select **Add to Home Screen**.
-3.  The dashboard will now launch in full-screen mode without the browser UI.
+3.  The dashboard will launch in full-screen mode, hiding the Safari UI for a native feel.
 
  > [!IMPORTANT]
->
-> 0FluffStart does **not** auto-update. To make sure you're running the latest version:
->
-> 1. Check if a new update is available.
-> 2. Compare your current version with the latest release version.
-> 3. If they are different, download and update manually.
-> 4. If the issue still persists after updating, you can submit a report.
->
-> Remember: keeping your version up-to-date ensures the best experience and fixes known issues.
+> **Update Policy:**
+> * **Live Web/PWA:** You do **not** need to manually update. The Service Worker automatically syncs the latest version from the live URL whenever you are online.
+> * **Browser Extension:** Since this is a manual "Unpacked" installation, you must occasionally download the latest release and overwrite your local folder to receive new features.
+
 ---
 
 ## 🔥 Key Features
 * **Privacy-First Architecture:** No external analytics or trackers.
-* **Theming:** 10+ themes (OLED, Cyberpunk, Luminous, etc.).
-* **Data Portability:** Backup & Restore.
-* **Smart Search:** Instant engine switching and optional, privacy-focused DuckDuckGo suggestions.
-* **Optimized Performance:** Built with pure Vanilla JS/CSS for sub-second load times.
+* **PWA Enabled:** Offline-capable with instant load times via Service Worker caching.
+* **Theming:** 10+ themes (OLED, Cyberpunk, Luminous, Retro Amber, etc.).
+* **Data Portability:** Local Backup & Restore functionality.
+* **Smart Search:** Instant engine switching with privacy-focused DuckDuckGo suggestions.
+* **Optimized Performance:** Pure Vanilla JS/CSS for sub-second load times.
 
 ---
 
@@ -77,7 +73,8 @@ All configuration is stored in the browser's `localStorage`. To move your setup 
 
 ## 🏛️ Project Structure
 ```text
-├── manifest.json      # Extension configuration (MV3)
+├── manifest.json      # Unified Extension & PWA configuration
+├── sw.js              # Service Worker (Offline caching & PWA logic)
 ├── index.html         # Application entry point
 ├── state.js           # Data persistence & state management
 ├── ui-logic.js        # DOM interaction & event handling
