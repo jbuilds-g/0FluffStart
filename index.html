@@ -244,6 +244,16 @@
 <script src="state.js"></script>
 <script src="utilities.js"></script>
 <script src="ui-logic.js"></script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('PWA Active'))
+        .catch(err => console.log('PWA Error: ', err));
+    });
+  }
+    </script>
+    
 </body>
 </html>
 
