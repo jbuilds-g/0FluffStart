@@ -5,7 +5,6 @@
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
     background: rgba(0,0,0,0.6); display: none; 
     justify-content: center; align-items: center; 
-    /* CRITICAL FIX: Bumped z-index from 100 to 9999 so it covers the search bar */
     z-index: 9999 !important; backdrop-filter: blur(3px); overflow-y: hidden; 
 }
 .modal.active { display: flex; }
@@ -33,88 +32,86 @@
     .modal.active .modal-content { transform: translateX(0); }
 }
 
-/* --- COLLAPSIBLE CATEGORIES (v1.2.0) --- */
-.category-panel {
-    background: transparent;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 5px;
-}
+/* --- COLLAPSIBLE CATEGORIES --- */
+.category-panel { background: transparent; border-bottom: 1px solid var(--border); margin-bottom: 5px; }
 .category-panel:last-of-type { border-bottom: none; }
-
 .category-panel summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 5px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text);
-    cursor: pointer;
-    user-select: none;
-    list-style: none; /* Hide default triangle */
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 5px; font-size: 1rem; font-weight: 600; color: var(--text);
+    cursor: pointer; user-select: none; list-style: none;
 }
 .category-panel summary::-webkit-details-marker { display: none; }
-
-.category-panel summary .chevron {
-    transition: transform 0.3s ease;
-    color: var(--dim);
-}
-.category-panel[open] summary .chevron {
-    transform: rotate(180deg);
-    color: var(--accent);
-}
-
-.category-content {
-    padding: 10px 5px 20px 5px;
-    animation: fadeIn 0.3s ease;
-}
+.category-panel summary .chevron { transition: transform 0.3s ease; color: var(--dim); }
+.category-panel[open] summary .chevron { transform: rotate(180deg); color: var(--accent); }
+.category-content { padding: 10px 5px 20px 5px; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* --- SETTINGS GROUPS & HELP TOOLTIPS (v1.2.0) --- */
+/* --- SETTINGS GROUPS & HELP TOOLTIPS --- */
 .setting-group { margin-bottom: 25px; }
 .setting-group:last-child { margin-bottom: 0; }
-
-.setting-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.setting-group h3 { 
-    margin: 0; font-size: 0.8rem; color: var(--dim); 
-    text-transform: uppercase; letter-spacing: 1px; font-weight: 700; 
-}
+.setting-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.setting-group h3 { margin: 0; font-size: 0.8rem; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
 
 .help-btn {
-    background: var(--card-hover); border: 1px solid var(--border);
-    color: var(--dim); border-radius: 50%; width: 20px; height: 20px;
-    font-size: 0.7rem; font-weight: bold; font-family: var(--font-main);
-    display: flex; align-items: center; justify-content: center;
+    background: var(--card-hover); border: 1px solid var(--border); color: var(--dim); border-radius: 50%; width: 20px; height: 20px;
+    font-size: 0.7rem; font-weight: bold; font-family: var(--font-main); display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all 0.2s;
 }
-.help-btn:hover, .help-btn.active {
-    color: var(--accent); border-color: var(--accent); background: var(--card);
-}
+.help-btn:hover, .help-btn.active { color: var(--accent); border-color: var(--accent); background: var(--card); }
 
 .help-text {
-    display: none; /* Hidden by default */
-    background: rgba(0,0,0,0.2);
-    border-left: 3px solid var(--accent);
-    padding: 10px 12px; margin-bottom: 15px;
-    font-size: 0.8rem; color: var(--dim); line-height: 1.4;
+    display: none; background: rgba(0,0,0,0.2); border-left: 3px solid var(--accent);
+    padding: 10px 12px; margin-bottom: 15px; font-size: 0.8rem; color: var(--dim); line-height: 1.4;
     border-radius: 0 var(--radius) var(--radius) 0;
 }
 .help-text.show { display: block; animation: fadeIn 0.2s ease; }
 
 /* --- FORM ELEMENTS --- */
-input[type="text"], input[type="url"], select { 
+input[type="text"], input[type="url"] { 
     width: 100%; padding: 12px; margin-bottom: 10px; background: var(--card-hover); 
     border: 1px solid var(--border); color: var(--text); border-radius: var(--radius); 
     box-sizing: border-box; font-size: 0.95rem; outline: none; appearance: none;
     font-family: var(--font-main); transition: border-color 0.2s;
 }
-input:focus, select:focus { border-color: var(--accent); }
+input:focus { border-color: var(--accent); }
+
+/* --- ENHANCED NATIVE SELECT --- */
+select { 
+    width: 100%; 
+    padding: 12px; 
+    padding-right: 40px; 
+    margin-bottom: 10px; 
+    background-color: var(--card-hover); 
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    border: 1px solid var(--border); 
+    color: var(--text); 
+    border-radius: var(--radius); 
+    box-sizing: border-box; 
+    font-size: 0.95rem; 
+    outline: none; 
+    appearance: none; 
+    -webkit-appearance: none;
+    font-family: var(--font-main); 
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    
+    /* THE MAGIC FIX: Forces the OS to render the native dropdown in Dark Mode */
+    color-scheme: dark; 
+}
+
+/* Explicitly force options to be dark with white text so they never turn invisible */
+select option {
+    background-color: #141418;
+    color: #ffffff;
+}
+
+select:focus, select:hover { 
+    border-color: var(--accent); 
+    box-shadow: 0 0 10px rgba(0, 170, 255, 0.1);
+}
 
 .radio-row { display: flex; gap: 10px; }
 .radio-option {
@@ -167,8 +164,7 @@ input:focus, select:focus { border-color: var(--accent); }
 .link-manager-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
 .link-manager-item { 
     display: flex; justify-content: space-between; align-items: center; 
-    padding: 8px 12px; background: var(--card-hover); border-radius: var(--radius); 
-    border: 1px solid var(--border); 
+    padding: 8px 12px; background: var(--card-hover); border-radius: var(--radius); border: 1px solid var(--border); 
 }
 .link-manager-item .link-name { font-size: 0.9rem; font-weight: 500; }
 .link-actions { display: flex; gap: 8px; }
