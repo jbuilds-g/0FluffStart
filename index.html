@@ -261,5 +261,69 @@
         });
     }
 </script>
+    <div id="betaNotice" class="beta-notice hidden">
+    <div class="beta-content">
+        <h3>⚠️ Beta Version Notice</h3>
+        <p>You are currently using a pre-release beta version (v1.4.0.beta2). Unexpected bugs or visual glitches may occur as we test new folders and themes.</p>
+        <button id="closeBetaBtn" class="save-btn" style="width: 100%; margin-top: 10px;">I Understand</button>
+    </div>
+</div>
+
+<style>
+    /* Styling for the temporary beta notice */
+    .beta-notice {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--card-bg);
+        border: 1px solid var(--accent);
+        border-radius: var(--radius);
+        padding: 20px;
+        width: 320px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        z-index: 9999;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .beta-notice.hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(20px);
+    }
+    .beta-content h3 {
+        color: var(--accent);
+        margin: 0 0 10px 0;
+        font-size: 1.1rem;
+    }
+    .beta-content p {
+        font-size: 0.9rem;
+        color: var(--fg);
+        line-height: 1.4;
+        margin-bottom: 10px;
+    }
+</style>
+
+<script>
+    // Logic for the beta notice
+    document.addEventListener('DOMContentLoaded', () => {
+        const betaNotice = document.getElementById('betaNotice');
+        const closeBetaBtn = document.getElementById('closeBetaBtn');
+        const currentBetaVersion = 'v1.4.0.beta2'; // Change this if you do beta3 to show it again
+        
+        // If they haven't seen this specific beta version notice, show it
+        if (localStorage.getItem('0fluff_beta_acknowledged') !== currentBetaVersion) {
+            setTimeout(() => {
+                betaNotice.classList.remove('hidden');
+            }, 1000); // Pops up 1 second after loading
+        }
+        
+        // When clicked, hide it and save to local storage so it doesn't show again
+        closeBetaBtn.addEventListener('click', () => {
+            localStorage.setItem('0fluff_beta_acknowledged', currentBetaVersion);
+            betaNotice.classList.add('hidden');
+        });
+    });
+</script>
 </body>
 </html>
