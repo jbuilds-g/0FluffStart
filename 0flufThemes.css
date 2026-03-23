@@ -333,3 +333,8 @@ body.nebula-drift .link-item:hover .link-icon-circle {
 body.nebula-drift .clock {
     text-shadow: 0 0 15px rgba(176, 136, 249, 0.5);
 }
+/* Fix for blur themes making icons jump over the search dropdown */
+.search-bar {
+    position: relative;
+    z-index: 999 !important;
+}
