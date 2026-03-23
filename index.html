@@ -1,277 +1,598 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>0FluffStart</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <link rel="stylesheet" href="0flufThemes.css">
-    <link rel="stylesheet" href="core.css">
-    <link rel="stylesheet" href="modules.css">
-    <link rel="stylesheet" href="settings.css">
-</head>
-<body class="dark">
 
-<div id="bgOverlay" class="bg-overlay"></div>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
 
-<div class="container">
-    <header>
+    <link rel="stylesheet" href="0flufThemes.css" />
+    <link rel="stylesheet" href="core.css" />
+    <link rel="stylesheet" href="modules.css" />
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body class="dark">
+    <div id="bgOverlay" class="bg-overlay"></div>
+
+    <div class="container">
+      <header>
         <div id="clockDisplay" class="clock">00:00:00</div>
         <div id="greetingDisplay" class="greeting">Hello, User.</div>
-    </header>
+      </header>
 
-    <div class="search-bar">
+      <div class="search-bar">
         <div class="engine-switcher" id="engineSwitcher">
-            <button class="engine-btn" id="engineDropdownBtn">
-                <span id="currentEngineIcon">G</span>
-                <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-            </button>
-            <div id="engineDropdown" class="engine-dropdown hidden"></div>
+          <button class="engine-btn" id="engineDropdownBtn">
+            <span id="currentEngineIcon">G</span>
+            <svg
+              class="chevron"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </button>
+          <div id="engineDropdown" class="engine-dropdown hidden"></div>
         </div>
 
-        <input type="text" id="searchInput" placeholder="Search or Type URL...">
-        
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search or Type URL..."
+        />
+
         <button class="search-icon" id="searchSubmitBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
         </button>
-        
-        <div id="suggestionsContainer" class="suggestions-container hidden"></div>
-    </div> <div id="activeFolderHeader" class="hidden" style="margin-top:20px; text-align:center; cursor:pointer; color:var(--accent); font-weight:bold;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:5px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+
+        <div
+          id="suggestionsContainer"
+          class="suggestions-container hidden"
+        ></div>
+      </div>
+
+      <div
+        id="activeFolderHeader"
+        class="hidden"
+        style="
+          margin-top: 20px;
+          text-align: center;
+          cursor: pointer;
+          color: var(--accent);
+          font-weight: bold;
+        "
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          style="vertical-align: middle; margin-right: 5px"
+        >
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
         Back to Dashboard
+      </div>
+
+      <div id="linkGrid" class="link-grid"></div>
     </div>
 
-    <div id="linkGrid" class="link-grid"></div>  
-</div> <div class="floating-settings">
-    <button id="settingsToggleBtn" class="icon-btn floating-btn" title="Settings">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-    </button>
-</div>
+    <div class="floating-settings">
+      <button
+        id="settingsToggleBtn"
+        class="icon-btn floating-btn"
+        title="Settings"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+          ></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      </button>
+    </div>
 
-<div class="modal" id="settingsModal">
-    <div class="modal-content">
+    <div class="modal" id="settingsModal">
+      <div class="modal-content">
         <div class="modal-header">
-            <h2>Settings</h2>
-            <div class="header-actions" style="display:flex; gap:10px; align-items:center;">
-                <span style="font-family: var(--font-main); font-size: 0.8rem; color: var(--dim); font-weight: 600;">v1.4.0</span>
-                <button id="githubBtn" class="icon-btn" title="View Source on GitHub">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7.37-.4.34-.78 1-1.15 2.06v4.31"></path></svg>
-                </button>
-                <div style="width: 1px; height: 20px; background-color: var(--border); margin: 0 5px;"></div>
-                <button id="closeSettingsBtn" class="icon-btn" title="Close Settings">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-            </div>
+          <h2>Settings</h2>
+          <div
+            class="header-actions"
+            style="display: flex; gap: 10px; align-items: center"
+          >
+            <span
+              style="
+                font-family: var(--font-main);
+                font-size: 0.8rem;
+                color: var(--dim);
+                font-weight: 600;
+              "
+              >v1.4.0.beta3</span
+            >
+            <button
+              id="githubBtn"
+              class="icon-btn"
+              title="View Source on GitHub"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7.37-.4.34-.78 1-1.15 2.06v4.31"
+                ></path>
+              </svg>
+            </button>
+            <div
+              style="
+                width: 1px;
+                height: 20px;
+                background-color: var(--border);
+                margin: 0 5px;
+              "
+            ></div>
+            <button
+              id="closeSettingsBtn"
+              class="icon-btn"
+              title="Close Settings"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <details class="category-panel" open>
-            <summary>Dashboard Links <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
-            <div class="category-content">
-                <div class="setting-group">
-                    <div class="setting-header">
-                        <h3>Quick Link Management</h3>
-                        <button class="help-btn">?</button>
-                    </div>
-                    <div class="help-text">Add, edit, or remove the shortcut icons on your main dashboard. You can also right-click icons on the dashboard to edit them directly.</div>
-                    
-                    <div id="linkListContainer">
-                        <div style="display:flex; gap:10px; margin-bottom: 15px;">
-                            <button id="addLinkBtn" class="add-link-btn" style="flex:1;">+ Add Link</button>
-                            <button id="addFolderBtn" class="add-link-btn" style="flex:1; background: var(--card-hover);">+ Add Folder</button>
-                        </div>
-                        <div id="linkManagerContent" class="link-manager-list"></div>
-                    </div>
-                    
-                    <div id="linkEditorContainer" class="hidden" style="background: var(--card-hover); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border);">
-                        <h4 id="editorTitle" style="margin: 0 0 15px 0; color: var(--accent);">Add New Link</h4>
-                        <input type="text" id="editName" placeholder="Name (e.g. YouTube)">
-                        <input type="url" id="editUrl" placeholder="URL (e.g. youtube.com)">
-                        <div style="display:flex; gap:10px;">
-                            <button id="saveLinkBtn" class="save-btn" style="margin-top:0;">Save</button>
-                            <button id="cancelEditBtn" class="secondary" style="margin-top:0; width:100%; border-radius: var(--radius); font-weight:bold; border:1px solid var(--border);">Cancel</button>
-                        </div>
-                    </div>
+          <summary>
+            Dashboard Links
+            <svg
+              class="chevron"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
+          <div class="category-content">
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Quick Link Management</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Add, edit, or remove the shortcut icons on your main dashboard.
+              </div>
+
+              <div id="linkListContainer">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px">
+                  <button id="addLinkBtn" class="add-link-btn" style="flex: 1">
+                    + Add Link
+                  </button>
+                  <button
+                    id="addFolderBtn"
+                    class="add-link-btn"
+                    style="flex: 1; background: var(--card-hover)"
+                  >
+                    + Add Folder
+                  </button>
                 </div>
-                
-                <div class="setting-group" style="margin-top:20px;">
-                    <label class="radio-option" style="justify-content: flex-start;">
-                        <input type="checkbox" id="showTitlesToggle"> Show Quick Link Titles
-                    </label>
+                <div id="linkManagerContent" class="link-manager-list"></div>
+              </div>
+
+              <div
+                id="linkEditorContainer"
+                class="hidden"
+                style="
+                  background: var(--card-hover);
+                  padding: 15px;
+                  border-radius: var(--radius);
+                  border: 1px solid var(--border);
+                "
+              >
+                <h4
+                  id="editorTitle"
+                  style="margin: 0 0 15px 0; color: var(--accent)"
+                >
+                  Add New Link
+                </h4>
+                <input
+                  type="text"
+                  id="editName"
+                  placeholder="Name (e.g. YouTube)"
+                />
+                <input
+                  type="url"
+                  id="editUrl"
+                  placeholder="URL (e.g. youtube.com)"
+                />
+                <div style="display: flex; gap: 10px">
+                  <button
+                    id="saveLinkBtn"
+                    class="save-btn"
+                    style="margin-top: 0"
+                  >
+                    Save
+                  </button>
+                  <button
+                    id="cancelEditBtn"
+                    class="secondary"
+                    style="
+                      margin-top: 0;
+                      width: 100%;
+                      border-radius: var(--radius);
+                      font-weight: bold;
+                      border: 1px solid var(--border);
+                    "
+                  >
+                    Cancel
+                  </button>
                 </div>
+              </div>
             </div>
+
+            <div class="setting-group" style="margin-top: 20px">
+              <label class="radio-option" style="justify-content: flex-start">
+                <input type="checkbox" id="showTitlesToggle" /> Show Quick Link
+                Titles
+              </label>
+            </div>
+          </div>
         </details>
 
         <details class="category-panel">
-            <summary>Personalization <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
-            <div class="category-content">
-                <div class="setting-group">
-                    <div class="setting-header">
-                        <h3>Your Name</h3>
-                        <button class="help-btn">?</button>
-                    </div>
-                    <div class="help-text">The display name used for the greeting in the header (e.g., "Hello, User"). Leave blank to hide the greeting.</div>
-                    <input type="text" id="userNameInput" placeholder="Name for greeting...">
-                </div>
-
-                <div class="setting-group">
-                    <div class="setting-header">
-                        <h3>Vibe (Theme)</h3>
-                        <button class="help-btn">?</button>
-                    </div>
-                    <div class="help-text">Changes the color scheme, borders, and general aesthetic of the dashboard.</div>
-                                   </div>
-                <select id="themeSelect">
-                        <option value="dark">OLED Dark (Default)</option>
-                        <option value="light">Clean Light</option>
-                        <option value="cyberpunk">Cyberpunk</option>
-                        <option value="sunset">Sunset Drive</option>
-                        <option value="forest">Forest Hike</option>
-                        <option value="paper">Paper & Ink</option>
-                        <option value="luminous">Luminous</option>
-                        <option value="nord">Nord Frost</option>
-                        <option value="dracula">Dracula</option>
-                        <option value="retro">Retro Amber</option>
-                        <option value="rose">Rose Pine</option>
-                        <option value="night-glow">Night Glow</option>
-                        <option value="crystal-ice">Crystal Ice</option>
-                        <option value="nebula-drift">Nebula Drift</option>
-                    </select>
-                <div class="setting-group">
-                    <div class="setting-header">
-                        <h3>Clock Style</h3>
-                        <button class="help-btn">?</button>
-                    </div>
-                    <div class="help-text">Change the visual appearance and typography of the main clock.</div>
-                    <select id="clockStyleSelect">
-                        <option value="default">Default</option>
-                        <option value="bold">Bold & Chunky</option>
-                        <option value="serif">Elegant Serif</option>
-                        <option value="mono">Monospace</option>
-                        <option value="lcd">LCD Digital</option>
-                        <option value="neon">Neon Glow</option>
-                        <option value="minimal">Ultra Minimal</option>
-                        <option value="block">Card Block</option>
-                    </select>
-                </div>
-
-                <div class="setting-group">
-                    <div class="setting-header">
-                        <h3>Custom Background</h3>
-                        <button class="help-btn">?</button>
-                    </div>
-                    <div class="help-text">Upload an image from your device to use as a wallpaper. It is stored completely locally in your browser's database.</div>
-                    <div class="bg-control-row">
-                        <input type="file" id="bgImageInput" accept="image/*" class="hidden-input">
-                        <label for="bgImageInput" class="custom-file-btn">Choose Image</label>
-                        <button id="resetBgBtn" class="secondary small-btn" style="display:none; width:auto; padding: 10px 15px;">Reset</button>
-                    </div>
-                    <p id="bgFileName" style="font-size: 0.8rem; color: var(--dim); margin-top: 8px;">No image selected.</p>
-                </div>
+          <summary>
+            Personalization
+            <svg
+              class="chevron"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
+          <div class="category-content">
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Your Name</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                The display name used for the greeting in the header.
+              </div>
+              <input
+                type="text"
+                id="userNameInput"
+                placeholder="Name for greeting..."
+              />
             </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Vibe (Theme)</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Changes the color scheme, borders, and general aesthetic of the
+                dashboard.
+              </div>
+              <select id="themeSelect">
+                <option value="dark">OLED Dark (Default)</option>
+                <option value="light">Clean Light</option>
+                <option value="cyberpunk">Cyberpunk</option>
+                <option value="sunset">Sunset Drive</option>
+                <option value="forest">Forest Hike</option>
+                <option value="paper">Paper & Ink</option>
+                <option value="luminous">Luminous</option>
+                <option value="nord">Nord Frost</option>
+                <option value="dracula">Dracula</option>
+                <option value="retro">Retro Amber</option>
+                <option value="rose">Rose Pine</option>
+                <option value="night-glow">Night Glow</option>
+                <option value="crystal-ice">Crystal Ice</option>
+                <option value="nebula-drift">Nebula Drift</option>
+              </select>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Clock Style</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <select id="clockStyleSelect">
+                <option value="default">Default</option>
+                <option value="bold">Bold & Chunky</option>
+                <option value="serif">Elegant Serif</option>
+                <option value="mono">Monospace</option>
+                <option value="lcd">LCD Digital</option>
+                <option value="neon">Neon Glow</option>
+                <option value="minimal">Ultra Minimal</option>
+                <option value="block">Card Block</option>
+              </select>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Custom Background</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="bg-control-row">
+                <input
+                  type="file"
+                  id="bgImageInput"
+                  accept="image/*"
+                  class="hidden-input"
+                />
+                <label for="bgImageInput" class="custom-file-btn"
+                  >Choose Image</label
+                >
+                <button
+                  id="resetBgBtn"
+                  class="secondary small-btn"
+                  style="display: none; width: auto; padding: 10px 15px"
+                >
+                  Reset
+                </button>
+              </div>
+              <p
+                id="bgFileName"
+                style="font-size: 0.8rem; color: var(--dim); margin-top: 8px"
+              >
+                No image selected.
+              </p>
+            </div>
+          </div>
         </details>
 
         <details class="category-panel">
-            <summary>Search & Preferences <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
-            <div class="category-content">
-                <div class="setting-group">
-                    <div class="setting-header">
-                        <h3>Clock Format</h3>
-                        <button class="help-btn">?</button>
-                    </div>
-                    <div class="help-text">Switch the main header clock between standard 12-hour (AM/PM) and 24-hour military time formats.</div>
-                    <div class="radio-row">
-                        <label class="radio-option">
-                            <input type="radio" name="clockFormat" value="12h" class="clock-radio"> 12-Hour
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="clockFormat" value="24h" class="clock-radio"> 24-Hour
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="setting-group">
-                    <div class="setting-header">
-                        <h3>External Search Suggestions</h3>
-                        <button class="help-btn">?</button>
-                    </div>
-                    <div class="help-text">When enabled, sends your search bar keystrokes to DuckDuckGo to provide real-time autocomplete suggestions. Disable for 100% offline local typing.</div>
-                    <label class="radio-option" style="justify-content: flex-start;">
-                        <input type="checkbox" id="externalSuggestToggle"> Enable Live Suggestions
-                    </label>
-                </div>
-                
-                <div class="setting-group">
-                    <div class="setting-header">
-                        <h3>Search History Control</h3>
-                        <button class="help-btn">?</button>
-                    </div>
-                    <div class="help-text">Locally caches your past searches so you can quickly find them in the search dropdown again.</div>
-                    <button id="clearHistoryBtn" class="secondary" style="width:100%; margin-bottom: 10px; font-weight:bold; border:1px solid var(--delete); color: var(--delete);">Clear All Search History</button>
-                    <label class="radio-option" style="justify-content: flex-start;">
-                        <input type="checkbox" id="historyEnabledToggle"> Enable Local Search History
-                    </label>
-                </div>
+          <summary>
+            Search & Preferences
+            <svg
+              class="chevron"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
+          <div class="category-content">
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Clock Format</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="radio-row">
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="clockFormat"
+                    value="12h"
+                    class="clock-radio"
+                  />
+                  12-Hour
+                </label>
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="clockFormat"
+                    value="24h"
+                    class="clock-radio"
+                  />
+                  24-Hour
+                </label>
+              </div>
             </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>External Search Suggestions</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <label class="radio-option" style="justify-content: flex-start">
+                <input type="checkbox" id="externalSuggestToggle" /> Enable Live
+                Suggestions
+              </label>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Search History Control</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <button
+                id="clearHistoryBtn"
+                class="secondary"
+                style="
+                  width: 100%;
+                  margin-bottom: 10px;
+                  border: 1px solid var(--delete);
+                  color: var(--delete);
+                "
+              >
+                Clear All Search History
+              </button>
+              <label class="radio-option" style="justify-content: flex-start">
+                <input type="checkbox" id="historyEnabledToggle" /> Enable Local
+                Search History
+              </label>
+            </div>
+          </div>
         </details>
 
         <details class="category-panel">
-            <summary>Data Management <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
-            <div class="category-content">
-                
-                <div class="setting-group">
-                    <div class="setting-header">
-                        <h3>Reset Preferences</h3>
-                        <button class="help-btn">?</button>
-                    </div>
-                    <div class="help-text">Wipes all your configuration settings (themes, toggles, names) back to default. This does NOT delete your custom quick links or search history.</div>
-                    <button id="resetSettingsBtn" class="secondary" style="width:100%; font-weight:bold; border:1px solid var(--delete); color: var(--delete);">Factory Reset Settings</button>
-                </div>
-
-                <div class="setting-group">
-                    <div class="setting-header">
-                        <h3 style="margin-top:0;">Data Backup & Restore</h3>
-                        <button class="help-btn">?</button>
-                    </div>
-                    <div class="help-text">Export your entire setup (Links, Themes, History) into a downloadable .json file. You can restore this file on another browser or device to clone your dashboard.</div>
-                    <div style="display:flex; gap:10px;">
-                        <button id="backupDataBtn" class="secondary" style="flex:1;">Backup (Save)</button>
-                        <button id="restoreDataBtn" class="secondary" style="flex:1;">Restore (Load)</button>
-                    </div>
-                    <input type="file" id="restoreInput" accept=".json" style="display:none;">
-                </div>
+          <summary>
+            Data Management
+            <svg
+              class="chevron"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
+          <div class="category-content">
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Reset Preferences</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <button
+                id="resetSettingsBtn"
+                class="secondary"
+                style="
+                  width: 100%;
+                  border: 1px solid var(--delete);
+                  color: var(--delete);
+                "
+              >
+                Factory Reset Settings
+              </button>
             </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3 style="margin-top: 0">Data Backup & Restore</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div style="display: flex; gap: 10px">
+                <button id="backupDataBtn" class="secondary" style="flex: 1">
+                  Backup (Save)
+                </button>
+                <button id="restoreDataBtn" class="secondary" style="flex: 1">
+                  Restore (Load)
+                </button>
+              </div>
+              <input
+                type="file"
+                id="restoreInput"
+                accept=".json"
+                style="display: none"
+              />
+            </div>
+          </div>
         </details>
-        
+      </div>
     </div>
-</div>
 
-<script src="state.js"></script>
-<script src="utilities.js"></script>
-<script src="ui-logic.js"></script>
+    <script src="state.js"></script>
+    <script src="utilities.js"></script>
+    <script src="ui-logic.js"></script>
 
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Registration failed: ', err));
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./sw.js")
+            .catch((err) => console.log("SW Registration failed: ", err));
         });
-    }
-</script>
-    <div id="betaNotice" class="beta-notice hidden">
-    <div class="beta-content">
-        <h3>⚠️ Beta Version Notice</h3>
-        <p>You are currently using a pre-release beta version (v1.4.0.beta3). Unexpected bugs or visual glitches may occur as we test new folders and themes.</p>
-        <button id="closeBetaBtn" class="save-btn" style="width: 100%; margin-top: 10px;">I Understand</button>
-    </div>
-</div>
+      }
+    </script>
 
-<style>
-    /* Styling for the temporary beta notice */
-    .beta-notice {
+    <div id="betaNotice" class="beta-notice hidden">
+      <div class="beta-content">
+        <h3>⚠️ Beta Version Notice</h3>
+        <p>
+          You are currently using a pre-release beta version (v1.4.0.beta4).
+          Unexpected bugs or visual glitches may occur as we test new folders
+          and themes.
+        </p>
+        <button
+          id="closeBetaBtn"
+          class="save-btn"
+          style="width: 100%; margin-top: 10px"
+        >
+          I Understand
+        </button>
+      </div>
+    </div>
+
+    <style>
+      .beta-notice {
         position: fixed;
         bottom: 20px;
         right: 20px;
@@ -280,50 +601,52 @@
         border-radius: var(--radius);
         padding: 20px;
         width: 320px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
         z-index: 9999;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    .beta-notice.hidden {
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+      }
+      .beta-notice.hidden {
         opacity: 0;
         pointer-events: none;
         transform: translateY(20px);
-    }
-    .beta-content h3 {
+      }
+      .beta-content h3 {
         color: var(--accent);
         margin: 0 0 10px 0;
         font-size: 1.1rem;
-    }
-    .beta-content p {
+      }
+      .beta-content p {
         font-size: 0.9rem;
         color: var(--fg);
         line-height: 1.4;
         margin-bottom: 10px;
-    }
-</style>
+      }
+    </style>
 
-<script>
-    // Logic for the beta notice
-    document.addEventListener('DOMContentLoaded', () => {
-        const betaNotice = document.getElementById('betaNotice');
-        const closeBetaBtn = document.getElementById('closeBetaBtn');
-        const currentBetaVersion = 'v1.4.0.beta3'; // Change this if you do beta3 to show it again
-        
-        // If they haven't seen this specific beta version notice, show it
-        if (localStorage.getItem('0fluff_beta_acknowledged') !== currentBetaVersion) {
-            setTimeout(() => {
-                betaNotice.classList.remove('hidden');
-            }, 1000); // Pops up 1 second after loading
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const betaNotice = document.getElementById("betaNotice");
+        const closeBetaBtn = document.getElementById("closeBetaBtn");
+        const currentBetaVersion = "v1.4.0.beta4";
+
+        if (
+          localStorage.getItem("0fluff_beta_acknowledged") !==
+          currentBetaVersion
+        ) {
+          setTimeout(() => {
+            betaNotice.classList.remove("hidden");
+          }, 1000);
         }
-        
-        // When clicked, hide it and save to local storage so it doesn't show again
-        closeBetaBtn.addEventListener('click', () => {
-            localStorage.setItem('0fluff_beta_acknowledged', currentBetaVersion);
-            betaNotice.classList.add('hidden');
+
+        closeBetaBtn.addEventListener("click", () => {
+          localStorage.setItem("0fluff_beta_acknowledged", currentBetaVersion);
+          betaNotice.classList.add("hidden");
         });
-    });
-</script>
-</body>
+      });
+    </script>
+  </body>
 </html>
