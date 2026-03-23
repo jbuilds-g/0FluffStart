@@ -216,3 +216,120 @@ body {
     pointer-events: none;
     transition: opacity 0.5s;
 }
+/* --- Night Glow (Moonlight) Theme --- */
+body.night-glow {
+    --bg: #000000;
+    --fg: #ffffff;
+    --accent: #ffffff;
+    --card-bg: rgba(0, 0, 0, 0.9);
+    --card-hover: rgba(255, 255, 255, 0.1);
+    --border: rgba(255, 255, 255, 0.4); 
+    --dim: #aaaaaa;
+    --delete: #ff4444;
+}
+
+/* Moonlight Glow on Text */
+body.night-glow .clock,
+body.night-glow .greeting,
+body.night-glow .link-name,
+body.night-glow h2, 
+body.night-glow h3 {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Moonlight Glow on Borders/Containers */
+body.night-glow .search-bar,
+body.night-glow .link-icon-circle,
+body.night-glow .modal-content,
+body.night-glow input, 
+body.night-glow select {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border);
+    background: #000000;
+}
+
+/* Hover effect - intense moon glow */
+body.night-glow .link-item:hover .link-icon-circle {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    border-color: #ffffff;
+}
+/* --- Crystal Ice Theme (V2: Ultra Frosted) --- */
+body.crystal-ice {
+    --bg: #050a12; /* Deepest freezing water */
+    --fg: #eef7ff; /* Crisp snow-white text */
+    --accent: #00ffff; /* Pure piercing cyan */
+    /* Subtle diagonal sheen like light hitting glass */
+    --card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.01) 100%);
+    --card-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(0, 255, 255, 0.1) 100%);
+    --dim: #8ab4f8;
+    --delete: #ff4a6b;
+}
+
+/* Thick Frosted Glass & Sharp Edges */
+body.crystal-ice .search-bar,
+body.crystal-ice .link-icon-circle,
+body.crystal-ice .modal-content,
+body.crystal-ice .engine-dropdown,
+body.crystal-ice .link-editor-container {
+    /* Extreme blur + color saturation for the "thick ice" look */
+    backdrop-filter: blur(24px) saturate(120%);
+    -webkit-backdrop-filter: blur(24px) saturate(120%);
+    background: var(--card-bg);
+    
+    /* 3D Ice Bevel: Bright top edge, faint bottom edge */
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* Deep shadow behind, soft white glow inside */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+/* Sharp cyan glint when hovering */
+body.crystal-ice .link-item:hover .link-icon-circle {
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.3);
+    border-top: 1px solid #ffffff;
+    transform: translateY(-3px); /* Snappy physical lift */
+}
+
+/* Icy text reflection */
+body.crystal-ice .clock,
+body.crystal-ice .link-title {
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.4);
+}
+/* --- Nebula Drift Theme --- */
+body.nebula-drift {
+    --bg: #0b0914; /* Deep space indigo */
+    --fg: #e2d9f3; /* Starlight lavender */
+    --accent: #b088f9; /* Cosmic purple */
+    --card-bg: rgba(20, 15, 35, 0.7);
+    --card-hover: rgba(176, 136, 249, 0.15);
+    --border: rgba(176, 136, 249, 0.3); 
+    --dim: #7a6b99;
+    --delete: #ff4d85;
+}
+
+/* Soft cosmic glow for containers */
+body.nebula-drift .search-bar,
+body.nebula-drift .link-icon-circle,
+body.nebula-drift .modal-content,
+body.nebula-drift .engine-dropdown,
+body.nebula-drift .link-editor-container {
+    box-shadow: 0 4px 20px rgba(74, 59, 105, 0.4), inset 0 0 10px rgba(176, 136, 249, 0.05);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Hover effect: Violet/Pink nebula flare */
+body.nebula-drift .link-item:hover .link-icon-circle {
+    box-shadow: 0 0 20px rgba(176, 136, 249, 0.4), inset 0 0 15px rgba(255, 77, 133, 0.1);
+    border-color: #d1b3ff;
+    transform: translateY(-2px);
+}
+
+/* Subtle glowing text for the clock */
+body.nebula-drift .clock {
+    text-shadow: 0 0 15px rgba(176, 136, 249, 0.5);
+}
