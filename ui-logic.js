@@ -4,6 +4,9 @@
 /* global renderEngineDropdown, loadSettings, updateClock, autoSaveSettings, logSearch, handleSuggestions, clearHistory */
 /* global fetchExternalSuggestions, selectSuggestion, saveBgToDB, getBgFromDB */
 
+// --- NEW STATE ---
+let currentFolderId = null; // Tracks if we are inside a folder
+
 // --- INIT ---
 document.addEventListener('DOMContentLoaded', () => {
     bindStaticEvents();
@@ -54,13 +57,25 @@ function bindStaticEvents() {
 
     document.getElementById('githubBtn').addEventListener('click', () => window.open('https://github.com/jbuilds-g/0FluffStart', '_blank'));
     
+    // Links & Folders Binding
     document.getElementById('addLinkBtn').addEventListener('click', () => openEditor());
+    const addFolderBtn = document.getElementById('addFolderBtn');
+    if (addFolderBtn) addFolderBtn.addEventListener('click', addFolder);
+    
+    const activeFolderHeader = document.getElementById('activeFolderHeader');
+    if (activeFolderHeader) activeFolderHeader.addEventListener('click', () => navigateToFolder(null));
+
     document.getElementById('saveLinkBtn').addEventListener('click', saveLink);
     document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
+    
+    // Settings Binding
     document.getElementById('userNameInput').addEventListener('input', autoSaveSettings);
     document.getElementById('themeSelect').addEventListener('change', autoSaveSettings);
     document.getElementById('clockStyleSelect').addEventListener('change', autoSaveSettings);
     
+    const showTitlesToggle = document.getElementById('showTitlesToggle');
+    if (showTitlesToggle) showTitlesToggle.addEventListener('change', autoSaveSettings);
+
     const bgInput = document.getElementById('bgImageInput');
     bgInput.addEventListener('change', () => handleImageUpload(bgInput));
     document.getElementById('resetBgBtn').addEventListener('click', clearBackground);
@@ -112,6 +127,59 @@ function applyClockStyle() {
     }
 }
 
+// --- FOLDER NAVIGATION & CREATION ---
+function navigateToFolder(folderId) {
+    currentFolderId = folderId;
+    const header = document.getElementById('activeFolderHeader');
+    if (header) {
+        if (folderId) header.classList.remove('hidden');
+        else header.classList.add('hidden');
+    }
+    renderLinks();
+}
+
+function addFolder() {
+    const folderName = prompt("Enter folder name:");
+    if (!folderName) return;
+    
+    const newFolderId = 'folder_' + Date.now().toString();
+    
+    // Find links that are NOT folders and are NOT already in a folder
+    const rootLinks = links.filter(l => !l.isFolder && !l.parentId);
+    
+    // Ask if user wants to move existing dashboard links into it
+    if (rootLinks.length > 0 && confirm(`Folder '${folderName}' created! Do you want to move any existing dashboard links into it right now?`)) {
+        let promptText = "Type the numbers of the links you want to move (comma separated, e.g., 1, 3):\n\n";
+        rootLinks.forEach((l, i) => {
+            promptText += `${i + 1}: ${l.name}\n`;
+        });
+        
+        const answers = prompt(promptText);
+        if (answers) {
+            const selectedNums = answers.split(',').map(n => parseInt(n.trim()) - 1);
+            selectedNums.forEach(index => {
+                if (rootLinks[index]) {
+                    const mainIndex = links.findIndex(l => l.id === rootLinks[index].id);
+                    if (mainIndex > -1) {
+                        links[mainIndex].parentId = newFolderId;
+                    }
+                }
+            });
+        }
+    }
+    
+    links.push({
+        id: newFolderId,
+        name: folderName,
+        isFolder: true,
+        parentId: currentFolderId
+    });
+    
+    localStorage.setItem('0fluff_links', JSON.stringify(links));
+    renderLinks();
+    renderLinkManager();
+}
+
 // --- BACKUP & RESTORE ---
 function backupData() {
     const data = {
@@ -157,7 +225,7 @@ function restoreData(e) {
                     let importedSettings = settingsData;
                     while(typeof importedSettings === 'string') { try { importedSettings = JSON.parse(importedSettings); } catch(err){break;} }
                     if (typeof importedSettings === 'object' && importedSettings !== null) {
-                        const validKeys = ['theme', 'clockStyle', 'userName', 'clockFormat', 'externalSuggest', 'historyEnabled', 'searchEngine'];
+                        const validKeys = ['theme', 'clockStyle', 'userName', 'clockFormat', 'externalSuggest', 'historyEnabled', 'searchEngine', 'showTitles'];
                         const cleanSettings = {};
                         validKeys.forEach(key => { if (importedSettings[key] !== undefined) cleanSettings[key] = importedSettings[key]; });
                         localStorage.setItem('0fluff_settings', JSON.stringify({ ...settings, ...cleanSettings }));
@@ -186,44 +254,62 @@ function renderLinks() {
     if(!grid) return;
     grid.innerHTML = '';
     
-    const fragment = document.createDocumentFragment();
-    links.forEach(link => {
-        const words = link.name.split(' ').filter(w => w.length > 0);
-        let acronym = words.map(word => word.charAt(0).toUpperCase()).join('');
-        if (words.length === 1 && acronym.length === 1 && link.name.length > 1) acronym = link.name.substring(0, 2).toUpperCase();
-        const display = acronym.substring(0, 3);
-        
-        let fontSize = '1.5rem';
-        let letterSpacing = '-1px';
-        if (display.length === 1) fontSize = '2rem';
-        else if (display.length === 2) fontSize = '1.6rem';
-        else { fontSize = '1.2rem'; letterSpacing = '-0.5px'; }
+    // Toggle show-titles class based on settings
+    grid.classList.toggle('show-titles', !!settings.showTitles);
 
+    // Filter by current folder
+    const visibleLinks = links.filter(l => (l.parentId || null) === currentFolderId);
+    
+    const fragment = document.createDocumentFragment();
+    visibleLinks.forEach(link => {
         const item = document.createElement('div');
         item.className = 'link-item';
         item.dataset.id = link.id;
-        
-        item.innerHTML = `
-            <div class="link-icon-circle">
-                <span style="
-                    font-size: ${fontSize}; 
-                    color: var(--accent); 
-                    font-weight: 800; 
-                    letter-spacing: ${letterSpacing};
-                    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-                    font-family: var(--font-main);
-                ">${display}</span>
-            </div>
-            <div class="link-name">${link.name}</div>
-        `;
-        
-        item.addEventListener('click', () => { window.location.href = link.url.startsWith('http') ? link.url : `https://${link.url}`; });
 
-        // --- v1.3.1: Complete Right-Click Integration ---
+        if (link.isFolder) {
+            // Folder UI - Minimalist SVG
+            item.innerHTML = `
+                <div class="link-icon-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <div class="link-name">${link.name}</div>
+            `;
+            item.addEventListener('click', () => navigateToFolder(link.id));
+        } else {
+            // Standard Link UI with acronym logic
+            const words = link.name.split(' ').filter(w => w.length > 0);
+            let acronym = words.map(word => word.charAt(0).toUpperCase()).join('');
+            if (words.length === 1 && acronym.length === 1 && link.name.length > 1) acronym = link.name.substring(0, 2).toUpperCase();
+            const display = acronym.substring(0, 3);
+            
+            let fontSize = '1.5rem';
+            let letterSpacing = '-1px';
+            if (display.length === 1) fontSize = '2rem';
+            else if (display.length === 2) fontSize = '1.6rem';
+            else { fontSize = '1.2rem'; letterSpacing = '-0.5px'; }
+
+            item.innerHTML = `
+                <div class="link-icon-circle">
+                    <span style="
+                        font-size: ${fontSize}; 
+                        color: var(--accent); 
+                        font-weight: 800; 
+                        letter-spacing: ${letterSpacing};
+                        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                        font-family: var(--font-main);
+                    ">${display}</span>
+                </div>
+                <div class="link-name">${link.name}</div>
+            `;
+            item.addEventListener('click', () => { window.location.href = link.url.startsWith('http') ? link.url : `https://${link.url}`; });
+        }
+
+        // Complete Right-Click Integration applies to both links AND folders
         item.addEventListener('contextmenu', (e) => {
             e.preventDefault(); 
             
-            // 1. Force Advanced Section accordion expand and open settings modal
             const advContent = document.getElementById('advancedSettings');
             const advBtn = document.getElementById('advancedToggleBtn');
             if(advContent && advBtn) {
@@ -232,19 +318,36 @@ function renderLinks() {
             }
             toggleSettings(); 
 
-            // 2. Locate the "Dashboard Links" details panel and force it open
             const linkListContainer = document.getElementById('linkListContainer');
             if (linkListContainer) {
                 const parentDetails = linkListContainer.closest('details');
                 if (parentDetails) parentDetails.open = true;
             }
             
-            // 3. Trigger Edit Mode for the link
             editLink(link.id);
         });
 
         fragment.appendChild(item);
     });
+
+    // --- Add a physical "+" tile when inside a folder ---
+    if (currentFolderId) {
+        const addBtnItem = document.createElement('div');
+        addBtnItem.className = 'link-item';
+        addBtnItem.innerHTML = `
+            <div class="link-icon-circle" style="background: transparent; border: 2px dashed var(--dim); display: flex; align-items: center; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+            <div class="link-name" style="color: var(--dim);">Add Link</div>
+        `;
+        // Clicking this opens settings straight to the "Add Link" menu
+        addBtnItem.addEventListener('click', () => {
+            toggleSettings(); 
+            openEditor();     
+        });
+        fragment.appendChild(addBtnItem);
+    }
+
     grid.appendChild(fragment);
 }
 
@@ -268,7 +371,9 @@ function renderLinkManager() {
         
         const nameSpan = document.createElement('span');
         nameSpan.className = 'link-name';
-        nameSpan.innerText = link.name;
+        // Add a minimalist folder icon prefix if it's a folder
+        const folderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+        nameSpan.innerHTML = (link.isFolder ? folderSvg : '') + link.name;
         
         const actionsDiv = document.createElement('div');
         actionsDiv.className = 'link-actions';
@@ -303,18 +408,31 @@ function openEditor(id = null) {
     const titleEl = document.getElementById('editorTitle');
     const nameInput = document.getElementById('editName');
     const urlInput = document.getElementById('editUrl');
+    
     isEditingId = id;
     if (id) {
         const link = links.find(l => l.id === id);
         if(link) {
-            if(titleEl) titleEl.innerText = "Edit Link";
+            if(titleEl) titleEl.innerText = link.isFolder ? "Edit Folder" : "Edit Link";
             if(nameInput) nameInput.value = link.name;
-            if(urlInput) urlInput.value = link.url;
+            // Hide URL field if it's a folder
+            if(urlInput) {
+                if (link.isFolder) {
+                    urlInput.style.display = 'none';
+                    urlInput.value = '';
+                } else {
+                    urlInput.style.display = 'block';
+                    urlInput.value = link.url || '';
+                }
+            }
         }
     } else {
         if(titleEl) titleEl.innerText = "Add New Link";
         if(nameInput) nameInput.value = '';
-        if(urlInput) urlInput.value = '';
+        if(urlInput) {
+            urlInput.style.display = 'block';
+            urlInput.value = '';
+        }
     }
 }
 
@@ -333,24 +451,40 @@ function saveLink() {
     
     const name = nameInput.value.trim();
     const url = urlInput.value.trim();
-    if (!name || !url) return alert("Please fill in both name and URL.");
+    
+    if (!name) return alert("Please fill in the name.");
+    
     if (isEditingId) {
         const idx = links.findIndex(l => l.id === isEditingId);
-        if (idx > -1) { links[idx].name = name; links[idx].url = url; }
+        if (idx > -1) { 
+            links[idx].name = name; 
+            if (!links[idx].isFolder) links[idx].url = url; 
+        }
     } else {
-        links.push({ id: Date.now().toString(), name, url });
+        if (!url) return alert("Please fill in the URL.");
+        // Make sure new link respects the current folder
+        links.push({ id: Date.now().toString(), name, url, isFolder: false, parentId: currentFolderId });
     }
     localStorage.setItem('0fluff_links', JSON.stringify(links));
-    renderLinks(); renderLinkManager(); cancelEdit();        
+    renderLinks(); 
+    renderLinkManager(); 
+    cancelEdit();        
 }
 
 function editLink(id, e) { if(e) e.stopPropagation(); openEditor(id); }
+
 function deleteLink(id, e) {
     if(e) e.stopPropagation();
-    if(confirm("Delete this link?")) {
-        links = links.filter(l => l.id !== id);
+    if(confirm("Delete this item?")) {
+        // Cascade delete: Remove the item AND any children if it was a folder
+        links = links.filter(l => l.id !== id && l.parentId !== id);
         localStorage.setItem('0fluff_links', JSON.stringify(links));
-        renderLinks(); renderLinkManager();
+        
+        // If we deleted the folder we were currently looking inside, return to dashboard
+        if (currentFolderId === id) navigateToFolder(null);
+        else renderLinks();
+        
+        renderLinkManager();
     }
 }
 
@@ -373,6 +507,9 @@ async function loadSettings() {
     
     const historyEnabledToggle = document.getElementById('historyEnabledToggle');
     if (historyEnabledToggle) historyEnabledToggle.checked = settings.historyEnabled !== false;
+
+    const showTitlesToggle = document.getElementById('showTitlesToggle');
+    if (showTitlesToggle) showTitlesToggle.checked = !!settings.showTitles;
 
     document.body.className = settings.theme || 'dark'; 
     applyClockStyle();
@@ -426,6 +563,12 @@ function autoSaveSettings() {
     
     const historyEnabledToggle = document.getElementById('historyEnabledToggle');
     if (historyEnabledToggle) settings.historyEnabled = historyEnabledToggle.checked;
+    
+    const showTitlesToggle = document.getElementById('showTitlesToggle');
+    if (showTitlesToggle) {
+        settings.showTitles = showTitlesToggle.checked;
+        document.getElementById('linkGrid')?.classList.toggle('show-titles', settings.showTitles);
+    }
     
     localStorage.setItem('0fluff_settings', JSON.stringify(settings));
     document.body.className = settings.theme;
@@ -517,3 +660,5 @@ window.toggleAdvanced = toggleAdvanced;
 window.clearHistory = clearHistory;
 window.backupData = backupData;
 window.restoreData = restoreData;
+window.navigateToFolder = navigateToFolder;
+window.addFolder = addFolder;
