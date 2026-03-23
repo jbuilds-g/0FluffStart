@@ -3,7 +3,13 @@
 /* --- BASE LAYOUT --- */
 * {
     /* Disable the default mobile tap highlight flash */
-    -webkit-tap-highlight-color: transparent; 
+    -webkit-tap-highlight-color: transparent;
+
+/* --- Quick Link Title Toggle Logic --- */
+.link-grid:not(.show-titles) .link-name {
+    display: none !important;
+}
+ 
 }
 
 body {
