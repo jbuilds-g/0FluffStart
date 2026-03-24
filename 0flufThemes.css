@@ -2,171 +2,201 @@
 
 /* --- GLOBAL VARIABLES (DEFAULT: OLED DARK) --- */
 :root {
-    --bg: #000000;
-    --card: #141418;
-    --card-hover: #1e1e24;
-    --text: #ffffff;
-    --accent: #00aaff;
-    --dim: #888;
-    --border: #333;
-    --delete: #ff4d4d;
-    --radius: 12px;
-    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --shadow: none;
+  --bg: #000000;
+  --card: #141418;
+  --card-hover: #1e1e24;
+  --text: #ffffff;
+  --accent: #00aaff;
+  --dim: #888;
+  --border: #333;
+  --delete: #ff4d4d;
+  --radius: 12px;
+  --font-main:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --shadow: none;
 }
 
 /* --- THEME OVERRIDES --- */
 
 body.light {
-    --bg: #f2f2f7;
-    --card: #ffffff;
-    --card-hover: #e5e5ea;
-    --text: #000000;
-    --accent: #007aff;
-    --dim: #8e8e93;
-    --border: #d1d1d6;
-    --shadow: 0 4px 12px rgba(0,0,0,0.05);
+  --bg: #f2f2f7;
+  --card: #ffffff;
+  --card-hover: #e5e5ea;
+  --text: #000000;
+  --accent: #007aff;
+  --dim: #8e8e93;
+  --border: #d1d1d6;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 body.cyberpunk {
-    --bg: #050505;
-    --card: #121212;
-    --card-hover: #1a1a1a;
-    --text: #00ff41;
-    --accent: #f0e600;
-    --dim: #008f11;
-    --border: #333;
-    --delete: #ff003c;
-    --radius: 0px;
-    --font-main: "Courier New", Courier, monospace;
-    --shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+  --bg: #050505;
+  --card: #121212;
+  --card-hover: #1a1a1a;
+  --text: #00ff41;
+  --accent: #f0e600;
+  --dim: #008f11;
+  --border: #333;
+  --delete: #ff003c;
+  --radius: 0px;
+  --font-main: "Courier New", Courier, monospace;
+  --shadow: 0 0 10px rgba(0, 255, 65, 0.1);
 }
 
 body.sunset {
-    --bg: #2d1b2e;
-    --card: #442646;
-    --card-hover: #583350;
-    --text: #ffd166;
-    --accent: #ef476f;
-    --dim: #b892b0;
-    --border: #6d4b68;
-    --radius: 20px;
+  --bg: #2d1b2e;
+  --card: #442646;
+  --card-hover: #583350;
+  --text: #ffd166;
+  --accent: #ef476f;
+  --dim: #b892b0;
+  --border: #6d4b68;
+  --radius: 20px;
 }
 
 body.forest {
-    --bg: #1a2f1a;
-    --card: #2d4c2d;
-    --card-hover: #3a5c3a;
-    --text: #e1efe1;
-    --accent: #c3e6c3;
-    --dim: #a4bfa4;
-    --border: #3a5c3a;
-    --radius: 16px;
+  --bg: #1a2f1a;
+  --card: #2d4c2d;
+  --card-hover: #3a5c3a;
+  --text: #e1efe1;
+  --accent: #c3e6c3;
+  --dim: #a4bfa4;
+  --border: #3a5c3a;
+  --radius: 16px;
 }
 
 body.paper {
-    --bg: #f5f5f0;
-    --card: #ffffff;
-    --card-hover: #eaeae0;
-    --text: #333333;
-    --accent: #555555;
-    --dim: #999999;
-    --border: #cccccc;
-    --radius: 4px;
+  --bg: #f5f5f0;
+  --card: #ffffff;
+  --card-hover: #eaeae0;
+  --text: #333333;
+  --accent: #555555;
+  --dim: #999999;
+  --border: #cccccc;
+  --radius: 4px;
 }
 
 body.luminous {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --card-hover: #334155;
-    --text: #f8fafc;
-    --accent: #38bdf8;
-    --dim: #94a3b8;
-    --border: #475569;
+  --bg: #0f172a;
+  --card: #1e293b;
+  --card-hover: #334155;
+  --text: #f8fafc;
+  --accent: #38bdf8;
+  --dim: #94a3b8;
+  --border: #475569;
 }
 
 body.nord {
-    --bg: #2e3440;
-    --card: #3b4252;
-    --card-hover: #434c5e;
-    --text: #eceff4;
-    --accent: #88c0d0;
-    --dim: #d8dee9;
-    --border: #4c566a;
+  --bg: #2e3440;
+  --card: #3b4252;
+  --card-hover: #434c5e;
+  --text: #eceff4;
+  --accent: #88c0d0;
+  --dim: #d8dee9;
+  --border: #4c566a;
 }
 
 body.dracula {
-    --bg: #282a36;
-    --card: #44475a;
-    --card-hover: #6272a4;
-    --text: #f8f8f2;
-    --accent: #bd93f9;
-    --dim: #6272a4;
-    --border: #44475a;
+  --bg: #282a36;
+  --card: #44475a;
+  --card-hover: #6272a4;
+  --text: #f8f8f2;
+  --accent: #bd93f9;
+  --dim: #6272a4;
+  --border: #44475a;
 }
 
 body.retro {
-    --bg: #0d0202;
-    --card: #1a0505;
-    --card-hover: #260808;
-    --text: #ffb000;
-    --accent: #ffb000;
-    --dim: #7f5800;
-    --border: #ffb000;
-    --radius: 0px;
+  --bg: #0d0202;
+  --card: #1a0505;
+  --card-hover: #260808;
+  --text: #ffb000;
+  --accent: #ffb000;
+  --dim: #7f5800;
+  --border: #ffb000;
+  --radius: 0px;
 }
 
 body.rose {
-    --bg: #191724;
-    --card: #1f1d2e;
-    --card-hover: #26233a;
-    --text: #e0def4;
-    --accent: #ebbcba;
-    --dim: #908caa;
-    --border: #403d52;
+  --bg: #191724;
+  --card: #1f1d2e;
+  --card-hover: #26233a;
+  --text: #e0def4;
+  --accent: #ebbcba;
+  --dim: #908caa;
+  --border: #403d52;
 }
 
 /* --- ADAPTIVE CLOCK STYLES --- */
-.clock { transition: all 0.3s ease; }
-.clock-style-default { font-weight: 300; }
-.clock-style-bold { font-weight: 900; letter-spacing: -2px; }
-.clock-style-serif { font-family: 'Georgia', serif; font-weight: bold; }
-.clock-style-mono { font-family: 'Courier New', monospace; letter-spacing: 2px; }
-.clock-style-lcd { font-family: 'Courier New', monospace; text-shadow: 0 0 5px var(--accent); color: var(--accent); }
-.clock-style-neon { text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent); color: #fff; }
-.clock-style-minimal { font-weight: 100; opacity: 0.7; }
-.clock-style-block { 
-    background: var(--card); 
-    padding: 5px 20px; 
-    border-radius: var(--radius); 
-    border: 1px solid var(--border); 
-    box-shadow: var(--shadow); 
-    width: max-content; 
-    display: inline-block;
+.clock {
+  transition: all 0.3s ease;
+}
+.clock-style-default {
+  font-weight: 300;
+}
+.clock-style-bold {
+  font-weight: 900;
+  letter-spacing: -2px;
+}
+.clock-style-serif {
+  font-family: "Georgia", serif;
+  font-weight: bold;
+}
+.clock-style-mono {
+  font-family: "Courier New", monospace;
+  letter-spacing: 2px;
+}
+.clock-style-lcd {
+  font-family: "Courier New", monospace;
+  text-shadow: 0 0 5px var(--accent);
+  color: var(--accent);
+}
+.clock-style-neon {
+  text-shadow:
+    0 0 10px var(--accent),
+    0 0 20px var(--accent);
+  color: #fff;
+}
+.clock-style-minimal {
+  font-weight: 100;
+  opacity: 0.7;
+}
+.clock-style-block {
+  background: var(--card);
+  padding: 5px 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  width: max-content;
+  display: inline-block;
 }
 
 /* --- THEME-SPECIFIC HOVER MORPHING (UNIFORM INTERACTION ENGINE v1.3.1) --- */
 .link-item {
-    transition: transform 0.2s ease;
+  transition: transform 0.2s ease;
 }
 .link-item .link-icon-circle {
-    transition: background-color 0.2s ease, border-radius 0.3s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-radius 0.3s ease,
+    color 0.2s ease;
 }
 .link-item .link-icon-circle span {
-    transition: color 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .link-item:hover {
-    transform: translateY(-2px);
+  transform: translateY(-2px);
 }
 
 /* Define default hover behavior (Dark, Light, Luminous, Nord, Dracula, Rose) -> Circle */
 .link-item:hover .link-icon-circle {
-    background-color: var(--accent);
-    border-radius: 50%;
+  background-color: var(--accent);
+  border-radius: 50%;
 }
 .link-item:hover .link-icon-circle span {
-    color: var(--bg) !important; /* Force color inverse */
+  color: var(--bg) !important; /* Force color inverse */
 }
 
 /* Override rigid themes: Keep square, add border (Cyberpunk, Retro) */
@@ -178,136 +208,132 @@ body.cyberpunk .link-item:active .link-icon-circle,
 body.retro .link-item:active .link-icon-circle,
 body.cyberpunk .link-item:focus .link-icon-circle,
 body.retro .link-item:focus .link-icon-circle {
-    border-radius: 0 !important; 
+  border-radius: 0 !important;
 }
 
 body.cyberpunk .link-item:hover .link-icon-circle span,
 body.retro .link-item:hover .link-icon-circle span,
 body.cyberpunk .link-item:active .link-icon-circle span,
 body.retro .link-item:active .link-icon-circle span {
-    color: var(--accent) !important;
+  color: var(--accent) !important;
 }
 
 /* Soft Themes: Aggressive Morph to Circle (Sunset, Forest, Paper) */
 body.sunset .link-item:hover .link-icon-circle,
 body.forest .link-item:hover .link-icon-circle,
 body.paper .link-item:hover .link-icon-circle {
-     border-radius: 50%;
+  border-radius: 50%;
 }
 
 /* --- BACKGROUND IMAGE SUPPORT --- */
 body {
-    background-color: var(--bg);
-    color: var(--text);
-    transition: background-color 0.3s, color 0.3s;
-    position: relative;
-    z-index: 1;
+  background-color: var(--bg);
+  color: var(--text);
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  position: relative;
+  z-index: 1;
 }
 
 .bg-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: -1;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
 }
 /* --- Night Glow (Moonlight) Theme --- */
 body.night-glow {
-    --bg: #000000;
-    --fg: #ffffff;
-    --accent: #ffffff;
-    --card-bg: rgba(0, 0, 0, 0.9);
-    --card-hover: rgba(255, 255, 255, 0.1);
-    --border: rgba(255, 255, 255, 0.4); 
-    --dim: #aaaaaa;
-    --delete: #ff4444;
+  --bg: #000000;
+  --fg: #ffffff;
+  --accent: #ffffff;
+  --card-bg: rgba(0, 0, 0, 0.9);
+  --card-hover: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.4);
+  --dim: #aaaaaa;
+  --delete: #ff4444;
 }
 
 /* Moonlight Glow on Text */
 body.night-glow .clock,
 body.night-glow .greeting,
 body.night-glow .link-name,
-body.night-glow h2, 
+body.night-glow h2,
 body.night-glow h3 {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.3);
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 /* Moonlight Glow on Borders/Containers */
 body.night-glow .search-bar,
 body.night-glow .link-icon-circle,
 body.night-glow .modal-content,
-body.night-glow input, 
+body.night-glow input,
 body.night-glow select {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
-    border: 1px solid var(--border);
-    background: #000000;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border);
+  background: #000000;
 }
 
 /* Hover effect - intense moon glow */
 body.night-glow .link-item:hover .link-icon-circle {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-    border-color: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+  border-color: #ffffff;
 }
-/* --- Crystal Ice Theme (V2: Ultra Frosted) --- */
-body.crystal-ice {
-    --bg: #050a12; /* Deepest freezing water */
-    --fg: #eef7ff; /* Crisp snow-white text */
-    --accent: #00ffff; /* Pure piercing cyan */
-    /* Subtle diagonal sheen like light hitting glass */
-    --card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.01) 100%);
-    --card-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(0, 255, 255, 0.1) 100%);
-    --dim: #8ab4f8;
-    --delete: #ff4a6b;
-}
-
 /* Thick Frosted Glass & Sharp Edges */
 body.crystal-ice .search-bar,
 body.crystal-ice .link-icon-circle,
 body.crystal-ice .modal-content,
 body.crystal-ice .engine-dropdown,
 body.crystal-ice .link-editor-container {
-    /* Extreme blur + color saturation for the "thick ice" look */
-    backdrop-filter: blur(24px) saturate(120%);
-    -webkit-backdrop-filter: blur(24px) saturate(120%);
-    background: var(--card-bg);
-    
-    /* 3D Ice Bevel: Bright top edge, faint bottom edge */
-    border-top: 1px solid rgba(255, 255, 255, 0.5);
-    border-left: 1px solid rgba(255, 255, 255, 0.3);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    
-    /* Deep shadow behind, soft white glow inside */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.05);
+  /* Extreme blur + color saturation for the "thick ice" look */
+  backdrop-filter: blur(24px) saturate(120%);
+  -webkit-backdrop-filter: blur(24px) saturate(120%);
+  background: var(--card-bg);
+
+  /* 3D Ice Bevel: Bright top edge, faint bottom edge */
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  /* Deep shadow behind, soft white glow inside */
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
 /* Sharp cyan glint when hovering */
 body.crystal-ice .link-item:hover .link-icon-circle {
-    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.3);
-    border-top: 1px solid #ffffff;
-    transform: translateY(-3px); /* Snappy physical lift */
+  box-shadow:
+    0 0 25px rgba(0, 255, 255, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.3);
+  border-top: 1px solid #ffffff;
+  transform: translateY(-3px); /* Snappy physical lift */
 }
 
 /* Icy text reflection */
 body.crystal-ice .clock,
 body.crystal-ice .link-title {
-    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.4);
 }
 /* --- Nebula Drift Theme --- */
 body.nebula-drift {
-    --bg: #0b0914; /* Deep space indigo */
-    --fg: #e2d9f3; /* Starlight lavender */
-    --accent: #b088f9; /* Cosmic purple */
-    --card-bg: rgba(20, 15, 35, 0.7);
-    --card-hover: rgba(176, 136, 249, 0.15);
-    --border: rgba(176, 136, 249, 0.3); 
-    --dim: #7a6b99;
-    --delete: #ff4d85;
+  --bg: #0b0914; /* Deep space indigo */
+  --fg: #e2d9f3; /* Starlight lavender */
+  --accent: #b088f9; /* Cosmic purple */
+  --card-bg: rgba(20, 15, 35, 0.7);
+  --card-hover: rgba(176, 136, 249, 0.15);
+  --border: rgba(176, 136, 249, 0.3);
+  --dim: #7a6b99;
+  --delete: #ff4d85;
 }
 
 /* Soft cosmic glow for containers */
@@ -316,25 +342,29 @@ body.nebula-drift .link-icon-circle,
 body.nebula-drift .modal-content,
 body.nebula-drift .engine-dropdown,
 body.nebula-drift .link-editor-container {
-    box-shadow: 0 4px 20px rgba(74, 59, 105, 0.4), inset 0 0 10px rgba(176, 136, 249, 0.05);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 4px 20px rgba(74, 59, 105, 0.4),
+    inset 0 0 10px rgba(176, 136, 249, 0.05);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* Hover effect: Violet/Pink nebula flare */
 body.nebula-drift .link-item:hover .link-icon-circle {
-    box-shadow: 0 0 20px rgba(176, 136, 249, 0.4), inset 0 0 15px rgba(255, 77, 133, 0.1);
-    border-color: #d1b3ff;
-    transform: translateY(-2px);
+  box-shadow:
+    0 0 20px rgba(176, 136, 249, 0.4),
+    inset 0 0 15px rgba(255, 77, 133, 0.1);
+  border-color: #d1b3ff;
+  transform: translateY(-2px);
 }
 
 /* Subtle glowing text for the clock */
 body.nebula-drift .clock {
-    text-shadow: 0 0 15px rgba(176, 136, 249, 0.5);
+  text-shadow: 0 0 15px rgba(176, 136, 249, 0.5);
 }
 /* Fix for blur themes making icons jump over the search dropdown */
 .search-bar {
-    position: relative;
-    z-index: 999 !important;
+  position: relative;
+  z-index: 999 !important;
 }
