@@ -682,3 +682,10 @@ window.backupData = backupData;
 window.restoreData = restoreData;
 window.navigateToFolder = navigateToFolder;
 window.addFolder = addFolder;
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./sw.js")
+      .catch((err) => console.log("SW Registration failed: ", err));
+  });
+}

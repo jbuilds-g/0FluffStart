@@ -558,37 +558,15 @@
         </details>
       </div>
     </div>
-
-    <script src="state.js"></script>
-    <script src="utilities.js"></script>
-    <script src="ui-logic.js"></script>
-
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("./sw.js")
-            .catch((err) => console.log("SW Registration failed: ", err));
-        });
-      }
-    </script>
-
     <div id="betaNotice" class="beta-notice hidden">
-      <div class="beta-content">
-        <h3>⚠️ Beta Version Notice</h3>
-        <p>
-          You are currently using a pre-release beta version (v1.4.0.beta4).
-          Unexpected bugs or visual glitches may occur as we test new folders
-          and themes.
-        </p>
-        <button
-          id="closeBetaBtn"
-          class="save-btn"
-          style="width: 100%; margin-top: 10px"
-        >
-          I Understand
-        </button>
-      </div>
+      <span>You are running a beta version.</span>
+      <a
+        href="https://github.com/jbuilds-g/0FluffStart/blob/main/beta-notes.md"
+        target="_blank"
+        class="beta-link"
+        >Please read.</a
+      >
+      <button id="closeBetaBtn" class="beta-btn">Got it</button>
     </div>
 
     <style>
@@ -598,55 +576,42 @@
         right: 20px;
         background: var(--card-bg);
         border: 1px solid var(--accent);
-        border-radius: var(--radius);
-        padding: 20px;
-        width: 320px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        padding: 12px 18px;
         z-index: 9999;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        transition:
-          opacity 0.3s ease,
-          transform 0.3s ease;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-radius: 4px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        transition: opacity 0.3s ease;
       }
+
       .beta-notice.hidden {
         opacity: 0;
         pointer-events: none;
-        transform: translateY(20px);
       }
-      .beta-content h3 {
+
+      .beta-link {
         color: var(--accent);
-        margin: 0 0 10px 0;
-        font-size: 1.1rem;
+        font-weight: 700;
+        text-decoration: underline;
       }
-      .beta-content p {
-        font-size: 0.9rem;
-        color: var(--fg);
-        line-height: 1.4;
-        margin-bottom: 10px;
+
+      .beta-btn {
+        background: var(--accent);
+        color: #000;
+        border: none;
+        padding: 4px 10px;
+        cursor: pointer;
+        font-weight: 700;
+        border-radius: 3px;
+        font-size: 12px;
       }
     </style>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const betaNotice = document.getElementById("betaNotice");
-        const closeBetaBtn = document.getElementById("closeBetaBtn");
-        const currentBetaVersion = "v1.4.0.beta4";
-
-        if (
-          localStorage.getItem("0fluff_beta_acknowledged") !==
-          currentBetaVersion
-        ) {
-          setTimeout(() => {
-            betaNotice.classList.remove("hidden");
-          }, 1000);
-        }
-
-        closeBetaBtn.addEventListener("click", () => {
-          localStorage.setItem("0fluff_beta_acknowledged", currentBetaVersion);
-          betaNotice.classList.add("hidden");
-        });
-      });
-    </script>
+    <script src="state.js"></script>
+    <script src="utilities.js"></script>
+    <script src="ui-logic.js"></script>
+    <script src="version-check.js"></script>
   </body>
 </html>
