@@ -1,6 +1,8 @@
-/* OflufThemes.css - Consolidated Theme Engine */
+/* 0flufThemes.css - Consolidated Theme Engine */
 
-/* --- GLOBAL VARIABLES (DEFAULT: OLED DARK) --- */
+/* =========================================
+   1. GLOBAL VARIABLES (DEFAULT: OLED DARK)
+   ========================================= */
 :root {
   --bg: #000000;
   --card: #141418;
@@ -17,7 +19,9 @@
   --shadow: none;
 }
 
-/* --- THEME OVERRIDES --- */
+/* =========================================
+   2. STANDARD THEME OVERRIDES
+   ========================================= */
 
 body.light {
   --bg: #f2f2f7;
@@ -128,7 +132,9 @@ body.rose {
   --border: #403d52;
 }
 
-/* --- ADAPTIVE CLOCK STYLES --- */
+/* =========================================
+   3. ADAPTIVE CLOCK STYLES
+   ========================================= */
 .clock {
   transition: all 0.3s ease;
 }
@@ -153,10 +159,13 @@ body.rose {
   color: var(--accent);
 }
 .clock-style-neon {
-  text-shadow:
-    0 0 10px var(--accent),
-    0 0 20px var(--accent);
   color: #fff;
+  /* Stacked shadows: White core -> Tight Accent -> Wide Accent */
+  text-shadow:
+    0 0 5px #fff,
+    0 0 15px var(--accent),
+    0 0 30px var(--accent),
+    0 0 50px var(--accent);
 }
 .clock-style-minimal {
   font-weight: 100;
@@ -172,7 +181,9 @@ body.rose {
   display: inline-block;
 }
 
-/* --- THEME-SPECIFIC HOVER MORPHING (UNIFORM INTERACTION ENGINE v1.3.1) --- */
+/* =========================================
+   4. THEME-SPECIFIC HOVER MORPHING
+   ========================================= */
 .link-item {
   transition: transform 0.2s ease;
 }
@@ -190,7 +201,7 @@ body.rose {
   transform: translateY(-2px);
 }
 
-/* Define default hover behavior (Dark, Light, Luminous, Nord, Dracula, Rose) -> Circle */
+/* Default hover behavior -> Circle */
 .link-item:hover .link-icon-circle {
   background-color: var(--accent);
   border-radius: 50%;
@@ -225,7 +236,9 @@ body.paper .link-item:hover .link-icon-circle {
   border-radius: 50%;
 }
 
-/* --- BACKGROUND IMAGE SUPPORT --- */
+/* =========================================
+   5. BACKGROUND IMAGE SUPPORT
+   ========================================= */
 body {
   background-color: var(--bg);
   color: var(--text);
@@ -248,7 +261,12 @@ body {
   pointer-events: none;
   transition: opacity 0.5s;
 }
-/* --- Night Glow (Moonlight) Theme --- */
+
+/* =========================================
+   6. ADVANCED GLASSMORPHISM THEMES
+   ========================================= */
+
+/* --- Night Glow (Moonlight) --- */
 body.night-glow {
   --bg: #000000;
   --fg: #ffffff;
@@ -260,7 +278,6 @@ body.night-glow {
   --delete: #ff4444;
 }
 
-/* Moonlight Glow on Text */
 body.night-glow .clock,
 body.night-glow .greeting,
 body.night-glow .link-name,
@@ -271,7 +288,6 @@ body.night-glow h3 {
     0 0 20px rgba(255, 255, 255, 0.3);
 }
 
-/* Moonlight Glow on Borders/Containers */
 body.night-glow .search-bar,
 body.night-glow .link-icon-circle,
 body.night-glow .modal-content,
@@ -281,90 +297,78 @@ body.night-glow select {
   border: 1px solid var(--border);
   background: #000000;
 }
+/* Intense fluorescent tube glow specifically for the neon clock setting */
+body.night-glow .clock.clock-style-neon {
+  text-shadow:
+    0 0 5px #fff,
+    0 0 15px #fff,
+    0 0 30px rgba(255, 255, 255, 0.8),
+    0 0 60px rgba(255, 255, 255, 0.5);
+}
 
-/* Hover effect - intense moon glow */
 body.night-glow .link-item:hover .link-icon-circle {
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
   border-color: #ffffff;
 }
-/* Thick Frosted Glass & Sharp Edges */
-body.crystal-ice .search-bar,
-body.crystal-ice .link-icon-circle,
-body.crystal-ice .modal-content,
-body.crystal-ice .engine-dropdown,
-body.crystal-ice .link-editor-container {
-  /* Extreme blur + color saturation for the "thick ice" look */
-  backdrop-filter: blur(24px) saturate(120%);
-  -webkit-backdrop-filter: blur(24px) saturate(120%);
-  background: var(--card-bg);
 
-  /* 3D Ice Bevel: Bright top edge, faint bottom edge */
-  border-top: 1px solid rgba(255, 255, 255, 0.5);
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-  /* Deep shadow behind, soft white glow inside */
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 0 10px rgba(255, 255, 255, 0.05);
-}
-
-/* Sharp cyan glint when hovering */
-body.crystal-ice .link-item:hover .link-icon-circle {
-  box-shadow:
-    0 0 25px rgba(0, 255, 255, 0.3),
-    inset 0 0 20px rgba(255, 255, 255, 0.3);
-  border-top: 1px solid #ffffff;
-  transform: translateY(-3px); /* Snappy physical lift */
-}
-
-/* Icy text reflection */
-body.crystal-ice .clock,
-body.crystal-ice .link-title {
-  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.4);
-}
-/* --- Nebula Drift Theme --- */
+/* --- Nebula Drift --- */
 body.nebula-drift {
-  --bg: #0b0914; /* Deep space indigo */
-  --fg: #e2d9f3; /* Starlight lavender */
-  --accent: #b088f9; /* Cosmic purple */
-  --card-bg: rgba(20, 15, 35, 0.7);
-  --card-hover: rgba(176, 136, 249, 0.15);
-  --border: rgba(176, 136, 249, 0.3);
-  --dim: #7a6b99;
-  --delete: #ff4d85;
+  --bg: #1f1b2e; /* Fallback for older browsers */
+  background-image: linear-gradient(135deg, #1f1b2e 0%, #16213e 100%);
+  background-attachment: fixed;
+  --card-bg: rgba(255, 255, 255, 0.04);
+  --card-hover: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.12);
+  --text: #fdfcff;
+  --dim: #a3a9c2;
+  --accent: #00e5ff;
+  --delete: #ff4a8d;
 }
 
-/* Soft cosmic glow for containers */
-body.nebula-drift .search-bar,
-body.nebula-drift .link-icon-circle,
 body.nebula-drift .modal-content,
 body.nebula-drift .engine-dropdown,
-body.nebula-drift .link-editor-container {
-  box-shadow:
-    0 4px 20px rgba(74, 59, 105, 0.4),
-    inset 0 0 10px rgba(176, 136, 249, 0.05);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+body.nebula-drift .search-bar,
+body.nebula-drift .link-icon-circle {
+  background: rgba(35, 30, 55, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
-/* Hover effect: Violet/Pink nebula flare */
-body.nebula-drift .link-item:hover .link-icon-circle {
-  box-shadow:
-    0 0 20px rgba(176, 136, 249, 0.4),
-    inset 0 0 15px rgba(255, 77, 133, 0.1);
-  border-color: #d1b3ff;
-  transform: translateY(-2px);
+body.nebula-drift .clock.clock-style-neon {
+  color: #fff;
+  /* Hot white core -> Cyan inner glow -> Purple outer nebula bleed */
+  text-shadow:
+    0 0 5px #fff,
+    0 0 15px #00e5ff,
+    0 0 30px #00e5ff,
+    0 0 60px #b088f9;
 }
 
-/* Subtle glowing text for the clock */
-body.nebula-drift .clock {
-  text-shadow: 0 0 15px rgba(176, 136, 249, 0.5);
-}
+/* =========================================
+   7. FIXES & PERFORMANCE PATCHES
+   ========================================= */
+
 /* Fix for blur themes making icons jump over the search dropdown */
 .search-bar {
   position: relative;
   z-index: 999 !important;
+}
+
+/* GLOBAL GPU PERFORMANCE PATCH */
+/* Forces the settings modal and floating button onto their own hardware-accelerated layers */
+.modal-content,
+.floating-settings {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  will-change: transform, scroll-position;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Native momentum scrolling for the settings menu */
+.modal-content {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }

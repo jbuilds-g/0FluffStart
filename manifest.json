@@ -1,15 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "0flufStart beta4",
+  "name": "0flufStart",
   "version": "1.4.0",
   "description": "Zero-Fluff. All Speed. A privacy-first, minimalist start page.",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": [
-    "storage",
-    "unlimitedStorage"
-  ],
+  "permissions": ["storage", "unlimitedStorage"],
   "icons": {
     "16": "icon.png",
     "48": "icon.png",

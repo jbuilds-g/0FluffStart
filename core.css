@@ -2,127 +2,158 @@
 
 /* --- BASE LAYOUT --- */
 * {
-    /* Disable the default mobile tap highlight flash */
-    -webkit-tap-highlight-color: transparent;
-
-/* --- Quick Link Title Toggle Logic --- */
-.link-grid:not(.show-titles) .link-name {
-    display: none !important;
-}
- 
+  /* Disable the default mobile tap highlight flash */
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    font-family: var(--font-main);
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+  font-family: var(--font-main);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
 
 /* Main Container */
-.container { 
-    width: 100%; 
-    max-width: 600px; 
-    padding-bottom: 50px; 
+.container {
+  width: 100%;
+  max-width: 600px;
+  padding-bottom: 50px;
 }
 
 /* --- HEADER SECTION --- */
-.header-row { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 10px; 
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-h1 { 
-    margin: 0; 
-    font-size: 2rem; 
-    letter-spacing: -1px; 
+h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: -1px;
 }
 
 /* Header Buttons */
-.icon-btn { 
-    background: transparent; 
-    border: none; 
-    color: var(--text); 
-    cursor: pointer; 
-    padding: 5px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s;
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
 }
 
 .icon-btn:hover {
-    color: var(--accent);
+  color: var(--accent);
 }
 
 /* --- CLOCK & GREETING --- */
-.clock { 
-    font-size: 1.8rem; 
-    font-weight: 300; 
-    color: var(--accent); 
-    margin-bottom: 5px; 
-    font-variant-numeric: tabular-nums; 
+.clock {
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--accent);
+  margin-bottom: 5px;
+  font-variant-numeric: tabular-nums;
 }
 
 .greeting {
-    font-size: 1rem;
-    color: var(--dim);
-    margin-bottom: 30px; 
-    font-weight: 500;
+  font-size: 1rem;
+  color: var(--dim);
+  margin-bottom: 30px;
+  font-weight: 500;
 }
 
 /* --- UTILITIES --- */
-.hidden { 
-    display: none !important; 
+.hidden {
+  display: none !important;
 }
 
 /* --- FLOATING SETTINGS BUTTON (v1.1.0) --- */
 .floating-settings {
-    position: fixed;
-    bottom: 24px;
-    left: 24px;
-    z-index: 50;
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 50;
 }
 
 .floating-btn {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, background 0.3s;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.3s,
+    background 0.3s;
 }
 
 .floating-btn:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    background: var(--card-hover);
-    color: var(--accent);
-    border-color: var(--accent);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  background: var(--card-hover);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* --- DESKTOP OPTIMIZATIONS (Core Layout) --- */
 @media (min-width: 768px) {
-    .container { 
-        max-width: 900px; 
-        padding-top: 50px;
-    }
+  .container {
+    max-width: 900px;
+    padding-top: 50px;
+  }
 
-    h1 {
-        font-size: 2.5rem;
-    }
-    
-    .clock { 
-        font-size: 2.5rem; 
-    }
+  h1 {
+    font-size: 2.5rem;
+  }
 
-    .greeting {
-        font-size: 1.2rem;
-    }
+  .clock {
+    font-size: 2.5rem;
+  }
+
+  .greeting {
+    font-size: 1.2rem;
+  }
+}
+
+/* --- FOLDER ICON & TEXT MORPH FIX --- */
+/* Turns SVG dark on hover */
+.link-item:hover .link-icon-circle svg {
+  stroke: var(--bg) !important; 
+}
+
+/* Turns Text icon dark on hover */
+.link-item:hover .link-icon-circle span {
+  color: var(--bg) !important; 
+}
+
+/* --- SMART TITLE HOVER LOGIC --- */
+/* If the user has NOT checked "Show Titles", hide them by default... */
+.link-grid:not(.show-titles) .link-name {
+  display: block !important; 
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none; /* Prevents invisible titles from blocking clicks */
+}
+
+/* Show title when hovering over the item */
+.link-grid:not(.show-titles) .link-item:hover .link-name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* If the user HAS checked "Show Titles", keep them visible normally */
+.link-grid.show-titles .link-name {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
 }

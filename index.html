@@ -150,7 +150,7 @@
                 color: var(--dim);
                 font-weight: 600;
               "
-              >v1.4.0.beta4</span
+              >v1.4.0</span
             >
             <button
               id="githubBtn"
@@ -229,6 +229,7 @@
               </div>
               <div class="help-text">
                 Add, edit, or remove the shortcut icons on your main dashboard.
+                Drag the handle to reorder them or drop links inside folders.
               </div>
 
               <div id="linkListContainer">
@@ -263,6 +264,7 @@
                 >
                   Add New Link
                 </h4>
+
                 <input
                   type="text"
                   id="editName"
@@ -273,11 +275,12 @@
                   id="editUrl"
                   placeholder="URL (e.g. youtube.com)"
                 />
-                <div style="display: flex; gap: 10px">
+
+                <div style="display: flex; gap: 10px; margin-bottom: 10px">
                   <button
                     id="saveLinkBtn"
                     class="save-btn"
-                    style="margin-top: 0"
+                    style="margin-top: 0; flex: 1"
                   >
                     Save
                   </button>
@@ -286,7 +289,7 @@
                     class="secondary"
                     style="
                       margin-top: 0;
-                      width: 100%;
+                      flex: 1;
                       border-radius: var(--radius);
                       font-weight: bold;
                       border: 1px solid var(--border);
@@ -299,10 +302,20 @@
             </div>
 
             <div class="setting-group" style="margin-top: 20px">
-              <label class="radio-option" style="justify-content: flex-start">
-                <input type="checkbox" id="showTitlesToggle" /> Show Quick Link
-                Titles
-              </label>
+              <div
+                class="setting-header"
+                style="justify-content: flex-start; gap: 10px"
+              >
+                <label class="radio-option" style="margin: 0">
+                  <input type="checkbox" id="showTitlesToggle" /> Show Quick
+                  Link Titles
+                </label>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                When off, link names stay hidden until you hover over the icon.
+                Keeps the dashboard ultra-clean.
+              </div>
             </div>
           </div>
         </details>
@@ -331,7 +344,7 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                The display name used for the greeting in the header.
+                The display name used for the greeting in the top left header.
               </div>
               <input
                 type="text"
@@ -371,6 +384,10 @@
                 <h3>Clock Style</h3>
                 <button class="help-btn">?</button>
               </div>
+              <div class="help-text">
+                Choose the typography and visual design of the main dashboard
+                clock.
+              </div>
               <select id="clockStyleSelect">
                 <option value="default">Default</option>
                 <option value="bold">Bold & Chunky</option>
@@ -387,6 +404,10 @@
               <div class="setting-header">
                 <h3>Custom Background</h3>
                 <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Upload your own image to replace the solid background. High-res
+                images look best.
               </div>
               <div class="bg-control-row">
                 <input
@@ -439,6 +460,10 @@
                 <h3>Clock Format</h3>
                 <button class="help-btn">?</button>
               </div>
+              <div class="help-text">
+                Switch between standard 12-hour (AM/PM) and 24-hour military
+                time.
+              </div>
               <div class="radio-row">
                 <label class="radio-option">
                   <input
@@ -466,6 +491,10 @@
                 <h3>External Search Suggestions</h3>
                 <button class="help-btn">?</button>
               </div>
+              <div class="help-text">
+                Fetches real-time autocomplete suggestions from search engines
+                as you type.
+              </div>
               <label class="radio-option" style="justify-content: flex-start">
                 <input type="checkbox" id="externalSuggestToggle" /> Enable Live
                 Suggestions
@@ -476,6 +505,10 @@
               <div class="setting-header">
                 <h3>Search History Control</h3>
                 <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Keeps a private local log of your recent searches for quicker
+                access later.
               </div>
               <button
                 id="clearHistoryBtn"
@@ -520,6 +553,10 @@
                 <h3>Reset Preferences</h3>
                 <button class="help-btn">?</button>
               </div>
+              <div class="help-text">
+                Wipes all custom settings and returns the dashboard to its
+                original factory state.
+              </div>
               <button
                 id="resetSettingsBtn"
                 class="secondary"
@@ -537,6 +574,10 @@
               <div class="setting-header">
                 <h3 style="margin-top: 0">Data Backup & Restore</h3>
                 <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Download your links and settings as a file, or load a previous
+                backup.
               </div>
               <div style="display: flex; gap: 10px">
                 <button id="backupDataBtn" class="secondary" style="flex: 1">
@@ -557,88 +598,8 @@
         </details>
       </div>
     </div>
-
     <script src="state.js"></script>
     <script src="utilities.js"></script>
     <script src="ui-logic.js"></script>
-
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("./sw.js")
-            .catch((err) => console.log("SW Registration failed: ", err));
-        });
-      }
-    </script>
-
-   <div id="betaNotice" class="beta-notice hidden">
-  <span>You are running a beta version.</span>
-  <a href="https://github.com/jbuilds-g/0FluffStart/blob/main/beta-notes.md" target="_blank" class="beta-link">Please read.</a>
-  <button id="closeBetaBtn" class="beta-btn">Got it</button>
-</div>
-
-<style>
-  .beta-notice {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--card-bg);
-    border: 1px solid var(--accent);
-    padding: 12px 18px;
-    z-index: 9999;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-radius: 4px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    transition: opacity 0.3s ease;
-  }
-
-  .beta-notice.hidden { 
-    opacity: 0; 
-    pointer-events: none; 
-  }
-
-  .beta-link { 
-    color: var(--accent); 
-    font-weight: 700; 
-    text-decoration: underline;
-  }
-
-  .beta-btn {
-    background: var(--accent);
-    color: #000;
-    border: none;
-    padding: 4px 10px;
-    cursor: pointer;
-    font-weight: 700;
-    border-radius: 3px;
-    font-size: 12px;
-  }
-</style>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const betaNotice = document.getElementById("betaNotice");
-    const closeBetaBtn = document.getElementById("closeBetaBtn");
-    const currentBetaVersion = "v1.4.0.beta4";
-
-    if (localStorage.getItem("0fluff_beta_acknowledged") !== currentBetaVersion) {
-      setTimeout(() => {
-        betaNotice.classList.remove("hidden");
-      }, 1000);
-    }
-
-    closeBetaBtn.addEventListener("click", () => {
-      localStorage.setItem("0fluff_beta_acknowledged", currentBetaVersion);
-      betaNotice.classList.add("hidden");
-    });
-  });
-</script>
-       
-        
-    </script>
   </body>
 </html>

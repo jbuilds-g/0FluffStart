@@ -6,10 +6,15 @@
 
 // --- STATE ---
 let currentFolderId = null;
-let draggedItemId = null; // NEW: Tracks the ID of the item being moved
 
-// --- INIT ---
+// --- INIT & PWA ---
 document.addEventListener("DOMContentLoaded", () => {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("./sw.js")
+      .catch((err) => console.log("SW Error: ", err));
+  }
+
   bindStaticEvents();
   renderLinks();
   loadSettings();
@@ -48,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// --- CSP EVENT BINDING ---
+// --- EVENT BINDING ---
 function bindStaticEvents() {
   document
     .getElementById("settingsToggleBtn")
@@ -144,7 +149,11 @@ function bindStaticEvents() {
   document.querySelectorAll(".help-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      const textEl = btn.parentElement.nextElementSibling;
+      const parent =
+        btn.closest(".setting-item") ||
+        btn.closest(".setting-header") ||
+        btn.parentElement;
+      const textEl = parent.nextElementSibling;
       if (textEl && textEl.classList.contains("help-text")) {
         textEl.classList.toggle("show");
         btn.classList.toggle("active");
@@ -153,11 +162,10 @@ function bindStaticEvents() {
   });
 
   document.getElementById("resetSettingsBtn").addEventListener("click", () => {
-    const warning =
-      "Are you sure? This is going to delete all your preferences in settings. This action cannot be undone.";
+    const warning = "Are you sure? This action cannot be undone.";
     if (confirm(warning)) {
       localStorage.removeItem("0fluff_settings");
-      alert("Settings have been reset to default.");
+      alert("Settings reset to default.");
       window.location.reload();
     }
   });
@@ -199,12 +207,11 @@ function addFolder() {
   renderLinkManager();
 }
 
-// --- LINKS RENDERING & DRAG EVENTS ---
+// --- MAIN GRID RENDERING ---
 function renderLinks() {
   const grid = document.getElementById("linkGrid");
   if (!grid) return;
   grid.innerHTML = "";
-
   grid.classList.toggle("show-titles", !!settings.showTitles);
 
   const visibleLinks = links.filter(
@@ -216,10 +223,6 @@ function renderLinks() {
     const item = document.createElement("div");
     item.className = "link-item";
     item.dataset.id = link.id;
-
-    // NEW: Make items draggable
-    item.draggable = true;
-    setupDragEvents(item);
 
     if (link.isFolder) {
       item.classList.add("is-folder");
@@ -268,7 +271,6 @@ function renderLinks() {
     fragment.appendChild(item);
   });
 
-  // Add "+" tile inside folders
   if (currentFolderId) {
     const addBtnItem = document.createElement("div");
     addBtnItem.className = "link-item add-btn-item";
@@ -284,66 +286,10 @@ function renderLinks() {
     });
     fragment.appendChild(addBtnItem);
   }
-
   grid.appendChild(fragment);
 }
 
-// --- NEW: DRAG AND DROP ENGINE ---
-function setupDragEvents(el) {
-  el.addEventListener("dragstart", (e) => {
-    draggedItemId = el.dataset.id;
-    el.classList.add("dragging");
-    e.dataTransfer.effectAllowed = "move";
-  });
-
-  el.addEventListener("dragend", () => {
-    el.classList.remove("dragging");
-    document
-      .querySelectorAll(".drag-over")
-      .forEach((item) => item.classList.remove("drag-over"));
-    draggedItemId = null;
-  });
-
-  el.addEventListener("dragover", (e) => {
-    e.preventDefault(); // Required to allow drop
-    const target = e.target.closest(".link-item");
-
-    // Only show "glow" if we are hovering a folder that ISN'T the thing we are dragging
-    if (
-      target &&
-      target.classList.contains("is-folder") &&
-      target.dataset.id !== draggedItemId
-    ) {
-      target.classList.add("drag-over");
-    }
-  });
-
-  el.addEventListener("dragleave", (e) => {
-    const target = e.target.closest(".link-item");
-    if (target) target.classList.remove("drag-over");
-  });
-
-  el.addEventListener("drop", (e) => {
-    e.preventDefault();
-    const target = e.target.closest(".link-item");
-    if (target && target.classList.contains("is-folder") && draggedItemId) {
-      moveItemToFolder(draggedItemId, target.dataset.id);
-    }
-  });
-}
-
-function moveItemToFolder(itemId, folderId) {
-  if (itemId === folderId) return;
-
-  const itemIndex = links.findIndex((l) => l.id === itemId);
-  if (itemIndex > -1) {
-    links[itemIndex].parentId = folderId; // Update parent reference
-    localStorage.setItem("0fluff_links", JSON.stringify(links));
-    renderLinks();
-  }
-}
-
-// --- LINK MANAGEMENT ---
+// --- NESTED LINK MANAGEMENT ---
 function renderLinkManager() {
   const linkManagerContent = document.getElementById("linkManagerContent");
   if (!linkManagerContent) return;
@@ -356,43 +302,134 @@ function renderLinkManager() {
   }
 
   const fragment = document.createDocumentFragment();
-  const editIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>`;
-  const deleteIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
 
-  links.forEach((link) => {
+  // --- ICONS & SETUP ---
+  const editIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>`;
+  const deleteIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+  const moveOutIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+  const folderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+
+  // --- ITEM BUILDER ---
+  function createManagerItem(link, isSubItem = false) {
     const item = document.createElement("div");
     item.className = "link-manager-item";
+    item.dataset.id = link.id;
+
+    if (isSubItem) {
+      item.style.marginLeft = "28px";
+      item.style.borderLeft = "2px solid var(--border)";
+      item.style.paddingLeft = "12px";
+      item.style.marginTop = "6px";
+      item.style.marginBottom = "6px";
+      item.style.width = "calc(100% - 40px)";
+    }
 
     const nameSpan = document.createElement("span");
     nameSpan.className = "link-name";
-    const folderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
-    nameSpan.innerHTML = (link.isFolder ? folderSvg : "") + link.name;
+    nameSpan.style.display = "flex";
+    nameSpan.style.alignItems = "center";
+
+    let prefix = "";
+    if (link.isFolder) {
+      prefix += `<span class="folder-toggle" style="cursor:pointer; margin-right:8px; color:var(--accent); font-size:12px; width:12px; display:inline-block; text-align:center;">▶</span>`;
+    }
+    nameSpan.innerHTML = prefix + (link.isFolder ? folderSvg : "") + link.name;
 
     const actionsDiv = document.createElement("div");
     actionsDiv.className = "link-actions";
+    actionsDiv.style.display = "flex";
+    actionsDiv.style.gap = "5px";
+
+    if (isSubItem) {
+      const moveOutBtn = document.createElement("button");
+      moveOutBtn.className = "icon-btn";
+      moveOutBtn.title = "Move out of folder";
+      moveOutBtn.innerHTML = moveOutIconSVG;
+
+      moveOutBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (
+          confirm(
+            `Are you sure you want to move "${link.name}" out of this folder?`,
+          )
+        ) {
+          const idx = links.findIndex((l) => l.id === link.id);
+          if (idx > -1) {
+            const [movedItem] = links.splice(idx, 1);
+            movedItem.parentId = null;
+            links.unshift(movedItem);
+
+            localStorage.setItem("0fluff_links", JSON.stringify(links));
+            renderLinks();
+            renderLinkManager();
+          }
+        }
+      });
+      actionsDiv.appendChild(moveOutBtn);
+    }
 
     const editBtn = document.createElement("button");
     editBtn.className = "icon-btn secondary";
+    editBtn.title = "Edit";
     editBtn.innerHTML = editIconSVG;
     editBtn.addEventListener("click", (e) => editLink(link.id, e));
 
     const deleteBtn = document.createElement("button");
     deleteBtn.className = "icon-btn delete-btn";
+    deleteBtn.title = "Delete";
     deleteBtn.innerHTML = deleteIconSVG;
     deleteBtn.addEventListener("click", (e) => deleteLink(link.id, e));
 
     actionsDiv.appendChild(editBtn);
     actionsDiv.appendChild(deleteBtn);
+
     item.appendChild(nameSpan);
     item.appendChild(actionsDiv);
-    fragment.appendChild(item);
-  });
+
+    return item;
+  }
+
+  // --- RENDER LOOP ---
+  links
+    .filter((l) => !l.parentId)
+    .forEach((rootLink) => {
+      const row = createManagerItem(rootLink, false);
+      fragment.appendChild(row);
+
+      if (rootLink.isFolder) {
+        const subContainer = document.createElement("div");
+        subContainer.className = "folder-sub-container";
+
+        subContainer.style.display = "none";
+        subContainer.style.marginTop = "4px";
+        subContainer.style.marginBottom = "8px";
+
+        const toggleBtn = row.querySelector(".folder-toggle");
+        if (toggleBtn) {
+          toggleBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isHidden = subContainer.style.display === "none";
+            subContainer.style.display = isHidden ? "block" : "none";
+            toggleBtn.innerText = isHidden ? "▼" : "▶";
+          });
+        }
+
+        links
+          .filter((l) => l.parentId === rootLink.id)
+          .forEach((child) => {
+            subContainer.appendChild(createManagerItem(child, true));
+          });
+        fragment.appendChild(subContainer);
+      }
+    });
+
   linkManagerContent.appendChild(fragment);
 }
 
 function openEditor(id = null) {
   const linkListContainer = document.getElementById("linkListContainer");
   const linkEditorContainer = document.getElementById("linkEditorContainer");
+
   if (linkListContainer) linkListContainer.classList.add("hidden");
   if (linkEditorContainer) linkEditorContainer.classList.remove("hidden");
 
@@ -406,6 +443,7 @@ function openEditor(id = null) {
     if (link) {
       titleEl.innerText = link.isFolder ? "Edit Folder" : "Edit Link";
       nameInput.value = link.name;
+
       if (link.isFolder) {
         urlInput.style.display = "none";
         urlInput.value = "";
@@ -551,6 +589,9 @@ function autoSaveSettings() {
   localStorage.setItem("0fluff_settings", JSON.stringify(settings));
   document.body.className = settings.theme;
   applyClockStyle();
+  document
+    .getElementById("linkGrid")
+    ?.classList.toggle("show-titles", settings.showTitles);
 }
 
 function toggleSettings() {
