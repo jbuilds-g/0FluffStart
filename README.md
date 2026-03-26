@@ -1,11 +1,4 @@
 # 👑 0FluffStart
-**The Final Minimalist Dashboard for Desktop & Mobile.**
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-blue)
-![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
-
-> 0FluffStart is a high-performance, privacy-focused start page designed to replace bloated default homepages. It operates as a local-first application, ensuring that your data links, settings, and search history never leave your device.
 
 <div align="center">
 
@@ -14,6 +7,14 @@
   <p><i>The high-performance, minimalist productivity engine.</i></p>
   
   <br><br>
+
+**The Final Minimalist Dashboard for Desktop & Mobile.**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-blue)
+![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
+
+> 0FluffStart is a high-performance, privacy-focused start page designed to replace bloated default homepages. It operates as a local-first application, ensuring that your data links, settings, and search history never leave your device.
 
   <h3>📱 Mobile Experience</h3>
   <video src="https://github.com/user-attachments/assets/7d073a88-8bb4-4bcf-9ea4-da28beb1e815" width="250" muted autoplay loop playsinline style="border-radius: 16px; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></video>
