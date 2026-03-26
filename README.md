@@ -8,16 +8,18 @@
 > 0FluffStart is a high-performance, privacy-focused start page designed to replace bloated default homepages. It operates as a local-first application, ensuring that your data links, settings, and search history never leave your device.
 
 <div align="center">
-  <video 
-    src="https://github.com/user-attachments/assets/75b1a36b-fab8-4b27-bde6-6aaf81866c16" 
-    width="100%" 
-    muted 
-    autoplay 
-    loop 
-    playsinline 
-    style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.5); pointer-events: none;"
-  >
-  </video>
+  <table>
+    <tr>
+      <td width="65%" align="center" valign="top">
+        <b>Desktop Experience</b><br><br>
+        <video src="https://github.com/user-attachments/assets/75b1a36b-fab8-4b27-bde6-6aaf81866c16" width="100%" muted autoplay loop playsinline style="border-radius: 8px; pointer-events: none;"></video>
+      </td>
+      <td width="35%" align="center" valign="top">
+        <b>Mobile View</b><br><br>
+        <video src="https://github.com/user-attachments/assets/7d073a88-8bb4-4bcf-9ea4-da28beb1e815" width="100%" muted autoplay loop playsinline style="border-radius: 8px; pointer-events: none;"></video>
+      </td>
+    </tr>
+  </table>
 </div>
 
 [**🚀 Launch Web Version**](https://jbuilds-g.github.io/0FluffStart/)
