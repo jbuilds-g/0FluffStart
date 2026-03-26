@@ -10,23 +10,21 @@
 <div align="center">
   <table>
     <tr>
-      <td width="65%" align="center" valign="top">
+      <td width="65%" align="center" valign="middle">
         <video src="https://github.com/user-attachments/assets/75b1a36b-fab8-4b27-bde6-6aaf81866c16" width="100%" muted autoplay loop playsinline style="border-radius: 8px; pointer-events: none;"></video>
+        
+        <br /><br />
+        
+        <img src="https://github.com/user-attachments/assets/46af697b-7331-4959-9cdc-a5f53d476ce3" width="90" alt="0FluffStart Icon" />
+        <h2>0FluffStart</h2>
+        <p><i>The high-performance, minimalist productivity engine.</i></p>
       </td>
+
       <td width="35%" align="center" valign="top">
         <video src="https://github.com/user-attachments/assets/7d073a88-8bb4-4bcf-9ea4-da28beb1e815" width="100%" muted autoplay loop playsinline style="border-radius: 8px; pointer-events: none;"></video>
       </td>
     </tr>
   </table>
-
-  <br />
-
-  <img src="https://github.com/user-attachments/assets/46af697b-7331-4959-9cdc-a5f53d476ce3" width="120" alt="0FluffStart Icon" />
-  
-  <h1 align="center">0FluffStart</h1>
-  <p align="center"><i>The high-performance, minimalist productivity engine.</i></p>
-
-  <br />
 </div>
 
 [**🚀 Launch Web Version**](https://jbuilds-g.github.io/0FluffStart/)
