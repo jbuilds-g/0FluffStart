@@ -1,44 +1,35 @@
-// state.js
-
-// --- HELPER: Generate Unique IDs ---
-// Crucial for drag and drop. We need to track exactly which item is moving.
-function generateId() {
-  return (
-    "item_" + Date.now().toString(36) + Math.random().toString(36).substr(2, 5)
-  );
-}
+/* state.js - Core Data & Persistence Management */
 
 // --- CORE STATE ---
 let links = JSON.parse(localStorage.getItem("0fluff_links") || "[]");
 
 // --- MIGRATION SCRIPT ---
-// Upgrades old basic links into the new advanced format
+// Upgrades legacy links into the modern ID-based format
 let needsSave = false;
 links = links.map((item) => {
-  // If the item doesn't have an ID, it's from the old version of the app
   if (!item.id) {
     needsSave = true;
     return {
       id: generateId(),
-      type: "link", // Explicitly label it as a link
+      type: "link",
       name: item.name,
       url: item.url,
+      parentId: null, // Ensure new links have a parentId for the move-out logic
     };
   }
-  // If it already has an ID, it's a modern item (link or folder), leave it alone
   return item;
 });
 
-// If we upgraded any old links, save the new modern list back to storage
 if (needsSave) {
   localStorage.setItem("0fluff_links", JSON.stringify(links));
 }
 
-// Helper to easily save links whenever we drag/drop or edit them
+// Helper to persist the current state of links to local storage
 function saveLinksState() {
   localStorage.setItem("0fluff_links", JSON.stringify(links));
 }
 
+// --- SETTINGS & HISTORY ---
 let settings = JSON.parse(
   localStorage.getItem("0fluff_settings") ||
     JSON.stringify({
@@ -55,10 +46,9 @@ let searchHistory = JSON.parse(localStorage.getItem("0fluff_history") || "[]");
 // --- UI STATE ---
 let isEditMode = false;
 let isEditingId = null;
+let activeFolderId = null; // Tracks the current folder view depth
 
-// NEW: Tracks if the user is currently viewing the inside of a folder
-let activeFolderId = null;
-
+// --- SEARCH ENGINE CONFIGURATION ---
 const searchEngines = [
   { name: "Google", url: "https://www.google.com/search?q=", initial: "G" },
   { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=", initial: "D" },
