@@ -2,7 +2,7 @@
 **The Final Minimalist Dashboard for Desktop & Mobile.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Version: 1.3.2](https://img.shields.io/badge/Version-1.3.2-blue)
+![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-blue)
 ![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
 
 > 0FluffStart is a high-performance, privacy-focused start page designed to replace bloated default homepages. It operates as a local-first application, ensuring that your data links, settings, and search history never leave your device.
@@ -13,7 +13,7 @@
 
 ## 📖 Overview
 0FluffStart is built on a "Zero-Fluff" philosophy: no trackers, no backend latency, and zero dependencies. It serves a dual purpose:
-1.  **Desktop:** A fully integrated browser extension (Manifest V3).
+1.  **Desktop:** A fully integrated browser extension (Manifest V3) or standalone start page.
 2.  **Mobile & Web:** A high-performance **Progressive Web App (PWA)** that works offline and installs natively on mobile devices.
 
 ---
@@ -29,7 +29,7 @@ Install 0FluffStart locally to override your "New Tab" page.
 5.  Select **Load Unpacked** and point to the extracted folder.
 
 ### Mobile & Live Web (PWA)
-The hosted version is now a fully compliant **PWA**, meaning it can be installed as a standalone app that works even without an internet connection.
+The hosted version is a fully compliant **PWA**, meaning it can be installed as a standalone app that works even without an internet connection.
 
 #### Android (Chrome)
 1.  Navigate to the [Live URL](https://jbuilds-g.github.io/0FluffStart/).
@@ -49,20 +49,22 @@ The hosted version is now a fully compliant **PWA**, meaning it can be installed
 ---
 
 ## 🔥 Key Features
-* **Privacy-First Architecture:** No external analytics or trackers.
-* **PWA Enabled:** Offline-capable with instant load times via Service Worker caching.
-* **Theming:** 10+ themes (OLED, Cyberpunk, Luminous, Retro Amber, etc.).
-* **Data Portability:** Local Backup & Restore functionality.
-* **Smart Search:** Instant engine switching with privacy-focused DuckDuckGo suggestions.
-* **Optimized Performance:** Pure Vanilla JS/CSS for sub-second load times.
+* **GPU-Accelerated Performance:** Global hardware acceleration and optimized CSS layers ensure silky-smooth 60fps interactions on all devices.
+* **Privacy-First Architecture:** No external analytics, trackers, or cloud sync. Your data stays on your hardware. *(Note: Enabling optional search suggestions will connect to the DuckDuckGo API).*
+* **Offline-Ready PWA:** Instant load times and full offline functionality via advanced Service Worker caching.
+* **Smart Link Management:** Organize your dashboard with nested folders and explicit "Move Out" management tools.
+* **Premium Theming Engine:** 10+ built-in themes (e.g., OLED, Cyberpunk, Clean Light).
+* **Custom Backgrounds:** Full support for high-resolution image uploads with persistent local storage.
+* **Integrated Search Hub:** Instant engine switching with private search suggestions and local history.
+* **Ultra-Minimalist Codebase:** Built with 100% Vanilla JS/CSS—zero framework bloat, zero dependencies.
 
 ---
 
 ## 💾 Data Management
-All configuration is stored in the browser's `localStorage`. To move your setup from Desktop to Mobile:
-1.  **Export:** Go to *Settings > Advanced* and click **Backup**.
+All configuration is stored in the browser's `localStorage` and `IndexedDB`. To move your setup from Desktop to Mobile:
+1.  **Export:** Go to *Settings > Data Management* and click **Backup (Save)**.
 2.  **Transfer:** Send the generated `.json` file to your mobile device.
-3.  **Import:** Open the mobile web link, go to *Settings > Advanced*, and select **Restore**.
+3.  **Import:** Open the mobile web link, go to *Settings > Data Management*, and select **Restore (Load)**.
 
 ---
 
@@ -79,4 +81,4 @@ All configuration is stored in the browser's `localStorage`. To move your setup 
 ├── state.js           # Data persistence & state management
 ├── ui-logic.js        # DOM interaction & event handling
 ├── utilities.js       # Search APIs & helper functions
-└── *.css              # Modular stylesheets (Themes, Core, Layout)
+└── *.css              # Modular stylesheets (Themes, Core, Layout, Settings)
