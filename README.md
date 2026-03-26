@@ -1,8 +1,9 @@
 # 👑 0FluffStart
+
 **The Final Minimalist Dashboard for Desktop & Mobile.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-blue)
+![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-blue)
 ![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
 
 > 0FluffStart is a high-performance, privacy-focused start page designed to replace bloated default homepages. It operates as a local-first application, ensuring that your data links, settings, and search history never leave your device.
@@ -12,7 +13,9 @@
 ---
 
 ## 📖 Overview
+
 0FluffStart is built on a "Zero-Fluff" philosophy: no trackers, no backend latency, and zero dependencies. It serves a dual purpose:
+
 1.  **Desktop:** A fully integrated browser extension (Manifest V3) or standalone start page.
 2.  **Mobile & Web:** A high-performance **Progressive Web App (PWA)** that works offline and installs natively on mobile devices.
 
@@ -21,7 +24,9 @@
 ## 🛠️ Deployment & Installation
 
 ### Desktop (Browser Extension)
+
 Install 0FluffStart locally to override your "New Tab" page.
+
 1.  **Download** the latest source code from the [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) page.
 2.  **Extract** the archive to a local directory.
 3.  Navigate to your browser's extension management page (`chrome://extensions` or `edge://extensions`).
@@ -29,51 +34,59 @@ Install 0FluffStart locally to override your "New Tab" page.
 5.  Select **Load Unpacked** and point to the extracted folder.
 
 ### Mobile & Live Web (PWA)
+
 The hosted version is a fully compliant **PWA**, meaning it can be installed as a standalone app that works even without an internet connection.
 
 #### Android (Chrome)
+
 1.  Navigate to the [Live URL](https://jbuilds-g.github.io/0FluffStart/).
 2.  Tap the three dots (Menu) and select **Add to Home Screen**.
 3.  The dashboard will appear in your app drawer as a native application.
 
 #### iOS (Safari)
+
 1.  Open the [Live URL](https://jbuilds-g.github.io/0FluffStart/) in Safari.
 2.  Tap the **Share** icon and select **Add to Home Screen**.
 3.  The dashboard will launch in full-screen mode, hiding the Safari UI for a native feel.
 
- > [!IMPORTANT]
+> [!IMPORTANT]
 > **Update Policy:**
-> * **Live Web/PWA:** You do **not** need to manually update. The Service Worker automatically syncs the latest version from the live URL whenever you are online.
-> * **Browser Extension:** Since this is a manual "Unpacked" installation, you must occasionally download the latest release and overwrite your local folder to receive new features.
+>
+> - **Live Web/PWA:** You do **not** need to manually update. The Service Worker automatically syncs the latest version from the live URL whenever you are online.
+> - **Browser Extension:** Since this is a manual "Unpacked" installation, you must occasionally download the latest release and overwrite your local folder to receive new features.
 
 ---
 
 ## 🔥 Key Features
-* **GPU-Accelerated Performance:** Global hardware acceleration and optimized CSS layers ensure silky-smooth 60fps interactions on all devices.
-* **Privacy-First Architecture:** No external analytics, trackers, or cloud sync. Your data stays on your hardware. *(Note: Enabling optional search suggestions will connect to the DuckDuckGo API).*
-* **Offline-Ready PWA:** Instant load times and full offline functionality via advanced Service Worker caching.
-* **Smart Link Management:** Organize your dashboard with nested folders and explicit "Move Out" management tools.
-* **Premium Theming Engine:** 10+ built-in themes (e.g., OLED, Cyberpunk, Clean Light).
-* **Custom Backgrounds:** Full support for high-resolution image uploads with persistent local storage.
-* **Integrated Search Hub:** Instant engine switching with private search suggestions and local history.
-* **Ultra-Minimalist Codebase:** Built with 100% Vanilla JS/CSS—zero framework bloat, zero dependencies.
+
+- **GPU-Accelerated Performance:** Global hardware acceleration and optimized CSS layers ensure silky-smooth 60fps interactions on all devices.
+- **Privacy-First Architecture:** No external analytics, trackers, or cloud sync. Your data stays on your hardware. _(Note: Enabling optional search suggestions will connect to the DuckDuckGo API)._
+- **Offline-Ready PWA:** Instant load times and full offline functionality via advanced Service Worker caching.
+- **Smart Link Management:** Organize your dashboard with nested folders and explicit "Move Out" management tools.
+- **Premium Theming Engine:** 10+ built-in themes (e.g., OLED, Cyberpunk, Clean Light).
+- **Custom Backgrounds:** Full support for high-resolution image uploads with persistent local storage.
+- **Integrated Search Hub:** Instant engine switching with private search suggestions and local history.
+- **Ultra-Minimalist Codebase:** Built with 100% Vanilla JS/CSS—zero framework bloat, zero dependencies.
 
 ---
 
 ## 💾 Data Management
+
 All configuration is stored in the browser's `localStorage` and `IndexedDB`. To move your setup from Desktop to Mobile:
-1.  **Export:** Go to *Settings > Data Management* and click **Backup (Save)**.
+
+1.  **Export:** Go to _Settings > Data Management_ and click **Backup (Save)**.
 2.  **Transfer:** Send the generated `.json` file to your mobile device.
-3.  **Import:** Open the mobile web link, go to *Settings > Data Management*, and select **Restore (Load)**.
+3.  **Import:** Open the mobile web link, go to _Settings > Data Management_, and select **Restore (Load)**.
 
 ---
 
- > [!NOTE]
+> [!NOTE]
 > The core logic and application code were generated by **Gemini AI** under my supervision and instruction.
 
 ---
 
 ## 🏛️ Project Structure
+
 ```text
 ├── manifest.json      # Unified Extension & PWA configuration
 ├── sw.js              # Service Worker (Offline caching & PWA logic)
@@ -82,3 +95,4 @@ All configuration is stored in the browser's `localStorage` and `IndexedDB`. To 
 ├── ui-logic.js        # DOM interaction & event handling
 ├── utilities.js       # Search APIs & helper functions
 └── *.css              # Modular stylesheets (Themes, Core, Layout, Settings)
+```
