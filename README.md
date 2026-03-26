@@ -50,7 +50,7 @@ The hosted version is a fully compliant **PWA**, meaning it can be installed as 
 
 ## 🔥 Key Features
 * **GPU-Accelerated Performance:** Global hardware acceleration and optimized CSS layers ensure silky-smooth 60fps interactions on all devices.
-* **Privacy-First Architecture:** No external analytics, trackers, or cloud sync. Your data stays on your hardware.
+* **Privacy-First Architecture:** No external analytics, trackers, or cloud sync. Your data stays on your hardware. *(Note: Enabling optional search suggestions will connect to the DuckDuckGo API).*
 * **Offline-Ready PWA:** Instant load times and full offline functionality via advanced Service Worker caching.
 * **Smart Link Management:** Organize your dashboard with nested folders and explicit "Move Out" management tools.
 * **Premium Theming Engine:** 10+ built-in themes (e.g., OLED, Cyberpunk, Clean Light).
