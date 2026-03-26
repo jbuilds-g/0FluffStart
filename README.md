@@ -8,11 +8,21 @@
 > 0FluffStart is a high-performance, privacy-focused start page designed to replace bloated default homepages. It operates as a local-first application, ensuring that your data links, settings, and search history never leave your device.
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/b969031a-8ad7-41b0-9161-4014a89ac214" width="100%" muted autoplay loop playsinline style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+  <video 
+    src="https://github.com/user-attachments/assets/b969031a-8ad7-41b0-9161-4014a89ac214" 
+    width="100%" 
+    muted 
+    autoplay 
+    loop 
+    playsinline 
+    disablepictureinpicture
+    disableremoteplayback
+    style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.5); pointer-events: none;"
+  >
     Your browser does not support the video tag.
   </video>
   <p align="center">
-    <i>Experience zero-latency navigation, instant theme switching, and the new Link Picker management system.</i>
+    <i>Zero-latency navigation & the new v1.5.0 Link Picker.</i>
   </p>
 </div>
 
