@@ -15,12 +15,28 @@
 > 0FluffStart is a high-performance, privacy-focused start page designed to replace bloated default homepages. It operates as a local-first application, ensuring that your data links, settings, and search history never leave your device.
 
   <h3>📱 Mobile Experience</h3>
-  <video src="https://github.com/user-attachments/assets/7d073a88-8bb4-4bcf-9ea4-da28beb1e815" width="250" muted autoplay loop playsinline style="border-radius: 16px; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></video>
+  <video 
+    src="https://github.com/user-attachments/assets/7d073a88-8bb4-4bcf-9ea4-da28beb1e815" 
+    width="250" 
+    muted 
+    autoplay 
+    loop 
+    playsinline 
+    style="border-radius: 20px; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);"
+  ></video>
 
-  <br><br>
+  <br><br><br>
 
   <h3>💻 Desktop Experience</h3>
-  <video src="https://github.com/user-attachments/assets/75b1a36b-fab8-4b27-bde6-6aaf81866c16" width="100%" muted autoplay loop playsinline style="border-radius: 12px; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></video>
+  <video 
+    src="https://github.com/user-attachments/assets/75b1a36b-fab8-4b27-bde6-6aaf81866c16" 
+    width="100%" 
+    muted 
+    autoplay 
+    loop 
+    playsinline 
+    style="border-radius: 12px; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);"
+  ></video>
 
 </div>
 
