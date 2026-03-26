@@ -20,14 +20,6 @@
   </video>
 </div>
 
-## 🚀 Release v1.5.0
-
-* **Link Picker:** Batch-select and move links between folders.
-* **New Icons:** Visual distinction between links and folders.
-* **Direct Nesting:** Create new links directly inside nested folders.
-* **Refined UI:** Side-by-side action buttons and optimized performance.
-
-
 [**🚀 Launch Web Version**](https://jbuilds-g.github.io/0FluffStart/)
 
 ---
