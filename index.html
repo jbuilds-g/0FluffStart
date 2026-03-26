@@ -233,7 +233,10 @@
               </div>
 
               <div id="linkListContainer">
-                <div style="display: flex; gap: 10px; margin-bottom: 15px">
+                <div
+                  id="standardActionBtns"
+                  style="display: flex; gap: 10px; margin-bottom: 15px"
+                >
                   <button id="addLinkBtn" class="add-link-btn" style="flex: 1">
                     + Add Link
                   </button>
@@ -245,6 +248,48 @@
                     + Add Folder
                   </button>
                 </div>
+
+                <div
+                  id="selectionToolbar"
+                  class="hidden"
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 15px;
+                    padding: 10px;
+                    background: var(--card-hover);
+                    border-radius: var(--radius);
+                    border: 1px solid var(--border);
+                  "
+                >
+                  <span
+                    id="selectionCount"
+                    style="font-weight: bold; color: var(--accent)"
+                    >0 Selected</span
+                  >
+                  <div style="display: flex; gap: 10px">
+                    <button
+                      id="cancelSelectionBtn"
+                      class="secondary"
+                      style="
+                        border-radius: var(--radius);
+                        border: 1px solid var(--border);
+                        padding: 5px 15px;
+                      "
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      id="confirmSelectionBtn"
+                      class="save-btn"
+                      style="margin: 0; padding: 5px 15px"
+                    >
+                      Move Here
+                    </button>
+                  </div>
+                </div>
+
                 <div id="linkManagerContent" class="link-manager-list"></div>
               </div>
 

@@ -1,11 +1,14 @@
-// ui-logic.js
-
 /* global links:writable, settings, isEditMode, isEditingId:writable, searchEngines */
 /* global renderEngineDropdown, loadSettings, updateClock, autoSaveSettings, logSearch, handleSuggestions, clearHistory */
 /* global fetchExternalSuggestions, selectSuggestion, saveBgToDB, getBgFromDB */
 
 // --- STATE ---
 let currentFolderId = null;
+
+// --- SELECTION MODE STATE ---
+let isSelectionMode = false;
+let selectedLinkIds = [];
+let editorTargetFolderId = null; // Tracks which folder a NEW link should be saved into
 
 // --- INIT & PWA ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -85,9 +88,10 @@ function bindStaticEvents() {
       window.open("https://github.com/jbuilds-g/0FluffStart", "_blank"),
     );
 
+  // Default "Add Link" button on main settings screen uses the current dashboard folder
   document
     .getElementById("addLinkBtn")
-    .addEventListener("click", () => openEditor());
+    .addEventListener("click", () => openEditor(null, currentFolderId));
   const addFolderBtn = document.getElementById("addFolderBtn");
   if (addFolderBtn) addFolderBtn.addEventListener("click", addFolder);
 
@@ -99,6 +103,36 @@ function bindStaticEvents() {
   document
     .getElementById("cancelEditBtn")
     .addEventListener("click", cancelEdit);
+
+  // --- SELECTION MODE BUTTONS ---
+  document
+    .getElementById("cancelSelectionBtn")
+    ?.addEventListener("click", () => {
+      isSelectionMode = false;
+      selectedLinkIds = [];
+      activeFolderId = null;
+      renderLinkManager();
+    });
+
+  document
+    .getElementById("confirmSelectionBtn")
+    ?.addEventListener("click", () => {
+      if (selectedLinkIds.length === 0)
+        return alert("Please select at least one link.");
+
+      links.forEach((link) => {
+        if (selectedLinkIds.includes(link.id)) {
+          link.parentId = activeFolderId;
+        }
+      });
+
+      localStorage.setItem("0fluff_links", JSON.stringify(links));
+      isSelectionMode = false;
+      selectedLinkIds = [];
+      activeFolderId = null;
+      renderLinkManager();
+      renderLinks();
+    });
 
   document
     .getElementById("userNameInput")
@@ -271,22 +305,17 @@ function renderLinks() {
     fragment.appendChild(item);
   });
 
-  if (currentFolderId) {
-    const addBtnItem = document.createElement("div");
-    addBtnItem.className = "link-item add-btn-item";
-    addBtnItem.innerHTML = `
-            <div class="link-icon-circle" style="border: 2px dashed var(--dim);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            </div>
-            <div class="link-name" style="color: var(--dim);">Add Link</div>
-        `;
-    addBtnItem.addEventListener("click", () => {
-      toggleSettings();
-      openEditor();
-    });
-    fragment.appendChild(addBtnItem);
-  }
   grid.appendChild(fragment);
+}
+
+// --- SELECTION TOGGLE ---
+function toggleSelection(id) {
+  if (selectedLinkIds.includes(id)) {
+    selectedLinkIds = selectedLinkIds.filter((itemId) => itemId !== id);
+  } else {
+    selectedLinkIds.push(id);
+  }
+  renderLinkManager();
 }
 
 // --- NESTED LINK MANAGEMENT ---
@@ -294,6 +323,19 @@ function renderLinkManager() {
   const linkManagerContent = document.getElementById("linkManagerContent");
   if (!linkManagerContent) return;
   linkManagerContent.innerHTML = "";
+
+  const standardBtns = document.getElementById("standardActionBtns");
+  const selectionToolbar = document.getElementById("selectionToolbar");
+
+  if (isSelectionMode) {
+    if (standardBtns) standardBtns.classList.add("hidden");
+    if (selectionToolbar) selectionToolbar.classList.remove("hidden");
+    const countSpan = document.getElementById("selectionCount");
+    if (countSpan) countSpan.innerText = `${selectedLinkIds.length} Selected`;
+  } else {
+    if (standardBtns) standardBtns.classList.remove("hidden");
+    if (selectionToolbar) selectionToolbar.classList.add("hidden");
+  }
 
   if (links.length === 0) {
     linkManagerContent.innerHTML =
@@ -308,12 +350,17 @@ function renderLinkManager() {
   const deleteIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
   const moveOutIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
   const folderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+  const linkSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px; opacity: 0.5;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
 
   // --- ITEM BUILDER ---
-  function createManagerItem(link, isSubItem = false) {
+  function createManagerItem(link, isSubItem = false, isSelectable = false) {
     const item = document.createElement("div");
     item.className = "link-manager-item";
     item.dataset.id = link.id;
+    item.style.display = "flex";
+    item.style.justifyContent = "space-between";
+    item.style.alignItems = "center";
+    item.style.padding = "6px 0";
 
     if (isSubItem) {
       item.style.marginLeft = "28px";
@@ -330,79 +377,105 @@ function renderLinkManager() {
     nameSpan.style.alignItems = "center";
 
     let prefix = "";
+    // ALWAYS show the folder toggle arrow, even in selection mode
     if (link.isFolder) {
       prefix += `<span class="folder-toggle" style="cursor:pointer; margin-right:8px; color:var(--accent); font-size:12px; width:12px; display:inline-block; text-align:center;">▶</span>`;
     }
-    nameSpan.innerHTML = prefix + (link.isFolder ? folderSvg : "") + link.name;
+    nameSpan.innerHTML =
+      prefix + (link.isFolder ? folderSvg : linkSvg) + link.name;
 
-    const actionsDiv = document.createElement("div");
-    actionsDiv.className = "link-actions";
-    actionsDiv.style.display = "flex";
-    actionsDiv.style.gap = "5px";
+    if (isSelectable) {
+      const leftContainer = document.createElement("div");
+      leftContainer.style.display = "flex";
+      leftContainer.style.alignItems = "center";
+      leftContainer.style.gap = "10px";
 
-    if (isSubItem) {
-      const moveOutBtn = document.createElement("button");
-      moveOutBtn.className = "icon-btn";
-      moveOutBtn.title = "Move out of folder";
-      moveOutBtn.innerHTML = moveOutIconSVG;
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = selectedLinkIds.includes(link.id);
+      checkbox.style.cursor = "pointer";
+      checkbox.style.accentColor = "var(--accent)";
 
-      moveOutBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        if (
-          confirm(
-            `Are you sure you want to move "${link.name}" out of this folder?`,
-          )
-        ) {
-          const idx = links.findIndex((l) => l.id === link.id);
-          if (idx > -1) {
-            const [movedItem] = links.splice(idx, 1);
-            movedItem.parentId = null;
-            links.unshift(movedItem);
+      leftContainer.appendChild(checkbox);
+      leftContainer.appendChild(nameSpan);
 
-            localStorage.setItem("0fluff_links", JSON.stringify(links));
-            renderLinks();
-            renderLinkManager();
+      item.appendChild(leftContainer);
+      item.style.cursor = "pointer";
+      item.onclick = (e) => {
+        // Prevent checking the box if they just clicked the expand/collapse arrow
+        if (e.target.classList.contains("folder-toggle")) return;
+
+        if (e.target !== checkbox) checkbox.checked = !checkbox.checked;
+        toggleSelection(link.id);
+      };
+    } else {
+      const actionsDiv = document.createElement("div");
+      actionsDiv.className = "link-actions";
+      actionsDiv.style.display = "flex";
+      actionsDiv.style.gap = "5px";
+
+      if (isSubItem) {
+        const moveOutBtn = document.createElement("button");
+        moveOutBtn.className = "icon-btn";
+        moveOutBtn.title = "Move out of folder";
+        moveOutBtn.innerHTML = moveOutIconSVG;
+
+        moveOutBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (confirm(`Move "${link.name}" back to the main dashboard?`)) {
+            const idx = links.findIndex((l) => l.id === link.id);
+            if (idx > -1) {
+              const [movedItem] = links.splice(idx, 1);
+              movedItem.parentId = null;
+              links.push(movedItem);
+              localStorage.setItem("0fluff_links", JSON.stringify(links));
+              renderLinks();
+              renderLinkManager();
+            }
           }
-        }
-      });
-      actionsDiv.appendChild(moveOutBtn);
+        });
+        actionsDiv.appendChild(moveOutBtn);
+      }
+
+      const editBtn = document.createElement("button");
+      editBtn.className = "icon-btn secondary";
+      editBtn.title = "Edit";
+      editBtn.innerHTML = editIconSVG;
+      editBtn.addEventListener("click", (e) => editLink(link.id, e));
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "icon-btn delete-btn";
+      deleteBtn.title = "Delete";
+      deleteBtn.innerHTML = deleteIconSVG;
+      deleteBtn.addEventListener("click", (e) => deleteLink(link.id, e));
+
+      actionsDiv.appendChild(editBtn);
+      actionsDiv.appendChild(deleteBtn);
+
+      item.appendChild(nameSpan);
+      item.appendChild(actionsDiv);
     }
-
-    const editBtn = document.createElement("button");
-    editBtn.className = "icon-btn secondary";
-    editBtn.title = "Edit";
-    editBtn.innerHTML = editIconSVG;
-    editBtn.addEventListener("click", (e) => editLink(link.id, e));
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.className = "icon-btn delete-btn";
-    deleteBtn.title = "Delete";
-    deleteBtn.innerHTML = deleteIconSVG;
-    deleteBtn.addEventListener("click", (e) => deleteLink(link.id, e));
-
-    actionsDiv.appendChild(editBtn);
-    actionsDiv.appendChild(deleteBtn);
-
-    item.appendChild(nameSpan);
-    item.appendChild(actionsDiv);
 
     return item;
   }
 
   // --- RENDER LOOP ---
+  // We use one unified tree loop for BOTH normal and selection mode!
   links
     .filter((l) => !l.parentId)
     .forEach((rootLink) => {
-      const row = createManagerItem(rootLink, false);
+      // If we are adding items TO a folder, hide that destination folder from the list
+      if (isSelectionMode && rootLink.id === activeFolderId) return;
+
+      const row = createManagerItem(rootLink, false, isSelectionMode);
       fragment.appendChild(row);
 
       if (rootLink.isFolder) {
         const subContainer = document.createElement("div");
         subContainer.className = "folder-sub-container";
-
         subContainer.style.display = "none";
         subContainer.style.marginTop = "4px";
-        subContainer.style.marginBottom = "8px";
+        subContainer.style.marginBottom = "10px";
 
         const toggleBtn = row.querySelector(".folder-toggle");
         if (toggleBtn) {
@@ -417,16 +490,70 @@ function renderLinkManager() {
         links
           .filter((l) => l.parentId === rootLink.id)
           .forEach((child) => {
-            subContainer.appendChild(createManagerItem(child, true));
+            subContainer.appendChild(
+              createManagerItem(child, true, isSelectionMode),
+            );
           });
+
+        // Only inject the "+ New Link" / "+ Existing" buttons in NORMAL mode
+        if (!isSelectionMode) {
+          const actionRow = document.createElement("div");
+          actionRow.style.display = "flex";
+          actionRow.style.gap = "8px";
+          actionRow.style.marginLeft = "28px";
+          actionRow.style.marginTop = "5px";
+          actionRow.style.width = "calc(100% - 40px)";
+
+          const addNewBtn = document.createElement("button");
+          addNewBtn.className = "add-link-btn";
+          addNewBtn.style.flex = "1";
+          addNewBtn.style.background = "var(--card-hover)";
+          addNewBtn.style.border = "1px solid var(--border)";
+          addNewBtn.style.padding = "8px";
+          addNewBtn.style.color = "var(--text)";
+          addNewBtn.style.fontSize = "0.85rem";
+          addNewBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> New Link`;
+          addNewBtn.onclick = () => openEditor(null, rootLink.id);
+
+          const addExistingBtn = document.createElement("button");
+          addExistingBtn.className = "add-link-btn";
+          addExistingBtn.style.flex = "1";
+          addExistingBtn.style.background = "var(--card-hover)";
+          addExistingBtn.style.border = "1px dashed var(--border)";
+          addExistingBtn.style.padding = "8px";
+          addExistingBtn.style.color = "var(--accent)";
+          addExistingBtn.style.fontSize = "0.85rem";
+          addExistingBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Existing`;
+          addExistingBtn.onclick = () => {
+            isSelectionMode = true;
+            activeFolderId = rootLink.id;
+            selectedLinkIds = [];
+            renderLinkManager();
+          };
+
+          actionRow.appendChild(addNewBtn);
+          actionRow.appendChild(addExistingBtn);
+          subContainer.appendChild(actionRow);
+        }
+
         fragment.appendChild(subContainer);
       }
     });
 
+  // Failsafe: if the user opens selection mode but there's literally nothing else to select
+  if (isSelectionMode && fragment.children.length === 0) {
+    const emptyMsg = document.createElement("div");
+    emptyMsg.innerText = "No other links or folders available.";
+    emptyMsg.style.padding = "15px";
+    emptyMsg.style.color = "var(--dim)";
+    emptyMsg.style.textAlign = "center";
+    fragment.appendChild(emptyMsg);
+  }
+
   linkManagerContent.appendChild(fragment);
 }
 
-function openEditor(id = null) {
+function openEditor(id = null, parentId = null) {
   const linkListContainer = document.getElementById("linkListContainer");
   const linkEditorContainer = document.getElementById("linkEditorContainer");
 
@@ -438,6 +565,9 @@ function openEditor(id = null) {
   const urlInput = document.getElementById("editUrl");
 
   isEditingId = id;
+  // If we clicked "+ New Link" inside a nested folder, save that destination
+  editorTargetFolderId = parentId !== null ? parentId : currentFolderId;
+
   if (id) {
     const link = links.find((l) => l.id === id);
     if (link) {
@@ -464,6 +594,7 @@ function cancelEdit() {
   document.getElementById("linkEditorContainer")?.classList.add("hidden");
   document.getElementById("linkListContainer")?.classList.remove("hidden");
   isEditingId = null;
+  editorTargetFolderId = null; // Clear the target
 }
 
 function saveLink() {
@@ -487,10 +618,14 @@ function saveLink() {
       name,
       url,
       isFolder: false,
-      parentId: currentFolderId,
+      // Uses the target folder from the settings dropdown, or defaults to the dashboard folder
+      parentId:
+        editorTargetFolderId !== null ? editorTargetFolderId : currentFolderId,
     });
   }
+
   localStorage.setItem("0fluff_links", JSON.stringify(links));
+  editorTargetFolderId = null; // Reset target after saving
   renderLinks();
   renderLinkManager();
   cancelEdit();
@@ -498,7 +633,7 @@ function saveLink() {
 
 function editLink(id, e) {
   if (e) e.stopPropagation();
-  openEditor(id);
+  openEditor(id, null);
 }
 
 function deleteLink(id, e) {
