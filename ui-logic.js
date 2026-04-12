@@ -733,7 +733,21 @@ function toggleSettings() {
   cancelEdit();
   renderLinkManager();
   const modal = document.getElementById("settingsModal");
-  if (modal) modal.classList.add("active");
+  if (modal) {
+    modal.classList.add("active");
+
+    // --- NEW: Sync Wallpaper Label State ---
+    const bgLabel = document.getElementById("bgFileName");
+    if (bgLabel) {
+      if (settings.backgroundImage === "indexeddb") {
+        bgLabel.innerText = "Custom Image Active";
+        bgLabel.style.color = "var(--accent)";
+      } else {
+        bgLabel.innerText = "No image selected.";
+        bgLabel.style.color = "var(--dim)";
+      }
+    }
+  }
 }
 function closeModal(id) {
   const modal = document.getElementById(id);

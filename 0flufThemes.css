@@ -1,4 +1,4 @@
-/* 0flufThemes.css - Consolidated Theme Engine */
+/* 0flufThemes.css - Consolidated Theme Engine v1.6.0 */
 
 /* =========================================
    1. GLOBAL VARIABLES (DEFAULT: OLED DARK)
@@ -70,15 +70,17 @@ body.forest {
   --radius: 16px;
 }
 
+/* --- OVERHAULED: Paper Ink (The Stationery Look) --- */
 body.paper {
-  --bg: #f5f5f0;
-  --card: #ffffff;
-  --card-hover: #eaeae0;
-  --text: #333333;
-  --accent: #555555;
-  --dim: #999999;
-  --border: #cccccc;
-  --radius: 4px;
+  --bg: #f9f7f2; /* Warm, recycled paper tone */
+  --card: rgba(255, 255, 255, 0.8);
+  --card-hover: rgba(0, 0, 0, 0.03);
+  --text: #1a1a1a; /* Deep charcoal ink */
+  --accent: #222222;
+  --dim: #777777;
+  --border: #d1cfc8;
+  --radius: 2px; /* Physical paper cut */
+  --shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 body.luminous {
@@ -93,12 +95,13 @@ body.luminous {
 
 body.nord {
   --bg: #2e3440;
-  --card: #3b4252;
-  --card-hover: #434c5e;
+  --card: rgba(59, 66, 82, 0.7);
+  --card-hover: rgba(67, 76, 94, 0.9);
   --text: #eceff4;
   --accent: #88c0d0;
   --dim: #d8dee9;
   --border: #4c566a;
+  --radius: 16px;
 }
 
 body.dracula {
@@ -130,6 +133,53 @@ body.rose {
   --accent: #ebbcba;
   --dim: #908caa;
   --border: #403d52;
+}
+
+/* --- NEW: Heatwave (The Solar Energy) --- */
+body.heatwave {
+  --bg: #1b0d05;
+  --card: rgba(60, 20, 0, 0.6);
+  --card-hover: rgba(255, 95, 0, 0.15);
+  --text: #f5e6ca;
+  --accent: #ff5f00;
+  --dim: #a67c52;
+  --border: rgba(255, 95, 0, 0.3);
+  --radius: 4px;
+}
+
+/* --- NEW: Slate Industrial (The Brutalist) --- */
+body.slate {
+  --bg: #1a1a1a;
+  --card: rgba(45, 45, 45, 0.6);
+  --card-hover: rgba(255, 215, 0, 0.1);
+  --text: #d1d1d1;
+  --accent: #ffd700;
+  --dim: #888888;
+  --border: rgba(255, 215, 0, 0.3);
+  --radius: 0px;
+}
+
+/* --- NEW: Toxic Tide (The Vintage Lab) --- */
+body.toxic-tide {
+  --bg: #041614;
+  --card: rgba(15, 45, 40, 0.5);
+  --card-hover: rgba(47, 191, 162, 0.1);
+  --text: #f4f19b;
+  --accent: #2fbfa2;
+  --dim: #5c8a82;
+  --border: rgba(47, 191, 162, 0.3);
+  --radius: 8px;
+}
+
+/* --- NEW: Evergreen Archive (Premium Glass Flagship) --- */
+body.evergreen-archive {
+  --bg: #1a2416;
+  --card: rgba(72, 96, 52, 0.6); /* #486034 with transparency for glass blur */
+  --card-hover: rgba(72, 96, 52, 0.8);
+  --text: #d9c588;
+  --accent: #d9c588;
+  --dim: #764d44;
+  --border: #764d44;
 }
 
 /* =========================================
@@ -182,58 +232,104 @@ body.rose {
 }
 
 /* =========================================
-   4. THEME-SPECIFIC HOVER MORPHING
+   4. SHAPE-BASED MORPHING ENGINE v2.1
    ========================================= */
 .link-item {
   transition: transform 0.2s ease;
 }
-.link-item .link-icon-circle {
-  transition:
-    background-color 0.2s ease,
-    border-radius 0.3s ease,
-    color 0.2s ease;
-}
-.link-item .link-icon-circle span {
-  transition: color 0.2s ease;
-}
-
 .link-item:hover {
   transform: translateY(-2px);
 }
 
-/* Default hover behavior -> Circle */
-.link-item:hover .link-icon-circle {
-  background-color: var(--accent);
-  border-radius: 50%;
-}
-.link-item:hover .link-icon-circle span {
-  color: var(--bg) !important; /* Force color inverse */
+.link-icon-circle {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
 }
 
-/* Override rigid themes: Keep square, add border (Cyberpunk, Retro) */
-body.cyberpunk .link-item .link-icon-circle,
-body.retro .link-item .link-icon-circle,
-body.cyberpunk .link-item:hover .link-icon-circle,
+/* --- CATEGORY A: THE SHARP SET (Ghost Effect) --- */
+body.retro .link-icon-circle,
+body.cyberpunk .link-icon-circle,
+body.paper .link-icon-circle,
+body.slate .link-icon-circle,
+body.toxic-tide .link-icon-circle,
+body.heatwave .link-icon-circle {
+  border-radius: var(--radius);
+}
+
 body.retro .link-item:hover .link-icon-circle,
-body.cyberpunk .link-item:active .link-icon-circle,
-body.retro .link-item:active .link-icon-circle,
-body.cyberpunk .link-item:focus .link-icon-circle,
-body.retro .link-item:focus .link-icon-circle {
-  border-radius: 0 !important;
+body.cyberpunk .link-item:hover .link-icon-circle,
+body.paper .link-item:hover .link-icon-circle,
+body.slate .link-item:hover .link-icon-circle,
+body.toxic-tide .link-item:hover .link-icon-circle,
+body.heatwave .link-item:hover .link-icon-circle {
+  background: transparent !important;
+  border: 2px solid var(--accent);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-body.cyberpunk .link-item:hover .link-icon-circle span,
 body.retro .link-item:hover .link-icon-circle span,
-body.cyberpunk .link-item:active .link-icon-circle span,
-body.retro .link-item:active .link-icon-circle span {
+body.cyberpunk .link-item:hover .link-icon-circle span,
+body.paper .link-item:hover .link-icon-circle span,
+body.slate .link-item:hover .link-icon-circle span,
+body.toxic-tide .link-item:hover .link-icon-circle span,
+body.heatwave .link-item:hover .link-icon-circle span {
   color: var(--accent) !important;
 }
 
-/* Soft Themes: Aggressive Morph to Circle (Sunset, Forest, Paper) */
-body.sunset .link-item:hover .link-icon-circle,
+/* --- CATEGORY B: THE SQUIRCLES (Premium Soft Morph) --- */
+body.forest .link-icon-circle,
+body.rose .link-icon-circle,
+body.luminous .link-icon-circle,
+body.light .link-icon-circle {
+  border-radius: 40%;
+}
+
 body.forest .link-item:hover .link-icon-circle,
-body.paper .link-item:hover .link-icon-circle {
+body.rose .link-item:hover .link-icon-circle,
+body.luminous .link-item:hover .link-icon-circle,
+body.light .link-item:hover .link-icon-circle {
   border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid var(--accent);
+  transform: scale(1.05);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+body.forest .link-item:hover .link-icon-circle span,
+body.rose .link-item:hover .link-icon-circle span,
+body.luminous .link-item:hover .link-icon-circle span,
+body.light .link-item:hover .link-icon-circle span {
+  color: var(--accent) !important;
+}
+
+/* --- CATEGORY C: THE CIRCLES (Blur & Tilt Flip) --- */
+body.evergreen-archive .link-icon-circle,
+body.nord .link-icon-circle,
+body.sunset .link-icon-circle,
+body.nebula-drift .link-icon-circle,
+body.night-glow .link-icon-circle {
+  border-radius: 50%;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+body.evergreen-archive .link-item:hover .link-icon-circle,
+body.nord .link-item:hover .link-icon-circle,
+body.sunset .link-item:hover .link-icon-circle,
+body.nebula-drift .link-item:hover .link-icon-circle,
+body.night-glow .link-item:hover .link-icon-circle {
+  background: var(--text);
+  transform: rotate(3deg) scale(1.05);
+  border: 2px solid transparent;
+}
+
+body.evergreen-archive .link-item:hover .link-icon-circle span,
+body.nord .link-item:hover .link-icon-circle span,
+body.sunset .link-item:hover .link-icon-circle span,
+body.nebula-drift .link-item:hover .link-icon-circle span,
+body.night-glow .link-item:hover .link-icon-circle span {
+  color: var(--bg) !important;
 }
 
 /* =========================================
@@ -350,10 +446,12 @@ body.nebula-drift .clock.clock-style-neon {
    7. FIXES & PERFORMANCE PATCHES
    ========================================= */
 
-/* Fix for blur themes making icons jump over the search dropdown */
-.search-bar {
+/* Fix for blur themes making icons jump over the search dropdown AND Retro ghosting bug */
+.search-bar,
+.search-container {
   position: relative;
-  z-index: 999 !important;
+  z-index: 1000 !important;
+  transform: translateZ(0); /* Hardware isolation to stop bleeding */
 }
 
 /* GLOBAL GPU PERFORMANCE PATCH */
