@@ -2,7 +2,6 @@
   "manifest_version": 3,
   "name": "0flufStart",
   "version": "1.6.0",
-  "version": "1.5.0",
   "description": "Zero-Fluff. All Speed. A privacy-first, minimalist start page.",
   "chrome_url_overrides": {
     "newtab": "index.html"
