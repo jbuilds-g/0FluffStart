@@ -127,21 +127,23 @@ h1 {
 /* --- FOLDER ICON & TEXT MORPH FIX --- */
 /* Turns SVG dark on hover */
 .link-item:hover .link-icon-circle svg {
-  stroke: var(--bg) !important; 
+  stroke: var(--bg) !important;
 }
 
 /* Turns Text icon dark on hover */
 .link-item:hover .link-icon-circle span {
-  color: var(--bg) !important; 
+  color: var(--bg) !important;
 }
 
 /* --- SMART TITLE HOVER LOGIC --- */
 /* If the user has NOT checked "Show Titles", hide them by default... */
 .link-grid:not(.show-titles) .link-name {
-  display: block !important; 
+  display: block !important;
   opacity: 0;
   transform: translateY(5px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
   pointer-events: none; /* Prevents invisible titles from blocking clicks */
 }
 

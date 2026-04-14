@@ -759,16 +759,22 @@ function renderEngineDropdown() {
   const dropdown = document.getElementById("engineDropdown");
   if (!dropdown) return;
   dropdown.innerHTML = "";
+
   const current =
     searchEngines.find((s) => s.name === settings.searchEngine) ||
     searchEngines[0];
+
+  // --- CHANGE 1: Update the main icon next to the search bar ---
   const iconEl = document.getElementById("currentEngineIcon");
-  if (iconEl) iconEl.innerText = current.initial;
+  if (iconEl) iconEl.innerHTML = current.icon; // Changed from .innerText and .initial
 
   searchEngines.forEach((e) => {
     const div = document.createElement("div");
     div.className = `engine-option ${e.name === settings.searchEngine ? "selected" : ""}`;
-    div.innerHTML = `<span>${e.name}</span> <span>${e.initial}</span>`;
+
+    // --- CHANGE 2: Update the dropdown list to render the SVG ---
+    div.innerHTML = `<span class="engine-icon">${e.icon}</span> <span>${e.name}</span>`;
+
     div.addEventListener("click", () => {
       settings.searchEngine = e.name;
       autoSaveSettings();
