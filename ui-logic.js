@@ -95,10 +95,6 @@ function bindStaticEvents() {
   const addFolderBtn = document.getElementById("addFolderBtn");
   if (addFolderBtn) addFolderBtn.addEventListener("click", addFolder);
 
-  const activeFolderHeader = document.getElementById("activeFolderHeader");
-  if (activeFolderHeader)
-    activeFolderHeader.addEventListener("click", () => navigateToFolder(null));
-
   document.getElementById("saveLinkBtn").addEventListener("click", saveLink);
   document
     .getElementById("cancelEditBtn")
@@ -306,7 +302,30 @@ function renderLinks() {
   });
 
   grid.appendChild(fragment);
-}
+
+  // --- NEW: SOLID PILL WITH INNER CIRCLE ---
+  if (currentFolderId !== null) {
+    const exitContainer = document.createElement("div");
+    exitContainer.className = "folder-exit-container";
+
+    // Notice the new <div class="back-icon-circle"> wrapping the SVG
+    exitContainer.innerHTML = `
+      <div class="back-pill" title="Back to Dashboard">
+        <div class="back-icon-circle">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        </div>
+        <span class="back-text">DASHBOARD</span>
+      </div>
+    `;
+
+    const backBtn = exitContainer.querySelector(".back-pill");
+    backBtn.addEventListener("click", () => {
+      navigateToFolder(null);
+    });
+
+    grid.appendChild(exitContainer);
+  }
+} // End of renderLinks() function
 
 // --- SELECTION TOGGLE ---
 function toggleSelection(id) {

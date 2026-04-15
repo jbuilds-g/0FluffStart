@@ -159,3 +159,70 @@ h1 {
   transform: none;
   pointer-events: auto;
 }
+/* --- SEARCH ENGINE SVG SIZING --- */
+/* Forces all SVGs (Bootstrap & SimpleIcons) to be the exact same size */
+.engine-switcher svg,
+#engineDropdown .engine-option svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: currentColor; /* For Bootstrap */
+  color: currentColor; /* For Lucide/Feather */
+}
+
+/* --- THE SOLID PILL BACK BUTTON --- */
+.folder-exit-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0 20px;
+  width: 100%;
+}
+
+.back-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* 8px padding on the left to tightly hug the circle, 24px on right for the text */
+  padding: 8px 24px 8px 8px;
+  background: var(--card-bg); /* Solid color 1 (Main Element) */
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  color: var(--text);
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  /* NO transparency / backdrop-filter */
+}
+
+/* The new inner circle for the arrow */
+.back-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--accent); /* Solid color 2 (Circle Element) */
+  border-radius: 50%;
+  color: var(
+    --bg
+  ); /* Keeps the arrow itself visible against the accent color */
+}
+
+.back-icon-circle svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Clean, solid hover state */
+.back-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent);
+}
