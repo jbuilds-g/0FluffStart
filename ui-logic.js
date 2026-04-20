@@ -722,6 +722,7 @@ async function loadSettings() {
   }
   updateClock();
   renderEngineDropdown();
+  triggerMaterialYou();
 }
 
 function autoSaveSettings() {
@@ -743,6 +744,8 @@ function autoSaveSettings() {
   localStorage.setItem("0fluff_settings", JSON.stringify(settings));
   document.body.className = settings.theme;
   applyClockStyle();
+  triggerMaterialYou();
+
   document
     .getElementById("linkGrid")
     ?.classList.toggle("show-titles", settings.showTitles);
@@ -874,6 +877,105 @@ function restoreData(e) {
     }
   };
   reader.readAsText(file);
+}
+
+// ==========================================
+// MATERIAL YOU (MONET) ENGINE
+// ==========================================
+
+// Extracts the average RGB color from an image using a 1x1 canvas
+function getAverageColor(imgElement) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1;
+  canvas.height = 1;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  ctx.drawImage(imgElement, 0, 0, 1, 1);
+  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+  return { r, g, b };
+}
+
+// Converts RGB to HSL and returns the Hue (0-360)
+function rgbToHue(r, g, b) {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  const max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+  let h;
+  if (max === min) h = 0;
+  else {
+    const d = max - min;
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+  return Math.round(h * 360);
+}
+
+// Applies the Material You palette directly to the body
+function applyMaterialYouTheme(hue) {
+  const target = document.body;
+
+  target.style.setProperty("--bg", `hsl(${hue}, 20%, 10%)`);
+  target.style.setProperty("--card", `hsl(${hue}, 25%, 15%)`);
+  target.style.setProperty("--card-hover", `hsl(${hue}, 30%, 20%)`);
+  target.style.setProperty("--border", `hsl(${hue}, 20%, 25%)`);
+
+  // THE FIX: Pushed saturation to 50% and dropped lightness down to 75%
+  // This makes the tint much richer, darker, and more prominent!
+  target.style.setProperty("--text", `hsl(${hue}, 50%, 75%)`);
+
+  target.style.setProperty("--accent", `hsl(${hue}, 60%, 65%)`);
+}
+
+// The Trigger that starts the Engine
+async function triggerMaterialYou() {
+  const target = document.body; // <-- THIS WAS THE BUG. Fixed.
+
+  if (settings.theme !== "material-you") {
+    target.style.removeProperty("--bg");
+    target.style.removeProperty("--card");
+    target.style.removeProperty("--card-hover");
+    target.style.removeProperty("--border");
+    target.style.removeProperty("--text");
+    target.style.removeProperty("--accent");
+    return;
+  }
+
+  if (settings.backgroundImage === "indexeddb") {
+    try {
+      const bgData = await getBgFromDB();
+      if (bgData) {
+        const url =
+          bgData instanceof Blob || bgData instanceof File
+            ? URL.createObjectURL(bgData)
+            : bgData;
+
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.src = url;
+
+        img.onload = () => {
+          const { r, g, b } = getAverageColor(img);
+          const hue = rgbToHue(r, g, b);
+          applyMaterialYouTheme(hue);
+        };
+      }
+    } catch (e) {
+      console.error("Material You engine failed:", e);
+    }
+  } else {
+    applyMaterialYouTheme(210); // Default blue hue
+  }
 }
 
 // Global Exports

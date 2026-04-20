@@ -1,4 +1,4 @@
-/* 0flufThemes.css - Consolidated Theme Engine v1.6.0 */
+/* 0flufThemes.css - Consolidated Theme Engine v1.7.0 */
 
 /* =========================================
    1. GLOBAL VARIABLES (DEFAULT: OLED DARK)
@@ -70,16 +70,15 @@ body.forest {
   --radius: 16px;
 }
 
-/* --- OVERHAULED: Paper Ink (The Stationery Look) --- */
 body.paper {
-  --bg: #f9f7f2; /* Warm, recycled paper tone */
+  --bg: #f9f7f2;
   --card: rgba(255, 255, 255, 0.8);
   --card-hover: rgba(0, 0, 0, 0.03);
-  --text: #1a1a1a; /* Deep charcoal ink */
+  --text: #1a1a1a;
   --accent: #222222;
   --dim: #777777;
   --border: #d1cfc8;
-  --radius: 2px; /* Physical paper cut */
+  --radius: 2px;
   --shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
@@ -135,7 +134,6 @@ body.rose {
   --border: #403d52;
 }
 
-/* --- NEW: Heatwave (The Solar Energy) --- */
 body.heatwave {
   --bg: #1b0d05;
   --card: rgba(60, 20, 0, 0.6);
@@ -147,7 +145,6 @@ body.heatwave {
   --radius: 4px;
 }
 
-/* --- NEW: Slate Industrial (The Brutalist) --- */
 body.slate {
   --bg: #1a1a1a;
   --card: rgba(45, 45, 45, 0.6);
@@ -159,7 +156,6 @@ body.slate {
   --radius: 0px;
 }
 
-/* --- NEW: Toxic Tide (The Vintage Lab) --- */
 body.toxic-tide {
   --bg: #041614;
   --card: rgba(15, 45, 40, 0.5);
@@ -171,15 +167,27 @@ body.toxic-tide {
   --radius: 8px;
 }
 
-/* --- NEW: Evergreen Archive (Premium Glass Flagship) --- */
 body.evergreen-archive {
   --bg: #1a2416;
-  --card: rgba(72, 96, 52, 0.6); /* #486034 with transparency for glass blur */
+  --card: rgba(72, 96, 52, 0.6);
   --card-hover: rgba(72, 96, 52, 0.8);
   --text: #d9c588;
   --accent: #d9c588;
   --dim: #764d44;
   --border: #764d44;
+}
+
+/* --- NEW: Material You Fallback --- */
+/* (This ensures the layout holds together even before JS injects the colors) */
+body.material-you {
+  --bg: #1e1e1e;
+  --card: rgba(40, 40, 40, 0.6);
+  --card-hover: rgba(55, 55, 55, 0.8);
+  --text: #e0e0e0;
+  --accent: #a8c7fa;
+  --dim: #888888;
+  --border: #444444;
+  --radius: 24px;
 }
 
 /* =========================================
@@ -210,7 +218,6 @@ body.evergreen-archive {
 }
 .clock-style-neon {
   color: #fff;
-  /* Stacked shadows: White core -> Tight Accent -> Wide Accent */
   text-shadow:
     0 0 5px #fff,
     0 0 15px var(--accent),
@@ -308,7 +315,8 @@ body.evergreen-archive .link-icon-circle,
 body.nord .link-icon-circle,
 body.sunset .link-icon-circle,
 body.nebula-drift .link-icon-circle,
-body.night-glow .link-icon-circle {
+body.night-glow .link-icon-circle,
+body.material-you .link-icon-circle {
   border-radius: 50%;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -318,7 +326,8 @@ body.evergreen-archive .link-item:hover .link-icon-circle,
 body.nord .link-item:hover .link-icon-circle,
 body.sunset .link-item:hover .link-icon-circle,
 body.nebula-drift .link-item:hover .link-icon-circle,
-body.night-glow .link-item:hover .link-icon-circle {
+body.night-glow .link-item:hover .link-icon-circle,
+body.material-you .link-item:hover .link-icon-circle {
   background: var(--text);
   transform: rotate(3deg) scale(1.05);
   border: 2px solid transparent;
@@ -328,7 +337,8 @@ body.evergreen-archive .link-item:hover .link-icon-circle span,
 body.nord .link-item:hover .link-icon-circle span,
 body.sunset .link-item:hover .link-icon-circle span,
 body.nebula-drift .link-item:hover .link-icon-circle span,
-body.night-glow .link-item:hover .link-icon-circle span {
+body.night-glow .link-item:hover .link-icon-circle span,
+body.material-you .link-item:hover .link-icon-circle span {
   color: var(--bg) !important;
 }
 
@@ -362,12 +372,11 @@ body {
    6. ADVANCED GLASSMORPHISM THEMES
    ========================================= */
 
-/* --- Night Glow (Moonlight) --- */
 body.night-glow {
   --bg: #000000;
   --fg: #ffffff;
   --accent: #ffffff;
-  --card-bg: rgba(0, 0, 0, 0.9);
+  --card: rgba(0, 0, 0, 0.9);
   --card-hover: rgba(255, 255, 255, 0.1);
   --border: rgba(255, 255, 255, 0.4);
   --dim: #aaaaaa;
@@ -393,7 +402,7 @@ body.night-glow select {
   border: 1px solid var(--border);
   background: #000000;
 }
-/* Intense fluorescent tube glow specifically for the neon clock setting */
+
 body.night-glow .clock.clock-style-neon {
   text-shadow:
     0 0 5px #fff,
@@ -407,12 +416,11 @@ body.night-glow .link-item:hover .link-icon-circle {
   border-color: #ffffff;
 }
 
-/* --- Nebula Drift --- */
 body.nebula-drift {
-  --bg: #1f1b2e; /* Fallback for older browsers */
+  --bg: #1f1b2e;
   background-image: linear-gradient(135deg, #1f1b2e 0%, #16213e 100%);
   background-attachment: fixed;
-  --card-bg: rgba(255, 255, 255, 0.04);
+  --card: rgba(255, 255, 255, 0.04);
   --card-hover: rgba(255, 255, 255, 0.09);
   --border: rgba(255, 255, 255, 0.12);
   --text: #fdfcff;
@@ -434,7 +442,6 @@ body.nebula-drift .link-icon-circle {
 
 body.nebula-drift .clock.clock-style-neon {
   color: #fff;
-  /* Hot white core -> Cyan inner glow -> Purple outer nebula bleed */
   text-shadow:
     0 0 5px #fff,
     0 0 15px #00e5ff,
@@ -445,17 +452,13 @@ body.nebula-drift .clock.clock-style-neon {
 /* =========================================
    7. FIXES & PERFORMANCE PATCHES
    ========================================= */
-
-/* Fix for blur themes making icons jump over the search dropdown AND Retro ghosting bug */
 .search-bar,
 .search-container {
   position: relative;
   z-index: 1000 !important;
-  transform: translateZ(0); /* Hardware isolation to stop bleeding */
+  transform: translateZ(0);
 }
 
-/* GLOBAL GPU PERFORMANCE PATCH */
-/* Forces the settings modal and floating button onto their own hardware-accelerated layers */
 .modal-content,
 .floating-settings {
   -webkit-transform: translate3d(0, 0, 0);
@@ -465,7 +468,6 @@ body.nebula-drift .clock.clock-style-neon {
   backface-visibility: hidden;
 }
 
-/* Native momentum scrolling for the settings menu */
 .modal-content {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
