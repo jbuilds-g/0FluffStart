@@ -67,7 +67,7 @@ async function fetchExternalSuggestions(query) {
     
     // STRATEGY 1: Corsproxy.io
     try {
-        const proxyUrl = `https://corsproxy.io?${encodeURIComponent(targetUrl)}`;
+        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
         const res = await fetch(proxyUrl);
         if (res.ok) {
             const data = await res.json();

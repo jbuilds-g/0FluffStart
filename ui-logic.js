@@ -88,6 +88,23 @@ function bindStaticEvents() {
       window.open("https://github.com/jbuilds-g/0FluffStart", "_blank"),
     );
 
+  // --- MOBILE RESPONSIVE ENGINE ---
+  const mobileSearchBtn = document.getElementById("mobileSearchBtn");
+  const mainSearchInput = document.getElementById("searchInput");
+
+  if (mobileSearchBtn && mainSearchInput) {
+    mobileSearchBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Instantly pass the physical tap event to the main input field
+      // This bypasses the OS block and forces the keyboard to slide up
+      mainSearchInput.focus();
+
+      // Safety scroll: Ensures the search bar is in view when the keyboard opens
+      mainSearchInput.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }
+
   // Default "Add Link" button on main settings screen uses the current dashboard folder
   document
     .getElementById("addLinkBtn")

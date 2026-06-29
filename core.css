@@ -226,3 +226,63 @@ h1 {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   border-color: var(--accent);
 }
+/* =========================================
+   MOBILE RESPONSIVENESS OVERRIDES
+   ========================================= */
+.mobile-dock {
+  display: none; /* Strictly hidden on desktop */
+}
+
+@media (max-width: 768px) {
+  /* Force app container to use full dynamic height */
+  body,
+  html,
+  .app-container {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  /* Push the quick links grid down to thumb level */
+  .grid-container,
+  #linksGrid {
+    margin-top: auto !important;
+    margin-bottom: 90px !important; /* Safety clearance for the dock */
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+
+  /* Reveal and format the floating search dock */
+  .mobile-dock {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: calc(70px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: rgba(20, 20, 24, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+  }
+
+  .mobile-search-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent, #00aaff);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .mobile-search-btn:active {
+    transform: scale(0.9);
+  }
+}
