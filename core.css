@@ -230,36 +230,34 @@ h1 {
    MOBILE RESPONSIVENESS OVERRIDES
    ========================================= */
 .mobile-dock {
-  display: none;
+  display: none !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 850px) {
   /* Forcefully drags the links grid down to thumb level */
   .grid-container,
   #linksGrid {
-    margin-top: 35vh !important; /* Physically pushes the grid down */
+    margin-top: 35vh !important;
     margin-bottom: 20px !important;
   }
 
-  /* Mirrors your floating-settings container, but on the right */
-  .floating-search {
-    display: block; /* Overrides the .mobile-dock hidden state */
-    position: fixed;
-    bottom: 24px;
-    right: 24px; /* Placed exactly opposite the settings button */
-    z-index: 50; /* Matches your settings z-index exactly */
-    pointer-events: none; /* Stops the wrapper from blocking touches */
+  /* The Wrapper: Forces position on the bottom right */
+  .mobile-dock {
+    display: block !important;
+    position: fixed !important;
+    bottom: 24px !important;
+    right: 24px !important; /* Exactly opposite of settings left: 24px */
+    z-index: 50 !important; /* Matches settings z-index */
+    pointer-events: none !important; /* Stops the wrapper from blocking touches */
   }
 
-  /* Re-enable clicks just for the button, center the SVG icon */
-  .floating-search .floating-btn {
-    pointer-events: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(
-      --text
-    ); /* Defaults to standard text color, hover turns it accent */
-    padding: 0; /* Ensures the SVG centers perfectly */
+  /* The Button: We leave the colors/size out so .floating-btn styles it! */
+  #mobileSearchBtn {
+    pointer-events: auto !important; /* Makes the button itself clickable */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 0 !important; /* Centers the SVG */
+    color: var(--text) !important; /* Icon color */
   }
 }
