@@ -75,7 +75,7 @@ h1 {
   display: none !important;
 }
 
-/* --- FLOATING SETTINGS BUTTON (v1.1.0) --- */
+/* --- FLOATING SETTINGS BUTTON --- */
 .floating-settings {
   position: fixed;
   bottom: 24px;
@@ -230,59 +230,36 @@ h1 {
    MOBILE RESPONSIVENESS OVERRIDES
    ========================================= */
 .mobile-dock {
-  display: none; /* Strictly hidden on desktop */
+  display: none;
 }
 
 @media (max-width: 768px) {
-  /* Force app container to use full dynamic height */
-  body,
-  html,
-  .app-container {
-    height: 100dvh;
-    overflow: hidden;
-  }
-
-  /* Push the quick links grid down to thumb level */
+  /* Forcefully drags the links grid down to thumb level */
   .grid-container,
   #linksGrid {
-    margin-top: auto !important;
-    margin-bottom: 90px !important; /* Safety clearance for the dock */
-    padding-bottom: env(safe-area-inset-bottom, 20px);
+    margin-top: 35vh !important; /* Physically pushes the grid down */
+    margin-bottom: 20px !important;
   }
 
-  /* Reveal and format the floating search dock */
-  .mobile-dock {
-    display: flex;
+  /* Mirrors your floating-settings container, but on the right */
+  .floating-search {
+    display: block; /* Overrides the .mobile-dock hidden state */
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: calc(70px + env(safe-area-inset-bottom, 0px));
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    background: rgba(20, 20, 24, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
+    bottom: 24px;
+    right: 24px; /* Placed exactly opposite the settings button */
+    z-index: 50; /* Matches your settings z-index exactly */
+    pointer-events: none; /* Stops the wrapper from blocking touches */
   }
 
-  .mobile-search-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--accent, #00aaff);
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+  /* Re-enable clicks just for the button, center the SVG icon */
+  .floating-search .floating-btn {
+    pointer-events: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-
-  .mobile-search-btn:active {
-    transform: scale(0.9);
+    color: var(
+      --text
+    ); /* Defaults to standard text color, hover turns it accent */
+    padding: 0; /* Ensures the SVG centers perfectly */
   }
 }
