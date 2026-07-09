@@ -5,6 +5,7 @@
   <p><i>The high-performance, minimalist productivity engine.</i></p>
   
   <br><br>
+  ![GitHub Downloads](https://img.shields.io/github/downloads/jbuilds-g/0FluffStart/total.svg)
 
 **The Final Minimalist Dashboard for Desktop & Mobile.**
 
