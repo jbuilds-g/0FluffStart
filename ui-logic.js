@@ -720,10 +720,20 @@ async function loadSettings() {
     try {
       const bgData = await getBgFromDB();
       if (bgData) {
+        // Clear any prior matching pointer before making a fresh instance
+        if (window.activeBgObjectUrl) {
+          URL.revokeObjectURL(window.activeBgObjectUrl);
+        }
+
         const url =
           bgData instanceof Blob || bgData instanceof File
             ? URL.createObjectURL(bgData)
             : bgData;
+
+        if (bgData instanceof Blob || bgData instanceof File) {
+          window.activeBgObjectUrl = url; // Save state reference
+        }
+
         document.body.style.backgroundImage = `url('${url}')`;
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundPosition = "center";
@@ -734,6 +744,11 @@ async function loadSettings() {
       console.error("Background load fail:", e);
     }
   } else {
+    // If background setting is cleared or not set, clean memory
+    if (window.activeBgObjectUrl) {
+      URL.revokeObjectURL(window.activeBgObjectUrl);
+      window.activeBgObjectUrl = null;
+    }
     document.body.style.backgroundImage = "";
     if (overlay) overlay.style.opacity = "0";
   }
@@ -956,7 +971,7 @@ function applyMaterialYouTheme(hue) {
 
 // The Trigger that starts the Engine
 async function triggerMaterialYou() {
-  const target = document.body; // <-- THIS WAS THE BUG. Fixed.
+  const target = document.body;
 
   if (settings.theme !== "material-you") {
     target.style.removeProperty("--bg");
@@ -970,13 +985,24 @@ async function triggerMaterialYou() {
 
   if (settings.backgroundImage === "indexeddb") {
     try {
-      const bgData = await getBgFromDB();
-      if (bgData) {
-        const url =
-          bgData instanceof Blob || bgData instanceof File
-            ? URL.createObjectURL(bgData)
-            : bgData;
+      // Direct optimization: Reuse the already validated background image URL if available
+      // instead of fetching from IndexedDB and spinning up another object URL token.
+      let url = window.activeBgObjectUrl;
 
+      if (!url) {
+        const bgData = await getBgFromDB();
+        if (bgData) {
+          url =
+            bgData instanceof Blob || bgData instanceof File
+              ? URL.createObjectURL(bgData)
+              : bgData;
+          if (bgData instanceof Blob || bgData instanceof File) {
+            window.activeBgObjectUrl = url;
+          }
+        }
+      }
+
+      if (url) {
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.src = url;
