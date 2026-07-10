@@ -79,43 +79,41 @@ function bindStaticEvents() {
     );
 
   const searchInput = document.getElementById("searchInput");
-  searchInput.addEventListener("input", handleSuggestions);
-  searchInput.addEventListener("keypress", handleSearch);
+  if (searchInput) {
+    searchInput.addEventListener("input", handleSuggestions);
+    searchInput.addEventListener("keypress", handleSearch);
+  }
 
-  document
-    .getElementById("githubBtn")
-    .addEventListener("click", () =>
+  const githubBtn = document.getElementById("githubBtn");
+  if (githubBtn)
+    githubBtn.addEventListener("click", () =>
       window.open("https://github.com/jbuilds-g/0FluffStart", "_blank"),
     );
 
   // --- MOBILE RESPONSIVE ENGINE ---
   const mobileSearchBtn = document.getElementById("mobileSearchBtn");
-  const mainSearchInput = document.getElementById("searchInput");
-
-  if (mobileSearchBtn && mainSearchInput) {
+  if (mobileSearchBtn && searchInput) {
     mobileSearchBtn.addEventListener("click", (e) => {
       e.preventDefault();
-
-      // Instantly pass the physical tap event to the main input field
-      // This bypasses the OS block and forces the keyboard to slide up
-      mainSearchInput.focus();
-
-      // Safety scroll: Ensures the search bar is in view when the keyboard opens
-      mainSearchInput.scrollIntoView({ behavior: "smooth", block: "center" });
+      searchInput.focus();
+      searchInput.scrollIntoView({ behavior: "smooth", block: "center" });
     });
   }
 
-  // Default "Add Link" button on main settings screen uses the current dashboard folder
-  document
-    .getElementById("addLinkBtn")
-    .addEventListener("click", () => openEditor(null, currentFolderId));
+  const addLinkBtn = document.getElementById("addLinkBtn");
+  if (addLinkBtn)
+    addLinkBtn.addEventListener("click", () =>
+      openEditor(null, currentFolderId),
+    );
+
   const addFolderBtn = document.getElementById("addFolderBtn");
   if (addFolderBtn) addFolderBtn.addEventListener("click", addFolder);
 
-  document.getElementById("saveLinkBtn").addEventListener("click", saveLink);
-  document
-    .getElementById("cancelEditBtn")
-    .addEventListener("click", cancelEdit);
+  const saveLinkBtn = document.getElementById("saveLinkBtn");
+  if (saveLinkBtn) saveLinkBtn.addEventListener("click", saveLink);
+
+  const cancelEditBtn = document.getElementById("cancelEditBtn");
+  if (cancelEditBtn) cancelEditBtn.addEventListener("click", cancelEdit);
 
   // --- SELECTION MODE BUTTONS ---
   document
@@ -132,13 +130,11 @@ function bindStaticEvents() {
     ?.addEventListener("click", () => {
       if (selectedLinkIds.length === 0)
         return alert("Please select at least one link.");
-
       links.forEach((link) => {
         if (selectedLinkIds.includes(link.id)) {
           link.parentId = activeFolderId;
         }
       });
-
       localStorage.setItem("0fluff_links", JSON.stringify(links));
       isSelectionMode = false;
       selectedLinkIds = [];
@@ -147,52 +143,74 @@ function bindStaticEvents() {
       renderLinks();
     });
 
-  document
-    .getElementById("userNameInput")
-    .addEventListener("input", autoSaveSettings);
-  document
-    .getElementById("themeSelect")
-    .addEventListener("change", autoSaveSettings);
-  document
-    .getElementById("clockStyleSelect")
-    .addEventListener("change", autoSaveSettings);
+  // --- OPTIMIZATION 2: SELECTIVE SETTINGS TRIGGERS ---
+  const userNameInput = document.getElementById("userNameInput");
+  if (userNameInput)
+    userNameInput.addEventListener("input", () => autoSaveSettings("username"));
+
+  const themeSelect = document.getElementById("themeSelect");
+  if (themeSelect)
+    themeSelect.addEventListener("change", () => autoSaveSettings("theme"));
+
+  const clockStyleSelect = document.getElementById("clockStyleSelect");
+  if (clockStyleSelect)
+    clockStyleSelect.addEventListener("change", () =>
+      autoSaveSettings("clock"),
+    );
 
   const showTitlesToggle = document.getElementById("showTitlesToggle");
   if (showTitlesToggle)
-    showTitlesToggle.addEventListener("change", autoSaveSettings);
-
-  const bgInput = document.getElementById("bgImageInput");
-  bgInput.addEventListener("change", () => handleImageUpload(bgInput));
-  document
-    .getElementById("resetBgBtn")
-    .addEventListener("click", clearBackground);
-
-  document
-    .getElementById("externalSuggestToggle")
-    .addEventListener("change", autoSaveSettings);
-  document
-    .getElementById("historyEnabledToggle")
-    .addEventListener("change", autoSaveSettings);
-  document
-    .getElementById("clearHistoryBtn")
-    .addEventListener("click", clearHistory);
-
-  document
-    .getElementById("backupDataBtn")
-    .addEventListener("click", backupData);
-  document
-    .getElementById("restoreDataBtn")
-    .addEventListener("click", () =>
-      document.getElementById("restoreInput").click(),
+    showTitlesToggle.addEventListener("change", () =>
+      autoSaveSettings("titles"),
     );
-  document
-    .getElementById("restoreInput")
-    .addEventListener("change", restoreData);
+
+  const externalSuggestToggle = document.getElementById(
+    "externalSuggestToggle",
+  );
+  if (externalSuggestToggle)
+    externalSuggestToggle.addEventListener("change", () =>
+      autoSaveSettings("suggestions"),
+    );
+
+  const historyEnabledToggle = document.getElementById("historyEnabledToggle");
+  if (historyEnabledToggle)
+    historyEnabledToggle.addEventListener("change", () =>
+      autoSaveSettings("history"),
+    );
 
   document.querySelectorAll(".clock-radio").forEach((radio) => {
-    radio.addEventListener("change", autoSaveSettings);
+    radio.addEventListener("change", () => autoSaveSettings("clock"));
   });
 
+  // --- BACKGROUND & DATA BUTTONS (Safely Preserved) ---
+  const bgInput = document.getElementById("bgImageInput");
+  if (bgInput)
+    bgInput.addEventListener("change", () => handleImageUpload(bgInput));
+
+  const resetBgBtn = document.getElementById("resetBgBtn");
+  if (resetBgBtn) {
+    resetBgBtn.addEventListener("click", () => {
+      clearBackground();
+      autoSaveSettings("background");
+    });
+  }
+
+  const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+  if (clearHistoryBtn) clearHistoryBtn.addEventListener("click", clearHistory);
+
+  const backupDataBtn = document.getElementById("backupDataBtn");
+  if (backupDataBtn) backupDataBtn.addEventListener("click", backupData);
+
+  const restoreDataBtn = document.getElementById("restoreDataBtn");
+  if (restoreDataBtn)
+    restoreDataBtn.addEventListener("click", () =>
+      document.getElementById("restoreInput").click(),
+    );
+
+  const restoreInput = document.getElementById("restoreInput");
+  if (restoreInput) restoreInput.addEventListener("change", restoreData);
+
+  // --- UI HELPERS ---
   document.querySelectorAll(".help-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -208,14 +226,16 @@ function bindStaticEvents() {
     });
   });
 
-  document.getElementById("resetSettingsBtn").addEventListener("click", () => {
-    const warning = "Are you sure? This action cannot be undone.";
-    if (confirm(warning)) {
-      localStorage.removeItem("0fluff_settings");
-      alert("Settings reset to default.");
-      window.location.reload();
-    }
-  });
+  const resetSettingsBtn = document.getElementById("resetSettingsBtn");
+  if (resetSettingsBtn) {
+    resetSettingsBtn.addEventListener("click", () => {
+      if (confirm("Are you sure? This action cannot be undone.")) {
+        localStorage.removeItem("0fluff_settings");
+        alert("Settings reset to default.");
+        window.location.reload();
+      }
+    });
+  }
 }
 
 function applyClockStyle() {
@@ -757,30 +777,61 @@ async function loadSettings() {
   triggerMaterialYou();
 }
 
-function autoSaveSettings() {
-  settings.theme = document.getElementById("themeSelect")?.value || "dark";
-  settings.clockStyle =
-    document.getElementById("clockStyleSelect")?.value || "default";
-  settings.userName =
-    document.getElementById("userNameInput")?.value.trim() || "";
+// --- FIXED AUTO-SAVE WITH SELECTIVE RENDERING ---
+function autoSaveSettings(changedSetting = null) {
+  // 1. Core State Capture (Safely check if elements exist so we don't overwrite hidden settings)
+  const themeSelect = document.getElementById("themeSelect");
+  if (themeSelect) settings.theme = themeSelect.value;
+
+  const clockStyleSelect = document.getElementById("clockStyleSelect");
+  if (clockStyleSelect) settings.clockStyle = clockStyleSelect.value;
+
+  const userNameInput = document.getElementById("userNameInput");
+  if (userNameInput) settings.userName = userNameInput.value.trim();
 
   const radios = document.getElementsByName("clockFormat");
-  for (let r of radios) if (r.checked) settings.clockFormat = r.value;
+  if (radios && radios.length > 0) {
+    for (let r of radios) {
+      if (r.checked) settings.clockFormat = r.value;
+    }
+  }
 
-  settings.externalSuggest = !!document.getElementById("externalSuggestToggle")
-    ?.checked;
-  settings.historyEnabled = !!document.getElementById("historyEnabledToggle")
-    ?.checked;
-  settings.showTitles = !!document.getElementById("showTitlesToggle")?.checked;
+  const externalSuggestToggle = document.getElementById(
+    "externalSuggestToggle",
+  );
+  if (externalSuggestToggle)
+    settings.externalSuggest = !!externalSuggestToggle.checked;
 
+  const historyEnabledToggle = document.getElementById("historyEnabledToggle");
+  if (historyEnabledToggle)
+    settings.historyEnabled = !!historyEnabledToggle.checked;
+
+  const showTitlesToggle = document.getElementById("showTitlesToggle");
+  if (showTitlesToggle) settings.showTitles = !!showTitlesToggle.checked;
+
+  // 2. Synchronize to LocalStorage
   localStorage.setItem("0fluff_settings", JSON.stringify(settings));
-  document.body.className = settings.theme;
-  applyClockStyle();
-  triggerMaterialYou();
 
-  document
-    .getElementById("linkGrid")
-    ?.classList.toggle("show-titles", settings.showTitles);
+  // 3. Isolated UI Updates (Prevents Global Layout Thrashing)
+  if (
+    !changedSetting ||
+    changedSetting === "theme" ||
+    changedSetting === "background"
+  ) {
+    document.body.className = settings.theme || "dark";
+    triggerMaterialYou();
+  }
+
+  if (!changedSetting || changedSetting === "clock") {
+    applyClockStyle();
+    updateClock();
+  }
+
+  if (!changedSetting || changedSetting === "titles") {
+    document
+      .getElementById("linkGrid")
+      ?.classList.toggle("show-titles", !!settings.showTitles);
+  }
 }
 
 function toggleSettings() {
