@@ -274,6 +274,27 @@ function addFolder() {
   renderLinkManager();
 }
 
+// --- OPTIMIZATION 3: FAST MASTER TEMPLATES ---
+const folderTemplate = document.createElement("div");
+folderTemplate.className = "link-item is-folder";
+folderTemplate.innerHTML = `
+    <div class="link-icon-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </div>
+    <div class="link-name"></div>
+`;
+
+const linkTemplate = document.createElement("div");
+linkTemplate.className = "link-item";
+linkTemplate.innerHTML = `
+    <div class="link-icon-circle">
+        <span class="link-acronym" style="color: var(--accent); font-weight: 800; font-family: var(--font-main);"></span>
+    </div>
+    <div class="link-name"></div>
+`;
+
 // --- MAIN GRID RENDERING ---
 function renderLinks() {
   const grid = document.getElementById("linkGrid");
@@ -287,28 +308,25 @@ function renderLinks() {
   const fragment = document.createDocumentFragment();
 
   visibleLinks.forEach((link) => {
-    const item = document.createElement("div");
-    item.className = "link-item";
-    item.dataset.id = link.id;
+    let item;
 
     if (link.isFolder) {
-      item.classList.add("is-folder");
-      item.innerHTML = `
-                <div class="link-icon-circle">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                </div>
-                <div class="link-name">${link.name}</div>
-            `;
+      // Clone master folder template
+      item = folderTemplate.cloneNode(true);
+      item.dataset.id = link.id;
+      item.querySelector(".link-name").textContent = link.name;
       item.addEventListener("click", () => navigateToFolder(link.id));
     } else {
+      // Clone master link template
+      item = linkTemplate.cloneNode(true);
+      item.dataset.id = link.id;
+
       const words = link.name.split(" ").filter((w) => w.length > 0);
       let acronym = words.map((word) => word.charAt(0).toUpperCase()).join("");
-      if (words.length === 1 && acronym.length === 1 && link.name.length > 1)
+      if (words.length === 1 && acronym.length === 1 && link.name.length > 1) {
         acronym = link.name.substring(0, 2).toUpperCase();
+      }
       const display = acronym.substring(0, 3);
-
       let fontSize =
         display.length === 1
           ? "2rem"
@@ -316,12 +334,11 @@ function renderLinks() {
             ? "1.6rem"
             : "1.2rem";
 
-      item.innerHTML = `
-                <div class="link-icon-circle">
-                    <span style="font-size: ${fontSize}; color: var(--accent); font-weight: 800; font-family: var(--font-main);">${display}</span>
-                </div>
-                <div class="link-name">${link.name}</div>
-            `;
+      const span = item.querySelector(".link-acronym");
+      span.textContent = display;
+      span.style.fontSize = fontSize;
+      item.querySelector(".link-name").textContent = link.name;
+
       item.addEventListener("click", () => {
         window.location.href = link.url.startsWith("http")
           ? link.url
@@ -340,12 +357,10 @@ function renderLinks() {
 
   grid.appendChild(fragment);
 
-  // --- NEW: SOLID PILL WITH INNER CIRCLE ---
+  // --- SOLID PILL BACK BUTTON ---
   if (currentFolderId !== null) {
     const exitContainer = document.createElement("div");
     exitContainer.className = "folder-exit-container";
-
-    // Notice the new <div class="back-icon-circle"> wrapping the SVG
     exitContainer.innerHTML = `
       <div class="back-pill" title="Back to Dashboard">
         <div class="back-icon-circle">
@@ -356,10 +371,7 @@ function renderLinks() {
     `;
 
     const backBtn = exitContainer.querySelector(".back-pill");
-    backBtn.addEventListener("click", () => {
-      navigateToFolder(null);
-    });
-
+    backBtn.addEventListener("click", () => navigateToFolder(null));
     grid.appendChild(exitContainer);
   }
 } // End of renderLinks() function
