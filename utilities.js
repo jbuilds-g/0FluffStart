@@ -286,6 +286,9 @@ async function handleImageUpload(input) {
       if (fileNameEl) fileNameEl.innerText = file.name;
       if (resetBtn) resetBtn.style.display = "inline-block";
       if (bgOverlay) bgOverlay.style.opacity = "1";
+
+      // --- Force the theme engine to extract the new colors instantly! ---
+      if (typeof triggerMaterialYou === "function") triggerMaterialYou();
     } catch (e) {
       console.error("Failed to save media to DB", e);
       alert("Failed to save background media. Database error.");
@@ -324,6 +327,9 @@ async function clearBackground() {
   if (nameEl) nameEl.innerText = "No media selected.";
   if (resetBtn) resetBtn.style.display = "none";
   if (overlay) overlay.style.opacity = "0";
+
+  // --- Revert the theme back to the default color instantly! ---
+  if (typeof triggerMaterialYou === "function") triggerMaterialYou();
 }
 
 // Exports

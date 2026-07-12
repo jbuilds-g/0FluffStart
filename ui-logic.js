@@ -870,15 +870,19 @@ function toggleSettings() {
   if (modal) {
     modal.classList.add("active");
 
-    // --- NEW: Sync Media Label State ---
+    // --- FIXED: Sync Media Label & Reset Button State ---
     const bgLabel = document.getElementById("bgFileName");
+    const resetBtn = document.getElementById("resetBgBtn");
+
     if (bgLabel) {
       if (settings.backgroundImage === "indexeddb") {
         bgLabel.innerText = "Custom Media Active";
         bgLabel.style.color = "var(--accent)";
+        if (resetBtn) resetBtn.style.display = "inline-block"; // Unhide button!
       } else {
         bgLabel.innerText = "No media selected.";
         bgLabel.style.color = "var(--dim)";
+        if (resetBtn) resetBtn.style.display = "none"; // Hide button
       }
     }
   }
