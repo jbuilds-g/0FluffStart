@@ -748,11 +748,12 @@ async function loadSettings() {
   applyClockStyle();
 
   const overlay = document.getElementById("bgOverlay");
+  const bgVideo = document.getElementById("bgVideo"); // Grab the video element
+
   if (settings.backgroundImage === "indexeddb") {
     try {
       const bgData = await getBgFromDB();
       if (bgData) {
-        // Clear any prior matching pointer before making a fresh instance
         if (window.activeBgObjectUrl) {
           URL.revokeObjectURL(window.activeBgObjectUrl);
         }
@@ -761,27 +762,43 @@ async function loadSettings() {
           bgData instanceof Blob || bgData instanceof File
             ? URL.createObjectURL(bgData)
             : bgData;
-
         if (bgData instanceof Blob || bgData instanceof File) {
-          window.activeBgObjectUrl = url; // Save state reference
+          window.activeBgObjectUrl = url;
         }
 
-        document.body.style.backgroundImage = `url('${url}')`;
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundPosition = "center";
-        document.body.style.backgroundAttachment = "fixed";
+        // --- PHASE 3: Route to Video or Image on page refresh ---
+        if (bgData.type && bgData.type.startsWith("video/")) {
+          document.body.style.backgroundImage = "";
+          if (bgVideo) {
+            bgVideo.src = url;
+            bgVideo.classList.remove("hidden");
+          }
+        } else {
+          if (bgVideo) {
+            bgVideo.src = "";
+            bgVideo.classList.add("hidden");
+          }
+          document.body.style.backgroundImage = `url('${url}')`;
+          document.body.style.backgroundSize = "cover";
+          document.body.style.backgroundPosition = "center";
+          document.body.style.backgroundAttachment = "fixed";
+        }
+
         if (overlay) overlay.style.opacity = "1";
       }
     } catch (e) {
       console.error("Background load fail:", e);
     }
   } else {
-    // If background setting is cleared or not set, clean memory
     if (window.activeBgObjectUrl) {
       URL.revokeObjectURL(window.activeBgObjectUrl);
       window.activeBgObjectUrl = null;
     }
     document.body.style.backgroundImage = "";
+    if (bgVideo) {
+      bgVideo.src = "";
+      bgVideo.classList.add("hidden");
+    }
     if (overlay) overlay.style.opacity = "0";
   }
   updateClock();
@@ -853,14 +870,14 @@ function toggleSettings() {
   if (modal) {
     modal.classList.add("active");
 
-    // --- NEW: Sync Wallpaper Label State ---
+    // --- NEW: Sync Media Label State ---
     const bgLabel = document.getElementById("bgFileName");
     if (bgLabel) {
       if (settings.backgroundImage === "indexeddb") {
-        bgLabel.innerText = "Custom Image Active";
+        bgLabel.innerText = "Custom Media Active";
         bgLabel.style.color = "var(--accent)";
       } else {
-        bgLabel.innerText = "No image selected.";
+        bgLabel.innerText = "No media selected.";
         bgLabel.style.color = "var(--dim)";
       }
     }
@@ -1048,33 +1065,58 @@ async function triggerMaterialYou() {
 
   if (settings.backgroundImage === "indexeddb") {
     try {
-      // Direct optimization: Reuse the already validated background image URL if available
-      // instead of fetching from IndexedDB and spinning up another object URL token.
       let url = window.activeBgObjectUrl;
+      let bgData = await getBgFromDB(); // Fetch to check file type
 
-      if (!url) {
-        const bgData = await getBgFromDB();
-        if (bgData) {
-          url =
-            bgData instanceof Blob || bgData instanceof File
-              ? URL.createObjectURL(bgData)
-              : bgData;
-          if (bgData instanceof Blob || bgData instanceof File) {
-            window.activeBgObjectUrl = url;
-          }
+      if (!url && bgData) {
+        url =
+          bgData instanceof Blob || bgData instanceof File
+            ? URL.createObjectURL(bgData)
+            : bgData;
+        if (bgData instanceof Blob || bgData instanceof File) {
+          window.activeBgObjectUrl = url;
         }
       }
 
-      if (url) {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.src = url;
+      if (url && bgData) {
+        // --- Video Color Extraction ---
+        if (bgData.type && bgData.type.startsWith("video/")) {
+          const vid = document.createElement("video");
+          vid.src = url;
+          vid.muted = true;
+          vid.playsInline = true;
+          vid.crossOrigin = "Anonymous";
 
-        img.onload = () => {
-          const { r, g, b } = getAverageColor(img);
-          const hue = rgbToHue(r, g, b);
-          applyMaterialYouTheme(hue);
-        };
+          // Wait for the video to load enough to know its length
+          vid.addEventListener("loadeddata", () => {
+            // Fast-forward to 1 second (or halfway if the video is super short)
+            // This skips the black keyframes at the very beginning of mp4s
+            vid.currentTime = Math.min(1, vid.duration / 2);
+          });
+
+          // Wait until the fast-forward is completely finished before taking the picture
+          vid.addEventListener("seeked", () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = 1;
+            canvas.height = 1;
+            const ctx = canvas.getContext("2d", { willReadFrequently: true });
+            ctx.drawImage(vid, 0, 0, 1, 1);
+            const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+            const hue = rgbToHue(r, g, b);
+            applyMaterialYouTheme(hue);
+          });
+        } else {
+          // Standard Image Color Extraction
+          const img = new Image();
+          img.crossOrigin = "Anonymous";
+          img.src = url;
+
+          img.onload = () => {
+            const { r, g, b } = getAverageColor(img);
+            const hue = rgbToHue(r, g, b);
+            applyMaterialYouTheme(hue);
+          };
+        }
       }
     } catch (e) {
       console.error("Material You engine failed:", e);

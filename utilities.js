@@ -233,41 +233,62 @@ function updateClock() {
   );
 }
 
-// --- UPDATED IMAGE HANDLER WITH LIFE-CYCLE TRACKING (Optimized) ---
+// --- UPGRADED MEDIA HANDLER ---
 async function handleImageUpload(input) {
   const file = input.files[0];
   const fileNameEl = document.getElementById("bgFileName");
   const resetBtn = document.getElementById("resetBgBtn");
 
-  if (file && file.type.startsWith("image/")) {
+  // Accept both image and video MIME types
+  if (
+    file &&
+    (file.type.startsWith("image/") || file.type.startsWith("video/"))
+  ) {
     try {
       // Store raw file in IndexedDB
       await saveBgToDB(file);
 
       // Update settings to flag IDB usage
       settings.backgroundImage = "indexeddb";
-      autoSaveSettings();
+      autoSaveSettings("background");
 
       // Clean up any old ObjectURL to prevent memory leaks
       if (window.activeBgObjectUrl) {
         URL.revokeObjectURL(window.activeBgObjectUrl);
       }
 
-      // Apply immediately using ObjectURL for zero-latency preview
+      // Generate zero-latency preview token
       const objectUrl = URL.createObjectURL(file);
       window.activeBgObjectUrl = objectUrl; // Bind tracker
 
-      document.body.style.backgroundImage = `url('${objectUrl}')`;
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backgroundPosition = "center";
-      document.body.style.backgroundAttachment = "fixed";
+      const bgVideo = document.getElementById("bgVideo");
+      const bgOverlay = document.getElementById("bgOverlay");
 
-      fileNameEl.innerText = file.name;
-      resetBtn.style.display = "inline-block";
-      document.getElementById("bgOverlay").style.opacity = "1";
+      if (file.type.startsWith("video/")) {
+        // Route to Video Player
+        document.body.style.backgroundImage = ""; // Clear fallback image
+        if (bgVideo) {
+          bgVideo.src = objectUrl;
+          bgVideo.classList.remove("hidden");
+        }
+      } else {
+        // Route to CSS Background
+        if (bgVideo) {
+          bgVideo.src = "";
+          bgVideo.classList.add("hidden");
+        }
+        document.body.style.backgroundImage = `url('${objectUrl}')`;
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundAttachment = "fixed";
+      }
+
+      if (fileNameEl) fileNameEl.innerText = file.name;
+      if (resetBtn) resetBtn.style.display = "inline-block";
+      if (bgOverlay) bgOverlay.style.opacity = "1";
     } catch (e) {
-      console.error("Failed to save background to DB", e);
-      alert("Failed to save background image. Database error.");
+      console.error("Failed to save media to DB", e);
+      alert("Failed to save background media. Database error.");
     }
   } else {
     clearBackground();
@@ -276,7 +297,7 @@ async function handleImageUpload(input) {
 
 async function clearBackground() {
   settings.backgroundImage = null;
-  autoSaveSettings();
+  autoSaveSettings("background");
   await clearBgFromDB(); // Purge from IDB
 
   // Revoke object URL from memory instantly
@@ -286,22 +307,23 @@ async function clearBackground() {
   }
 
   document.body.style.backgroundImage = "";
-  document.getElementById("bgImageInput").value = "";
-  document.getElementById("bgFileName").innerText = "No image selected.";
-  document.getElementById("resetBgBtn").style.display = "none";
-  document.getElementById("bgOverlay").style.opacity = "0";
-}
 
-async function clearBackground() {
-  settings.backgroundImage = null;
-  autoSaveSettings();
-  await clearBgFromDB(); // Purge from IDB
+  // Kill the video player explicitly
+  const bgVideo = document.getElementById("bgVideo");
+  if (bgVideo) {
+    bgVideo.src = "";
+    bgVideo.classList.add("hidden");
+  }
 
-  document.body.style.backgroundImage = "";
-  document.getElementById("bgImageInput").value = "";
-  document.getElementById("bgFileName").innerText = "No image selected.";
-  document.getElementById("resetBgBtn").style.display = "none";
-  document.getElementById("bgOverlay").style.opacity = "0";
+  const inputEl = document.getElementById("bgImageInput");
+  const nameEl = document.getElementById("bgFileName");
+  const resetBtn = document.getElementById("resetBgBtn");
+  const overlay = document.getElementById("bgOverlay");
+
+  if (inputEl) inputEl.value = "";
+  if (nameEl) nameEl.innerText = "No media selected.";
+  if (resetBtn) resetBtn.style.display = "none";
+  if (overlay) overlay.style.opacity = "0";
 }
 
 // Exports

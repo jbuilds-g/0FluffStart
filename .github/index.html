@@ -24,6 +24,7 @@
   <body class="dark">
     <div id="bgOverlay" class="bg-overlay"></div>
   <video id="bgVideo" class="bg-video hidden" loop muted autoplay playsinline></video>
+
     <div class="container">
       <header>
         <div id="clockDisplay" class="clock">00:00:00</div>
@@ -430,26 +431,38 @@
             </div>
 
             <div class="setting-group">
-            <div class="setting-header">
-              <h3>Custom Background</h3>
-              <button class="help-btn">?</button>
-            </div>
-            <div class="help-text">
-              Upload your own image or video to replace the solid background. 
-              <br /><br />
-              <span style="opacity: 0.85">
-                💡 <b>Tip:</b> If the "Material You" theme is selected, it is highly recommended to use smooth, continuous video loops with a consistent color palette to preserve UI readability and layout balance.
-              </span>
-            </div>
-            <div class="setting-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-              <div style="display: flex; gap: 10px; width: 100%;">
-                <input type="file" id="bgImageInput" accept="image/*,video/*" class="hidden-input" />
-                <label for="bgImageInput" class="custom-file-btn">Choose Media</label>
-                <button id="resetBgBtn" class="icon-btn secondary" style="display: none;" title="Reset Background">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+              <div class="setting-header">
+                <h3>Custom Background</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Upload your own image to replace the solid background. High-res
+                images look best.
+              </div>
+              <div class="bg-control-row">
+                <input
+                  type="file"
+                  id="bgImageInput"
+                  accept="image/*"
+                  class="hidden-input"
+                />
+                <label for="bgImageInput" class="custom-file-btn"
+                  >Choose Image</label
+                >
+                <button
+                  id="resetBgBtn"
+                  class="secondary small-btn"
+                  style="display: none; width: auto; padding: 10px 15px"
+                >
+                  Reset
                 </button>
               </div>
-              <p id="bgFileName" style="font-size: 0.85rem; color: var(--dim); margin: 0; word-break: break-all;">No media selected.</p>
+              <p
+                id="bgFileName"
+                style="font-size: 0.8rem; color: var(--dim); margin-top: 8px"
+              >
+                No image selected.
+              </p>
             </div>
           </div>
         </details>
