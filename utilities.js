@@ -227,7 +227,11 @@ function updateClock() {
     h = String(h).padStart(2, "0");
   }
 
-  document.getElementById("clockDisplay").innerText = `${h}:${m}:${s}${suffix}`;
+  // Check if seconds should be shown (defaults to true if not set yet)
+  const showSeconds = settings.showSeconds !== false;
+  const timeString = showSeconds ? `${h}:${m}:${s}` : `${h}:${m}`;
+
+  document.getElementById("clockDisplay").innerText = `${timeString}${suffix}`;
   document.getElementById("greetingDisplay").innerText = getGreeting(
     settings.userName,
   );

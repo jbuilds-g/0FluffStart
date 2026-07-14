@@ -203,10 +203,6 @@ body.material-you {
   font-weight: 900;
   letter-spacing: -2px;
 }
-.clock-style-serif {
-  font-family: "Georgia", serif;
-  font-weight: bold;
-}
 .clock-style-mono {
   font-family: "Courier New", monospace;
   letter-spacing: 2px;

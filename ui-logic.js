@@ -182,6 +182,14 @@ function bindStaticEvents() {
     radio.addEventListener("change", () => autoSaveSettings("clock"));
   });
 
+  const showSecondsToggle = document.getElementById("showSecondsToggle");
+  if (showSecondsToggle) {
+    showSecondsToggle.addEventListener("change", () => {
+      autoSaveSettings("clock");
+      updateClock(); // Force an instant visual update!
+    });
+  }
+
   // --- BACKGROUND & DATA BUTTONS (Safely Preserved) ---
   const bgInput = document.getElementById("bgImageInput");
   if (bgInput)
@@ -744,6 +752,10 @@ async function loadSettings() {
   const showTitlesToggle = document.getElementById("showTitlesToggle");
   if (showTitlesToggle) showTitlesToggle.checked = !!settings.showTitles;
 
+  const showSecondsToggle = document.getElementById("showSecondsToggle");
+  if (showSecondsToggle)
+    showSecondsToggle.checked = settings.showSeconds !== false;
+
   document.body.className = settings.theme || "dark";
   applyClockStyle();
 
@@ -817,6 +829,9 @@ function autoSaveSettings(changedSetting = null) {
 
   const userNameInput = document.getElementById("userNameInput");
   if (userNameInput) settings.userName = userNameInput.value.trim();
+
+  const showSecondsToggle = document.getElementById("showSecondsToggle");
+  if (showSecondsToggle) settings.showSeconds = !!showSecondsToggle.checked;
 
   const radios = document.getElementsByName("clockFormat");
   if (radios && radios.length > 0) {

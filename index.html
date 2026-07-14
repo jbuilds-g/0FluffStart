@@ -23,7 +23,7 @@
   </head>
   <body class="dark">
     <div id="bgOverlay" class="bg-overlay"></div>
-  <video id="bgVideo" class="bg-video hidden" loop muted autoplay playsinline></video>
+    <video id="bgVideo" class="bg-video hidden" loop muted autoplay playsinline></video>
     <div class="container">
       <header>
         <div id="clockDisplay" class="clock">00:00:00</div>
@@ -123,7 +123,7 @@
                 color: var(--dim);
                 font-weight: 600;
               "
-              >v1.7.0</span
+              >v1.8.0</span
             >
             <button
               id="githubBtn"
@@ -410,46 +410,59 @@
 
             <div class="setting-group">
               <div class="setting-header">
-                <h3>Clock Style</h3>
+                <h3>Clock Customization</h3>
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Choose the typography and visual design of the main dashboard
-                clock.
+                Fine-tune typography styles, time format, and ticking visibility.
               </div>
-              <select id="clockStyleSelect">
+
+              <select id="clockStyleSelect" style="margin-bottom: 12px; width: 100%;">
                 <option value="default">Default</option>
                 <option value="bold">Bold & Chunky</option>
-                <option value="serif">Elegant Serif</option>
                 <option value="mono">Monospace</option>
                 <option value="lcd">LCD Digital</option>
                 <option value="neon">Neon Glow</option>
                 <option value="minimal">Ultra Minimal</option>
                 <option value="block">Card Block</option>
               </select>
+
+              <div class="radio-row" style="margin-bottom: 12px;">
+                <label class="radio-option">
+                  <input type="radio" name="clockFormat" value="12h" class="clock-radio" /> 12-Hour
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="clockFormat" value="24h" class="clock-radio" /> 24-Hour
+                </label>
+              </div>
+
+              <label class="radio-option" style="justify-content: flex-start; margin: 0; display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="showSecondsToggle" checked /> Display Live Seconds
+              </label>
             </div>
 
             <div class="setting-group">
-            <div class="setting-header">
-              <h3>Custom Background</h3>
-              <button class="help-btn">?</button>
-            </div>
-            <div class="help-text">
-              Upload your own image or video to replace the solid background. 
-              <br /><br />
-              <span style="opacity: 0.85">
-                💡 <b>Tip:</b> If the "Material You" theme is selected, it is highly recommended to use smooth, continuous video loops with a consistent color palette to preserve UI readability and layout balance.
-              </span>
-            </div>
-            <div class="setting-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-              <div style="display: flex; gap: 10px; width: 100%;">
-                <input type="file" id="bgImageInput" accept="image/*,video/*" class="hidden-input" />
-                <label for="bgImageInput" class="custom-file-btn">Choose Media</label>
-                <button id="resetBgBtn" class="icon-btn secondary" style="display: none;" title="Reset Background">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                </button>
+              <div class="setting-header">
+                <h3>Custom Background</h3>
+                <button class="help-btn">?</button>
               </div>
-              <p id="bgFileName" style="font-size: 0.85rem; color: var(--dim); margin: 0; word-break: break-all;">No media selected.</p>
+              <div class="help-text">
+                Upload your own image or video to replace the solid background. 
+                <br /><br />
+                <span style="opacity: 0.85">
+                  💡 <b>Tip:</b> If the "Material You" theme is selected, it is highly recommended to use smooth, continuous video loops with a consistent color palette to preserve UI readability and layout balance.
+                </span>
+              </div>
+              <div class="setting-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+                <div style="display: flex; gap: 10px; width: 100%;">
+                  <input type="file" id="bgImageInput" accept="image/*,video/*" class="hidden-input" />
+                  <label for="bgImageInput" class="custom-file-btn">Choose Media</label>
+                  <button id="resetBgBtn" class="icon-btn secondary" style="display: none;" title="Reset Background">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                  </button>
+                </div>
+                <p id="bgFileName" style="font-size: 0.85rem; color: var(--dim); margin: 0; word-break: break-all;">No media selected.</p>
+              </div>
             </div>
           </div>
         </details>
@@ -474,37 +487,6 @@
           <div class="category-content">
             <div class="setting-group">
               <div class="setting-header">
-                <h3>Clock Format</h3>
-                <button class="help-btn">?</button>
-              </div>
-              <div class="help-text">
-                Switch between standard 12-hour (AM/PM) and 24-hour military
-                time.
-              </div>
-              <div class="radio-row">
-                <label class="radio-option">
-                  <input
-                    type="radio"
-                    name="clockFormat"
-                    value="12h"
-                    class="clock-radio"
-                  />
-                  12-Hour
-                </label>
-                <label class="radio-option">
-                  <input
-                    type="radio"
-                    name="clockFormat"
-                    value="24h"
-                    class="clock-radio"
-                  />
-                  24-Hour
-                </label>
-              </div>
-            </div>
-
-            <div class="setting-group">
-              <div class="setting-header">
                 <h3>External Search Suggestions</h3>
                 <button class="help-btn">?</button>
               </div>
@@ -512,7 +494,7 @@
                 Fetches real-time autocomplete suggestions from search engines
                 as you type.
               </div>
-              <label class="radio-option" style="justify-content: flex-start">
+              <label class="radio-option" style="justify-content: flex-start; display: flex; align-items: center; gap: 6px;">
                 <input type="checkbox" id="externalSuggestToggle" /> Enable Live
                 Suggestions
               </label>
@@ -527,19 +509,7 @@
                 Keeps a private local log of your recent searches for quicker
                 access later.
               </div>
-              <button
-                id="clearHistoryBtn"
-                class="secondary"
-                style="
-                  width: 100%;
-                  margin-bottom: 10px;
-                  border: 1px solid var(--delete);
-                  color: var(--delete);
-                "
-              >
-                Clear All Search History
-              </button>
-              <label class="radio-option" style="justify-content: flex-start">
+              <label class="radio-option" style="justify-content: flex-start; display: flex; align-items: center; gap: 6px;">
                 <input type="checkbox" id="historyEnabledToggle" /> Enable Local
                 Search History
               </label>
@@ -565,6 +535,27 @@
             </svg>
           </summary>
           <div class="category-content">
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Search History Cleanup</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Purges the private transaction log indices of your local navigation history parameters.
+              </div>
+              <button
+                id="clearHistoryBtn"
+                class="secondary"
+                style="
+                  width: 100%;
+                  border: 1px solid var(--delete);
+                  color: var(--delete);
+                "
+              >
+                Clear All Search History
+              </button>
+            </div>
+
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Reset Preferences</h3>
