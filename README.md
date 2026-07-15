@@ -3,7 +3,9 @@
   <img src="https://github.com/user-attachments/assets/46af697b-7331-4959-9cdc-a5f53d476ce3" width="120" alt="0FluffStart Icon" />
   <h1 style="margin: 0;">0FluffStart</h1>
   <p><i>The high-performance, minimalist productivity engine.</i></p>
+  
    <br><br>
+   
 **The Final Minimalist Dashboard for Desktop & Mobile.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
