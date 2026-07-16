@@ -1,13 +1,10 @@
-const CACHE_NAME = "0fluff-v32";
+const CACHE_NAME = "0fluff-v33";
 
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
   "./core.css",
-  "./0flufThemes.css",
-  "./modules.css",
-  "./settings.css",
   "./state.js",
   "./utilities.js",
   "./ui-logic.js",
