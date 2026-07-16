@@ -691,6 +691,7 @@ body.material .link-item:hover .link-icon-circle span {
     max-width: none;
     height: 100%;
     max-height: 100vh;
+    max-height: 100dvh;
     border-radius: 0;
     border-right: none;
     border-top: none;
