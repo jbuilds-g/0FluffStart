@@ -75,8 +75,10 @@ The hosted version is a fully compliant **PWA**, meaning it can be installed as 
 2.  Tap the three dots (Menu) and select **Add to Home Screen**.
 3.  The dashboard will appear in your app drawer as a native application.
 
-*alternatively*
+_alternatively_
+
 > It can be set as default homescreen.
+
 1. Open **settings**.
 2. Navigate to **Homepage** and turn it **on**.
 3. Type/paste the **live URL** `jbuilds-g.github.io/0FluffStart/`
@@ -132,5 +134,5 @@ All configuration is stored in the browser's `localStorage` and `IndexedDB`. To 
 ├── state.js           # Data persistence & state management
 ├── ui-logic.js        # DOM interaction & event handling
 ├── utilities.js       # Search APIs & helper functions
-└── *.css              # Modular stylesheets (Themes, Core, Layout, Settings)
+└── core.css              # Modular stylesheets (Themes, Core, Layout, Settings)
 ```
