@@ -15,6 +15,7 @@ body {
   align-items: center;
   min-height: 100vh;
   min-height: 100dvh;
+  overflow: hidden; /* Locks the dashboard tightly in place */
 }
 
 /* Main Container */
@@ -659,6 +660,8 @@ body.material .link-item:hover .link-icon-circle span {
   max-height: 85vh;
   max-height: 85dvh;
   overflow-y: auto;
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hides scrollbar in Edge/IE */
   border: 1px solid var(--border);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   box-sizing: border-box;
@@ -668,6 +671,12 @@ body.material .link-item:hover .link-icon-circle span {
     transform 0.2s ease-out,
     opacity 0.2s ease-out;
 }
+
+/* Hides scrollbar in Chrome, Safari, and newer Edge */
+.modal-content::-webkit-scrollbar {
+  display: none;
+}
+
 .modal.active .modal-content {
   transform: scale(1);
   opacity: 1;
