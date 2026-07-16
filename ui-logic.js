@@ -575,31 +575,22 @@ function renderLinkManager() {
         if (!isSelectionMode) {
           const actionRow = document.createElement("div");
           actionRow.style.display = "flex";
-          actionRow.style.gap = "8px";
-          actionRow.style.marginLeft = "28px";
-          actionRow.style.marginTop = "5px";
-          actionRow.style.width = "calc(100% - 40px)";
+          actionRow.style.gap = "10px"; /* Matched to the top buttons' gap */
+          actionRow.style.marginLeft = "0";
+          actionRow.style.marginTop = "10px";
+          actionRow.style.width = "100%";
 
           const addNewBtn = document.createElement("button");
           addNewBtn.className = "add-link-btn";
           addNewBtn.style.flex = "1";
-          addNewBtn.style.background = "var(--card-hover)";
-          addNewBtn.style.border = "1px solid var(--border)";
-          addNewBtn.style.padding = "8px";
-          addNewBtn.style.color = "var(--text)";
-          addNewBtn.style.fontSize = "0.85rem";
-          addNewBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> New Link`;
+          addNewBtn.innerHTML = `+ New Link`;
           addNewBtn.onclick = () => openEditor(null, rootLink.id);
 
           const addExistingBtn = document.createElement("button");
           addExistingBtn.className = "add-link-btn";
           addExistingBtn.style.flex = "1";
           addExistingBtn.style.background = "var(--card-hover)";
-          addExistingBtn.style.border = "1px dashed var(--border)";
-          addExistingBtn.style.padding = "8px";
-          addExistingBtn.style.color = "var(--accent)";
-          addExistingBtn.style.fontSize = "0.85rem";
-          addExistingBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Existing`;
+          addExistingBtn.innerHTML = `+ Existing`;
           addExistingBtn.onclick = () => {
             isSelectionMode = true;
             activeFolderId = rootLink.id;
