@@ -103,7 +103,7 @@ _alternatively_
 - **Privacy-First Architecture:** No external analytics, trackers, or cloud sync. Your data stays on your hardware. _(Note: Enabling optional search suggestions will connect to the DuckDuckGo API)._
 - **Offline-Ready PWA:** Instant load times and full offline functionality via advanced Service Worker caching.
 - **Smart Link Management:** Organize your dashboard with nested folders/quick links.
-- **Premium Theming Engine:** **Material You** theming that adapts based on the background and 10+ built-in themes (e.g., OLED, Cyberpunk, Clean Light).
+- **Premium Theming Engine:** Material You theming that adapts based on the background and 10+ built-in themes (e.g., OLED, Cyberpunk, Clean Light).
 - **Custom Backgrounds:** Full support for high-resolution image and video uploads with persistent local storage.
 - **Integrated Search Hub:** Instant engine switching with private search suggestions and local history.
 - **Ultra-Minimalist Codebase:** Built with 100% Vanilla JS/CSS—zero framework bloat, zero dependencies.
