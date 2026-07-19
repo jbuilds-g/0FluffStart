@@ -77,7 +77,7 @@ The hosted version is a fully compliant **PWA**, meaning it can be installed as 
 
 _alternatively_
 
-> It can be set as default homescreen.
+> It can be set as default homepage.
 
 1. Open **settings**.
 2. Navigate to **Homepage** and turn it **on**.
