@@ -77,7 +77,7 @@ The hosted version is a fully compliant **PWA**, meaning it can be installed as 
 
 _alternatively_
 
-> It can be set as default homepage.
+> It can be set as a custom homepage.
 
 1. Open **settings**.
 2. Navigate to **Homepage** and turn it **on**.
