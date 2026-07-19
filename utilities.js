@@ -66,7 +66,7 @@ function getCurrentSearchEngine() {
 let debounceTimer;
 
 async function fetchExternalSuggestions(query) {
-  const targetUrl = `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`;
+  const targetUrl = `https://ac.duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`;
 
   // STRATEGY 1: Corsproxy.io
   try {
