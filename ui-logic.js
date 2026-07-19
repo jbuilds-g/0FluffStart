@@ -191,9 +191,38 @@ function bindStaticEvents() {
   }
 
   // --- BACKGROUND & DATA BUTTONS (Safely Preserved) ---
+  // --- BACKGROUND & DATA BUTTONS (Safely Preserved) ---
   const bgInput = document.getElementById("bgImageInput");
   if (bgInput)
     bgInput.addEventListener("change", () => handleImageUpload(bgInput));
+
+  const bgUrlInput = document.getElementById("bgUrlInput");
+  if (bgUrlInput) {
+    const processUrlBackground = async () => {
+      const url = bgUrlInput.value.trim();
+      if (!url) return;
+      try {
+        await saveBgToDB(url);
+        settings.backgroundImage = "indexeddb";
+        autoSaveSettings("background");
+        loadSettings();
+
+        const bgLabel = document.getElementById("bgFileName");
+        if (bgLabel) {
+          bgLabel.innerText = "URL Media Active";
+          bgLabel.style.color = "var(--accent)";
+        }
+        document.getElementById("resetBgBtn").style.display = "inline-block";
+      } catch (e) {
+        console.error("Failed to apply URL background:", e);
+      }
+    };
+
+    bgUrlInput.addEventListener("change", processUrlBackground);
+    bgUrlInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") processUrlBackground();
+    });
+  }
 
   const resetBgBtn = document.getElementById("resetBgBtn");
   if (resetBgBtn) {
@@ -357,7 +386,38 @@ function renderLinks() {
     item.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       toggleSettings();
-      editLink(link.id);
+
+      if (link.isFolder) {
+        // Ensure the Dashboard Links panel is open
+        const detailsPanel = document
+          .querySelector("#linkListContainer")
+          .closest("details");
+        if (detailsPanel && !detailsPanel.open) {
+          detailsPanel.open = true;
+        }
+
+        // Reset to manager view
+        cancelEdit();
+
+        // Locate the manager item and force expand/focus
+        const managerItem = document.querySelector(
+          `.link-manager-item[data-id="${link.id}"]`,
+        );
+        if (managerItem) {
+          const subContainer = managerItem.nextElementSibling;
+          if (
+            subContainer &&
+            subContainer.classList.contains("folder-sub-container")
+          ) {
+            subContainer.style.display = "block";
+            const toggleBtn = managerItem.querySelector(".folder-toggle");
+            if (toggleBtn) toggleBtn.innerText = "▼";
+          }
+          managerItem.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      } else {
+        editLink(link.id);
+      }
     });
 
     fragment.appendChild(item);
@@ -770,11 +830,19 @@ async function loadSettings() {
         }
 
         // --- PHASE 3: Route to Video or Image on page refresh ---
-        if (bgData.type && bgData.type.startsWith("video/")) {
+        // --- PHASE 3: Route to Video or Image on page refresh ---
+        const isVideo =
+          (bgData.type && bgData.type.startsWith("video/")) ||
+          (typeof bgData === "string" &&
+            bgData.match(/\.(mp4|webm|ogg)($|\?)/i));
+        if (isVideo) {
           document.body.style.backgroundImage = "";
           if (bgVideo) {
             bgVideo.src = url;
             bgVideo.classList.remove("hidden");
+            bgVideo
+              .play()
+              .catch((err) => console.warn("Playback prevented:", err));
           }
         } else {
           if (bgVideo) {
@@ -1090,7 +1158,11 @@ async function triggerMaterialYou() {
 
       if (url && bgData) {
         // --- Video Color Extraction ---
-        if (bgData.type && bgData.type.startsWith("video/")) {
+        const isVideo =
+          (bgData.type && bgData.type.startsWith("video/")) ||
+          (typeof bgData === "string" &&
+            bgData.match(/\.(mp4|webm|ogg)($|\?)/i));
+        if (isVideo) {
           const vid = document.createElement("video");
           vid.src = url;
           vid.muted = true;
