@@ -966,7 +966,8 @@ function toggleSettings() {
     if (bgLabel) {
       if (settings.backgroundImage === "indexeddb") {
         bgLabel.innerText = "Custom Media Active";
-        bgLabel.style.color = "var(--accent)";
+        bgLabel.style.color = "var(--dim accent)";
+        bgLabel.style.marginTop = "10px";
         if (resetBtn) resetBtn.style.display = "inline-block"; // Unhide button!
       } else {
         bgLabel.innerText = "No media selected.";
