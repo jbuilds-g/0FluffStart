@@ -273,6 +273,65 @@ function bindStaticEvents() {
       }
     });
   }
+
+  const grid = document.getElementById("linkGrid");
+  if (grid) {
+    grid.addEventListener("click", (e) => {
+      const item = e.target.closest(".link-item");
+      if (!item) return;
+      const id = item.dataset.id;
+      const link = links.find((l) => l.id === id);
+      if (!link) return;
+
+      if (link.isFolder) {
+        navigateToFolder(link.id);
+      } else {
+        window.location.href = link.url.startsWith("http")
+          ? link.url
+          : `https://${link.url}`;
+      }
+    });
+
+    grid.addEventListener("contextmenu", (e) => {
+      const item = e.target.closest(".link-item");
+      if (!item) return;
+      e.preventDefault();
+      const id = item.dataset.id;
+      const link = links.find((l) => l.id === id);
+      if (!link) return;
+
+      toggleSettings();
+
+      if (link.isFolder) {
+        const detailsPanel = document
+          .querySelector("#linkListContainer")
+          ?.closest("details");
+        if (detailsPanel && !detailsPanel.open) {
+          detailsPanel.open = true;
+        }
+
+        cancelEdit();
+
+        const managerItem = document.querySelector(
+          `.link-manager-item[data-id="${link.id}"]`,
+        );
+        if (managerItem) {
+          const subContainer = managerItem.nextElementSibling;
+          if (
+            subContainer &&
+            subContainer.classList.contains("folder-sub-container")
+          ) {
+            subContainer.style.display = "block";
+            const toggleBtn = managerItem.querySelector(".folder-toggle");
+            if (toggleBtn) toggleBtn.innerText = "▼";
+          }
+          managerItem.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      } else {
+        editLink(link.id);
+      }
+    });
+  }
 }
 
 function applyClockStyle() {
@@ -352,7 +411,6 @@ function renderLinks() {
       item = folderTemplate.cloneNode(true);
       item.dataset.id = link.id;
       item.querySelector(".link-name").textContent = link.name;
-      item.addEventListener("click", () => navigateToFolder(link.id));
     } else {
       // Clone master link template
       item = linkTemplate.cloneNode(true);
@@ -375,50 +433,7 @@ function renderLinks() {
       span.textContent = display;
       span.style.fontSize = fontSize;
       item.querySelector(".link-name").textContent = link.name;
-
-      item.addEventListener("click", () => {
-        window.location.href = link.url.startsWith("http")
-          ? link.url
-          : `https://${link.url}`;
-      });
     }
-
-    item.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      toggleSettings();
-
-      if (link.isFolder) {
-        // Ensure the Dashboard Links panel is open
-        const detailsPanel = document
-          .querySelector("#linkListContainer")
-          .closest("details");
-        if (detailsPanel && !detailsPanel.open) {
-          detailsPanel.open = true;
-        }
-
-        // Reset to manager view
-        cancelEdit();
-
-        // Locate the manager item and force expand/focus
-        const managerItem = document.querySelector(
-          `.link-manager-item[data-id="${link.id}"]`,
-        );
-        if (managerItem) {
-          const subContainer = managerItem.nextElementSibling;
-          if (
-            subContainer &&
-            subContainer.classList.contains("folder-sub-container")
-          ) {
-            subContainer.style.display = "block";
-            const toggleBtn = managerItem.querySelector(".folder-toggle");
-            if (toggleBtn) toggleBtn.innerText = "▼";
-          }
-          managerItem.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      } else {
-        editLink(link.id);
-      }
-    });
 
     fragment.appendChild(item);
   });

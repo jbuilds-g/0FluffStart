@@ -3,6 +3,12 @@
 // --- CORE STATE ---
 let links = JSON.parse(localStorage.getItem("0fluff_links") || "[]");
 
+// --- UTILITIES ---
+const generateId = () =>
+  typeof crypto?.randomUUID === "function"
+    ? crypto.randomUUID()
+    : "id_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+
 // --- MIGRATION SCRIPT ---
 // Upgrades legacy links into the modern ID-based format
 let needsSave = false;

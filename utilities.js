@@ -62,9 +62,6 @@ function getCurrentSearchEngine() {
 }
 
 // --- SUGGESTIONS ---
-
-let debounceTimer;
-
 async function fetchExternalSuggestions(query) {
   const targetUrl = `https://ac.duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`;
 
@@ -200,8 +197,10 @@ function clearHistory() {
   alert("Search history has been cleared.");
 }
 
-function getGreeting(userName) {
-  const hour = new Date().getHours();
+let cachedHour = null;
+let cachedUserName = null;
+
+function getGreeting(userName, hour) {
   let greeting = "Hello";
   if (hour < 5) greeting = "Good Night";
   else if (hour < 12) greeting = "Good Morning";
@@ -214,7 +213,8 @@ function getGreeting(userName) {
 
 function updateClock() {
   const now = new Date();
-  let h = now.getHours();
+  const currentHour = now.getHours();
+  let h = currentHour;
   let m = String(now.getMinutes()).padStart(2, "0");
   let s = String(now.getSeconds()).padStart(2, "0");
   let suffix = "";
@@ -232,9 +232,16 @@ function updateClock() {
   const timeString = showSeconds ? `${h}:${m}:${s}` : `${h}:${m}`;
 
   document.getElementById("clockDisplay").innerText = `${timeString}${suffix}`;
-  document.getElementById("greetingDisplay").innerText = getGreeting(
-    settings.userName,
-  );
+
+  // Optimization: Only update the greeting DOM when the hour or username actually changes
+  if (cachedHour !== currentHour || cachedUserName !== settings.userName) {
+    document.getElementById("greetingDisplay").innerText = getGreeting(
+      settings.userName,
+      currentHour,
+    );
+    cachedHour = currentHour;
+    cachedUserName = settings.userName;
+  }
 }
 
 // --- UPGRADED MEDIA HANDLER ---

@@ -500,6 +500,10 @@
               <div class="help-text">
                 Fetches real-time autocomplete suggestions from search engines
                 as you type.
+                <br /><br />
+                <span style="opacity: 0.85">
+                  ⚠️ <b>Privacy Note:</b> To bypass browser restrictions, this feature routes your keystrokes through a public proxy. Keep this disabled if you prefer strictly local searches.
+                </span>
               </div>
               <label class="radio-option" style="justify-content: flex-start; display: flex; align-items: center; gap: 6px;">
                 <input type="checkbox" id="externalSuggestToggle" /> Enable Live
@@ -616,14 +620,15 @@
     <script src="state.js"></script>
     <script src="utilities.js"></script>
     <script src="ui-logic.js"></script>
-    <div class="mobile-dock" id="mobileDock">
-     <div class="mobile-dock floating-search" id="mobileDock">
+
+    <div class="mobile-dock floating-search" id="mobileDock">
       <button class="floating-btn" id="mobileSearchBtn">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
       </button>
+    </div>
     </div> 
   </body>
 </html>
