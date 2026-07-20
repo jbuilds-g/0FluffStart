@@ -62,6 +62,9 @@ function getCurrentSearchEngine() {
 }
 
 // --- SUGGESTIONS ---
+
+let debounceTimer;
+
 async function fetchExternalSuggestions(query) {
   const targetUrl = `https://ac.duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`;
 
