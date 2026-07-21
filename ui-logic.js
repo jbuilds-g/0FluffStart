@@ -1191,30 +1191,39 @@ async function triggerMaterialYou() {
           (typeof bgData === "string" &&
             bgData.match(/\.(mp4|webm|ogg)($|\?)/i));
         if (isVideo) {
-          const vid = document.createElement("video");
-          vid.src = url;
-          vid.muted = true;
-          vid.playsInline = true;
-          vid.crossOrigin = "Anonymous";
+          if (!window.sharedColorVideo) {
+            window.sharedColorVideo = document.createElement("video");
+            window.sharedColorVideo.muted = true;
+            window.sharedColorVideo.playsInline = true;
+            window.sharedColorVideo.crossOrigin = "Anonymous";
 
-          // Wait for the video to load enough to know its length
-          vid.addEventListener("loadeddata", () => {
-            // Fast-forward to 1 second (or halfway if the video is super short)
-            // This skips the black keyframes at the very beginning of mp4s
-            vid.currentTime = Math.min(1, vid.duration / 2);
-          });
+            window.sharedColorVideo.addEventListener("loadeddata", () => {
+              window.sharedColorVideo.currentTime = Math.min(
+                1,
+                window.sharedColorVideo.duration / 2,
+              );
+            });
 
-          // Wait until the fast-forward is completely finished before taking the picture
-          vid.addEventListener("seeked", () => {
-            const canvas = document.createElement("canvas");
-            canvas.width = 1;
-            canvas.height = 1;
-            const ctx = canvas.getContext("2d", { willReadFrequently: true });
-            ctx.drawImage(vid, 0, 0, 1, 1);
-            const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-            const hue = rgbToHue(r, g, b);
-            applyMaterialYouTheme(hue);
-          });
+            window.sharedColorVideo.addEventListener("seeked", () => {
+              if (window.colorExtractionTimer)
+                clearTimeout(window.colorExtractionTimer);
+              window.colorExtractionTimer = setTimeout(() => {
+                const canvas = document.createElement("canvas");
+                canvas.width = 1;
+                canvas.height = 1;
+                const ctx = canvas.getContext("2d", {
+                  willReadFrequently: true,
+                });
+                ctx.drawImage(window.sharedColorVideo, 0, 0, 1, 1);
+                const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+                applyMaterialYouTheme(rgbToHue(r, g, b));
+              }, 150);
+            });
+          }
+
+          if (window.sharedColorVideo.src !== url) {
+            window.sharedColorVideo.src = url;
+          }
         } else {
           // Standard Image Color Extraction
           const img = new Image();

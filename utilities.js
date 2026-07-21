@@ -20,7 +20,10 @@ function openDB() {
   });
 }
 
+window.cachedBgData = null;
+
 async function saveBgToDB(data) {
+  window.cachedBgData = data;
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(DB_CONFIG.store, "readwrite");
@@ -32,17 +35,22 @@ async function saveBgToDB(data) {
 }
 
 async function getBgFromDB() {
+  if (window.cachedBgData) return window.cachedBgData;
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(DB_CONFIG.store, "readonly");
     const store = tx.objectStore(DB_CONFIG.store);
     const req = store.get("backgroundImage");
-    req.onsuccess = () => resolve(req.result);
+    req.onsuccess = () => {
+      window.cachedBgData = req.result;
+      resolve(req.result);
+    };
     req.onerror = () => reject(req.error);
   });
 }
 
 async function clearBgFromDB() {
+  window.cachedBgData = null;
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(DB_CONFIG.store, "readwrite");
