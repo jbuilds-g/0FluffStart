@@ -7,9 +7,13 @@
     "newtab": "index.html"
   },
   "permissions": ["storage", "unlimitedStorage"],
+  "start_url": "./index.html",
+  "display": "standalone",
   "icons": {
     "16": "icon.png",
     "48": "icon.png",
-    "128": "icon.png"
+    "128": "icon.png",
+    "192": "icon.png",
+    "512": "icon.png"
   }
 }
