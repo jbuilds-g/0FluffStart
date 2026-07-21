@@ -8,7 +8,7 @@
     />
     <title>0FluffStart</title>
 
-    <link rel="manifest" href="manifest.json" />
+    <link rel="manifest" href="pwa-manifest.json" />
     <meta name="theme-color" content="#000000" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
@@ -620,13 +620,6 @@
     <script src="state.js"></script>
     <script src="utilities.js"></script>
     <script src="ui-logic.js"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js');
-        });
-      }
-    </script>
 
     <div class="mobile-dock floating-search" id="mobileDock">
       <button class="floating-btn" id="mobileSearchBtn">
