@@ -172,6 +172,12 @@ function bindStaticEvents() {
       autoSaveSettings("suggestions"),
     );
 
+  const customProxyInput = document.getElementById("customProxyInput");
+  if (customProxyInput)
+    customProxyInput.addEventListener("input", () =>
+      autoSaveSettings("suggestions"),
+    );
+
   const historyEnabledToggle = document.getElementById("historyEnabledToggle");
   if (historyEnabledToggle)
     historyEnabledToggle.addEventListener("change", () =>
@@ -811,6 +817,9 @@ async function loadSettings() {
   if (externalSuggestToggle)
     externalSuggestToggle.checked = !!settings.externalSuggest;
 
+  const customProxyInput = document.getElementById("customProxyInput");
+  if (customProxyInput) customProxyInput.value = settings.customProxyUrl || "";
+
   const historyEnabledToggle = document.getElementById("historyEnabledToggle");
   if (historyEnabledToggle)
     historyEnabledToggle.checked = settings.historyEnabled !== false;
@@ -919,6 +928,9 @@ function autoSaveSettings(changedSetting = null) {
   );
   if (externalSuggestToggle)
     settings.externalSuggest = !!externalSuggestToggle.checked;
+
+  const customProxyInput = document.getElementById("customProxyInput");
+  if (customProxyInput) settings.customProxyUrl = customProxyInput.value.trim();
 
   const historyEnabledToggle = document.getElementById("historyEnabledToggle");
   if (historyEnabledToggle)

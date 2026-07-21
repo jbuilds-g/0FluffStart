@@ -502,13 +502,17 @@
                 as you type.
                 <br /><br />
                 <span style="opacity: 0.85">
-                  ⚠️ <b>Privacy Note:</b> To bypass browser restrictions, this feature routes your keystrokes through a public proxy. Keep this disabled if you prefer strictly local searches.
+                  ⚠️ <b>Privacy Note:</b> To bypass browser restrictions, this feature routes your keystrokes through a public or custom proxy. Keep this disabled if you prefer strictly local searches.
                 </span>
               </div>
               <label class="radio-option" style="justify-content: flex-start; display: flex; align-items: center; gap: 6px;">
                 <input type="checkbox" id="externalSuggestToggle" /> Enable Live
                 Suggestions
               </label>
+              <div id="customProxyContainer" style="margin-top: 10px; display: flex; flex-direction: column; gap: 5px;">
+                <label for="customProxyInput" style="font-size: 0.85rem; color: var(--dim);">Custom Proxy URL (Optional)</label>
+                <input type="url" id="customProxyInput" placeholder="e.g., https://my-proxy.com/?" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 8px;" />
+              </div>
             </div>
 
             <div class="setting-group">

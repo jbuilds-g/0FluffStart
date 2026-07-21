@@ -44,6 +44,7 @@ let settings = JSON.parse(
       clockStyle: "default",
       searchEngine: "Google",
       userName: "User",
+      customProxyUrl: "",
     }),
 );
 

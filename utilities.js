@@ -68,6 +68,33 @@ let debounceTimer;
 async function fetchExternalSuggestions(query) {
   const targetUrl = `https://ac.duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`;
 
+  // STRATEGY 0: Custom User Proxy
+  if (settings.customProxyUrl) {
+    try {
+      const proxyUrl =
+        settings.customProxyUrl.endsWith("=") ||
+        settings.customProxyUrl.endsWith("?")
+          ? `${settings.customProxyUrl}${encodeURIComponent(targetUrl)}`
+          : `${settings.customProxyUrl}?url=${encodeURIComponent(targetUrl)}`;
+
+      const res = await fetch(proxyUrl);
+      if (res.ok) {
+        const data = await res.json();
+        // Handle direct array returns (like corsproxy)
+        if (Array.isArray(data))
+          return data.map((item) => item.phrase).filter((p) => p);
+        // Handle wrapped contents (like allorigins)
+        if (data.contents) {
+          const innerData = JSON.parse(data.contents);
+          if (Array.isArray(innerData))
+            return innerData.map((item) => item.phrase).filter((p) => p);
+        }
+      }
+    } catch (e) {
+      console.warn("Custom proxy failed, falling back to defaults...", e);
+    }
+  }
+
   // STRATEGY 1: Corsproxy.io
   try {
     const proxyUrl = `https://corsproxy.io?${encodeURIComponent(targetUrl)}`;
