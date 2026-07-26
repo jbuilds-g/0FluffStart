@@ -1618,6 +1618,28 @@ body.nebula-drift .clock.clock-style-neon {
     height: 14px !important;
   }
 
+  /* Lock mobile touch items: disable tap scaling and hover shape morphing */
+  .link-grid .link-item:active {
+    transform: none !important;
+  }
+
+  .link-grid .link-item:hover .link-icon-circle,
+  .link-grid .link-item:active .link-icon-circle {
+    transform: none !important;
+    border-radius: var(--radius) !important;
+  }
+
+  /* Lock mobile touch items: disable tap scaling and hover shape morphing */
+  .link-grid .link-item:active {
+    transform: none !important;
+  }
+
+  .link-grid .link-item:hover .link-icon-circle,
+  .link-grid .link-item:active .link-icon-circle {
+    transform: none !important;
+    border-radius: var(--radius) !important;
+  }
+
   /* Force Titles to be permanently visible on mobile */
   .link-grid .link-name {
     opacity: 1 !important;
