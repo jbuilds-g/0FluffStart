@@ -1618,7 +1618,7 @@ body.nebula-drift .clock.clock-style-neon {
     height: 14px !important;
   }
 
-  /* Lock mobile touch items: disable tap scaling and hover shape morphing across all themes */
+  /* Lock mobile touch items: disable tap scaling and maintain natural squircle geometry */
   body:not(.force-desktop-mode) .link-grid .link-item:active {
     transform: none !important;
   }
@@ -1627,7 +1627,6 @@ body.nebula-drift .clock.clock-style-neon {
   body:not(.force-desktop-mode) .link-grid .link-item:active .link-icon-circle {
     transform: none !important;
     background: var(--card) !important;
-    border-radius: var(--radius) !important;
     box-shadow: var(--shadow) !important;
   }
 
@@ -1655,19 +1654,6 @@ body.nebula-drift .clock.clock-style-neon {
     .link-icon-circle
     svg {
     stroke: var(--accent) !important;
-  }
-
-  /* Lock mobile touch items: disable tap scaling and hover shape morphing across all themes */
-  body:not(.force-desktop-mode) .link-grid .link-item:active {
-    transform: none !important;
-  }
-
-  body:not(.force-desktop-mode) .link-grid .link-item:hover .link-icon-circle,
-  body:not(.force-desktop-mode) .link-grid .link-item:active .link-icon-circle {
-    transform: none !important;
-    background: var(--card) !important;
-    border-radius: var(--radius) !important;
-    box-shadow: var(--shadow) !important;
   }
 
   body:not(.force-desktop-mode)
