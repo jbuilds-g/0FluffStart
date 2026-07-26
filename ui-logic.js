@@ -5,6 +5,22 @@
 // --- STATE ---
 let currentFolderId = null;
 
+// --- SECURITY: PROTOCOL SANITIZER ---
+function sanitizeUrl(url) {
+  if (!url) return "#";
+  const trimmed = url.trim();
+  // Allow safe protocols or relative paths; block javascript:, data:, etc.
+  if (/^(https?:\/\/|mailto:|tel:|\/|\.\/)/i.test(trimmed)) {
+    return trimmed;
+  }
+  // Block any explicitly dangerous or malformed scheme
+  if (/^[a-z0-9+-.]+:/i.test(trimmed)) {
+    return "#";
+  }
+  // Default protocol-less entries to HTTPS
+  return `https://${trimmed}`;
+}
+
 // --- SELECTION MODE STATE ---
 let isSelectionMode = false;
 let selectedLinkIds = [];
@@ -317,9 +333,8 @@ function bindStaticEvents() {
       if (link.isFolder) {
         navigateToFolder(link.id);
       } else {
-        window.location.href = link.url.startsWith("http")
-          ? link.url
-          : `https://${link.url}`;
+        const safeUrl = sanitizeUrl(link.url);
+        if (safeUrl !== "#") window.location.href = safeUrl;
       }
     });
 
@@ -558,13 +573,21 @@ function renderLinkManager() {
     nameSpan.style.display = "flex";
     nameSpan.style.alignItems = "center";
 
-    let prefix = "";
-    // ALWAYS show the folder toggle arrow, even in selection mode
     if (link.isFolder) {
-      prefix += `<span class="folder-toggle" style="cursor:pointer; margin-right:8px; color:var(--accent); font-size:12px; width:12px; display:inline-block; text-align:center;">▶</span>`;
+      const toggleSpan = document.createElement("span");
+      toggleSpan.className = "folder-toggle";
+      toggleSpan.style.cssText =
+        "cursor:pointer; margin-right:8px; color:var(--accent); font-size:12px; width:12px; display:inline-block; text-align:center;";
+      toggleSpan.textContent = "▶";
+      nameSpan.appendChild(toggleSpan);
     }
-    nameSpan.innerHTML =
-      prefix + (link.isFolder ? folderSvg : linkSvg) + link.name;
+
+    const iconWrapper = document.createElement("span");
+    iconWrapper.innerHTML = link.isFolder ? folderSvg : linkSvg;
+    nameSpan.appendChild(iconWrapper);
+
+    const textNode = document.createTextNode(link.name);
+    nameSpan.appendChild(textNode);
 
     if (isSelectable) {
       const leftContainer = document.createElement("div");
@@ -1082,7 +1105,8 @@ function handleSearch(e) {
       searchEngines.find((s) => s.name === settings.searchEngine) ||
       searchEngines[0];
     if (val.includes(".") && !val.includes(" ")) {
-      window.location.href = val.startsWith("http") ? val : `https://${val}`;
+      const safeUrl = sanitizeUrl(val);
+      if (safeUrl !== "#") window.location.href = safeUrl;
     } else {
       window.location.href = `${engine.url}${encodeURIComponent(val)}`;
     }
@@ -1092,9 +1116,8 @@ function handleSearch(e) {
 function selectSuggestion(suggestion) {
   document.getElementById("searchInput").value = suggestion.name;
   if (suggestion.type === "Link") {
-    window.location.href = suggestion.url.startsWith("http")
-      ? suggestion.url
-      : `https://${suggestion.url}`;
+    const safeUrl = sanitizeUrl(suggestion.url);
+    if (safeUrl !== "#") window.location.href = safeUrl;
   } else {
     document.getElementById("suggestionsContainer")?.classList.add("hidden");
     handleSearch({ key: "Enter", type: "synthetic", preventDefault: () => {} });

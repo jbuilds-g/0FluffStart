@@ -7,7 +7,7 @@ let links = JSON.parse(localStorage.getItem("0fluff_links") || "[]");
 const generateId = () =>
   typeof crypto?.randomUUID === "function"
     ? crypto.randomUUID()
-    : "id_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+    : "id_" + Date.now() + "_" + Math.random().toString(36).slice(2, 11);
 
 // --- MIGRATION SCRIPT ---
 // Upgrades legacy links into the modern ID-based format

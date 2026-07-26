@@ -6,8 +6,12 @@
 // We use IndexedDB for heavy assets to avoid LocalStorage quota limits (typically ~5MB).
 const DB_CONFIG = { name: "0FluffDB", version: 1, store: "assets" };
 
+let cachedDBPromise = null;
+
 function openDB() {
-  return new Promise((resolve, reject) => {
+  if (cachedDBPromise) return cachedDBPromise;
+
+  cachedDBPromise = new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_CONFIG.name, DB_CONFIG.version);
     req.onupgradeneeded = (e) => {
       const db = e.target.result;
@@ -15,9 +19,23 @@ function openDB() {
         db.createObjectStore(DB_CONFIG.store);
       }
     };
-    req.onsuccess = (e) => resolve(e.target.result);
-    req.onerror = (e) => reject(e.target.error);
+    req.onsuccess = (e) => {
+      const db = e.target.result;
+      db.onclose = () => {
+        cachedDBPromise = null;
+      };
+      db.onerror = () => {
+        cachedDBPromise = null;
+      };
+      resolve(db);
+    };
+    req.onerror = (e) => {
+      cachedDBPromise = null;
+      reject(e.target.error);
+    };
   });
+
+  return cachedDBPromise;
 }
 
 window.cachedBgData = null;
