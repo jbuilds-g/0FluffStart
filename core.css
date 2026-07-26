@@ -1618,26 +1618,82 @@ body.nebula-drift .clock.clock-style-neon {
     height: 14px !important;
   }
 
-  /* Lock mobile touch items: disable tap scaling and hover shape morphing */
-  .link-grid .link-item:active {
+  /* Lock mobile touch items: disable tap scaling and hover shape morphing across all themes */
+  body:not(.force-desktop-mode) .link-grid .link-item:active {
     transform: none !important;
   }
 
-  .link-grid .link-item:hover .link-icon-circle,
-  .link-grid .link-item:active .link-icon-circle {
+  body:not(.force-desktop-mode) .link-grid .link-item:hover .link-icon-circle,
+  body:not(.force-desktop-mode) .link-grid .link-item:active .link-icon-circle {
     transform: none !important;
+    background: var(--card) !important;
     border-radius: var(--radius) !important;
+    box-shadow: var(--shadow) !important;
   }
 
-  /* Lock mobile touch items: disable tap scaling and hover shape morphing */
-  .link-grid .link-item:active {
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:hover
+    .link-icon-circle
+    span,
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:active
+    .link-icon-circle
+    span {
+    color: var(--accent) !important;
+  }
+
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:hover
+    .link-icon-circle
+    svg,
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:active
+    .link-icon-circle
+    svg {
+    stroke: var(--accent) !important;
+  }
+
+  /* Lock mobile touch items: disable tap scaling and hover shape morphing across all themes */
+  body:not(.force-desktop-mode) .link-grid .link-item:active {
     transform: none !important;
   }
 
-  .link-grid .link-item:hover .link-icon-circle,
-  .link-grid .link-item:active .link-icon-circle {
+  body:not(.force-desktop-mode) .link-grid .link-item:hover .link-icon-circle,
+  body:not(.force-desktop-mode) .link-grid .link-item:active .link-icon-circle {
     transform: none !important;
+    background: var(--card) !important;
     border-radius: var(--radius) !important;
+    box-shadow: var(--shadow) !important;
+  }
+
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:hover
+    .link-icon-circle
+    span,
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:active
+    .link-icon-circle
+    span {
+    color: var(--accent) !important;
+  }
+
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:hover
+    .link-icon-circle
+    svg,
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:active
+    .link-icon-circle
+    svg {
+    stroke: var(--accent) !important;
   }
 
   /* Force Titles to be permanently visible on mobile */
