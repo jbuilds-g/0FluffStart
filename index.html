@@ -20,6 +20,7 @@
     
   </head>
   <body class="dark">
+    <div class="search-backdrop"></div>
     <div id="bgOverlay" class="bg-overlay"></div>
     <video id="bgVideo" class="bg-video hidden" loop muted autoplay playsinline></video>
     <div class="container">
@@ -81,7 +82,7 @@
       <div id="linkGrid" class="link-grid"></div>
     </div>
 
-    <div class="floating-settings">
+   <div class="floating-settings">
       <button
         id="settingsToggleBtn"
         class="icon-btn floating-btn"
@@ -121,7 +122,7 @@
                 color: var(--dim);
                 font-weight: 600;
               "
-              >v1.9.1</span
+              >v2.0.0</span
             >
             <button
               id="githubBtn"
@@ -318,7 +319,7 @@
               </div>
             </div>
 
-            <div class="setting-group" style="margin-top: 20px">
+            <div class="setting-group desktop-only-setting" style="margin-top: 20px">
               <div
                 class="setting-header"
                 style="justify-content: flex-start; gap: 10px"
@@ -527,6 +528,39 @@
               <label class="radio-option" style="justify-content: flex-start; display: flex; align-items: center; gap: 6px;">
                 <input type="checkbox" id="historyEnabledToggle" /> Enable Local
                 Search History
+              </label>
+            </div>
+          </div>
+        </details>
+
+        <details class="category-panel mobile-only-setting">
+          <summary>
+            Advanced
+            <svg
+              class="chevron"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
+          <div class="category-content">
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Force Desktop Mode</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Bypasses mobile-specific layout adjustments and restores the desktop search bar.
+              </div>
+              <label class="radio-option" style="justify-content: flex-start; display: flex; align-items: center; gap: 6px;">
+                <input type="checkbox" id="forceDesktopToggle" /> Force Desktop Layout
               </label>
             </div>
           </div>

@@ -92,11 +92,30 @@ function bindStaticEvents() {
 
   // --- MOBILE RESPONSIVE ENGINE ---
   const mobileSearchBtn = document.getElementById("mobileSearchBtn");
-  if (mobileSearchBtn && searchInput) {
+  const searchBarContainer = document.querySelector(".search-bar");
+  const searchBackdrop = document.querySelector(".search-backdrop");
+
+  const closeMobileSearch = () => {
+    if (searchBarContainer)
+      searchBarContainer.classList.remove("mobile-expanded");
+    if (searchBackdrop) searchBackdrop.classList.remove("active");
+    if (searchInput) searchInput.blur();
+  };
+
+  if (mobileSearchBtn && searchInput && searchBarContainer) {
     mobileSearchBtn.addEventListener("click", (e) => {
       e.preventDefault();
+      searchBarContainer.classList.add("mobile-expanded");
+      if (searchBackdrop) searchBackdrop.classList.add("active");
       searchInput.focus();
-      searchInput.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    if (searchBackdrop) {
+      searchBackdrop.addEventListener("click", closeMobileSearch);
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMobileSearch();
     });
   }
 
@@ -162,6 +181,12 @@ function bindStaticEvents() {
   if (showTitlesToggle)
     showTitlesToggle.addEventListener("change", () =>
       autoSaveSettings("titles"),
+    );
+
+  const forceDesktopToggle = document.getElementById("forceDesktopToggle");
+  if (forceDesktopToggle)
+    forceDesktopToggle.addEventListener("change", () =>
+      autoSaveSettings("forceDesktop"),
     );
 
   const externalSuggestToggle = document.getElementById(
@@ -827,6 +852,15 @@ async function loadSettings() {
   const showTitlesToggle = document.getElementById("showTitlesToggle");
   if (showTitlesToggle) showTitlesToggle.checked = !!settings.showTitles;
 
+  const forceDesktopToggle = document.getElementById("forceDesktopToggle");
+  if (forceDesktopToggle) {
+    forceDesktopToggle.checked = !!settings.forceDesktop;
+    document.body.classList.toggle(
+      "force-desktop-mode",
+      !!settings.forceDesktop,
+    );
+  }
+
   const showSecondsToggle = document.getElementById("showSecondsToggle");
   if (showSecondsToggle)
     showSecondsToggle.checked = settings.showSeconds !== false;
@@ -939,6 +973,9 @@ function autoSaveSettings(changedSetting = null) {
   const showTitlesToggle = document.getElementById("showTitlesToggle");
   if (showTitlesToggle) settings.showTitles = !!showTitlesToggle.checked;
 
+  const forceDesktopToggle = document.getElementById("forceDesktopToggle");
+  if (forceDesktopToggle) settings.forceDesktop = !!forceDesktopToggle.checked;
+
   // 2. Synchronize to LocalStorage
   localStorage.setItem("0fluff_settings", JSON.stringify(settings));
 
@@ -961,6 +998,13 @@ function autoSaveSettings(changedSetting = null) {
     document
       .getElementById("linkGrid")
       ?.classList.toggle("show-titles", !!settings.showTitles);
+  }
+
+  if (!changedSetting || changedSetting === "forceDesktop") {
+    document.body.classList.toggle(
+      "force-desktop-mode",
+      !!settings.forceDesktop,
+    );
   }
 }
 

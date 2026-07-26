@@ -235,14 +235,7 @@ h1 {
   display: none !important;
 }
 
-@media (max-width: 850px) {
-  /* Forcefully drags the links grid down to thumb level */
-  .grid-container,
-  #linksGrid {
-    margin-top: 35vh !important;
-    margin-bottom: 20px !important;
-  }
-
+@media (max-width: 850px) and (pointer: coarse) {
   /* The Wrapper: Forces position on the bottom right */
   .mobile-dock {
     display: block !important;
@@ -1495,4 +1488,190 @@ body.nebula-drift .clock.clock-style-neon {
 .modal-content {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+}
+/* Mobile Search Overlay System */
+.search-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99;
+}
+
+.search-backdrop.active {
+  display: block;
+}
+
+/* Hide the default inline search bar on mobile (unless desktop mode is forced or expanded) */
+@media (max-width: 850px) and (pointer: coarse) {
+  body:not(.force-desktop-mode) .search-bar:not(.mobile-expanded) {
+    display: none !important;
+  }
+}
+
+/* Force visibility and positioning when expanded */
+.search-bar.mobile-expanded {
+  display: flex !important;
+  position: fixed !important;
+  top: 16px !important;
+  left: 16px !important;
+  right: 16px !important;
+  width: calc(100% - 32px) !important;
+  z-index: 100 !important;
+  margin: 0 !important;
+}
+/* Mobile Horizontal Scrolling Grid - Clean Document Flow */
+@media (max-width: 850px) and (pointer: coarse) {
+  .container {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100dvh !important; /* Takes up the full viewport height */
+    padding-bottom: 0 !important;
+  }
+
+  .link-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    touch-action: pan-x !important;
+    scroll-snap-type: x mandatory;
+    gap: 15px;
+
+    /* Strict viewport alignment to restore native right-side scroll physics */
+    width: 100vw !important;
+    margin-left: -20px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    box-sizing: border-box !important;
+
+    /* Pushes grid to thumb level naturally */
+    margin-top: auto !important;
+    margin-bottom: 90px !important;
+
+    /* Hide scrollbars */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .link-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .link-grid > * {
+    scroll-snap-align: start;
+    flex: 0 0 auto !important; /* Prevents icons from shrinking */
+  }
+
+  /* Enlarge header clock/greeting for mobile (Left-aligned) */
+  body:not(.force-desktop-mode) header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    margin-top: 10px !important;
+  }
+
+  body:not(.force-desktop-mode) .clock {
+    font-size: 2.8rem !important;
+    font-weight: 400 !important;
+  }
+
+  body:not(.force-desktop-mode) .greeting {
+    font-size: 1.25rem !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Center and scale the Back Button for Mobile */
+  .folder-exit-container {
+    position: fixed !important;
+    bottom: 24px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    padding: 0 !important;
+    width: auto !important;
+    z-index: 50 !important;
+  }
+
+  .back-pill {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+    padding: 6px 16px 6px 6px !important; /* Slimmer mobile footprint */
+    font-size: 0.75rem !important; /* Reduced text scale */
+    gap: 8px !important;
+  }
+
+  .back-pill .back-icon-circle {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .back-pill .back-icon-circle svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  /* Force Titles to be permanently visible on mobile */
+  .link-grid .link-name {
+    opacity: 1 !important;
+    transform: none !important;
+    display: block !important;
+    pointer-events: auto !important;
+  }
+
+  /* Force Desktop Mode Grid & Layout Adjustments */
+  body.force-desktop-mode .container {
+    height: auto !important;
+    padding-bottom: 50px !important;
+    display: block !important;
+  }
+
+  body.force-desktop-mode .link-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    flex-direction: unset !important;
+    overflow-x: visible !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: content-box !important;
+    margin-top: 20px !important;
+    margin-bottom: 0 !important;
+  }
+
+  body.force-desktop-mode .folder-exit-container {
+    position: static !important;
+    transform: none !important;
+  }
+
+  body.force-desktop-mode .back-pill {
+    padding: 8px 24px 8px 8px !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* Hide mobile floating search button when desktop mode is active */
+  body.force-desktop-mode .mobile-dock {
+    display: none !important;
+  }
+}
+
+/* Device-Specific Settings Visibility */
+@media (min-width: 851px) {
+  .mobile-only-setting {
+    display: none !important;
+  }
+}
+
+@media (max-width: 850px) and (pointer: coarse) {
+  .desktop-only-setting {
+    display: none !important;
+  }
 }
