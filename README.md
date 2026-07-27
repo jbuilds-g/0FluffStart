@@ -6,6 +6,8 @@
 </div>
    <br><br>
    
+---   
+
 **The Final Minimalist Dashboard for Desktop & Mobile.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
