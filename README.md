@@ -1,45 +1,48 @@
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/46af697b-7331-4959-9cdc-a5f53d476ce3" width="120" alt="0FluffStart Icon" />
-  <h1 style="margin: 0; border: none;">0FluffStart</h1>
-  <p><i>The high-performance, minimalist productivity engine.</i></p>
-</div>
 
+  <img src="https://github.com/user-attachments/assets/46af697b-7331-4959-9cdc-a5f53d476ce3" width="120" alt="0FluffStart Icon" />
+  <h1 style="margin: 0;">0FluffStart</h1>
+  <p><i>The high-performance, minimalist productivity engine.</i></p>
+</div>  
+   <br><br>
+   
 **The Final Minimalist Dashboard for Desktop & Mobile.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Version: 2.0.1](https://img.shields.io/badge/Version-2.0.1-blue)
 ![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
 
----
-
 > 0FluffStart is a high-performance, privacy-focused start page designed to replace bloated default homepages. It operates as a local-first application, ensuring that your data links, settings, and search history never leave your device.
 
-  <h3>📱 Mobile Experience</h3>
-  <video 
-    src="https://github.com/user-attachments/assets/7d073a88-8bb4-4bcf-9ea4-da28beb1e815" 
-    width="250" 
-    muted 
-    autoplay 
-    loop 
-    playsinline 
-    style="border-radius: 20px; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);"
-  ></video>
-
-<br><br><br>
-
+<div>
   <h3>💻 Desktop Experience</h3>
   <video 
-    src="https://github.com/user-attachments/assets/75b1a36b-fab8-4b27-bde6-6aaf81866c16" 
+    src="https://github.com/user-attachments/assets/7608ae94-e335-489c-8146-0c88cbe2b7cf" 
     width="100%" 
     muted 
     autoplay 
     loop 
     playsinline 
-    style="border-radius: 12px; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);"
   ></video>
 
-</div>
+  <br><br><br>
 
+  <h3>📱 Mobile Experience</h3>
+  <table>
+    <tr>
+      <td width="180">
+        <video 
+          src="https://github.com/user-attachments/assets/aff71e11-1af9-4576-98a8-d1111f12e820" 
+          muted 
+          autoplay 
+          loop 
+          playsinline 
+        ></video>
+      </td>
+    </tr>
+  </table>
+</div>
+  
 [**🚀 Launch Web Version**](https://jbuilds-g.github.io/0FluffStart/)
 
 ---
