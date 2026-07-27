@@ -238,7 +238,6 @@ function bindStaticEvents() {
   }
 
   // --- BACKGROUND & DATA BUTTONS (Safely Preserved) ---
-  // --- BACKGROUND & DATA BUTTONS (Safely Preserved) ---
   const bgInput = document.getElementById("bgImageInput");
   if (bgInput)
     bgInput.addEventListener("change", () => handleImageUpload(bgInput));
@@ -909,7 +908,6 @@ async function loadSettings() {
           window.activeBgObjectUrl = url;
         }
 
-        // --- PHASE 3: Route to Video or Image on page refresh ---
         // --- PHASE 3: Route to Video or Image on page refresh ---
         const isVideo =
           (bgData.type && bgData.type.startsWith("video/")) ||

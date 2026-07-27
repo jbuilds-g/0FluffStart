@@ -760,8 +760,17 @@ body.material .link-item:hover .link-icon-circle span {
 .setting-group {
   margin-bottom: 25px;
 }
-.setting-group:last-child {
+.setting-group:last-child,
+.setting-group:has(+ .desktop-only-setting) {
   margin-bottom: 0;
+}
+
+@media (max-width: 850px) and (pointer: coarse) {
+  .desktop-only-setting {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 }
 .setting-header {
   display: flex;
@@ -1737,5 +1746,8 @@ body.nebula-drift .clock.clock-style-neon {
 @media (max-width: 850px) and (pointer: coarse) {
   .desktop-only-setting {
     display: none !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
   }
 }
