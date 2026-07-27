@@ -1291,6 +1291,14 @@ async function triggerMaterialYou() {
 
           if (window.sharedColorVideo.src !== url) {
             window.sharedColorVideo.src = url;
+          } else if (window.sharedColorVideo.readyState >= 2) {
+            // Force re-extraction if the video source is already set and ready
+            const ctx = window.offscreenCanvas.getContext("2d", {
+              willReadFrequently: true,
+            });
+            ctx.drawImage(window.sharedColorVideo, 0, 0, 1, 1);
+            const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+            applyMaterialYouTheme(rgbToHue(r, g, b));
           }
         } else {
           // Standard Image Color Extraction
