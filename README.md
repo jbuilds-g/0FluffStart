@@ -31,7 +31,7 @@
   <h3>📱 Mobile Experience</h3>
   <video 
     src="https://github.com/user-attachments/assets/aff71e11-1af9-4576-98a8-d1111f12e820" 
-    width="80" 
+    width="50" 
     muted 
     autoplay 
     loop 
