@@ -23,20 +23,24 @@
     autoplay 
     loop 
     playsinline 
-    style="border-radius: 12px; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);"
   ></video>
 
   <br><br><br>
 
   <h3>📱 Mobile Experience</h3>
-  <video 
-    src="https://github.com/user-attachments/assets/aff71e11-1af9-4576-98a8-d1111f12e820" 
-    muted 
-    autoplay 
-    loop 
-    playsinline 
-    style="max-width: 120px !important; width: 100%; height: auto; border-radius: 20px; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);"
-  ></video>
+  <table>
+    <tr>
+      <td width="180">
+        <video 
+          src="https://github.com/user-attachments/assets/aff71e11-1af9-4576-98a8-d1111f12e820" 
+          muted 
+          autoplay 
+          loop 
+          playsinline 
+        ></video>
+      </td>
+    </tr>
+  </table>
 </div>
   
 [**🚀 Launch Web Version**](https://jbuilds-g.github.io/0FluffStart/)
