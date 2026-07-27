@@ -4,9 +4,8 @@
   <h1 style="margin: 0;">0FluffStart</h1>
   <p><i>The high-performance, minimalist productivity engine.</i></p>
 </div>
+
    <br><br>
-   
----   
 
 **The Final Minimalist Dashboard for Desktop & Mobile.**
 
