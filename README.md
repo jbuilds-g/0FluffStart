@@ -16,7 +16,7 @@
 
   <h3>📱 Mobile Experience</h3>
   <video 
-    src="https://github.com/user-attachments/assets/7d073a88-8bb4-4bcf-9ea4-da28beb1e815" 
+    src="https://github.com/user-attachments/assets/aff71e11-1af9-4576-98a8-d1111f12e820" 
     width="250" 
     muted 
     autoplay 
@@ -29,7 +29,7 @@
 
   <h3>💻 Desktop Experience</h3>
   <video 
-    src="https://github.com/user-attachments/assets/75b1a36b-fab8-4b27-bde6-6aaf81866c16" 
+    src="https://github.com/user-attachments/assets/7608ae94-e335-489c-8146-0c88cbe2b7cf" 
     width="100%" 
     muted 
     autoplay 

@@ -588,9 +588,11 @@ function renderLinkManager() {
       const toggleSpan = document.createElement("span");
       toggleSpan.className = "folder-toggle";
       toggleSpan.style.cssText =
-        "cursor:pointer; margin-right:8px; color:var(--accent); font-size:12px; width:12px; display:inline-block; text-align:center;";
+        "margin-right:8px; color:var(--accent); font-size:12px; width:12px; display:inline-block; text-align:center; pointer-events:none;";
       toggleSpan.textContent = "▶";
       nameSpan.appendChild(toggleSpan);
+
+      item.style.cursor = "pointer";
     }
 
     const iconWrapper = document.createElement("span");
@@ -695,8 +697,10 @@ function renderLinkManager() {
 
         const toggleBtn = row.querySelector(".folder-toggle");
         if (toggleBtn) {
-          toggleBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
+          row.addEventListener("click", (e) => {
+            // Prevent expand/collapse if clicking edit or delete buttons
+            if (e.target.closest(".link-actions")) return;
+
             const isHidden = subContainer.style.display === "none";
             subContainer.style.display = isHidden ? "block" : "none";
             toggleBtn.innerText = isHidden ? "▼" : "▶";
