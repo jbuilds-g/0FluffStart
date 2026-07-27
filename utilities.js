@@ -267,7 +267,15 @@ function getGreeting(userName, hour) {
   return `${greeting}${name}.`;
 }
 
+let clockEl = null;
+let greetingEl = null;
+let cachedTimeString = null;
+
 function updateClock() {
+  if (!clockEl) clockEl = document.getElementById("clockDisplay");
+  if (!greetingEl) greetingEl = document.getElementById("greetingDisplay");
+  if (!clockEl || !greetingEl) return;
+
   const now = new Date();
   const currentHour = now.getHours();
   let h = currentHour;
@@ -283,18 +291,16 @@ function updateClock() {
     h = String(h).padStart(2, "0");
   }
 
-  // Check if seconds should be shown (defaults to true if not set yet)
   const showSeconds = settings.showSeconds !== false;
-  const timeString = showSeconds ? `${h}:${m}:${s}` : `${h}:${m}`;
+  const timeString = `${showSeconds ? `${h}:${m}:${s}` : `${h}:${m}`}${suffix}`;
 
-  document.getElementById("clockDisplay").innerText = `${timeString}${suffix}`;
+  if (cachedTimeString !== timeString) {
+    clockEl.textContent = timeString;
+    cachedTimeString = timeString;
+  }
 
-  // Optimization: Only update the greeting DOM when the hour or username actually changes
   if (cachedHour !== currentHour || cachedUserName !== settings.userName) {
-    document.getElementById("greetingDisplay").innerText = getGreeting(
-      settings.userName,
-      currentHour,
-    );
+    greetingEl.textContent = getGreeting(settings.userName, currentHour);
     cachedHour = currentHour;
     cachedUserName = settings.userName;
   }

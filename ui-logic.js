@@ -402,16 +402,15 @@ function navigateToFolder(folderId) {
 function addFolder() {
   const folderName = prompt("Enter folder name:");
   if (!folderName) return;
-  const newFolderId = "folder_" + Date.now().toString();
 
   links.push({
-    id: newFolderId,
+    id: generateId(),
     name: folderName,
     isFolder: true,
     parentId: currentFolderId,
   });
 
-  localStorage.setItem("0fluff_links", JSON.stringify(links));
+  saveLinksState();
   renderLinks();
   renderLinkManager();
 }
@@ -1271,14 +1270,16 @@ async function triggerMaterialYou() {
               );
             });
 
+            if (!window.offscreenCanvas) {
+              window.offscreenCanvas = document.createElement("canvas");
+              window.offscreenCanvas.width = 1;
+              window.offscreenCanvas.height = 1;
+            }
             window.sharedColorVideo.addEventListener("seeked", () => {
               if (window.colorExtractionTimer)
                 clearTimeout(window.colorExtractionTimer);
               window.colorExtractionTimer = setTimeout(() => {
-                const canvas = document.createElement("canvas");
-                canvas.width = 1;
-                canvas.height = 1;
-                const ctx = canvas.getContext("2d", {
+                const ctx = window.offscreenCanvas.getContext("2d", {
                   willReadFrequently: true,
                 });
                 ctx.drawImage(window.sharedColorVideo, 0, 0, 1, 1);
