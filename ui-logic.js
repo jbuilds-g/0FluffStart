@@ -31,7 +31,20 @@ document.addEventListener("DOMContentLoaded", () => {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("./sw.js")
+      .then((reg) => {
+        // Force browser to check sw.js for updates immediately on load
+        reg.update();
+      })
       .catch((err) => console.log("SW Error: ", err));
+
+    // Automatically reload page when new SW takes control
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!refreshing) {
+        refreshing = true;
+        window.location.reload();
+      }
+    });
   }
 
   bindStaticEvents();
