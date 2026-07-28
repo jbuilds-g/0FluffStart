@@ -350,12 +350,15 @@ function bindStaticEvents() {
   if (resetSettingsBtn) {
     resetSettingsBtn.addEventListener("click", async () => {
       const confirmed = await customConfirm(
-        "All custom preferences will be returned to factory defaults. This action cannot be undone.",
-        "Reset Settings?",
+        "All custom preferences, links, and saved folders will be permanently deleted. This action cannot be undone.",
+        "Reset Everything?",
       );
       if (confirmed) {
         localStorage.removeItem("0fluff_settings");
-        showToast("Settings reset to default", "success");
+        localStorage.removeItem("0fluff_links");
+        localStorage.removeItem("0fluff_history");
+        links = [];
+        showToast("App completely reset to factory defaults", "success");
         setTimeout(() => window.location.reload(), 1000);
       }
     });
