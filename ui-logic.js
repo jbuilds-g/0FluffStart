@@ -26,6 +26,71 @@ let isSelectionMode = false;
 let selectedLinkIds = [];
 let editorTargetFolderId = null; // Tracks which folder a NEW link should be saved into
 
+// --- REUSABLE CUSTOM SELECT ENGINE ---
+function initCustomSelects() {
+  document.addEventListener("click", (e) => {
+    const trigger = e.target.closest(".select-trigger");
+    const selectContainer = e.target.closest(".custom-select");
+
+    // Close open dropdowns outside the active container
+    document.querySelectorAll(".custom-select").forEach((cs) => {
+      if (cs !== selectContainer) {
+        cs.classList.remove("open");
+        cs.querySelector(".select-dropdown")?.classList.add("hidden");
+      }
+    });
+
+    if (trigger && selectContainer) {
+      const dropdown = selectContainer.querySelector(".select-dropdown");
+      const isOpening = dropdown?.classList.contains("hidden");
+      selectContainer.classList.toggle("open", isOpening);
+      dropdown?.classList.toggle("hidden");
+      return;
+    }
+
+    const option = e.target.closest(".select-option");
+    if (option && selectContainer) {
+      const value = option.dataset.value;
+      const label = option.textContent.trim();
+      const labelEl = selectContainer.querySelector(".selected-text");
+      const dropdown = selectContainer.querySelector(".select-dropdown");
+
+      if (labelEl) labelEl.textContent = label;
+      selectContainer.dataset.value = value;
+
+      selectContainer.querySelectorAll(".select-option").forEach((opt) => {
+        opt.classList.toggle("selected", opt === option);
+      });
+
+      selectContainer.classList.remove("open");
+      dropdown?.classList.add("hidden");
+      selectContainer.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  });
+}
+
+function setCustomSelectValue(selectId, value) {
+  const selectEl = document.getElementById(selectId);
+  if (!selectEl) return;
+  const option = selectEl.querySelector(
+    `.select-option[data-value="${value}"]`,
+  );
+  if (option) {
+    selectEl
+      .querySelectorAll(".select-option")
+      .forEach((opt) => opt.classList.remove("selected"));
+    option.classList.add("selected");
+    const labelEl = selectEl.querySelector(".selected-text");
+    if (labelEl) labelEl.textContent = option.textContent.trim();
+    selectEl.dataset.value = value;
+  }
+}
+
+function getCustomSelectValue(selectId) {
+  const selectEl = document.getElementById(selectId);
+  return selectEl ? selectEl.dataset.value || "" : "";
+}
+
 // --- INIT & PWA ---
 document.addEventListener("DOMContentLoaded", () => {
   if ("serviceWorker" in navigator) {
@@ -66,6 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  initCustomSelects();
   bindStaticEvents();
   renderLinks();
   loadSettings();
@@ -922,12 +988,8 @@ async function deleteLink(id, e) {
 
 // --- SETTINGS HELPERS ---
 async function loadSettings() {
-  const themeSelect = document.getElementById("themeSelect");
-  if (themeSelect) themeSelect.value = settings.theme || "dark";
-
-  const clockStyleSelect = document.getElementById("clockStyleSelect");
-  if (clockStyleSelect)
-    clockStyleSelect.value = settings.clockStyle || "default";
+  setCustomSelectValue("themeSelect", settings.theme || "dark");
+  setCustomSelectValue("clockStyleSelect", settings.clockStyle || "default");
 
   const userNameInput = document.getElementById("userNameInput");
   if (userNameInput) userNameInput.value = settings.userName || "";
@@ -1037,11 +1099,11 @@ async function loadSettings() {
 // --- FIXED AUTO-SAVE WITH SELECTIVE RENDERING ---
 function autoSaveSettings(changedSetting = null) {
   // 1. Core State Capture (Safely check if elements exist so we don't overwrite hidden settings)
-  const themeSelect = document.getElementById("themeSelect");
-  if (themeSelect) settings.theme = themeSelect.value;
+  const themeVal = getCustomSelectValue("themeSelect");
+  if (themeVal) settings.theme = themeVal;
 
-  const clockStyleSelect = document.getElementById("clockStyleSelect");
-  if (clockStyleSelect) settings.clockStyle = clockStyleSelect.value;
+  const clockVal = getCustomSelectValue("clockStyleSelect");
+  if (clockVal) settings.clockStyle = clockVal;
 
   const userNameInput = document.getElementById("userNameInput");
   if (userNameInput) settings.userName = userNameInput.value.trim();

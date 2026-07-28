@@ -128,7 +128,7 @@
                 color: var(--dim);
                 font-weight: 600;
               "
-              >v2.0.1</span
+              >v3.0.0</span
             >
             <button
               id="githubBtn"
@@ -208,8 +208,6 @@
 
               <div class="help-text">
                 Add, edit, or remove the shortcut icons on your main dashboard.
-                Organize your dashboard by creating custom folders for different
-                tasks.
               </div>
 
               <div id="linkListContainer">
@@ -342,7 +340,6 @@
               </div>
               <div class="help-text">
                 When off, link names stay hidden until you hover over the icon.
-                Keeps the dashboard ultra-clean.
               </div>
             </div>
           </div>
@@ -395,26 +392,62 @@
                   to adapt to your background image.</span
                 >
               </div>
-              <select id="themeSelect">
-                <option value="dark">OLED Dark (Default)</option>
-                <option value="light">Clean Light</option>
-                <option value="material-you">Material You</option>
-                <option value="cyberpunk">Cyberpunk</option>
-                <option value="sunset">Sunset Drive</option>
-                <option value="forest">Forest Hike</option>
-                <option value="paper">Paper & Ink</option>
-                <option value="luminous">Luminous</option>
-                <option value="nord">Nord Frost</option>
-                <option value="dracula">Dracula</option>
-                <option value="retro">Retro Amber</option>
-                <option value="rose">Rose Pine</option>
-                <option value="night-glow">Night Glow</option>
-                <option value="nebula-drift">Nebula Drift</option>
-                <option value="heatwave">Heatwave</option>
-                <option value="slate">Slate Industrial</option>
-                <option value="toxic-tide">Toxic Tide</option>
-                <option value="evergreen-archive">Evergreen Archive</option>
-              </select>
+              <div class="custom-select" id="themeSelect" data-value="dark">
+                <div class="select-trigger">
+                  <span class="selected-text">OLED Dark (Default)</span>
+                  <span class="select-arrow">▼</span>
+                </div>
+                <div class="select-dropdown hidden">
+                  <div class="select-option" data-value="dark">
+                    OLED Dark (Default)
+                  </div>
+                  <div class="select-option" data-value="light">
+                    Clean Light
+                  </div>
+                  <div class="select-option" data-value="material-you">
+                    Material You
+                  </div>
+                  <div class="select-option" data-value="cyberpunk">
+                    Cyberpunk
+                  </div>
+                  <div class="select-option" data-value="sunset">
+                    Sunset Drive
+                  </div>
+                  <div class="select-option" data-value="forest">
+                    Forest Hike
+                  </div>
+                  <div class="select-option" data-value="paper">
+                    Paper & Ink
+                  </div>
+                  <div class="select-option" data-value="luminous">
+                    Luminous
+                  </div>
+                  <div class="select-option" data-value="nord">Nord Frost</div>
+                  <div class="select-option" data-value="dracula">Dracula</div>
+                  <div class="select-option" data-value="retro">
+                    Retro Amber
+                  </div>
+                  <div class="select-option" data-value="rose">Rose Pine</div>
+                  <div class="select-option" data-value="night-glow">
+                    Night Glow
+                  </div>
+                  <div class="select-option" data-value="nebula-drift">
+                    Nebula Drift
+                  </div>
+                  <div class="select-option" data-value="heatwave">
+                    Heatwave
+                  </div>
+                  <div class="select-option" data-value="slate">
+                    Slate Industrial
+                  </div>
+                  <div class="select-option" data-value="toxic-tide">
+                    Toxic Tide
+                  </div>
+                  <div class="select-option" data-value="evergreen-archive">
+                    Evergreen Archive
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="setting-group">
@@ -427,18 +460,30 @@
                 visibility.
               </div>
 
-              <select
+              <div
+                class="custom-select"
                 id="clockStyleSelect"
+                data-value="default"
                 style="margin-bottom: 12px; width: 100%"
               >
-                <option value="default">Default</option>
-                <option value="bold">Bold & Chunky</option>
-                <option value="mono">Monospace</option>
-                <option value="lcd">LCD Digital</option>
-                <option value="neon">Neon Glow</option>
-                <option value="minimal">Ultra Minimal</option>
-                <option value="block">Card Block</option>
-              </select>
+                <div class="select-trigger">
+                  <span class="selected-text">Default</span>
+                  <span class="select-arrow">▼</span>
+                </div>
+                <div class="select-dropdown hidden">
+                  <div class="select-option" data-value="default">Default</div>
+                  <div class="select-option" data-value="bold">
+                    Bold & Chunky
+                  </div>
+                  <div class="select-option" data-value="mono">Monospace</div>
+                  <div class="select-option" data-value="lcd">LCD Digital</div>
+                  <div class="select-option" data-value="neon">Neon Glow</div>
+                  <div class="select-option" data-value="minimal">
+                    Ultra Minimal
+                  </div>
+                  <div class="select-option" data-value="block">Card Block</div>
+                </div>
+              </div>
 
               <div class="radio-row" style="margin-bottom: 12px">
                 <label class="radio-option">
