@@ -303,6 +303,11 @@ function bindStaticEvents() {
       document.getElementById("restoreInput").click(),
     );
 
+  const clearAllHistoryBtn = document.getElementById("clearHistoryBtn");
+  if (clearAllHistoryBtn) {
+    clearAllHistoryBtn.addEventListener("click", clearHistory);
+  }
+
   const restoreInput = document.getElementById("restoreInput");
   if (restoreInput) restoreInput.addEventListener("change", restoreData);
 
@@ -324,11 +329,15 @@ function bindStaticEvents() {
 
   const resetSettingsBtn = document.getElementById("resetSettingsBtn");
   if (resetSettingsBtn) {
-    resetSettingsBtn.addEventListener("click", () => {
-      if (confirm("Are you sure? This action cannot be undone.")) {
+    resetSettingsBtn.addEventListener("click", async () => {
+      const confirmed = await customConfirm(
+        "All custom preferences will be returned to factory defaults. This action cannot be undone.",
+        "Reset Settings?",
+      );
+      if (confirmed) {
         localStorage.removeItem("0fluff_settings");
-        alert("Settings reset to default.");
-        window.location.reload();
+        showToast("Settings reset to default", "success");
+        setTimeout(() => window.location.reload(), 1000);
       }
     });
   }
@@ -412,19 +421,25 @@ function navigateToFolder(folderId) {
 }
 
 function addFolder() {
-  const folderName = prompt("Enter folder name:");
-  if (!folderName) return;
+  const linkListContainer = document.getElementById("linkListContainer");
+  const linkEditorContainer = document.getElementById("linkEditorContainer");
 
-  links.push({
-    id: generateId(),
-    name: folderName,
-    isFolder: true,
-    parentId: currentFolderId,
-  });
+  if (linkListContainer) linkListContainer.classList.add("hidden");
+  if (linkEditorContainer) linkEditorContainer.classList.remove("hidden");
 
-  saveLinksState();
-  renderLinks();
-  renderLinkManager();
+  const titleEl = document.getElementById("editorTitle");
+  const nameInput = document.getElementById("editName");
+  const urlInput = document.getElementById("editUrl");
+
+  isEditingId = null;
+  editorTargetFolderId = currentFolderId;
+
+  if (titleEl) titleEl.innerText = "Add New Folder";
+  if (nameInput) nameInput.value = "";
+  if (urlInput) {
+    urlInput.value = "";
+    urlInput.style.display = "none"; // Hide URL field since folders only need a name
+  }
 }
 
 // --- OPTIMIZATION 3: FAST MASTER TEMPLATES ---
@@ -813,8 +828,9 @@ function saveLink() {
   const urlInput = document.getElementById("editUrl");
   const name = nameInput.value.trim();
   const url = urlInput.value.trim();
+  const isFolderCreation = urlInput && urlInput.style.display === "none";
 
-  if (!name) return alert("Please fill in the name.");
+  if (!name) return showToast("Please fill in the name.", "error");
 
   if (isEditingId) {
     const idx = links.findIndex((l) => l.id === isEditingId);
@@ -822,21 +838,40 @@ function saveLink() {
       links[idx].name = name;
       if (!links[idx].isFolder) links[idx].url = url;
     }
+    showToast(
+      links[idx]?.isFolder ? "Folder updated" : "Link updated",
+      "success",
+    );
   } else {
-    if (!url) return alert("Please fill in the URL.");
-    links.push({
-      id: Date.now().toString(),
-      name,
-      url,
-      isFolder: false,
-      // Uses the target folder from the settings dropdown, or defaults to the dashboard folder
-      parentId:
-        editorTargetFolderId !== null ? editorTargetFolderId : currentFolderId,
-    });
+    if (isFolderCreation) {
+      links.push({
+        id: generateId(),
+        name,
+        isFolder: true,
+        parentId:
+          editorTargetFolderId !== null
+            ? editorTargetFolderId
+            : currentFolderId,
+      });
+      showToast("Folder created successfully", "success");
+    } else {
+      if (!url) return showToast("Please fill in the URL.", "error");
+      links.push({
+        id: generateId(),
+        name,
+        url,
+        isFolder: false,
+        parentId:
+          editorTargetFolderId !== null
+            ? editorTargetFolderId
+            : currentFolderId,
+      });
+      showToast("Link added successfully", "success");
+    }
   }
 
-  localStorage.setItem("0fluff_links", JSON.stringify(links));
-  editorTargetFolderId = null; // Reset target after saving
+  saveLinksState();
+  editorTargetFolderId = null;
   renderLinks();
   renderLinkManager();
   cancelEdit();
@@ -847,14 +882,19 @@ function editLink(id, e) {
   openEditor(id, null);
 }
 
-function deleteLink(id, e) {
+async function deleteLink(id, e) {
   if (e) e.stopPropagation();
-  if (confirm("Delete this item?")) {
+  const confirmed = await customConfirm(
+    "This item and its contents will be permanently deleted.",
+    "Delete Item?",
+  );
+  if (confirmed) {
     links = links.filter((l) => l.id !== id && l.parentId !== id);
     localStorage.setItem("0fluff_links", JSON.stringify(links));
     if (currentFolderId === id) navigateToFolder(null);
     else renderLinks();
     renderLinkManager();
+    showToast("Item deleted", "info");
   }
 }
 
@@ -1156,10 +1196,14 @@ function restoreData(e) {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = (event) => {
+  reader.onload = async (event) => {
     try {
       const data = JSON.parse(event.target.result);
-      if (confirm("Restore from backup? This overwrites current data.")) {
+      const confirmed = await customConfirm(
+        "Restoring from backup will overwrite all current links and settings.",
+        "Restore Backup?",
+      );
+      if (confirmed) {
         localStorage.setItem("0fluff_links", JSON.stringify(data.links || []));
         localStorage.setItem(
           "0fluff_settings",
@@ -1169,10 +1213,11 @@ function restoreData(e) {
           "0fluff_history",
           JSON.stringify(data.history || []),
         );
-        window.location.reload();
+        showToast("Backup restored successfully", "success");
+        setTimeout(() => window.location.reload(), 1000);
       }
     } catch (err) {
-      alert("Restore failed: " + err.message);
+      showToast("Restore failed: " + err.message, "error");
     }
   };
   reader.readAsText(file);
@@ -1335,6 +1380,66 @@ async function triggerMaterialYou() {
     applyMaterialYouTheme(210); // Default blue hue
   }
 }
+
+// --- ASYNC DIALOG ENGINE ---
+function customConfirm(message, title = "Are you sure?") {
+  return new Promise((resolve) => {
+    const modal = document.getElementById("customDialogModal");
+    const titleEl = document.getElementById("customDialogTitle");
+    const messageEl = document.getElementById("customDialogMessage");
+    const cancelBtn = document.getElementById("customDialogCancelBtn");
+    const confirmBtn = document.getElementById("customDialogConfirmBtn");
+
+    if (!modal || !titleEl || !messageEl || !cancelBtn || !confirmBtn) {
+      return resolve(false);
+    }
+
+    titleEl.innerText = title;
+    messageEl.innerText = message;
+    modal.classList.add("active");
+
+    const cleanup = () => {
+      modal.classList.remove("active");
+      cancelBtn.removeEventListener("click", onCancel);
+      confirmBtn.removeEventListener("click", onConfirm);
+    };
+
+    const onCancel = () => {
+      cleanup();
+      resolve(false);
+    };
+
+    const onConfirm = () => {
+      cleanup();
+      resolve(true);
+    };
+
+    cancelBtn.addEventListener("click", onCancel);
+    confirmBtn.addEventListener("click", onConfirm);
+  });
+}
+
+window.customConfirm = customConfirm;
+
+// --- TOAST NOTIFICATION ENGINE ---
+function showToast(message, type = "info", duration = 3000) {
+  const container = document.getElementById("toastContainer");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.innerText = message;
+  container.appendChild(toast);
+
+  requestAnimationFrame(() => toast.classList.add("show"));
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+window.showToast = showToast;
 
 // Global Exports
 window.handleImageUpload = handleImageUpload;

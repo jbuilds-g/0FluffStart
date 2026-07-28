@@ -1736,6 +1736,62 @@ body.nebula-drift .clock.clock-style-neon {
   }
 }
 
+/* --- TOAST NOTIFICATION ENGINE --- */
+.toast-container {
+  position: fixed !important;
+  top: 24px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 10px !important;
+  pointer-events: none !important;
+  width: 90% !important;
+  max-width: 400px !important;
+}
+
+/* Offsets the container to center precisely within the remaining dashboard space when the 400px drawer is open */
+@media (min-width: 768px) {
+  .toast-container {
+    left: calc(50% - 200px) !important;
+  }
+}
+
+.toast {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  font-size: 0.9rem;
+  font-family: var(--font-main);
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(-20px) scale(0.95);
+  transition:
+    opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.toast.success {
+  border-color: var(--accent);
+}
+.toast.error {
+  border-color: var(--delete);
+  color: var(--delete);
+}
+
 /* Device-Specific Settings Visibility */
 @media (min-width: 851px) {
   .mobile-only-setting {

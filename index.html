@@ -15,14 +15,20 @@
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
-    
+
     <link rel="stylesheet" href="core.css" />
-    
   </head>
   <body class="dark">
     <div class="search-backdrop"></div>
     <div id="bgOverlay" class="bg-overlay"></div>
-    <video id="bgVideo" class="bg-video hidden" loop muted autoplay playsinline></video>
+    <video
+      id="bgVideo"
+      class="bg-video hidden"
+      loop
+      muted
+      autoplay
+      playsinline
+    ></video>
     <div class="container">
       <header>
         <div id="clockDisplay" class="clock">00:00:00</div>
@@ -82,7 +88,7 @@
       <div id="linkGrid" class="link-grid"></div>
     </div>
 
-   <div class="floating-settings">
+    <div class="floating-settings">
       <button
         id="settingsToggleBtn"
         class="icon-btn floating-btn"
@@ -199,10 +205,11 @@
                 <h3>Quick Link Management</h3>
                 <button class="help-btn">?</button>
               </div>
-              
+
               <div class="help-text">
                 Add, edit, or remove the shortcut icons on your main dashboard.
-                Organize your dashboard by creating custom folders for different tasks.
+                Organize your dashboard by creating custom folders for different
+                tasks.
               </div>
 
               <div id="linkListContainer">
@@ -319,7 +326,10 @@
               </div>
             </div>
 
-            <div class="setting-group desktop-only-setting" style="margin-top: 20px">
+            <div
+              class="setting-group desktop-only-setting"
+              style="margin-top: 20px"
+            >
               <div
                 class="setting-header"
                 style="justify-content: flex-start; gap: 10px"
@@ -413,10 +423,14 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Fine-tune typography styles, time format, and ticking visibility.
+                Fine-tune typography styles, time format, and ticking
+                visibility.
               </div>
 
-              <select id="clockStyleSelect" style="margin-bottom: 12px; width: 100%;">
+              <select
+                id="clockStyleSelect"
+                style="margin-bottom: 12px; width: 100%"
+              >
                 <option value="default">Default</option>
                 <option value="bold">Bold & Chunky</option>
                 <option value="mono">Monospace</option>
@@ -426,17 +440,39 @@
                 <option value="block">Card Block</option>
               </select>
 
-              <div class="radio-row" style="margin-bottom: 12px;">
+              <div class="radio-row" style="margin-bottom: 12px">
                 <label class="radio-option">
-                  <input type="radio" name="clockFormat" value="12h" class="clock-radio" /> 12-Hour
+                  <input
+                    type="radio"
+                    name="clockFormat"
+                    value="12h"
+                    class="clock-radio"
+                  />
+                  12-Hour
                 </label>
                 <label class="radio-option">
-                  <input type="radio" name="clockFormat" value="24h" class="clock-radio" /> 24-Hour
+                  <input
+                    type="radio"
+                    name="clockFormat"
+                    value="24h"
+                    class="clock-radio"
+                  />
+                  24-Hour
                 </label>
               </div>
 
-              <label class="radio-option" style="justify-content: flex-start; margin: 0; display: flex; align-items: center; gap: 8px;">
-                <input type="checkbox" id="showSecondsToggle" checked /> Display Live Seconds
+              <label
+                class="radio-option"
+                style="
+                  justify-content: flex-start;
+                  margin: 0;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+                <input type="checkbox" id="showSecondsToggle" checked /> Display
+                Live Seconds
               </label>
             </div>
 
@@ -446,29 +482,129 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Upload your own image or video, or paste a direct URL to a media file, to replace the solid background. 
+                Upload your own image or video, or paste a direct URL to a media
+                file, to replace the solid background.
                 <br /><br />
                 <span style="opacity: 0.85">
-                  ⚠️ <b>Note:</b> External URLs may not work perfectly if the host server blocks direct hotlinking or lacks open cross-origin (CORS) headers.
+                  ⚠️ <b>Note:</b> External URLs may not work perfectly if the
+                  host server blocks direct hotlinking or lacks open
+                  cross-origin (CORS) headers.
                 </span>
                 <br /><br />
                 <span style="opacity: 0.85">
-                  💡 <b>Tip:</b> If the "Material You" theme is selected, it is highly recommended to use smooth, continuous video loops with a consistent color palette to preserve UI readability and layout balance.
+                  💡 <b>Tip:</b> If the "Material You" theme is selected, it is
+                  highly recommended to use smooth, continuous video loops with
+                  a consistent color palette to preserve UI readability and
+                  layout balance.
                 </span>
               </div>
-              <div class="setting-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-                <div class="radio-row" style="width: 100%; display: flex; gap: 10px;">
-                  <input type="file" id="bgImageInput" accept="image/*,video/*" class="hidden-input" />
-                  <label for="bgImageInput" class="radio-option" style="flex: 1; justify-content: center; margin: 0; font-weight: 600;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              <div
+                class="setting-item"
+                style="
+                  flex-direction: column;
+                  align-items: flex-start;
+                  gap: 10px;
+                "
+              >
+                <div
+                  class="radio-row"
+                  style="width: 100%; display: flex; gap: 10px"
+                >
+                  <input
+                    type="file"
+                    id="bgImageInput"
+                    accept="image/*,video/*"
+                    class="hidden-input"
+                  />
+                  <label
+                    for="bgImageInput"
+                    class="radio-option"
+                    style="
+                      flex: 1;
+                      justify-content: center;
+                      margin: 0;
+                      font-weight: 600;
+                    "
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="2"
+                        ry="2"
+                      ></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
                     Choose Media
                   </label>
-                  <input type="url" id="bgUrlInput" placeholder="Paste URL..." style="flex: 1; margin: 0; padding: 0 10px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg); color: var(--text);" />
-                  <button id="resetBgBtn" class="radio-option" style="display: none; justify-content: center; margin: 0; max-width: 60px; color: var(--delete); border-color: transparent;" title="Reset Background">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                  <input
+                    type="url"
+                    id="bgUrlInput"
+                    placeholder="Paste URL..."
+                    style="
+                      flex: 1;
+                      margin: 0;
+                      padding: 0 10px;
+                      border-radius: var(--radius);
+                      border: 1px solid var(--border);
+                      background: var(--bg);
+                      color: var(--text);
+                    "
+                  />
+                  <button
+                    id="resetBgBtn"
+                    class="radio-option"
+                    style="
+                      display: none;
+                      justify-content: center;
+                      margin: 0;
+                      max-width: 60px;
+                      color: var(--delete);
+                      border-color: transparent;
+                    "
+                    title="Reset Background"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M3 6h18"></path>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    </svg>
                   </button>
                 </div>
-                <p id="bgFileName" style="font-size: 0.85rem; color: var(--dim); margin: 0; word-break: break-all;">No media selected.</p>
+                <p
+                  id="bgFileName"
+                  style="
+                    font-size: 0.85rem;
+                    color: var(--dim);
+                    margin: 0;
+                    word-break: break-all;
+                  "
+                >
+                  No media selected.
+                </p>
               </div>
             </div>
           </div>
@@ -502,16 +638,51 @@
                 as you type.
                 <br /><br />
                 <span style="opacity: 0.85">
-                  ⚠️ <b>Privacy Note:</b> To bypass browser restrictions, this feature routes your keystrokes through a public or custom proxy. Keep this disabled if you prefer strictly local searches.
+                  ⚠️ <b>Privacy Note:</b> To bypass browser restrictions, this
+                  feature routes your keystrokes through a public or custom
+                  proxy. Keep this disabled if you prefer strictly local
+                  searches.
                 </span>
               </div>
-              <label class="radio-option" style="justify-content: flex-start; display: flex; align-items: center; gap: 6px;">
+              <label
+                class="radio-option"
+                style="
+                  justify-content: flex-start;
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                "
+              >
                 <input type="checkbox" id="externalSuggestToggle" /> Enable Live
                 Suggestions
               </label>
-              <div id="customProxyContainer" style="margin-top: 10px; display: flex; flex-direction: column; gap: 5px;">
-                <label for="customProxyInput" style="font-size: 0.85rem; color: var(--dim);">Custom Proxy URL (Optional)</label>
-                <input type="url" id="customProxyInput" placeholder="e.g., https://my-proxy.com/?" style="width: 100%; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 8px;" />
+              <div
+                id="customProxyContainer"
+                style="
+                  margin-top: 10px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 5px;
+                "
+              >
+                <label
+                  for="customProxyInput"
+                  style="font-size: 0.85rem; color: var(--dim)"
+                  >Custom Proxy URL (Optional)</label
+                >
+                <input
+                  type="url"
+                  id="customProxyInput"
+                  placeholder="e.g., https://my-proxy.com/?"
+                  style="
+                    width: 100%;
+                    border-radius: var(--radius);
+                    border: 1px solid var(--border);
+                    background: var(--bg);
+                    color: var(--text);
+                    padding: 8px;
+                  "
+                />
               </div>
             </div>
 
@@ -524,7 +695,15 @@
                 Keeps a private local log of your recent searches for quicker
                 access later.
               </div>
-              <label class="radio-option" style="justify-content: flex-start; display: flex; align-items: center; gap: 6px;">
+              <label
+                class="radio-option"
+                style="
+                  justify-content: flex-start;
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                "
+              >
                 <input type="checkbox" id="historyEnabledToggle" /> Enable Local
                 Search History
               </label>
@@ -556,10 +735,20 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Bypasses mobile-specific layout adjustments and restores the desktop search bar.
+                Bypasses mobile-specific layout adjustments and restores the
+                desktop search bar.
               </div>
-              <label class="radio-option" style="justify-content: flex-start; display: flex; align-items: center; gap: 6px;">
-                <input type="checkbox" id="forceDesktopToggle" /> Force Desktop Layout
+              <label
+                class="radio-option"
+                style="
+                  justify-content: flex-start;
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                "
+              >
+                <input type="checkbox" id="forceDesktopToggle" /> Force Desktop
+                Layout
               </label>
             </div>
           </div>
@@ -589,7 +778,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Purges the private transaction log indices of your local navigation history parameters.
+                Purges the private transaction log indices of your local
+                navigation history parameters.
               </div>
               <button
                 id="clearHistoryBtn"
@@ -660,12 +850,53 @@
 
     <div class="mobile-dock floating-search" id="mobileDock">
       <button class="floating-btn" id="mobileSearchBtn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
       </button>
     </div>
-    </div> 
+
+    <!-- TOAST NOTIFICATION PORTAL -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- CUSTOM DIALOG ENGINE MODAL -->
+    <div class="modal" id="customDialogModal">
+      <div class="modal-content custom-dialog-content">
+        <h3 id="customDialogTitle" style="margin-top: 0; color: var(--accent)">
+          Are you sure?
+        </h3>
+        <p
+          id="customDialogMessage"
+          style="color: var(--text); font-size: 0.95rem; margin-bottom: 20px"
+        ></p>
+        <div class="custom-dialog-actions" style="display: flex; gap: 10px">
+          <button
+            id="customDialogCancelBtn"
+            class="secondary"
+            style="flex: 1; margin: 0"
+          >
+            Cancel
+          </button>
+          <button
+            id="customDialogConfirmBtn"
+            class="save-btn"
+            style="flex: 1; margin: 0; background: var(--delete); color: #fff"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

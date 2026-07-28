@@ -245,12 +245,18 @@ function logSearch(query) {
   }
 }
 
-function clearHistory() {
-  searchHistory = [];
-  localStorage.removeItem("0fluff_history");
-  document.getElementById("searchInput").focus();
-  handleSuggestions();
-  alert("Search history has been cleared.");
+async function clearHistory() {
+  const confirmed = await customConfirm(
+    "Are you sure you want to clear your local search history?",
+    "Clear Search History?",
+  );
+  if (confirmed) {
+    searchHistory = [];
+    localStorage.removeItem("0fluff_history");
+    document.getElementById("searchInput")?.focus();
+    if (typeof handleSuggestions === "function") handleSuggestions();
+    showToast("Search history cleared", "info");
+  }
 }
 
 let cachedHour = null;
