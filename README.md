@@ -21,7 +21,7 @@
 <br><br><br>
 
   <h3>📱 Mobile Experience</h3>
-  <img src="mobile-demo.gif" width="180%" />
+  <img src="mobile-demo.gif" width="120" />
 </div>
   
 [**🚀 Launch Web Version**](https://jbuilds-g.github.io/0FluffStart/)
