@@ -93,6 +93,17 @@ function getCustomSelectValue(selectId) {
 
 // --- INIT & PWA ---
 document.addEventListener("DOMContentLoaded", () => {
+  const CURRENT_VERSION = "v3.0.0";
+  const storedVersion = localStorage.getItem("0fluff_app_version");
+
+  if (storedVersion !== CURRENT_VERSION) {
+    localStorage.setItem("0fluff_app_version", CURRENT_VERSION);
+    if ("caches" in window) {
+      caches.keys().then((names) => {
+        for (let name of names) caches.delete(name);
+      });
+    }
+  }
   if ("serviceWorker" in navigator) {
     // updateViaCache: 'none' forces the browser to check the server directly for sw.js changes
     navigator.serviceWorker

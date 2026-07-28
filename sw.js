@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluff-v63";
+const CACHE_NAME = "0fluff-v64";
 
 const ASSETS = [
   "./",
@@ -48,12 +48,15 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// 3. FETCH: Network-First strategy for core scripts to ensure instant updates
+// 3. FETCH: Network-First with Cache-Bypass Fallback for Core Assets
 self.addEventListener("fetch", (event) => {
   if (!event.request.url.startsWith("http")) return;
 
+  // Force cache-bypassing fetch for CSS and JS files to prevent layout/logic decoupling
+  const isCoreAsset = event.request.url.match(/\.(js|css)$/i);
+
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, isCoreAsset ? { cache: "reload" } : {})
       .then((networkResponse) => {
         if (
           networkResponse &&
