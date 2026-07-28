@@ -16,31 +16,12 @@
 
 <div>
   <h3>💻 Desktop Experience</h3>
-  <video 
-    src="https://github.com/user-attachments/assets/7608ae94-e335-489c-8146-0c88cbe2b7cf" 
-    width="100%" 
-    muted 
-    autoplay 
-    loop 
-    playsinline 
-  ></video>
+  <img src="desktop-demo.gif" width="100%" />
 
-  <br><br><br>
+<br><br><br>
 
   <h3>📱 Mobile Experience</h3>
-  <table>
-    <tr>
-      <td width="180">
-        <video 
-          src="https://github.com/user-attachments/assets/aff71e11-1af9-4576-98a8-d1111f12e820" 
-          muted 
-          autoplay 
-          loop 
-          playsinline 
-        ></video>
-      </td>
-    </tr>
-  </table>
+  <img src="mobile-demo.gif" width="180%" />
 </div>
   
 [**🚀 Launch Web Version**](https://jbuilds-g.github.io/0FluffStart/)
