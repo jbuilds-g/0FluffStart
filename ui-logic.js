@@ -29,11 +29,30 @@ let editorTargetFolderId = null; // Tracks which folder a NEW link should be sav
 // --- INIT & PWA ---
 document.addEventListener("DOMContentLoaded", () => {
   if ("serviceWorker" in navigator) {
+    // updateViaCache: 'none' forces the browser to check the server directly for sw.js changes
     navigator.serviceWorker
-      .register("./sw.js")
+      .register("./sw.js", { updateViaCache: "none" })
       .then((reg) => {
-        // Force browser to check sw.js for updates immediately on load
         reg.update();
+
+        // If a new worker is waiting, tell it to skip waiting immediately
+        if (reg.waiting) {
+          reg.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+
+        reg.addEventListener("updatefound", () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener("statechange", () => {
+              if (
+                newWorker.state === "installed" &&
+                navigator.serviceWorker.controller
+              ) {
+                newWorker.postMessage({ type: "SKIP_WAITING" });
+              }
+            });
+          }
+        });
       })
       .catch((err) => console.log("SW Error: ", err));
 

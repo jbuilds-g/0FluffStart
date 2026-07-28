@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluff-v61";
+const CACHE_NAME = "0fluff-v62";
 
 const ASSETS = [
   "./",
@@ -11,14 +11,20 @@ const ASSETS = [
   "./icon.png",
 ];
 
-// 1. INSTALL: Cache new files and forcefully skip the waiting phase
-self.addEventListener("install", (event) => {
-  self.skipWaiting();
+// Listen for immediate update activation messages from active clients
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
 
+// 1. INSTALL: Cache new files, then skip waiting once caching succeeds
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS);
-    }),
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(ASSETS))
+      .then(() => self.skipWaiting()),
   );
 });
 
