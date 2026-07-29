@@ -765,13 +765,6 @@ body.material .link-item:hover .link-icon-circle span {
   margin-bottom: 0;
 }
 
-@media (max-width: 850px) and (pointer: coarse) {
-  .desktop-only-setting {
-    display: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-}
 .setting-header {
   display: flex;
   align-items: center;

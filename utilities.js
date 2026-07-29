@@ -278,8 +278,12 @@ let greetingEl = null;
 let cachedTimeString = null;
 
 function updateClock() {
-  if (!clockEl) clockEl = document.getElementById("clockDisplay");
-  if (!greetingEl) greetingEl = document.getElementById("greetingDisplay");
+  if (!clockEl || !document.body.contains(clockEl)) {
+    clockEl = document.getElementById("clockDisplay");
+  }
+  if (!greetingEl || !document.body.contains(greetingEl)) {
+    greetingEl = document.getElementById("greetingDisplay");
+  }
   if (!clockEl || !greetingEl) return;
 
   const now = new Date();

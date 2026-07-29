@@ -399,11 +399,6 @@ function bindStaticEvents() {
       document.getElementById("restoreInput").click(),
     );
 
-  const clearAllHistoryBtn = document.getElementById("clearHistoryBtn");
-  if (clearAllHistoryBtn) {
-    clearAllHistoryBtn.addEventListener("click", clearHistory);
-  }
-
   const restoreInput = document.getElementById("restoreInput");
   if (restoreInput) restoreInput.addEventListener("change", restoreData);
 
@@ -752,9 +747,14 @@ function renderLinkManager() {
         moveOutBtn.title = "Move out of folder";
         moveOutBtn.innerHTML = moveOutIconSVG;
 
-        moveOutBtn.addEventListener("click", (e) => {
+        moveOutBtn.addEventListener("click", async (e) => {
           e.stopPropagation();
-          if (confirm(`Move "${link.name}" back to the main dashboard?`)) {
+          if (
+            await customConfirm(
+              `Move "${link.name}" back to the main dashboard?`,
+              "Move Item?",
+            )
+          ) {
             const idx = links.findIndex((l) => l.id === link.id);
             if (idx > -1) {
               const [movedItem] = links.splice(idx, 1);
@@ -1412,42 +1412,69 @@ async function triggerMaterialYou() {
           (typeof bgData === "string" &&
             bgData.match(/\.(mp4|webm|ogg)($|\?)/i));
         if (isVideo) {
+          if (window.colorExtractionTimer) {
+            clearTimeout(window.colorExtractionTimer);
+            window.colorExtractionTimer = null;
+          }
+
           if (!window.sharedColorVideo) {
             window.sharedColorVideo = document.createElement("video");
             window.sharedColorVideo.muted = true;
             window.sharedColorVideo.playsInline = true;
             window.sharedColorVideo.crossOrigin = "Anonymous";
-
-            window.sharedColorVideo.addEventListener("loadeddata", () => {
-              window.sharedColorVideo.currentTime = Math.min(
-                1,
-                window.sharedColorVideo.duration / 2,
-              );
-            });
-
-            if (!window.offscreenCanvas) {
-              window.offscreenCanvas = document.createElement("canvas");
-              window.offscreenCanvas.width = 1;
-              window.offscreenCanvas.height = 1;
-            }
-            window.sharedColorVideo.addEventListener("seeked", () => {
-              if (window.colorExtractionTimer)
-                clearTimeout(window.colorExtractionTimer);
-              window.colorExtractionTimer = setTimeout(() => {
-                const ctx = window.offscreenCanvas.getContext("2d", {
-                  willReadFrequently: true,
-                });
-                ctx.drawImage(window.sharedColorVideo, 0, 0, 1, 1);
-                const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-                applyMaterialYouTheme(rgbToHue(r, g, b));
-              }, 150);
-            });
           }
+
+          if (!window.offscreenCanvas) {
+            window.offscreenCanvas = document.createElement("canvas");
+            window.offscreenCanvas.width = 1;
+            window.offscreenCanvas.height = 1;
+          }
+
+          if (window._colorLoadedHandler) {
+            window.sharedColorVideo.removeEventListener(
+              "loadeddata",
+              window._colorLoadedHandler,
+            );
+          }
+          if (window._colorSeekedHandler) {
+            window.sharedColorVideo.removeEventListener(
+              "seeked",
+              window._colorSeekedHandler,
+            );
+          }
+
+          window._colorLoadedHandler = () => {
+            window.sharedColorVideo.currentTime = Math.min(
+              1,
+              window.sharedColorVideo.duration / 2,
+            );
+          };
+
+          window._colorSeekedHandler = () => {
+            if (window.colorExtractionTimer)
+              clearTimeout(window.colorExtractionTimer);
+            window.colorExtractionTimer = setTimeout(() => {
+              const ctx = window.offscreenCanvas.getContext("2d", {
+                willReadFrequently: true,
+              });
+              ctx.drawImage(window.sharedColorVideo, 0, 0, 1, 1);
+              const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+              applyMaterialYouTheme(rgbToHue(r, g, b));
+            }, 150);
+          };
+
+          window.sharedColorVideo.addEventListener(
+            "loadeddata",
+            window._colorLoadedHandler,
+          );
+          window.sharedColorVideo.addEventListener(
+            "seeked",
+            window._colorSeekedHandler,
+          );
 
           if (window.sharedColorVideo.src !== url) {
             window.sharedColorVideo.src = url;
           } else if (window.sharedColorVideo.readyState >= 2) {
-            // Force re-extraction if the video source is already set and ready
             const ctx = window.offscreenCanvas.getContext("2d", {
               willReadFrequently: true,
             });
