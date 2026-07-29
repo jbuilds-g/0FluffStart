@@ -477,6 +477,27 @@ function bindStaticEvents() {
           `.link-manager-item[data-id="${link.id}"]`,
         );
         if (managerItem) {
+          // Expand all ancestor folder containers leading up to this item
+          let parentSubContainer = managerItem.closest(".folder-sub-container");
+          while (parentSubContainer) {
+            parentSubContainer.style.display = "block";
+            const parentManagerItem = parentSubContainer.previousElementSibling;
+            if (
+              parentManagerItem &&
+              parentManagerItem.classList.contains("link-manager-item")
+            ) {
+              const parentToggle =
+                parentManagerItem.querySelector(".folder-toggle");
+              if (parentToggle) parentToggle.innerText = "▼";
+            }
+            parentSubContainer = parentSubContainer.parentElement
+              ? parentSubContainer.parentElement.closest(
+                  ".folder-sub-container",
+                )
+              : null;
+          }
+
+          // Expand target folder's own sub-container
           const subContainer = managerItem.nextElementSibling;
           if (
             subContainer &&
@@ -486,6 +507,7 @@ function bindStaticEvents() {
             const toggleBtn = managerItem.querySelector(".folder-toggle");
             if (toggleBtn) toggleBtn.innerText = "▼";
           }
+
           managerItem.scrollIntoView({ behavior: "smooth", block: "center" });
         }
       } else {
@@ -660,8 +682,6 @@ function renderLinkManager() {
     return;
   }
 
-  const fragment = document.createDocumentFragment();
-
   // --- ICONS & SETUP ---
   const editIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>`;
   const deleteIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
@@ -670,7 +690,7 @@ function renderLinkManager() {
   const linkSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px; opacity: 0.5;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
 
   // --- ITEM BUILDER ---
-  function createManagerItem(link, isSubItem = false, isSelectable = false) {
+  function createManagerItem(link, level = 0, isSelectable = false) {
     const item = document.createElement("div");
     item.className = "link-manager-item";
     item.dataset.id = link.id;
@@ -679,13 +699,13 @@ function renderLinkManager() {
     item.style.alignItems = "center";
     item.style.padding = "6px 0";
 
-    if (isSubItem) {
-      item.style.marginLeft = "28px";
+    if (level > 0) {
+      item.style.marginLeft = `${level * 28}px`;
       item.style.borderLeft = "2px solid var(--border)";
       item.style.paddingLeft = "12px";
       item.style.marginTop = "6px";
       item.style.marginBottom = "6px";
-      item.style.width = "calc(100% - 40px)";
+      item.style.width = `calc(100% - ${level * 28 + 12}px)`;
     }
 
     const nameSpan = document.createElement("span");
@@ -729,7 +749,6 @@ function renderLinkManager() {
       item.appendChild(leftContainer);
       item.style.cursor = "pointer";
       item.onclick = (e) => {
-        // Prevent checking the box if they just clicked the expand/collapse arrow
         if (e.target.classList.contains("folder-toggle")) return;
 
         if (e.target !== checkbox) checkbox.checked = !checkbox.checked;
@@ -741,7 +760,7 @@ function renderLinkManager() {
       actionsDiv.style.display = "flex";
       actionsDiv.style.gap = "5px";
 
-      if (isSubItem) {
+      if (level > 0) {
         const moveOutBtn = document.createElement("button");
         moveOutBtn.className = "icon-btn";
         moveOutBtn.title = "Move out of folder";
@@ -791,18 +810,18 @@ function renderLinkManager() {
     return item;
   }
 
-  // --- RENDER LOOP ---
-  // We use one unified tree loop for BOTH normal and selection mode!
-  links
-    .filter((l) => !l.parentId)
-    .forEach((rootLink) => {
-      // If we are adding items TO a folder, hide that destination folder from the list
-      if (isSelectionMode && rootLink.id === activeFolderId) return;
+  // --- RECURSIVE FOLDER BUILDER ---
+  function buildFolderNodes(parentId = null, level = 0) {
+    const containerFragment = document.createDocumentFragment();
+    const childLinks = links.filter((l) => (l.parentId || null) === parentId);
 
-      const row = createManagerItem(rootLink, false, isSelectionMode);
-      fragment.appendChild(row);
+    childLinks.forEach((link) => {
+      if (isSelectionMode && link.id === activeFolderId) return;
 
-      if (rootLink.isFolder) {
+      const row = createManagerItem(link, level, isSelectionMode);
+      containerFragment.appendChild(row);
+
+      if (link.isFolder) {
         const subContainer = document.createElement("div");
         subContainer.className = "folder-sub-container";
         subContainer.style.display = "none";
@@ -812,7 +831,6 @@ function renderLinkManager() {
         const toggleBtn = row.querySelector(".folder-toggle");
         if (toggleBtn) {
           row.addEventListener("click", (e) => {
-            // Prevent expand/collapse if clicking edit or delete buttons
             if (e.target.closest(".link-actions")) return;
 
             const isHidden = subContainer.style.display === "none";
@@ -821,28 +839,21 @@ function renderLinkManager() {
           });
         }
 
-        links
-          .filter((l) => l.parentId === rootLink.id)
-          .forEach((child) => {
-            subContainer.appendChild(
-              createManagerItem(child, true, isSelectionMode),
-            );
-          });
+        subContainer.appendChild(buildFolderNodes(link.id, level + 1));
 
-        // Only inject the "+ New Link" / "+ Existing" buttons in NORMAL mode
         if (!isSelectionMode) {
           const actionRow = document.createElement("div");
           actionRow.style.display = "flex";
-          actionRow.style.gap = "10px"; /* Matched to the top buttons' gap */
-          actionRow.style.marginLeft = "0";
+          actionRow.style.gap = "10px";
+          actionRow.style.marginLeft = `${(level + 1) * 28}px`;
           actionRow.style.marginTop = "10px";
-          actionRow.style.width = "100%";
+          actionRow.style.width = `calc(100% - ${(level + 1) * 28}px)`;
 
           const addNewBtn = document.createElement("button");
           addNewBtn.className = "add-link-btn";
           addNewBtn.style.flex = "1";
           addNewBtn.innerHTML = `+ New Link`;
-          addNewBtn.onclick = () => openEditor(null, rootLink.id);
+          addNewBtn.onclick = () => openEditor(null, link.id);
 
           const addExistingBtn = document.createElement("button");
           addExistingBtn.className = "add-link-btn";
@@ -851,7 +862,7 @@ function renderLinkManager() {
           addExistingBtn.innerHTML = `+ Existing`;
           addExistingBtn.onclick = () => {
             isSelectionMode = true;
-            activeFolderId = rootLink.id;
+            activeFolderId = link.id;
             selectedLinkIds = [];
             renderLinkManager();
           };
@@ -861,11 +872,15 @@ function renderLinkManager() {
           subContainer.appendChild(actionRow);
         }
 
-        fragment.appendChild(subContainer);
+        containerFragment.appendChild(subContainer);
       }
     });
 
-  // Failsafe: if the user opens selection mode but there's literally nothing else to select
+    return containerFragment;
+  }
+
+  const fragment = buildFolderNodes(null, 0);
+
   if (isSelectionMode && fragment.children.length === 0) {
     const emptyMsg = document.createElement("div");
     emptyMsg.innerText = "No other links or folders available.";
