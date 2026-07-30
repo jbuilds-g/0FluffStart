@@ -244,7 +244,7 @@ h1 {
   display: none !important;
 }
 
-@media (max-width: 850px) {
+@media (max-width: 850px) and (pointer: coarse) {
   .floating-settings {
     top: auto !important;
     bottom: 92px !important;
