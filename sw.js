@@ -1,10 +1,10 @@
-const CACHE_NAME = "0fluff-v72";
+const CACHE_NAME = "0fluff-v73";
 
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
-  ".pwa-manifest.json",
+  "./pwa-manifest.json",
   "./core.css",
   "./state.js",
   "./utilities.js",
