@@ -1589,9 +1589,26 @@ body.nebula-drift .clock.clock-style-neon {
     width: 100vw !important;
     margin-left: -20px !important;
     padding-left: 20px !important;
-    padding-right: 20px !important;
+    padding-right: 100px !important;
     box-sizing: border-box !important;
+  }
 
+  .link-grid:not(:has(.folder-exit-container)) {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      black 0%,
+      black calc(100% - 110px),
+      transparent calc(100% - 20px)
+    );
+    mask-image: linear-gradient(
+      to right,
+      black 0%,
+      black calc(100% - 110px),
+      transparent calc(100% - 20px)
+    );
+  }
+
+  .link-grid {
     /* Pushes grid to thumb level naturally */
     margin-top: auto !important;
     margin-bottom: 90px !important;
@@ -1748,6 +1765,8 @@ body.nebula-drift .clock.clock-style-neon {
     box-sizing: content-box !important;
     margin-top: 20px !important;
     margin-bottom: 0 !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
   }
 
   body.force-desktop-mode .folder-exit-container {
