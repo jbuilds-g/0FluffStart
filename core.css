@@ -77,21 +77,30 @@ h1 {
   display: none !important;
 }
 
-/* --- FLOATING SETTINGS BUTTON --- */
+/* --- FLOATING CONTROLS --- */
 .floating-settings {
   position: fixed;
-  bottom: 24px;
-  left: 24px;
+  top: 24px;
+  right: 24px;
+  bottom: auto;
+  left: auto;
   z-index: 50;
+  pointer-events: none;
 }
 
 .floating-btn {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  cursor: pointer;
+  color: var(--text);
   transition:
     transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
     box-shadow 0.3s,
@@ -99,7 +108,7 @@ h1 {
 }
 
 .floating-btn:hover {
-  transform: translateY(-5px) scale(1.05);
+  transform: translateY(-3px) scale(1.05);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   background: var(--card-hover);
   color: var(--accent);
@@ -235,25 +244,53 @@ h1 {
   display: none !important;
 }
 
-@media (max-width: 850px) and (pointer: coarse) {
+@media (max-width: 850px) {
+  .floating-settings {
+    top: auto !important;
+    bottom: 92px !important;
+    right: 30px !important;
+    left: auto !important;
+    position: fixed !important;
+    z-index: 50 !important;
+    pointer-events: none !important;
+    display: flex !important;
+    justify-content: center !important;
+    width: 46px !important;
+  }
+
+  #settingsToggleBtn {
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 50% !important;
+    pointer-events: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
   /* The Wrapper: Forces position on the bottom right */
   .mobile-dock {
     display: block !important;
     position: fixed !important;
     bottom: 24px !important;
-    right: 24px !important; /* Exactly opposite of settings left: 24px */
-    z-index: 50 !important; /* Matches settings z-index */
-    pointer-events: none !important; /* Stops the wrapper from blocking touches */
+    right: 24px !important;
+    width: 58px !important;
+    height: 58px !important;
+    z-index: 50 !important;
+    pointer-events: none !important;
   }
 
-  /* The Button: We leave the colors/size out so .floating-btn styles it! */
+  /* The Button: Larger bottom search button */
   #mobileSearchBtn {
-    pointer-events: auto !important; /* Makes the button itself clickable */
+    pointer-events: auto !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    padding: 0 !important; /* Centers the SVG */
-    color: var(--text) !important; /* Icon color */
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    color: var(--text) !important;
   }
 }
 /* --- BACKGROUND VIDEO STYLING --- */
