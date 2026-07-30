@@ -117,10 +117,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h2>Settings</h2>
-          <div
-            class="header-actions"
-            style="display: flex; gap: 10px; align-items: center"
-          >
+          <div class="header-actions">
             <button
               id="toggleAllCategoriesBtn"
               class="icon-btn"
@@ -192,57 +189,32 @@
               </div>
 
               <div id="linkListContainer">
-                <div
-                  id="standardActionBtns"
-                  style="display: flex; gap: 10px; margin-bottom: 15px"
-                >
-                  <button id="addLinkBtn" class="add-link-btn" style="flex: 1">
+                <div id="standardActionBtns" class="action-btn-row">
+                  <button id="addLinkBtn" class="add-link-btn">
                     + Add Link
                   </button>
                   <button
                     id="addFolderBtn"
-                    class="add-link-btn"
-                    style="flex: 1; background: var(--card-hover)"
+                    class="add-link-btn btn-secondary-bg"
                   >
                     + Add Folder
                   </button>
                 </div>
 
-                <div
-                  id="selectionToolbar"
-                  class="hidden"
-                  style="
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 15px;
-                    padding: 10px;
-                    background: var(--card-hover);
-                    border-radius: var(--radius);
-                    border: 1px solid var(--border);
-                  "
-                >
-                  <span
-                    id="selectionCount"
-                    style="font-weight: bold; color: var(--accent)"
+                <div id="selectionToolbar" class="selection-toolbar hidden">
+                  <span id="selectionCount" class="selection-count"
                     >0 Selected</span
                   >
-                  <div style="display: flex; gap: 10px">
+                  <div class="selection-actions">
                     <button
                       id="cancelSelectionBtn"
-                      class="secondary"
-                      style="
-                        border-radius: var(--radius);
-                        border: 1px solid var(--border);
-                        padding: 5px 15px;
-                      "
+                      class="secondary selection-btn-cancel"
                     >
                       Cancel
                     </button>
                     <button
                       id="confirmSelectionBtn"
-                      class="save-btn"
-                      style="margin: 0; padding: 5px 15px"
+                      class="save-btn selection-btn-confirm"
                     >
                       Move Here
                     </button>
@@ -252,22 +224,8 @@
                 <div id="linkManagerContent" class="link-manager-list"></div>
               </div>
 
-              <div
-                id="linkEditorContainer"
-                class="hidden"
-                style="
-                  background: var(--card-hover);
-                  padding: 15px;
-                  border-radius: var(--radius);
-                  border: 1px solid var(--border);
-                "
-              >
-                <h4
-                  id="editorTitle"
-                  style="margin: 0 0 15px 0; color: var(--accent)"
-                >
-                  Add New Link
-                </h4>
+              <div id="linkEditorContainer" class="link-editor-box hidden">
+                <h4 id="editorTitle" class="editor-title">Add New Link</h4>
 
                 <input
                   type="text"
@@ -280,24 +238,11 @@
                   placeholder="URL (e.g. youtube.com)"
                 />
 
-                <div style="display: flex; gap: 10px; margin-bottom: 10px">
-                  <button
-                    id="saveLinkBtn"
-                    class="save-btn"
-                    style="margin-top: 0; flex: 1"
-                  >
-                    Save
-                  </button>
+                <div class="editor-btn-row">
+                  <button id="saveLinkBtn" class="save-btn">Save</button>
                   <button
                     id="cancelEditBtn"
-                    class="secondary"
-                    style="
-                      margin-top: 0;
-                      flex: 1;
-                      border-radius: var(--radius);
-                      font-weight: bold;
-                      border: 1px solid var(--border);
-                    "
+                    class="secondary editor-btn-cancel"
                   >
                     Cancel
                   </button>
@@ -306,14 +251,10 @@
             </div>
 
             <div
-              class="setting-group desktop-only-setting"
-              style="margin-top: 20px"
+              class="setting-group desktop-only-setting setting-group-desktop"
             >
-              <div
-                class="setting-header"
-                style="justify-content: flex-start; gap: 10px"
-              >
-                <label class="radio-option" style="margin: 0">
+              <div class="setting-header setting-header-start">
+                <label class="radio-option radio-option-no-margin">
                   <input type="checkbox" id="showTitlesToggle" /> Show Quick
                   Link Titles
                 </label>
@@ -442,10 +383,9 @@
               </div>
 
               <div
-                class="custom-select"
+                class="custom-select clock-style-select"
                 id="clockStyleSelect"
                 data-value="default"
-                style="margin-bottom: 12px; width: 100%"
               >
                 <div class="select-trigger">
                   <span class="selected-text">Default</span>
@@ -466,7 +406,7 @@
                 </div>
               </div>
 
-              <div class="radio-row" style="margin-bottom: 12px">
+              <div class="radio-row radio-row-mb">
                 <label class="radio-option">
                   <input
                     type="radio"
@@ -487,16 +427,7 @@
                 </label>
               </div>
 
-              <label
-                class="radio-option"
-                style="
-                  justify-content: flex-start;
-                  margin: 0;
-                  display: flex;
-                  align-items: center;
-                  gap: 8px;
-                "
-              >
+              <label class="radio-option radio-option-start">
                 <input type="checkbox" id="showSecondsToggle" checked /> Display
                 Live Seconds
               </label>
@@ -511,31 +442,21 @@
                 Upload your own image or video, or paste a direct URL to a media
                 file, to replace the solid background.
                 <br /><br />
-                <span style="opacity: 0.85">
+                <span>
                   ⚠️ <b>Note:</b> External URLs may not work perfectly if the
                   host server blocks direct hotlinking or lacks open
                   cross-origin (CORS) headers.
                 </span>
                 <br /><br />
-                <span style="opacity: 0.85">
+                <span>
                   💡 <b>Tip:</b> If the "Material You" theme is selected, it is
                   highly recommended to use smooth, continuous video loops with
                   a consistent color palette to preserve UI readability and
                   layout balance.
                 </span>
               </div>
-              <div
-                class="setting-item"
-                style="
-                  flex-direction: column;
-                  align-items: flex-start;
-                  gap: 10px;
-                "
-              >
-                <div
-                  class="radio-row"
-                  style="width: 100%; display: flex; gap: 10px"
-                >
+              <div class="setting-item setting-item-col">
+                <div class="radio-row bg-radio-row">
                   <input
                     type="file"
                     id="bgImageInput"
@@ -544,13 +465,7 @@
                   />
                   <label
                     for="bgImageInput"
-                    class="radio-option"
-                    style="
-                      flex: 1;
-                      justify-content: center;
-                      margin: 0;
-                      font-weight: 600;
-                    "
+                    class="radio-option bg-option-label"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -580,27 +495,11 @@
                     type="url"
                     id="bgUrlInput"
                     placeholder="Paste URL..."
-                    style="
-                      flex: 1;
-                      margin: 0;
-                      padding: 0 10px;
-                      border-radius: var(--radius);
-                      border: 1px solid var(--border);
-                      background: var(--bg);
-                      color: var(--text);
-                    "
+                    class="bg-url-input"
                   />
                   <button
                     id="resetBgBtn"
-                    class="radio-option"
-                    style="
-                      display: none;
-                      justify-content: center;
-                      margin: 0;
-                      max-width: 60px;
-                      color: var(--delete);
-                      border-color: transparent;
-                    "
+                    class="radio-option reset-bg-btn"
                     title="Reset Background"
                   >
                     <svg
@@ -620,17 +519,7 @@
                     </svg>
                   </button>
                 </div>
-                <p
-                  id="bgFileName"
-                  style="
-                    font-size: 0.85rem;
-                    color: var(--dim);
-                    margin: 0;
-                    word-break: break-all;
-                  "
-                >
-                  No media selected.
-                </p>
+                <p id="bgFileName" class="bg-file-name">No media selected.</p>
               </div>
             </div>
           </div>
@@ -670,44 +559,19 @@
                   searches.
                 </span>
               </div>
-              <label
-                class="radio-option"
-                style="
-                  justify-content: flex-start;
-                  display: flex;
-                  align-items: center;
-                  gap: 6px;
-                "
-              >
+              <label class="radio-option radio-option-start-sm">
                 <input type="checkbox" id="externalSuggestToggle" /> Enable Live
                 Suggestions
               </label>
-              <div
-                id="customProxyContainer"
-                style="
-                  margin-top: 10px;
-                  display: flex;
-                  flex-direction: column;
-                  gap: 5px;
-                "
-              >
-                <label
-                  for="customProxyInput"
-                  style="font-size: 0.85rem; color: var(--dim)"
+              <div id="customProxyContainer" class="custom-proxy-container">
+                <label for="customProxyInput" class="custom-proxy-label"
                   >Custom Proxy URL (Optional)</label
                 >
                 <input
                   type="url"
                   id="customProxyInput"
                   placeholder="e.g., https://my-proxy.com/?"
-                  style="
-                    width: 100%;
-                    border-radius: var(--radius);
-                    border: 1px solid var(--border);
-                    background: var(--bg);
-                    color: var(--text);
-                    padding: 8px;
-                  "
+                  class="custom-proxy-input"
                 />
               </div>
             </div>
@@ -721,15 +585,7 @@
                 Keeps a private local log of your recent searches for quicker
                 access later.
               </div>
-              <label
-                class="radio-option"
-                style="
-                  justify-content: flex-start;
-                  display: flex;
-                  align-items: center;
-                  gap: 6px;
-                "
-              >
+              <label class="radio-option radio-option-start-sm">
                 <input type="checkbox" id="historyEnabledToggle" /> Enable Local
                 Search History
               </label>
@@ -807,15 +663,7 @@
                 Purges the private transaction log indices of your local
                 navigation history parameters.
               </div>
-              <button
-                id="clearHistoryBtn"
-                class="secondary"
-                style="
-                  width: 100%;
-                  border: 1px solid var(--delete);
-                  color: var(--delete);
-                "
-              >
+              <button id="clearHistoryBtn" class="secondary danger-btn">
                 Clear All Search History
               </button>
             </div>
@@ -829,33 +677,25 @@
                 Wipes all custom settings and returns the dashboard to its
                 original factory state.
               </div>
-              <button
-                id="resetSettingsBtn"
-                class="secondary"
-                style="
-                  width: 100%;
-                  border: 1px solid var(--delete);
-                  color: var(--delete);
-                "
-              >
+              <button id="resetSettingsBtn" class="secondary danger-btn">
                 Factory Reset Settings
               </button>
             </div>
 
             <div class="setting-group">
               <div class="setting-header">
-                <h3 style="margin-top: 0">Data Backup & Restore</h3>
+                <h3 class="margin-top-zero">Data Backup & Restore</h3>
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
                 Download your links and settings as a file, or load a previous
                 backup.
               </div>
-              <div style="display: flex; gap: 10px">
-                <button id="backupDataBtn" class="secondary" style="flex: 1">
+              <div class="action-btn-row">
+                <button id="backupDataBtn" class="secondary">
                   Backup (Save)
                 </button>
-                <button id="restoreDataBtn" class="secondary" style="flex: 1">
+                <button id="restoreDataBtn" class="secondary">
                   Restore (Load)
                 </button>
               </div>
@@ -863,7 +703,7 @@
                 type="file"
                 id="restoreInput"
                 accept=".json"
-                style="display: none"
+                class="hidden-input"
               />
             </div>
           </div>
@@ -935,25 +775,20 @@
     <!-- CUSTOM DIALOG ENGINE MODAL -->
     <div class="modal" id="customDialogModal">
       <div class="modal-content custom-dialog-content">
-        <h3 id="customDialogTitle" style="margin-top: 0; color: var(--accent)">
+        <h3 id="customDialogTitle" class="custom-dialog-title">
           Are you sure?
         </h3>
-        <p
-          id="customDialogMessage"
-          style="color: var(--text); font-size: 0.95rem; margin-bottom: 20px"
-        ></p>
-        <div class="custom-dialog-actions" style="display: flex; gap: 10px">
+        <p id="customDialogMessage" class="custom-dialog-message"></p>
+        <div class="custom-dialog-actions">
           <button
             id="customDialogCancelBtn"
-            class="secondary"
-            style="flex: 1; margin: 0"
+            class="secondary custom-dialog-btn-cancel"
           >
             Cancel
           </button>
           <button
             id="customDialogConfirmBtn"
-            class="save-btn"
-            style="flex: 1; margin: 0; background: var(--delete); color: #fff"
+            class="save-btn custom-dialog-btn-confirm"
           >
             Confirm
           </button>

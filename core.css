@@ -89,7 +89,7 @@ h1 {
 }
 
 .floating-btn {
-  background: var(--card);
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 50%;
   width: 46px;
@@ -872,7 +872,7 @@ body.material .link-item:hover .link-icon-circle span {
 
 .help-text {
   display: none;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--card-hover);
   border-left: 3px solid var(--accent);
   padding: 10px 12px;
   margin-bottom: 15px;
@@ -936,10 +936,9 @@ select {
   color-scheme: dark;
 }
 
-/* Explicitly force options to be dark with white text so they never turn invisible */
 select option {
-  background-color: #141418;
-  color: #ffffff;
+  background-color: var(--card);
+  color: var(--text);
 }
 
 select:focus,
@@ -1074,18 +1073,299 @@ select:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
+  padding: 6px 0;
   background: var(--card-hover);
   border-radius: var(--radius);
   border: 1px solid var(--border);
+  box-sizing: border-box;
+}
+.link-manager-item.nested-level {
+  border-left: 2px solid var(--border);
+  padding-left: 12px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+.link-manager-item.is-folder-item {
+  cursor: pointer;
 }
 .link-manager-item .link-name {
   font-size: 0.9rem;
   font-weight: 500;
+  display: flex;
+  align-items: center;
 }
 .link-actions {
   display: flex;
+  gap: 5px;
+}
+.manager-item-icon {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.manager-item-icon.link-type {
+  opacity: 0.5;
+}
+.folder-toggle {
+  margin-right: 8px;
+  color: var(--accent);
+  font-size: 12px;
+  width: 12px;
+  display: inline-block;
+  text-align: center;
+  pointer-events: none;
+}
+.folder-sub-container {
+  display: none;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+.folder-action-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.folder-action-row .add-link-btn {
+  flex: 1;
+}
+.folder-action-row .btn-secondary-bg {
+  background: var(--card-hover);
+}
+.manager-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.manager-checkbox {
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+.empty-manager-msg {
+  padding: 15px;
+  color: var(--dim);
+  text-align: center;
+}
+
+/* UI Helper Classes & Component Layouts */
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.action-btn-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.action-btn-row .add-link-btn,
+.action-btn-row .secondary {
+  flex: 1;
+}
+.action-btn-row .btn-secondary-bg {
+  background: var(--card-hover);
+}
+.selection-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 6px 12px;
+  background: var(--card-hover);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.selection-count {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+.selection-actions {
+  display: flex;
+  gap: 6px;
+}
+.selection-btn-cancel {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  width: auto;
+}
+.selection-btn-confirm {
+  margin: 0;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  width: auto;
+}
+.link-editor-box {
+  background: var(--card-hover);
+  padding: 15px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.editor-title {
+  margin: 0 0 15px 0;
+  color: var(--accent);
+}
+.editor-btn-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.editor-btn-row .save-btn,
+.editor-btn-row .secondary {
+  margin-top: 0;
+  flex: 1;
+}
+.editor-btn-cancel {
+  border-radius: var(--radius);
+  font-weight: bold;
+  border: 1px solid var(--border);
+}
+.link-acronym {
+  font-family: var(--font-main);
+  font-weight: 800;
+  color: var(--accent);
+}
+.setting-group-desktop {
+  margin-top: 20px;
+}
+.setting-header-start {
+  justify-content: flex-start;
+  gap: 10px;
+}
+.radio-option-no-margin {
+  margin: 0;
+}
+.clock-style-select {
+  margin-bottom: 12px;
+  width: 100%;
+}
+.radio-row-mb {
+  margin-bottom: 12px;
+}
+.radio-option-start {
+  justify-content: flex-start;
+  margin: 0;
+  display: flex;
+  align-items: center;
   gap: 8px;
+}
+.radio-option-start-sm {
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.setting-item-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.bg-radio-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+}
+.bg-option-label {
+  flex: 1;
+  height: 36px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0 10px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+input[type="url"].bg-url-input {
+  flex: 1.4;
+  min-width: 0;
+  height: 36px;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--card-hover);
+  color: var(--text);
+  font-size: 0.8rem;
+  box-sizing: border-box;
+  line-height: normal;
+}
+.reset-bg-btn {
+  display: none;
+  height: 36px;
+  width: 36px;
+  min-width: 36px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: var(--delete);
+  border: 1px solid var(--border);
+  background: var(--card-hover);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border-radius: var(--radius);
+}
+.bg-file-name {
+  font-size: 0.85rem;
+  color: var(--dim);
+  margin: 0;
+  word-break: break-all;
+}
+.custom-proxy-container {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.custom-proxy-label {
+  font-size: 0.85rem;
+  color: var(--dim);
+}
+.custom-proxy-input {
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  padding: 8px;
+}
+.danger-btn {
+  width: 100%;
+  border: 1px solid var(--delete);
+  color: var(--delete);
+}
+.margin-top-zero {
+  margin-top: 0;
+}
+.custom-dialog-title {
+  margin-top: 0;
+  color: var(--accent);
+}
+.custom-dialog-message {
+  color: var(--text);
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+.custom-dialog-actions {
+  display: flex;
+  gap: 10px;
+}
+.custom-dialog-btn-cancel {
+  flex: 1;
+  margin: 0;
+}
+.custom-dialog-btn-confirm {
+  flex: 1;
+  margin: 0;
+  background: var(--delete);
+  color: var(--text);
 }
 
 /* 0flufThemes.css - Consolidated Theme Engine v1.7.0 */
@@ -1162,14 +1442,19 @@ body.forest {
 
 body.paper {
   --bg: #f9f7f2;
-  --card: rgba(255, 255, 255, 0.8);
-  --card-hover: rgba(0, 0, 0, 0.03);
+  --card: #ffffff;
+  --card-hover: #f0ede6;
   --text: #1a1a1a;
   --accent: #222222;
   --dim: #777777;
   --border: #d1cfc8;
   --radius: 2px;
   --shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+body.paper .search-bar,
+body.paper .floating-btn {
+  background: #ffffff;
 }
 
 body.luminous {
@@ -1482,6 +1767,7 @@ body.night-glow h3 {
 body.night-glow .search-bar,
 body.night-glow .link-icon-circle,
 body.night-glow .modal-content,
+body.night-glow .floating-btn,
 body.night-glow input,
 body.night-glow select {
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
@@ -1518,8 +1804,9 @@ body.nebula-drift {
 body.nebula-drift .modal-content,
 body.nebula-drift .engine-dropdown,
 body.nebula-drift .search-bar,
-body.nebula-drift .link-icon-circle {
-  background: rgba(35, 30, 55, 0.65);
+body.nebula-drift .link-icon-circle,
+body.nebula-drift .floating-btn {
+  background: rgba(35, 30, 55, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   -webkit-backdrop-filter: blur(12px);
@@ -1848,7 +2135,7 @@ body.nebula-drift .clock.clock-style-neon {
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  background: var(--card);
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);

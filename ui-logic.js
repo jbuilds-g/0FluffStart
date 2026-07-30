@@ -587,7 +587,7 @@ const linkTemplate = document.createElement("div");
 linkTemplate.className = "link-item";
 linkTemplate.innerHTML = `
     <div class="link-icon-circle">
-        <span class="link-acronym" style="color: var(--accent); font-weight: 800; font-family: var(--font-main);"></span>
+        <span class="link-acronym"></span>
     </div>
     <div class="link-name"></div>
 `;
@@ -698,43 +698,32 @@ function renderLinkManager() {
   // --- ICONS & SETUP ---
   const editIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>`;
   const deleteIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
-  const moveOutIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
-  const folderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
-  const linkSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px; opacity: 0.5;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
+  const moveOutIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--delete)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+  const folderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="manager-item-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+  const linkSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="manager-item-icon link-type"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
 
   // --- ITEM BUILDER ---
   function createManagerItem(link, level = 0, isSelectable = false) {
     const item = document.createElement("div");
     item.className = "link-manager-item";
     item.dataset.id = link.id;
-    item.style.display = "flex";
-    item.style.justifyContent = "space-between";
-    item.style.alignItems = "center";
-    item.style.padding = "6px 0";
 
     if (level > 0) {
+      item.classList.add("nested-level");
       item.style.marginLeft = `${level * 28}px`;
-      item.style.borderLeft = "2px solid var(--border)";
-      item.style.paddingLeft = "12px";
-      item.style.marginTop = "6px";
-      item.style.marginBottom = "6px";
       item.style.width = `calc(100% - ${level * 28 + 12}px)`;
     }
 
     const nameSpan = document.createElement("span");
     nameSpan.className = "link-name";
-    nameSpan.style.display = "flex";
-    nameSpan.style.alignItems = "center";
 
     if (link.isFolder) {
       const toggleSpan = document.createElement("span");
       toggleSpan.className = "folder-toggle";
-      toggleSpan.style.cssText =
-        "margin-right:8px; color:var(--accent); font-size:12px; width:12px; display:inline-block; text-align:center; pointer-events:none;";
       toggleSpan.textContent = "▶";
       nameSpan.appendChild(toggleSpan);
 
-      item.style.cursor = "pointer";
+      item.classList.add("is-folder-item");
     }
 
     const iconWrapper = document.createElement("span");
@@ -746,21 +735,18 @@ function renderLinkManager() {
 
     if (isSelectable) {
       const leftContainer = document.createElement("div");
-      leftContainer.style.display = "flex";
-      leftContainer.style.alignItems = "center";
-      leftContainer.style.gap = "10px";
+      leftContainer.className = "manager-item-left";
 
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = selectedLinkIds.includes(link.id);
-      checkbox.style.cursor = "pointer";
-      checkbox.style.accentColor = "var(--accent)";
+      checkbox.className = "manager-checkbox";
 
       leftContainer.appendChild(checkbox);
       leftContainer.appendChild(nameSpan);
 
       item.appendChild(leftContainer);
-      item.style.cursor = "pointer";
+      item.classList.add("is-folder-item");
       item.onclick = (e) => {
         if (e.target.classList.contains("folder-toggle")) return;
 
@@ -770,8 +756,6 @@ function renderLinkManager() {
     } else {
       const actionsDiv = document.createElement("div");
       actionsDiv.className = "link-actions";
-      actionsDiv.style.display = "flex";
-      actionsDiv.style.gap = "5px";
 
       if (level > 0) {
         const moveOutBtn = document.createElement("button");
@@ -856,22 +840,17 @@ function renderLinkManager() {
 
         if (!isSelectionMode) {
           const actionRow = document.createElement("div");
-          actionRow.style.display = "flex";
-          actionRow.style.gap = "10px";
+          actionRow.className = "folder-action-row";
           actionRow.style.marginLeft = `${(level + 1) * 28}px`;
-          actionRow.style.marginTop = "10px";
           actionRow.style.width = `calc(100% - ${(level + 1) * 28}px)`;
 
           const addNewBtn = document.createElement("button");
           addNewBtn.className = "add-link-btn";
-          addNewBtn.style.flex = "1";
           addNewBtn.innerHTML = `+ New Link`;
           addNewBtn.onclick = () => openEditor(null, link.id);
 
           const addExistingBtn = document.createElement("button");
-          addExistingBtn.className = "add-link-btn";
-          addExistingBtn.style.flex = "1";
-          addExistingBtn.style.background = "var(--card-hover)";
+          addExistingBtn.className = "add-link-btn btn-secondary-bg";
           addExistingBtn.innerHTML = `+ Existing`;
           addExistingBtn.onclick = () => {
             isSelectionMode = true;
@@ -897,9 +876,7 @@ function renderLinkManager() {
   if (isSelectionMode && fragment.children.length === 0) {
     const emptyMsg = document.createElement("div");
     emptyMsg.innerText = "No other links or folders available.";
-    emptyMsg.style.padding = "15px";
-    emptyMsg.style.color = "var(--dim)";
-    emptyMsg.style.textAlign = "center";
+    emptyMsg.className = "empty-manager-msg";
     fragment.appendChild(emptyMsg);
   }
 
