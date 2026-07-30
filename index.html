@@ -115,11 +115,16 @@
 
     <div class="modal" id="settingsModal">
       <div class="modal-content">
-        <div class="modal-header">
-          <h2>Settings</h2>
+        <div class="modal-header" style="align-items: flex-start">
+          <h2 style="margin-top: 4px">Settings</h2>
           <div
             class="header-actions"
-            style="display: flex; gap: 10px; align-items: center"
+            style="
+              display: flex;
+              gap: 10px;
+              align-items: flex-start;
+              margin-top: -2px;
+            "
           >
             <span
               style="
@@ -127,6 +132,7 @@
                 font-size: 0.8rem;
                 color: var(--dim);
                 font-weight: 600;
+                margin-top: 8px;
               "
               >v3.0.0</span
             >
@@ -156,32 +162,60 @@
                 width: 1px;
                 height: 20px;
                 background-color: var(--border);
-                margin: 0 5px;
+                margin: 8px 5px 0 5px;
               "
             ></div>
-            <button
-              id="closeSettingsBtn"
-              class="icon-btn"
-              title="Close Settings"
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+              <button
+                id="closeSettingsBtn"
+                class="icon-btn"
+                title="Close Settings"
               >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <button
+                id="toggleAllCategoriesBtn"
+                class="icon-btn"
+                title="Expand / Collapse All"
+              >
+                <svg
+                  class="chevron-all"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m7 15 5 5 5-5" />
+                  <path d="m7 9 5-5 5 5" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-
         <details class="category-panel" open>
           <summary>
             Dashboard Links

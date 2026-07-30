@@ -215,6 +215,19 @@ function bindStaticEvents() {
       window.open("https://github.com/jbuilds-g/0FluffStart", "_blank"),
     );
 
+  const toggleAllCategoriesBtn = document.getElementById(
+    "toggleAllCategoriesBtn",
+  );
+  if (toggleAllCategoriesBtn) {
+    toggleAllCategoriesBtn.addEventListener("click", () => {
+      const panels = document.querySelectorAll(
+        "#settingsModal details.category-panel",
+      );
+      const anyClosed = Array.from(panels).some((panel) => !panel.open);
+      panels.forEach((panel) => (panel.open = anyClosed));
+    });
+  }
+
   // --- MOBILE RESPONSIVE ENGINE ---
   const mobileSearchBtn = document.getElementById("mobileSearchBtn");
   const searchBarContainer = document.querySelector(".search-bar");
