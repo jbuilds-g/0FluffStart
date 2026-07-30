@@ -683,7 +683,6 @@ body.material .link-item:hover .link-icon-circle span {
 .modal-content {
   background: var(--bg);
   padding: 25px;
-  padding-bottom: 40px;
   border-radius: var(--radius);
   width: 90%;
   max-width: 450px;
@@ -697,6 +696,8 @@ body.material .link-item:hover .link-icon-circle span {
   box-sizing: border-box;
   transform: scale(0.95);
   opacity: 0;
+  display: flex;
+  flex-direction: column;
   transition:
     transform 0.2s ease-out,
     opacity 0.2s ease-out;
@@ -717,6 +718,35 @@ body.material .link-item:hover .link-icon-circle span {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--dim);
+  font-weight: 500;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-footer a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.modal-footer a:hover {
+  color: var(--accent);
 }
 
 /* Desktop Drawer Mode */

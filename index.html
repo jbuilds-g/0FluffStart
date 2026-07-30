@@ -115,36 +115,21 @@
 
     <div class="modal" id="settingsModal">
       <div class="modal-content">
-        <div class="modal-header" style="align-items: flex-start">
-          <h2 style="margin-top: 4px">Settings</h2>
+        <div class="modal-header">
+          <h2>Settings</h2>
           <div
             class="header-actions"
-            style="
-              display: flex;
-              gap: 10px;
-              align-items: flex-start;
-              margin-top: -2px;
-            "
+            style="display: flex; gap: 10px; align-items: center"
           >
-            <span
-              style="
-                font-family: var(--font-main);
-                font-size: 0.8rem;
-                color: var(--dim);
-                font-weight: 600;
-                margin-top: 8px;
-              "
-              >v3.0.0</span
-            >
             <button
-              id="githubBtn"
+              id="toggleAllCategoriesBtn"
               class="icon-btn"
-              title="View Source on GitHub"
+              title="Expand / Collapse All"
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                class="chevron-all"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -152,68 +137,30 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <path
-                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7.37-.4.34-.78 1-1.15 2.06v4.31"
-                ></path>
+                <path d="m7 15 5 5 5-5" />
+                <path d="m7 9 5-5 5 5" />
               </svg>
             </button>
-            <div
-              style="
-                width: 1px;
-                height: 20px;
-                background-color: var(--border);
-                margin: 8px 5px 0 5px;
-              "
-            ></div>
-            <div
-              style="
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 6px;
-              "
+            <button
+              id="closeSettingsBtn"
+              class="icon-btn"
+              title="Close Settings"
             >
-              <button
-                id="closeSettingsBtn"
-                class="icon-btn"
-                title="Close Settings"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-              <button
-                id="toggleAllCategoriesBtn"
-                class="icon-btn"
-                title="Expand / Collapse All"
-              >
-                <svg
-                  class="chevron-all"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="m7 15 5 5 5-5" />
-                  <path d="m7 9 5-5 5 5" />
-                </svg>
-              </button>
-            </div>
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
           </div>
         </div>
         <details class="category-panel" open>
@@ -921,6 +868,42 @@
             </div>
           </div>
         </details>
+
+        <div class="modal-footer">
+          <span class="footer-credit">
+            Made with ♥️ •
+            <a
+              href="https://github.com/jbuilds-g"
+              target="_blank"
+              rel="noopener noreferrer"
+              >jbuilds-g</a
+            >
+          </span>
+          <div class="footer-right">
+            <button
+              id="githubBtn"
+              class="icon-btn"
+              title="View Source on GitHub"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7.37-.4.34-.78 1-1.15 2.06v4.31"
+                ></path>
+              </svg>
+            </button>
+            <span class="footer-version">v4.0.0</span>
+          </div>
+        </div>
       </div>
     </div>
     <script src="state.js"></script>
