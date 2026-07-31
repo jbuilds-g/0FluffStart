@@ -447,6 +447,12 @@ body.material .engine-switcher {
   max-height: 250px;
   overflow-y: auto;
   padding: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.suggestions-container::-webkit-scrollbar {
+  display: none;
 }
 
 /* M3 Override for suggestions alignment with Pill shape */
@@ -2152,26 +2158,12 @@ body.nebula-drift .clock.clock-style-neon {
   gap: 2px;
   padding: 6px;
   box-sizing: border-box;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* Custom Theme-Aware Scrollbar */
 .select-dropdown::-webkit-scrollbar {
-  width: 6px;
-}
-
-.select-dropdown::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.select-dropdown::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: var(--radius);
-}
-
-.select-dropdown::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  display: none;
 }
 
 /* Chevron Rotation State */
@@ -2261,6 +2253,22 @@ body.nebula-drift .clock.clock-style-neon {
 .toast.error {
   border-color: var(--delete);
   color: var(--delete);
+}
+
+/* --- FORCE TRANSLUCENCY OVERRIDE ENGINE --- */
+body.force-translucent .search-bar,
+body.force-translucent .link-icon-circle,
+body.force-translucent .modal-content,
+body.force-translucent .floating-btn,
+body.force-translucent .suggestions-container,
+body.force-translucent .select-dropdown,
+body.force-translucent .link-manager-item,
+body.force-translucent .link-editor-box,
+body.force-translucent .toast {
+  background: color-mix(in srgb, var(--card) 60%, transparent) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border-color: color-mix(in srgb, var(--border) 60%, transparent) !important;
 }
 
 /* Device-Specific Settings Visibility */

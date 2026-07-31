@@ -371,6 +371,54 @@
 
             <div class="setting-group">
               <div class="setting-header">
+                <h3>
+                  Translucency
+                  <span
+                    style="
+                      font-size: 0.65rem;
+                      background: var(--card-hover);
+                      color: var(--accent);
+                      border: 1px solid var(--border);
+                      padding: 2px 6px;
+                      border-radius: 4px;
+                      font-weight: 600;
+                      letter-spacing: 0.5px;
+                      text-transform: uppercase;
+                      margin-left: 6px;
+                      vertical-align: middle;
+                    "
+                    >Experimental</span
+                  >
+                </h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Forces a frosted-glass translucent effect and backdrop blur
+                across all dashboard elements regardless of the selected theme's
+                default opacity.
+                <br /><br />
+                <span>
+                  ⚠️ <b>Experimental Feature:</b> Certain themes may experience
+                  visual bugs, reduced text contrast, or full transparency on
+                  floating menus and suggestions dropdowns. You may also run
+                  into unexpected or unknown visual bugs.
+                </span>
+              </div>
+              <label
+                class="radio-option"
+                style="
+                  justify-content: space-between;
+                  width: 100%;
+                  box-sizing: border-box;
+                "
+              >
+                <span>Force Translucent UI</span>
+                <input type="checkbox" id="forceTranslucencyToggle" />
+              </label>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
                 <h3>Clock Customization</h3>
                 <button class="help-btn">?</button>
               </div>

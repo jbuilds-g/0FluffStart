@@ -12,6 +12,7 @@
           searchEngine: "Google",
           userName: "User",
           customProxyUrl: "",
+          forceTranslucency: false,
         }),
     ),
     searchHistory: JSON.parse(localStorage.getItem("0fluff_history") || "[]"),
