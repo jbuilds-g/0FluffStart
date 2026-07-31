@@ -15,7 +15,12 @@ body {
   align-items: center;
   min-height: 100vh;
   min-height: 100dvh;
-  overflow: hidden; /* Locks the dashboard tightly in place */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+body.modal-open {
+  overflow: hidden !important;
 }
 
 /* Main Container */

@@ -1207,6 +1207,7 @@ function toggleSettings() {
   const modal = document.getElementById("settingsModal");
   if (modal) {
     modal.classList.add("active");
+    document.body.classList.add("modal-open");
 
     // --- FIXED: Sync Media Label & Reset Button State ---
     const bgLabel = document.getElementById("bgFileName");
@@ -1228,7 +1229,12 @@ function toggleSettings() {
 }
 function closeModal(id) {
   const modal = document.getElementById(id);
-  if (modal) modal.classList.remove("active");
+  if (modal) {
+    modal.classList.remove("active");
+    if (!document.querySelector(".modal.active")) {
+      document.body.classList.remove("modal-open");
+    }
+  }
 }
 
 // --- SEARCH LOGIC ---
@@ -1540,9 +1546,13 @@ function customConfirm(message, title = "Are you sure?") {
     titleEl.innerText = title;
     messageEl.innerText = message;
     modal.classList.add("active");
+    document.body.classList.add("modal-open");
 
     const cleanup = () => {
       modal.classList.remove("active");
+      if (!document.querySelector(".modal.active")) {
+        document.body.classList.remove("modal-open");
+      }
       cancelBtn.removeEventListener("click", onCancel);
       confirmBtn.removeEventListener("click", onConfirm);
     };

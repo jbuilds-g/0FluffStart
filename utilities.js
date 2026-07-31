@@ -346,14 +346,17 @@ async function handleImageUpload(input) {
       settings.backgroundImage = "indexeddb";
       autoSaveSettings("background");
 
-      // Clean up any old ObjectURL to prevent memory leaks
-      if (window.activeBgObjectUrl) {
-        URL.revokeObjectURL(window.activeBgObjectUrl);
+      // Revoke prior Object URLs to prevent memory leaks
+      if (window.activeBgObjectUrls) {
+        window.activeBgObjectUrls.forEach((url) => URL.revokeObjectURL(url));
+        window.activeBgObjectUrls.clear();
+      } else {
+        window.activeBgObjectUrls = new Set();
       }
 
-      // Generate zero-latency preview token
+      // Generate zero-latency preview token and track in Set
       const objectUrl = URL.createObjectURL(file);
-      window.activeBgObjectUrl = objectUrl; // Bind tracker
+      window.activeBgObjectUrls.add(objectUrl);
 
       const bgVideo = document.getElementById("bgVideo");
       const bgOverlay = document.getElementById("bgOverlay");
@@ -397,10 +400,10 @@ async function clearBackground() {
   autoSaveSettings("background");
   await clearBgFromDB(); // Purge from IDB
 
-  // Revoke object URL from memory instantly
-  if (window.activeBgObjectUrl) {
-    URL.revokeObjectURL(window.activeBgObjectUrl);
-    window.activeBgObjectUrl = null;
+  // Revoke all object URLs from memory instantly
+  if (window.activeBgObjectUrls) {
+    window.activeBgObjectUrls.forEach((url) => URL.revokeObjectURL(url));
+    window.activeBgObjectUrls.clear();
   }
 
   document.body.style.backgroundImage = "";
