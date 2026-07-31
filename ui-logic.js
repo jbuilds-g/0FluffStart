@@ -5,6 +5,15 @@
 // --- STATE ---
 let currentFolderId = null;
 
+// --- DEBOUNCE UTILITY ---
+function debounce(fn, delay = 300) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), delay);
+  };
+}
+
 // --- SECURITY: PROTOCOL SANITIZER ---
 function sanitizeUrl(url) {
   if (!url) return "#";
@@ -301,9 +310,18 @@ function bindStaticEvents() {
     });
 
   // --- OPTIMIZATION 2: SELECTIVE SETTINGS TRIGGERS ---
+  const debouncedSaveUsername = debounce(
+    () => autoSaveSettings("username"),
+    400,
+  );
+  const debouncedSaveProxy = debounce(
+    () => autoSaveSettings("suggestions"),
+    400,
+  );
+
   const userNameInput = document.getElementById("userNameInput");
   if (userNameInput)
-    userNameInput.addEventListener("input", () => autoSaveSettings("username"));
+    userNameInput.addEventListener("input", debouncedSaveUsername);
 
   const themeSelect = document.getElementById("themeSelect");
   if (themeSelect)
@@ -337,9 +355,7 @@ function bindStaticEvents() {
 
   const customProxyInput = document.getElementById("customProxyInput");
   if (customProxyInput)
-    customProxyInput.addEventListener("input", () =>
-      autoSaveSettings("suggestions"),
-    );
+    customProxyInput.addEventListener("input", debouncedSaveProxy);
 
   const historyEnabledToggle = document.getElementById("historyEnabledToggle");
   if (historyEnabledToggle)

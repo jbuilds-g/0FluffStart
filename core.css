@@ -861,7 +861,10 @@ body.material .link-item:hover .link-icon-circle span {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s;
 }
 .help-btn:hover,
 .help-btn.active {
@@ -983,7 +986,10 @@ select:hover {
   justify-content: center;
   cursor: pointer;
   color: var(--text);
-  transition: all 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s;
 }
 .icon-btn:hover {
   border-color: var(--accent);
@@ -1030,7 +1036,9 @@ select:hover {
   font-size: 0.9rem;
   font-family: var(--font-main);
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
 }
 .add-link-btn:hover {
   background: rgba(0, 170, 255, 0.1);
@@ -1569,7 +1577,9 @@ body.material-you {
    3. ADAPTIVE CLOCK STYLES
    ========================================= */
 .clock {
-  transition: all 0.3s ease;
+  transition:
+    color 0.3s ease,
+    opacity 0.3s ease;
 }
 .clock-style-default {
   font-weight: 300;

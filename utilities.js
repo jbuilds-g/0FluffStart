@@ -90,8 +90,15 @@ function getCurrentSearchEngine() {
 // --- SUGGESTIONS ---
 
 let debounceTimer;
+let activeFetchController = null;
 
 async function fetchExternalSuggestions(query) {
+  if (activeFetchController) {
+    activeFetchController.abort();
+  }
+  activeFetchController = new AbortController();
+  const signal = activeFetchController.signal;
+
   const targetUrl = `https://ac.duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=json`;
 
   // STRATEGY 0: Custom User Proxy
@@ -103,7 +110,7 @@ async function fetchExternalSuggestions(query) {
           ? `${settings.customProxyUrl}${encodeURIComponent(targetUrl)}`
           : `${settings.customProxyUrl}?url=${encodeURIComponent(targetUrl)}`;
 
-      const res = await fetch(proxyUrl);
+      const res = await fetch(proxyUrl, { signal });
       if (res.ok) {
         const data = await res.json();
         // Handle direct array returns (like corsproxy)
@@ -117,6 +124,7 @@ async function fetchExternalSuggestions(query) {
         }
       }
     } catch (e) {
+      if (e.name === "AbortError") return [];
       console.warn("Custom proxy failed, falling back to defaults...", e);
     }
   }
@@ -124,20 +132,21 @@ async function fetchExternalSuggestions(query) {
   // STRATEGY 1: Corsproxy.io
   try {
     const proxyUrl = `https://corsproxy.io?${encodeURIComponent(targetUrl)}`;
-    const res = await fetch(proxyUrl);
+    const res = await fetch(proxyUrl, { signal });
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data))
         return data.map((item) => item.phrase).filter((p) => p);
     }
   } catch (e) {
+    if (e.name === "AbortError") return [];
     console.warn("Primary proxy failed, switching to fallback...", e);
   }
 
   // STRATEGY 2: AllOrigins
   try {
     const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
-    const res = await fetch(proxyUrl);
+    const res = await fetch(proxyUrl, { signal });
     if (res.ok) {
       const wrapper = await res.json();
       const innerData = JSON.parse(wrapper.contents);
@@ -145,7 +154,9 @@ async function fetchExternalSuggestions(query) {
         return innerData.map((item) => item.phrase).filter((p) => p);
     }
   } catch (e) {
-    console.error("All proxies failed for suggestions.", e);
+    if (e.name !== "AbortError") {
+      console.error("All proxies failed for suggestions.", e);
+    }
   }
 
   return [];
