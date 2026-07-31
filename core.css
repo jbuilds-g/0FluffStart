@@ -140,16 +140,7 @@ h1 {
   }
 }
 
-/* --- FOLDER ICON & TEXT MORPH FIX --- */
-/* Turns SVG dark on hover */
-.link-item:hover .link-icon-circle svg {
-  stroke: var(--bg) !important;
-}
-
-/* Turns Text icon dark on hover */
-.link-item:hover .link-icon-circle span {
-  color: var(--bg) !important;
-}
+/* Icon hover rules handled by shape-based morphing engine below */
 
 /* --- SMART TITLE HOVER LOGIC --- */
 /* If the user has NOT checked "Show Titles", hide them by default... */
@@ -553,7 +544,6 @@ body.material .link-item:hover .link-icon-circle {
   background: var(--text); /* High contrast interaction */
   transform: rotate(3deg) scale(1.05); /* Playful tilt */
 }
-/* Invert text color on hover for contrast */
 body.material .link-item:hover .link-icon-circle span {
   color: var(--bg) !important;
 }
@@ -1787,7 +1777,7 @@ body.night-glow input,
 body.night-glow select {
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
   border: 1px solid var(--border);
-  background: #000000;
+  background: var(--bg);
 }
 
 body.night-glow .clock.clock-style-neon {

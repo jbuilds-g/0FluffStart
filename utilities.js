@@ -245,14 +245,17 @@ function renderSuggestions(suggestions, container) {
 }
 
 function logSearch(query) {
+  const currentHistory = store.getState().searchHistory || [];
+  const currentSettings = store.getState().settings || {};
+  const trimmedQuery = query.trim();
+
   if (
-    settings.historyEnabled &&
-    query.trim() &&
-    !searchHistory.includes(query)
+    currentSettings.historyEnabled &&
+    trimmedQuery &&
+    !currentHistory.includes(trimmedQuery)
   ) {
-    searchHistory.unshift(query);
-    searchHistory = searchHistory.slice(0, 20);
-    localStorage.setItem("0fluff_history", JSON.stringify(searchHistory));
+    const updatedHistory = [trimmedQuery, ...currentHistory].slice(0, 20);
+    store.setState({ searchHistory: updatedHistory });
   }
 }
 
@@ -262,8 +265,7 @@ async function clearHistory() {
     "Clear Search History?",
   );
   if (confirmed) {
-    searchHistory = [];
-    localStorage.removeItem("0fluff_history");
+    store.setState({ searchHistory: [] });
     document.getElementById("searchInput")?.focus();
     if (typeof handleSuggestions === "function") handleSuggestions();
     showToast("Search history cleared", "info");

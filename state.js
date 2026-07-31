@@ -1,8 +1,5 @@
 /* state.js - Core Data & Persistence Management */
 
-// --- CORE STATE ---
-let links = JSON.parse(localStorage.getItem("0fluff_links") || "[]");
-
 // --- UTILITIES ---
 const generateId = () =>
   typeof crypto?.randomUUID === "function"
@@ -16,50 +13,55 @@ const generateId = () =>
       Math.random().toString(36).substring(2, 15);
 
 // --- MIGRATION SCRIPT ---
-// Upgrades legacy links into the modern ID-based format
-let needsSave = false;
-links = links.map((item) => {
-  if (!item.id) {
-    needsSave = true;
-    return {
-      id: generateId(),
-      type: "link",
-      name: item.name,
-      url: item.url,
-      parentId: null, // Ensure new links have a parentId for the move-out logic
-    };
+// Upgrades legacy links into modern ID-based format via centralized store
+(function migrateLinks() {
+  const currentLinks = store.getState().links || [];
+  let needsSave = false;
+  const updatedLinks = currentLinks.map((item) => {
+    if (!item.id) {
+      needsSave = true;
+      return {
+        id: generateId(),
+        type: "link",
+        name: item.name,
+        url: item.url,
+        parentId: null,
+      };
+    }
+    return item;
+  });
+
+  if (needsSave) {
+    store.setState({ links: updatedLinks });
   }
-  return item;
-});
+})();
 
-if (needsSave) {
-  localStorage.setItem("0fluff_links", JSON.stringify(links));
-}
-
-// Helper to persist the current state of links to local storage
 function saveLinksState() {
-  localStorage.setItem("0fluff_links", JSON.stringify(links));
+  store.setState({ links: store.getState().links });
 }
 
-// --- SETTINGS & HISTORY ---
-let settings = JSON.parse(
-  localStorage.getItem("0fluff_settings") ||
-    JSON.stringify({
-      theme: "dark",
-      clockFormat: "24h",
-      clockStyle: "default",
-      searchEngine: "Google",
-      userName: "User",
-      customProxyUrl: "",
-    }),
-);
-
-let searchHistory = JSON.parse(localStorage.getItem("0fluff_history") || "[]");
-
-// --- UI STATE ---
-let isEditMode = false;
-let isEditingId = null;
-let activeFolderId = null; // Tracks the current folder view depth
+// --- STORE ACCESSIBILITY BRIDGE ---
+// Dynamically maps legacy global properties directly to store accessors
+[
+  "links",
+  "settings",
+  "searchHistory",
+  "isEditMode",
+  "isEditingId",
+  "activeFolderId",
+  "currentFolderId",
+].forEach((key) => {
+  Object.defineProperty(window, key, {
+    get() {
+      return store.getState()[key];
+    },
+    set(value) {
+      store.setState({ [key]: value });
+    },
+    configurable: true,
+    enumerable: true,
+  });
+});
 // state.js
 
 // --- SEARCH ENGINE CONFIGURATION ---

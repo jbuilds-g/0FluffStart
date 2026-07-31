@@ -114,13 +114,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   if ("serviceWorker" in navigator) {
-    // updateViaCache: 'none' forces the browser to check the server directly for sw.js changes
     navigator.serviceWorker
       .register("./sw.js", { updateViaCache: "none" })
       .then((reg) => {
-        reg.update();
+        const lastCheck = sessionStorage.getItem("sw_last_check");
+        const now = Date.now();
+        if (!lastCheck || now - parseInt(lastCheck, 10) > 3600000) {
+          reg.update();
+          sessionStorage.setItem("sw_last_check", now.toString());
+        }
 
-        // If a new worker is waiting, tell it to skip waiting immediately
         if (reg.waiting) {
           reg.waiting.postMessage({ type: "SKIP_WAITING" });
         }
@@ -139,9 +142,8 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
       })
-      .catch((err) => console.log("SW Error: ", err));
+      .catch((err) => console.warn("SW Registration:", err));
 
-    // Automatically reload page when new SW takes control
     let refreshing = false;
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       if (!refreshing) {
@@ -153,11 +155,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initCustomSelects();
   bindStaticEvents();
-  renderLinks();
   loadSettings();
+  renderLinks();
   renderEngineDropdown();
   updateClock();
   setInterval(updateClock, 1000);
+
+  // --- REACTIVE STORE SUBSCRIPTION ---
+  store.subscribe(() => {
+    renderLinks();
+  });
 
   const searchInput = document.getElementById("searchInput");
   if (searchInput) searchInput.focus();
@@ -296,17 +303,17 @@ function bindStaticEvents() {
     ?.addEventListener("click", () => {
       if (selectedLinkIds.length === 0)
         return alert("Please select at least one link.");
-      links.forEach((link) => {
+      const updatedLinks = store.getState().links.map((link) => {
         if (selectedLinkIds.includes(link.id)) {
-          link.parentId = activeFolderId;
+          return { ...link, parentId: activeFolderId };
         }
+        return link;
       });
-      localStorage.setItem("0fluff_links", JSON.stringify(links));
+      store.setState({ links: updatedLinks });
       isSelectionMode = false;
       selectedLinkIds = [];
       activeFolderId = null;
       renderLinkManager();
-      renderLinks();
     });
 
   // --- OPTIMIZATION 2: SELECTIVE SETTINGS TRIGGERS ---
@@ -1009,10 +1016,11 @@ async function deleteLink(id, e) {
     "Delete Item?",
   );
   if (confirmed) {
-    links = links.filter((l) => l.id !== id && l.parentId !== id);
-    localStorage.setItem("0fluff_links", JSON.stringify(links));
+    const updatedLinks = store
+      .getState()
+      .links.filter((l) => l.id !== id && l.parentId !== id);
+    store.setState({ links: updatedLinks });
     if (currentFolderId === id) navigateToFolder(null);
-    else renderLinks();
     renderLinkManager();
     showToast("Item deleted", "info");
   }
@@ -1169,8 +1177,8 @@ function autoSaveSettings(changedSetting = null) {
   const forceDesktopToggle = document.getElementById("forceDesktopToggle");
   if (forceDesktopToggle) settings.forceDesktop = !!forceDesktopToggle.checked;
 
-  // 2. Synchronize to LocalStorage
-  localStorage.setItem("0fluff_settings", JSON.stringify(settings));
+  // 2. Synchronize through Centralized Store
+  store.setState({ settings: { ...settings } });
 
   // 3. Isolated UI Updates (Prevents Global Layout Thrashing)
   if (
@@ -1326,15 +1334,11 @@ function restoreData(e) {
         "Restore Backup?",
       );
       if (confirmed) {
-        localStorage.setItem("0fluff_links", JSON.stringify(data.links || []));
-        localStorage.setItem(
-          "0fluff_settings",
-          JSON.stringify(data.settings || {}),
-        );
-        localStorage.setItem(
-          "0fluff_history",
-          JSON.stringify(data.history || []),
-        );
+        store.setState({
+          links: data.links || [],
+          settings: data.settings || {},
+          searchHistory: data.history || [],
+        });
         showToast("Backup restored successfully", "success");
         setTimeout(() => window.location.reload(), 1000);
       }
@@ -1391,16 +1395,16 @@ function rgbToHue(r, g, b) {
 function applyMaterialYouTheme(hue) {
   const target = document.body;
 
-  target.style.setProperty("--bg", `hsl(${hue}, 20%, 10%)`);
-  target.style.setProperty("--card", `hsl(${hue}, 25%, 15%)`);
-  target.style.setProperty("--card-hover", `hsl(${hue}, 30%, 20%)`);
-  target.style.setProperty("--border", `hsl(${hue}, 20%, 25%)`);
-
-  // THE FIX: Pushed saturation to 50% and dropped lightness down to 75%
-  // This makes the tint much richer, darker, and more prominent!
-  target.style.setProperty("--text", `hsl(${hue}, 50%, 75%)`);
-
-  target.style.setProperty("--accent", `hsl(${hue}, 60%, 65%)`);
+  const baseSat = 25;
+  target.style.setProperty("--bg", `hsl(${hue}, ${baseSat}%, 8%)`);
+  target.style.setProperty("--card", `hsl(${hue}, ${baseSat + 5}%, 14%)`);
+  target.style.setProperty(
+    "--card-hover",
+    `hsl(${hue}, ${baseSat + 10}%, 19%)`,
+  );
+  target.style.setProperty("--border", `hsl(${hue}, ${baseSat}%, 24%)`);
+  target.style.setProperty("--text", `hsl(${hue}, 45%, 82%)`);
+  target.style.setProperty("--accent", `hsl(${hue}, 65%, 68%)`);
 }
 
 // The Trigger that starts the Engine
