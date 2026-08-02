@@ -352,14 +352,6 @@ function bindStaticEvents() {
       autoSaveSettings("forceDesktop"),
     );
 
-  const forceTranslucencyToggle = document.getElementById(
-    "forceTranslucencyToggle",
-  );
-  if (forceTranslucencyToggle)
-    forceTranslucencyToggle.addEventListener("change", () =>
-      autoSaveSettings("translucency"),
-    );
-
   const externalSuggestToggle = document.getElementById(
     "externalSuggestToggle",
   );
@@ -1071,17 +1063,6 @@ async function loadSettings() {
     );
   }
 
-  const forceTranslucencyToggle = document.getElementById(
-    "forceTranslucencyToggle",
-  );
-  if (forceTranslucencyToggle) {
-    forceTranslucencyToggle.checked = !!settings.forceTranslucency;
-    document.body.classList.toggle(
-      "force-translucent",
-      !!settings.forceTranslucency,
-    );
-  }
-
   const showSecondsToggle = document.getElementById("showSecondsToggle");
   if (showSecondsToggle)
     showSecondsToggle.checked = settings.showSeconds !== false;
@@ -1196,12 +1177,6 @@ function autoSaveSettings(changedSetting = null) {
   const forceDesktopToggle = document.getElementById("forceDesktopToggle");
   if (forceDesktopToggle) settings.forceDesktop = !!forceDesktopToggle.checked;
 
-  const forceTranslucencyToggle = document.getElementById(
-    "forceTranslucencyToggle",
-  );
-  if (forceTranslucencyToggle)
-    settings.forceTranslucency = !!forceTranslucencyToggle.checked;
-
   // 2. Synchronize through Centralized Store
   store.setState({ settings: { ...settings } });
 
@@ -1230,17 +1205,6 @@ function autoSaveSettings(changedSetting = null) {
     document.body.classList.toggle(
       "force-desktop-mode",
       !!settings.forceDesktop,
-    );
-  }
-
-  if (
-    !changedSetting ||
-    changedSetting === "translucency" ||
-    changedSetting === "theme"
-  ) {
-    document.body.classList.toggle(
-      "force-translucent",
-      !!settings.forceTranslucency,
     );
   }
 }
