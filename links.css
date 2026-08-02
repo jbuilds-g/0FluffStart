@@ -307,7 +307,7 @@ body.material .link-item:hover .link-icon-circle span {
     flex-direction: column !important;
     align-items: flex-start !important;
     text-align: left !important;
-    margin-top: 10px !important;
+    margin-top: max(28px, env(safe-area-inset-top, 28px)) !important;
   }
 
   body:not(.force-desktop-mode) .clock {
