@@ -1,0 +1,27 @@
+/* =========================================
+   1. GLOBAL VARIABLES & STACKING SCALE
+   ========================================= */
+:root {
+  /* Theme Colors & Tokens */
+  --bg: #000000;
+  --card: #141418;
+  --card-hover: #1e1e24;
+  --text: #ffffff;
+  --accent: #00aaff;
+  --dim: #888;
+  --border: #333;
+  --delete: #ff4d4d;
+  --radius: 12px;
+  --font-main:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --shadow: none;
+
+  /* Standardized Z-Index Stacking Context Scale */
+  --z-bg: -1;
+  --z-base: 0;
+  --z-floating: 50;
+  --z-dropdown: 100;
+  --z-modal: 1000;
+  --z-toast: 2000;
+}

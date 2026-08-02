@@ -1,0 +1,126 @@
+/* =========================================
+   UTILITY CLASSES & NOTIFICATIONS
+   ========================================= */
+
+/* --- DISPLAY UTILITIES --- */
+.hidden {
+  display: none !important;
+}
+
+body.modal-open {
+  overflow: hidden !important;
+}
+
+/* --- MOBILE SEARCH DOCK WRAPPER --- */
+.mobile-dock {
+  display: none !important;
+}
+
+@media (max-width: 850px) and (pointer: coarse) {
+  .mobile-dock {
+    display: block !important;
+    position: fixed !important;
+    bottom: 24px !important;
+    right: 24px !important;
+    width: 48px !important;
+    height: 48px !important;
+    z-index: var(--z-floating) !important;
+    pointer-events: none !important;
+  }
+
+  #mobileSearchBtn {
+    pointer-events: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    color: var(--text) !important;
+  }
+
+  #mobileSearchBtn svg {
+    width: 22px !important;
+    height: 22px !important;
+    display: block;
+  }
+
+  /* Hide mobile floating search button when desktop mode is active */
+  body.force-desktop-mode .mobile-dock {
+    display: none !important;
+  }
+}
+
+/* --- TOAST NOTIFICATION ENGINE --- */
+.toast-container {
+  position: fixed !important;
+  top: 24px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: var(--z-toast) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 10px !important;
+  pointer-events: none !important;
+  width: 90% !important;
+  max-width: 400px !important;
+}
+
+/* Offsets the container to center precisely when the 400px desktop drawer is open */
+@media (min-width: 768px) {
+  .toast-container {
+    left: calc(50% - 200px) !important;
+  }
+}
+
+.toast {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  font-size: 0.9rem;
+  font-family: var(--font-main);
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(-20px) scale(0.95);
+  transition:
+    opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.toast.success {
+  border-color: var(--accent);
+}
+
+.toast.error {
+  border-color: var(--delete);
+  color: var(--delete);
+}
+
+/* --- DEVICE-SPECIFIC SETTINGS VISIBILITY --- */
+@media (min-width: 851px) {
+  .mobile-only-setting {
+    display: none !important;
+  }
+}
+
+@media (max-width: 850px) and (pointer: coarse) {
+  .desktop-only-setting {
+    display: none !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+  }
+}

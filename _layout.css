@@ -1,0 +1,165 @@
+/* =========================================
+   CORE LAYOUT & HEADER STRUCTURE
+   ========================================= */
+
+/* Main Container */
+.container {
+  width: 100%;
+  max-width: 600px;
+  padding-bottom: 50px;
+}
+
+/* --- HEADER SECTION --- */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: -1px;
+}
+
+/* Header Buttons */
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.icon-btn:hover {
+  color: var(--accent);
+}
+
+/* --- CLOCK & GREETING --- */
+.clock {
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--accent);
+  margin-bottom: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.greeting {
+  font-size: 1rem;
+  color: var(--dim);
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+/* --- FLOATING CONTROLS --- */
+.floating-settings {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  bottom: auto;
+  left: auto;
+  z-index: var(--z-floating);
+  pointer-events: none;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.floating-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  cursor: pointer;
+  color: var(--text);
+  transition:
+    transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.3s,
+    background 0.3s;
+}
+
+.floating-btn svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.floating-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  background: var(--card-hover);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* --- DESKTOP OPTIMIZATIONS (Core Layout) --- */
+@media (min-width: 768px) {
+  .container {
+    max-width: 900px;
+    padding-top: 50px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  .clock {
+    font-size: 2.5rem;
+  }
+
+  .greeting {
+    font-size: 1.2rem;
+  }
+}
+
+/* --- TOUCH MOBILE OVERRIDES (Floating Settings) --- */
+@media (max-width: 850px) and (pointer: coarse) {
+  body:not(.force-desktop-mode) .floating-settings {
+    top: auto !important;
+    bottom: 92px !important;
+    right: 30px !important;
+    left: auto !important;
+    position: fixed !important;
+    z-index: var(--z-floating) !important;
+    pointer-events: none !important;
+    display: flex !important;
+    justify-content: center !important;
+    width: 36px !important;
+  }
+
+  body:not(.force-desktop-mode) #settingsToggleBtn {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    pointer-events: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  body.force-desktop-mode .floating-settings {
+    top: 24px !important;
+    right: 24px !important;
+    bottom: auto !important;
+    left: auto !important;
+  }
+}

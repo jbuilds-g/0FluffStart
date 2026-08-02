@@ -1,0 +1,63 @@
+/* =========================================
+   BASE RESETS, BODY & MEDIA OVERLAYS
+   ========================================= */
+* {
+  /* Disable the default mobile tap highlight flash */
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+body {
+  font-family: var(--font-main);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: var(--bg);
+  color: var(--text);
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- BACKGROUND OVERLAY --- */
+.bg-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: var(--z-bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+
+/* --- BACKGROUND VIDEO STYLING --- */
+.bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  object-fit: cover;
+  z-index: -2; /* Keeps it strictly behind the UI and overlay */
+  pointer-events: none;
+}
+
+.bg-video.hidden {
+  display: none;
+}

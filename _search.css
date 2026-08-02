@@ -1,0 +1,258 @@
+/* =========================================
+   SEARCH BAR & SUGGESTIONS SYSTEM
+   ========================================= */
+
+/* --- SEARCH CONTAINER --- */
+.search-bar,
+.search-container {
+  position: relative;
+  z-index: 1000 !important;
+  transform: translateZ(0);
+}
+
+.search-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  height: 50px;
+  background: var(--card-hover);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: border-radius 0.3s ease;
+}
+
+/* Material 3 Override: Full Pill Shape */
+body.material .search-bar {
+  border-radius: 999px; /* Stadium shape */
+  padding-left: 8px; /* Offset for the extreme curve */
+}
+
+#searchInput {
+  flex-grow: 1;
+  height: 100%;
+  padding: 0 16px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 1rem;
+  box-sizing: border-box;
+  font-family: var(--font-main);
+}
+
+#searchInput:focus {
+  outline: none;
+}
+
+.search-icon {
+  width: 50px;
+  height: 100%;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: transparent;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+/* Material 3 Override: Fix icon radius due to pill shape */
+body.material .search-icon {
+  border-radius: 0 999px 999px 0;
+  padding-right: 10px;
+}
+
+/* --- ENGINE SWITCHER --- */
+.engine-switcher {
+  position: relative;
+  height: 100%;
+  border-right: 1px solid var(--border);
+}
+
+body.material .engine-switcher {
+  border-right: none; /* Remove border for cleaner look */
+  padding-left: 5px;
+}
+
+.engine-btn {
+  height: 100%;
+  padding: 0 15px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-weight: bold;
+  font-family: var(--font-main);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 1rem;
+}
+
+/* --- SEARCH ENGINE SVG SIZING --- */
+.engine-switcher svg,
+#engineDropdown .engine-option svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: currentColor; /* For Bootstrap */
+  color: currentColor; /* For Lucide/Feather */
+}
+
+/* Engine Dropdown */
+.engine-dropdown {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 180px;
+  z-index: 9999;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.engine-dropdown.hidden {
+  display: none;
+}
+
+.engine-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: calc(var(--radius) - 4px);
+  transition: background 0.2s;
+  font-size: 0.9rem;
+  color: var(--text);
+  display: flex;
+  justify-content: space-between;
+}
+
+.engine-option:hover {
+  background: var(--card-hover);
+  color: var(--accent);
+}
+
+.engine-option.selected {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* --- SUGGESTIONS DROPDOWN --- */
+.suggestions-container {
+  position: absolute;
+  top: 58px;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  z-index: 999;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.suggestions-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* M3 Override for suggestions alignment with Pill shape */
+body.material .suggestions-container {
+  border-radius: 20px; /* Slightly less than pill */
+  margin: 0 10px; /* Indent slightly */
+  width: calc(100% - 20px);
+}
+
+.suggestion-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--text);
+  transition: background 0.1s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--card-hover);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background: var(--card-hover);
+}
+
+.suggestion-type {
+  font-size: 0.75rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--card-hover);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* --- MOBILE SEARCH OVERLAY SYSTEM --- */
+.search-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99;
+}
+
+.search-backdrop.active {
+  display: block;
+}
+
+/* Hide the default inline search bar on mobile (unless desktop mode is forced or expanded) */
+@media (max-width: 850px) and (pointer: coarse) {
+  body:not(.force-desktop-mode) .search-bar:not(.mobile-expanded) {
+    display: none !important;
+  }
+}
+
+/* Force visibility and positioning when expanded */
+.search-bar.mobile-expanded {
+  display: flex !important;
+  position: fixed !important;
+  top: 16px !important;
+  left: 16px !important;
+  right: 16px !important;
+  width: calc(100% - 32px) !important;
+  z-index: 100 !important;
+  margin: 0 !important;
+}
+
+/* --- DESKTOP SEARCH OPTIMIZATIONS --- */
+@media (min-width: 768px) {
+  .search-bar {
+    height: 60px;
+  }
+  .engine-btn {
+    padding: 0 20px;
+  }
+  #searchInput {
+    font-size: 1.1rem;
+  }
+  .suggestions-container {
+    top: 68px;
+  }
+}

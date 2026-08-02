@@ -1,0 +1,429 @@
+/* =========================================
+   DASHBOARD LINK GRID & ICON SYSTEM
+   ========================================= */
+
+/* --- LINK GRID --- */
+.link-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  justify-content: center;
+}
+
+.link-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.link-item:active {
+  transform: scale(0.96);
+}
+
+.link-icon-circle {
+  width: 56px;
+  height: 56px;
+  background: var(--card);
+  border-radius: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition:
+    transform 0.2s,
+    border-radius 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+/* Theme specific overrides */
+body.cyberpunk .link-icon-circle {
+  border-radius: 0;
+}
+body.sunset .link-icon-circle {
+  border-radius: 50%;
+}
+
+/* Material 3 Expressive Logic */
+body.material .link-icon-circle {
+  border-radius: 22px; /* Super Squircle */
+  background: var(--card-hover); /* Lighter container */
+  border: none; /* No borders in M3, just elevation/tone */
+}
+
+/* The Morphing Interaction */
+body.material .link-item:hover .link-icon-circle {
+  border-radius: 50%; /* Morph to circle on hover */
+  background: var(--text); /* High contrast interaction */
+  transform: rotate(3deg) scale(1.05); /* Playful tilt */
+}
+body.material .link-item:hover .link-icon-circle span {
+  color: var(--bg) !important;
+}
+
+.link-icon-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.link-name {
+  color: var(--text);
+  font-size: 0.75rem;
+  text-align: center;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.9;
+}
+
+.link-acronym {
+  font-family: var(--font-main);
+  font-weight: 800;
+  color: var(--accent);
+}
+
+/* --- SMART TITLE HOVER LOGIC --- */
+/* If the user has NOT checked "Show Titles", hide them by default... */
+.link-grid:not(.show-titles) .link-name {
+  display: block !important;
+  opacity: 0;
+  transform: translateY(5px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+  pointer-events: none; /* Prevents invisible titles from blocking clicks */
+}
+
+/* Show title when hovering over the item */
+.link-grid:not(.show-titles) .link-item:hover .link-name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* If the user HAS checked "Show Titles", keep them visible normally */
+.link-grid.show-titles .link-name {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* --- LINK EDIT OVERLAY --- */
+.link-edit-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: var(--card-hover);
+  border-radius: 50%;
+
+  /* HIDE & DISABLE BY DEFAULT */
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important; /* Block interaction when invisible */
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
+  z-index: 10;
+}
+
+/* Show on Hover (Desktop) */
+.link-item:hover .link-edit-overlay {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: all !important; /* Allow click on hover */
+}
+
+.link-edit-overlay .edit-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--text);
+}
+
+/* Force show on smaller screens for better touch target */
+@media (max-width: 480px) {
+  .link-edit-overlay {
+    opacity: 0.8 !important;
+    visibility: visible !important;
+    pointer-events: all !important;
+  }
+}
+
+/* --- THE SOLID PILL BACK BUTTON --- */
+.folder-exit-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0 20px;
+  width: 100%;
+}
+
+.back-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* 8px padding on the left to tightly hug the circle, 24px on right for the text */
+  padding: 8px 24px 8px 8px;
+  background: var(--card-bg); /* Solid color 1 (Main Element) */
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  color: var(--text);
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Inner circle for arrow */
+.back-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--accent); /* Solid color 2 (Circle Element) */
+  border-radius: 50%;
+  color: var(--bg); /* Keeps arrow visible against accent color */
+}
+
+.back-icon-circle svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Solid hover state */
+.back-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent);
+}
+
+/* --- DESKTOP LINK GRID OVERRIDES --- */
+@media (min-width: 768px) {
+  .link-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+  }
+  .link-icon-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: calc(var(--radius) + 2px);
+  }
+
+  body.material .link-icon-circle {
+    border-radius: 26px;
+  }
+
+  .link-name {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .link-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+}
+
+/* --- MOBILE HORIZONTAL TOUCH-SCROLLING GRID LOGIC --- */
+@media (max-width: 850px) and (pointer: coarse) {
+  .container {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100dvh !important; /* Full viewport height */
+    padding-bottom: 0 !important;
+  }
+
+  .link-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    touch-action: pan-x !important;
+    scroll-snap-type: x mandatory;
+    gap: 15px;
+
+    /* Viewport alignment for right-side scroll physics */
+    width: 100vw !important;
+    margin-left: -20px !important;
+    padding-left: 20px !important;
+    padding-right: 100px !important;
+    box-sizing: border-box !important;
+  }
+
+  .link-grid:not(:has(.folder-exit-container)) {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      black 0%,
+      black calc(100% - 110px),
+      transparent calc(100% - 20px)
+    );
+    mask-image: linear-gradient(
+      to right,
+      black 0%,
+      black calc(100% - 110px),
+      transparent calc(100% - 20px)
+    );
+  }
+
+  .link-grid {
+    margin-top: auto !important;
+    margin-bottom: 90px !important;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .link-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .link-grid > * {
+    scroll-snap-align: start;
+    flex: 0 0 auto !important;
+  }
+
+  body:not(.force-desktop-mode) header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    margin-top: 10px !important;
+  }
+
+  body:not(.force-desktop-mode) .clock {
+    font-size: 2.8rem !important;
+    font-weight: 400 !important;
+  }
+
+  body:not(.force-desktop-mode) .greeting {
+    font-size: 1.25rem !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Center and scale Back Button for Mobile */
+  .folder-exit-container {
+    position: fixed !important;
+    bottom: 24px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    padding: 0 !important;
+    width: auto !important;
+    z-index: 50 !important;
+  }
+
+  .back-pill {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+    padding: 6px 16px 6px 6px !important;
+    font-size: 0.75rem !important;
+    gap: 8px !important;
+  }
+
+  .back-pill .back-icon-circle {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .back-pill .back-icon-circle svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  /* Lock mobile touch items */
+  body:not(.force-desktop-mode) .link-grid .link-item:active {
+    transform: none !important;
+  }
+
+  body:not(.force-desktop-mode) .link-grid .link-item:hover .link-icon-circle,
+  body:not(.force-desktop-mode) .link-grid .link-item:active .link-icon-circle {
+    transform: none !important;
+    background: var(--card) !important;
+    box-shadow: var(--shadow) !important;
+  }
+
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:hover
+    .link-icon-circle
+    span,
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:active
+    .link-icon-circle
+    span {
+    color: var(--accent) !important;
+  }
+
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:hover
+    .link-icon-circle
+    svg,
+  body:not(.force-desktop-mode)
+    .link-grid
+    .link-item:active
+    .link-icon-circle
+    svg {
+    stroke: var(--accent) !important;
+  }
+
+  /* Force Titles visible on mobile */
+  .link-grid .link-name {
+    opacity: 1 !important;
+    transform: none !important;
+    display: block !important;
+    pointer-events: auto !important;
+  }
+
+  /* Force Desktop Mode Grid Overrides */
+  body.force-desktop-mode .container {
+    height: auto !important;
+    padding-bottom: 50px !important;
+    display: block !important;
+  }
+
+  body.force-desktop-mode .link-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    flex-direction: unset !important;
+    overflow-x: visible !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: content-box !important;
+    margin-top: 20px !important;
+    margin-bottom: 0 !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+  }
+
+  body.force-desktop-mode .folder-exit-container {
+    position: static !important;
+    transform: none !important;
+  }
+
+  body.force-desktop-mode .back-pill {
+    padding: 8px 24px 8px 8px !important;
+    font-size: 0.85rem !important;
+  }
+}
