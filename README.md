@@ -43,11 +43,18 @@
 
 Install 0FluffStart locally to override your "New Tab" page.
 
-1.  **Download** the latest source code from the [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) page.
-2.  **Extract** the archive to a local directory.
-3.  Navigate to your browser's extension management page `chrome://extensions`.
-4.  Enable **Developer Mode** in the top-right corner.
-5.  Select **Load Unpacked** and point to the extracted folder.
+#### **Firefox Users**
+
+1. **Download** `0FluffStart.xpi` from the [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) page.
+2. **Drag and drop** the `.xpi` file directly into Firefox (or open `about:addons` → gear icon → _Install Add-on From File..._).
+
+#### **Chromium Users (Chrome, Edge, Brave)**
+
+1. **Download** the source code `.zip` from the [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) page.
+2. **Extract** the archive to a local directory.
+3. Navigate to `chrome://extensions` in your browser.
+4. Enable **Developer Mode** in the top-right corner.
+5. Select **Load Unpacked** and select the extracted folder.
 
 ### Mobile & Live Web (PWA)
 
