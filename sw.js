@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluff-v81";
+const CACHE_NAME = "0fluff-v82";
 
 const ASSETS = [
   "./",

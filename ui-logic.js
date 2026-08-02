@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }
-  if ("serviceWorker" in navigator) {
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
     navigator.serviceWorker
       .register("./sw.js", { updateViaCache: "none" })
       .then((reg) => {

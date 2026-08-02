@@ -7,8 +7,17 @@
     "newtab": "index.html"
   },
   "permissions": ["storage", "unlimitedStorage"],
-  "start_url": "./index.html",
-  "display": "standalone",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "0fluffstart@extension.local",
+      "strict_min_version": "109.0"
+    }
+  },
+  "host_permissions": [
+    "https://ac.duckduckgo.com/*",
+    "https://corsproxy.io/*",
+    "https://api.allorigins.win/*"
+  ],
   "icons": {
     "16": "icon.png",
     "48": "icon.png",
