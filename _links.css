@@ -176,7 +176,7 @@ body.material .link-item:hover .link-icon-circle span {
   gap: 12px;
   /* 8px padding on the left to tightly hug the circle, 24px on right for the text */
   padding: 8px 24px 8px 8px;
-  background: var(--card-bg); /* Solid color 1 (Main Element) */
+  background: var(--card); /* Solid color 1 (Main Element) */
   border: 1px solid var(--border);
   border-radius: 50px;
   color: var(--text);

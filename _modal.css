@@ -128,20 +128,19 @@
 
 /* --- COLLAPSIBLE CATEGORIES --- */
 .category-panel {
-  background: transparent;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 5px;
-}
-
-.category-panel:last-of-type {
-  border-bottom: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .category-panel summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 5px;
+  padding: 14px 16px;
   font-size: 1rem;
   font-weight: 600;
   color: var(--text);
@@ -165,7 +164,7 @@
 }
 
 .category-content {
-  padding: 10px 5px 20px 5px;
+  padding: 0 16px 16px 16px;
   animation: fadeIn 0.3s ease;
 }
 

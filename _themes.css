@@ -316,6 +316,16 @@ body.heatwave .link-item:hover .link-icon-circle span {
   color: var(--accent) !important;
 }
 
+body.retro .link-item:hover .link-icon-circle svg,
+body.cyberpunk .link-item:hover .link-icon-circle svg,
+body.paper .link-item:hover .link-icon-circle svg,
+body.slate .link-item:hover .link-icon-circle svg,
+body.toxic-tide .link-item:hover .link-icon-circle svg,
+body.heatwave .link-item:hover .link-icon-circle svg {
+  stroke: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
 /* CATEGORY B: THE SQUIRCLES (Premium Soft Morph) */
 body.forest .link-icon-circle,
 body.rose .link-icon-circle,
@@ -339,6 +349,14 @@ body.forest .link-item:hover .link-icon-circle span,
 body.rose .link-item:hover .link-icon-circle span,
 body.luminous .link-item:hover .link-icon-circle span,
 body.light .link-item:hover .link-icon-circle span {
+  color: var(--accent) !important;
+}
+
+body.forest .link-item:hover .link-icon-circle svg,
+body.rose .link-item:hover .link-icon-circle svg,
+body.luminous .link-item:hover .link-icon-circle svg,
+body.light .link-item:hover .link-icon-circle svg {
+  stroke: var(--accent) !important;
   color: var(--accent) !important;
 }
 
@@ -368,5 +386,14 @@ body.nord .link-item:hover .link-icon-circle span,
 body.sunset .link-item:hover .link-icon-circle span,
 body.night-glow .link-item:hover .link-icon-circle span,
 body.material-you .link-item:hover .link-icon-circle span {
+  color: var(--bg) !important;
+}
+
+body.evergreen-archive .link-item:hover .link-icon-circle svg,
+body.nord .link-item:hover .link-icon-circle svg,
+body.sunset .link-item:hover .link-icon-circle svg,
+body.night-glow .link-item:hover .link-icon-circle svg,
+body.material-you .link-item:hover .link-icon-circle svg {
+  stroke: var(--bg) !important;
   color: var(--bg) !important;
 }
