@@ -1,11 +1,8 @@
-/* =========================================
-   MASTER ENTRY MANIFEST
-   ========================================= */
-@import "_variables.css";
-@import "_base.css";
-@import "_layout.css";
-@import "_search.css";
-@import "_links.css";
-@import "_modal.css";
-@import "_themes.css";
-@import "_utilities.css";
+@import "variables.css";
+@import "base.css";
+@import "layout.css";
+@import "search.css";
+@import "links.css";
+@import "modal.css";
+@import "themes.css";
+@import "utilities.css";
