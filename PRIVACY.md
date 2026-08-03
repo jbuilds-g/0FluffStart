@@ -26,4 +26,4 @@
 
 ## 4. Contact
 
-For questions or concerns regarding this privacy policy, open an issue on the official GitHub repository: [https://github.com/jbuilds-g/0FluffStart](https://github.com/jbuilds-g/0FluffStart)
+For questions or concerns regarding this privacy policy, open an issue on the official [GitHub repository](https://github.com/jbuilds-g/0FluffStart/issues)
