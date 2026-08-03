@@ -125,5 +125,5 @@ All configuration is stored in the browser's `localStorage` and `IndexedDB`. To 
 ├── state.js           # Data persistence & state management
 ├── ui-logic.js        # DOM interaction & event handling
 ├── utilities.js       # Search APIs & helper functions
-└── core.css              # Modular stylesheets (Themes, Core, Layout, Settings)
+└── css/                  # Modular architecture (9 split stylesheets)
 ```

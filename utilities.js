@@ -113,10 +113,8 @@ async function fetchExternalSuggestions(query) {
       const res = await fetch(proxyUrl, { signal });
       if (res.ok) {
         const data = await res.json();
-        // Handle direct array returns (like corsproxy)
         if (Array.isArray(data))
           return data.map((item) => item.phrase).filter((p) => p);
-        // Handle wrapped contents (like allorigins)
         if (data.contents) {
           const innerData = JSON.parse(data.contents);
           if (Array.isArray(innerData))
@@ -124,9 +122,12 @@ async function fetchExternalSuggestions(query) {
         }
       }
     } catch (e) {
-      if (e.name === "AbortError") return [];
-      console.warn("Custom proxy failed, falling back to defaults...", e);
+      if (e.name !== "AbortError") {
+        console.error("Custom proxy failed for suggestions.", e);
+      }
     }
+    // Return early when a custom proxy is set so default public proxies are bypassed
+    return [];
   }
 
   // STRATEGY 1: Corsproxy.io
