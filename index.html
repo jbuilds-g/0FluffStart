@@ -539,7 +539,7 @@
           <div class="category-content">
             <div class="setting-group">
               <div class="setting-header">
-                <h3>External Search Suggestions</h3>
+                <h3>Live Search Suggestions</h3>
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
@@ -547,79 +547,81 @@
                 as you type.
                 <br /><br />
                 <span style="opacity: 0.85">
-                  ⚠️ <b>Privacy Note:</b> To bypass browser restrictions, this
-                  feature routes your keystrokes through a public or custom
-                  proxy. Keep this disabled if you prefer strictly local
-                  searches.
+                  ⚠️ <b>Privacy Note:</b> Requests are routed through a secure
+                  proxy layer to enable cross-origin suggestions. Keep disabled
+                  if you prefer strictly local searches.
                 </span>
               </div>
               <label class="radio-option radio-option-start-sm">
                 <input type="checkbox" id="externalSuggestToggle" /> Enable Live
                 Suggestions
               </label>
-              <label
-                class="radio-option radio-option-start-sm"
-                style="margin-top: 8px"
-              >
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Suggestion Caching</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Stores recent suggestion results in temporary local memory to
+                accelerate response times and minimize network requests.
+              </div>
+              <label class="radio-option radio-option-start-sm">
                 <input type="checkbox" id="cacheSuggestToggle" checked /> Cache
                 Search Suggestions
               </label>
+            </div>
 
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Suggestion Provider</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Choose your preferred autocomplete provider or let Automatic
+                match your active search engine with fallback support.
+              </div>
               <div
-                class="setting-item"
-                style="margin-top: 12px; margin-bottom: 12px"
+                class="custom-select"
+                id="suggestProviderSelect"
+                data-value="auto"
               >
-                <label class="custom-proxy-label"
-                  >Suggestion Engine Provider</label
-                >
-                <div
-                  class="custom-select"
-                  id="suggestProviderSelect"
-                  data-value="auto"
-                >
-                  <div class="select-trigger">
-                    <span class="selected-text"
-                      >Automatic (Smart Match & Fallback)</span
-                    >
-                    <svg
-                      class="chevron"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
+                <div class="select-trigger">
+                  <span class="selected-text"
+                    >Automatic (Smart Match & Fallback)</span
+                  >
+                  <span class="select-arrow">▼</span>
+                </div>
+                <div class="select-dropdown hidden">
+                  <div class="select-option selected" data-value="auto">
+                    Automatic (Smart Match & Fallback)
                   </div>
-                  <div class="select-dropdown hidden">
-                    <div class="select-option selected" data-value="auto">
-                      Automatic (Smart Match & Fallback)
-                    </div>
-                    <div class="select-option" data-value="DuckDuckGo">
-                      DuckDuckGo
-                    </div>
-                    <div class="select-option" data-value="Google">Google</div>
-                    <div class="select-option" data-value="Bing">Bing</div>
-                    <div class="select-option" data-value="Brave">Brave</div>
+                  <div class="select-option" data-value="DuckDuckGo">
+                    DuckDuckGo
                   </div>
+                  <div class="select-option" data-value="Google">Google</div>
+                  <div class="select-option" data-value="Bing">Bing</div>
+                  <div class="select-option" data-value="Brave">Brave</div>
                 </div>
               </div>
+            </div>
 
-              <div id="customProxyContainer" class="custom-proxy-container">
-                <label for="customProxyInput" class="custom-proxy-label"
-                  >Custom Proxy URL (Optional)</label
-                >
-                <input
-                  type="url"
-                  id="customProxyInput"
-                  placeholder="e.g., https://my-proxy.com/?"
-                  class="custom-proxy-input"
-                />
+            <div class="setting-group" id="customProxyContainer">
+              <div class="setting-header">
+                <h3>Custom Proxy Endpoint</h3>
+                <button class="help-btn">?</button>
               </div>
+              <div class="help-text">
+                Specify an optional custom reverse proxy endpoint URL if you
+                prefer not to use the default serverless Cloudflare Edge Worker.
+              </div>
+              <input
+                type="url"
+                id="customProxyInput"
+                placeholder="e.g., https://my-proxy.com/?"
+                class="custom-proxy-input"
+              />
             </div>
 
             <div class="setting-group">
@@ -628,8 +630,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Keeps a private local log of your recent searches for quicker
-                access later.
+                Keeps a private local log of your recent searches on this device
+                for instant access in the dashboard search bar.
               </div>
               <label class="radio-option radio-option-start-sm">
                 <input type="checkbox" id="historyEnabledToggle" /> Enable Local

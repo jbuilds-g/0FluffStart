@@ -713,6 +713,16 @@ select:hover {
   border: 1px solid var(--border);
 }
 
+.mobile-only-setting {
+  display: none !important;
+}
+
+@media (max-width: 850px) and (pointer: coarse) {
+  body:not(.force-desktop-mode) .mobile-only-setting {
+    display: block !important;
+  }
+}
+
 .setting-group-desktop {
   margin-top: 20px;
 }
