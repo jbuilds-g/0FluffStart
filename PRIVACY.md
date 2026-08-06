@@ -12,13 +12,12 @@
 ## 2. External Network Requests
 
 - **Disabled by Default:** 0FluffStart does not send network requests out of the box. Search auto-suggestions are strictly opt-in and can be toggled on or off in Settings at any time.
-- **Why Proxies Are Used:** DuckDuckGo (`ac.duckduckgo.com`) does not return cross-origin (CORS) headers for web or PWA environments. To make live suggestion queries work, requests must pass through a proxy.
+- **Why Proxies Are Used:** Upstream search autocomplete APIs (Google, Bing, DuckDuckGo, Brave) do not return permissive cross-origin (CORS) headers for standard web, PWA, or extension environments. To make live search suggestions work securely across origins, requests pass through a dedicated proxy layer.
 - **Strict Execution Chain:**
-  1. **Custom Proxy (User-Defined):** If you configure a custom proxy URL in Settings, all suggestion requests pass exclusively through that URL. Fallback proxies are bypassed entirely.
-  2. **Default Proxy Fallback:** If no custom proxy is set, requests attempt to load via `corsproxy.io`. If that request fails, it automatically falls back to `api.allorigins.win`.
-- **Zero Tracking:** Suggestion requests contain only your raw search query. No cookies, persistent identifiers, or telemetry data are ever attached or transmitted.
-
-* **Zero Tracking:** Suggestion requests contain only your raw search query. No cookies, persistent identifiers, or telemetry data are ever attached or transmitted.. Data Control & Portability
+  1. **Custom Proxy (User-Defined):** If you configure a custom proxy URL in Settings, all suggestion requests pass exclusively through that URL.
+  2. **Cloudflare Edge Worker Proxy (Default):** If no custom proxy is defined, requests are routed through a dedicated serverless Cloudflare Edge Worker (`0fluffstart-suggest-proxy.jbuilds.workers.dev`). It enforces origin verification and rate-limiting (40 requests per minute per IP) to prevent service abuse without logging user queries or personal identifiers.
+  3. **AllOrigins Fallback:** If the primary edge worker is unreachable or rate-limited, requests automatically fall back to `api.allorigins.win`.
+- **Zero Tracking:** Suggestion requests carry only the raw query string and target search engine parameter. No cookies, persistent identifiers, or telemetry data are ever attached, logged, or stored.
 
 ## 3. Data Control & Portability
 
@@ -27,3 +26,7 @@
 ## 4. Contact
 
 For questions or concerns regarding this privacy policy, open an issue on the official [GitHub repository](https://github.com/jbuilds-g/0FluffStart/issues)
+
+---
+
+> **Policy Version:** 1.0.0

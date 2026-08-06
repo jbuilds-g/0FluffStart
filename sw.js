@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluff-v83";
+const CACHE_NAME = "0fluff-v84";
 
 const ASSETS = [
   "./",
@@ -9,6 +9,7 @@ const ASSETS = [
   "./store.js",
   "./state.js",
   "./utilities.js",
+  "./suggestions.js",
   "./ui-logic.js",
   "./icon.png",
 ];

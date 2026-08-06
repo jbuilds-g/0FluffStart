@@ -557,6 +557,58 @@
                 <input type="checkbox" id="externalSuggestToggle" /> Enable Live
                 Suggestions
               </label>
+              <label
+                class="radio-option radio-option-start-sm"
+                style="margin-top: 8px"
+              >
+                <input type="checkbox" id="cacheSuggestToggle" checked /> Cache
+                Search Suggestions
+              </label>
+
+              <div
+                class="setting-item"
+                style="margin-top: 12px; margin-bottom: 12px"
+              >
+                <label class="custom-proxy-label"
+                  >Suggestion Engine Provider</label
+                >
+                <div
+                  class="custom-select"
+                  id="suggestProviderSelect"
+                  data-value="auto"
+                >
+                  <div class="select-trigger">
+                    <span class="selected-text"
+                      >Automatic (Smart Match & Fallback)</span
+                    >
+                    <svg
+                      class="chevron"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </div>
+                  <div class="select-dropdown hidden">
+                    <div class="select-option selected" data-value="auto">
+                      Automatic (Smart Match & Fallback)
+                    </div>
+                    <div class="select-option" data-value="DuckDuckGo">
+                      DuckDuckGo
+                    </div>
+                    <div class="select-option" data-value="Google">Google</div>
+                    <div class="select-option" data-value="Bing">Bing</div>
+                    <div class="select-option" data-value="Brave">Brave</div>
+                  </div>
+                </div>
+              </div>
+
               <div id="customProxyContainer" class="custom-proxy-container">
                 <label for="customProxyInput" class="custom-proxy-label"
                   >Custom Proxy URL (Optional)</label
@@ -743,7 +795,7 @@
     <script src="store.js"></script>
     <script src="state.js"></script>
     <script src="utilities.js"></script>
-    <script src="ui-logic.js"></script>
+    <script type="module" src="ui-logic.js"></script>
 
     <div class="mobile-dock floating-search" id="mobileDock">
       <button class="floating-btn" id="mobileSearchBtn">

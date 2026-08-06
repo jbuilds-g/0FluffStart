@@ -1,6 +1,14 @@
-/* global links:writable, settings, isEditMode, isEditingId:writable, searchEngines */
-/* global renderEngineDropdown, loadSettings, updateClock, autoSaveSettings, logSearch, handleSuggestions, clearHistory */
-/* global fetchExternalSuggestions, selectSuggestion, saveBgToDB, getBgFromDB */
+/* global links:writable, settings, isEditingId:writable, searchEngines, store, customConfirm, showToast */
+/* global renderEngineDropdown, loadSettings, updateClock, autoSaveSettings */
+/* global saveBgToDB, getBgFromDB, handleImageUpload, clearBackground, triggerMaterialYou */
+
+import {
+  handleSuggestions,
+  handleSuggestionKeyDown,
+  logSearch,
+  clearHistory,
+  clearSuggestionCache,
+} from "./suggestions.js";
 
 // --- STATE ---
 let currentFolderId = null;
@@ -220,9 +228,31 @@ function bindStaticEvents() {
     );
 
   const searchInput = document.getElementById("searchInput");
-  if (searchInput) {
-    searchInput.addEventListener("input", handleSuggestions);
-    searchInput.addEventListener("keypress", handleSearch);
+  const suggestionsContainer = document.getElementById("suggestionsContainer");
+
+  if (searchInput && suggestionsContainer) {
+    searchInput.addEventListener("input", (e) => {
+      handleSuggestions(e, {
+        links: store.getState().links || [],
+        settings: store.getState().settings || {},
+        searchHistory: store.getState().searchHistory || [],
+        inputEl: searchInput,
+        containerEl: suggestionsContainer,
+        selectSuggestionFn: selectSuggestion,
+      });
+    });
+
+    searchInput.addEventListener("keydown", (e) => {
+      handleSuggestionKeyDown(
+        e,
+        searchInput,
+        suggestionsContainer,
+        selectSuggestion,
+      );
+      if (!e.defaultPrevented) {
+        handleSearch(e);
+      }
+    });
   }
 
   const githubBtn = document.getElementById("githubBtn");
@@ -360,6 +390,20 @@ function bindStaticEvents() {
       autoSaveSettings("suggestions"),
     );
 
+  const suggestProviderSelect = document.getElementById(
+    "suggestProviderSelect",
+  );
+  if (suggestProviderSelect)
+    suggestProviderSelect.addEventListener("change", () =>
+      autoSaveSettings("suggestions"),
+    );
+
+  const cacheSuggestToggle = document.getElementById("cacheSuggestToggle");
+  if (cacheSuggestToggle)
+    cacheSuggestToggle.addEventListener("change", () =>
+      autoSaveSettings("suggestions"),
+    );
+
   const customProxyInput = document.getElementById("customProxyInput");
   if (customProxyInput)
     customProxyInput.addEventListener("input", debouncedSaveProxy);
@@ -424,7 +468,16 @@ function bindStaticEvents() {
   }
 
   const clearHistoryBtn = document.getElementById("clearHistoryBtn");
-  if (clearHistoryBtn) clearHistoryBtn.addEventListener("click", clearHistory);
+  if (clearHistoryBtn) {
+    clearHistoryBtn.addEventListener("click", () => {
+      clearHistory({
+        store,
+        customConfirmFn: customConfirm,
+        showToastFn: showToast,
+        inputEl: document.getElementById("searchInput"),
+      });
+    });
+  }
 
   const backupDataBtn = document.getElementById("backupDataBtn");
   if (backupDataBtn) backupDataBtn.addEventListener("click", backupData);
@@ -1044,6 +1097,15 @@ async function loadSettings() {
   if (externalSuggestToggle)
     externalSuggestToggle.checked = !!settings.externalSuggest;
 
+  const cacheSuggestToggle = document.getElementById("cacheSuggestToggle");
+  if (cacheSuggestToggle)
+    cacheSuggestToggle.checked = settings.cacheSuggestions !== false;
+
+  setCustomSelectValue(
+    "suggestProviderSelect",
+    settings.suggestProvider || "auto",
+  );
+
   const customProxyInput = document.getElementById("customProxyInput");
   if (customProxyInput) customProxyInput.value = settings.customProxyUrl || "";
 
@@ -1163,6 +1225,18 @@ function autoSaveSettings(changedSetting = null) {
   );
   if (externalSuggestToggle)
     settings.externalSuggest = !!externalSuggestToggle.checked;
+
+  const cacheSuggestToggle = document.getElementById("cacheSuggestToggle");
+  if (cacheSuggestToggle) {
+    const enabled = !!cacheSuggestToggle.checked;
+    settings.cacheSuggestions = enabled;
+    if (!enabled) {
+      clearSuggestionCache();
+    }
+  }
+
+  const suggestProviderVal = getCustomSelectValue("suggestProviderSelect");
+  if (suggestProviderVal) settings.suggestProvider = suggestProviderVal;
 
   const customProxyInput = document.getElementById("customProxyInput");
   if (customProxyInput) settings.customProxyUrl = customProxyInput.value.trim();
@@ -1284,7 +1358,7 @@ function handleSearch(e) {
   if (e.key === "Enter" || e.type === "click") {
     const val = document.getElementById("searchInput")?.value.trim();
     if (!val) return;
-    logSearch(val);
+    logSearch(val, store);
     const engine =
       searchEngines.find((s) => s.name === settings.searchEngine) ||
       searchEngines[0];
