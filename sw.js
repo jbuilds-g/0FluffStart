@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluff-v87";
+const CACHE_NAME = "0fluff-v88";
 
 const ASSETS = [
   "./",
@@ -52,13 +52,20 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// 3. FETCH: Stale-While-Revalidate Strategy for Instant Load
+// 3. FETCH: Hybrid Strategy (Network-First for Core Assets, Stale-While-Revalidate for Others)
 self.addEventListener("fetch", (event) => {
   if (!event.request.url.startsWith("http")) return;
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      const fetchPromise = fetch(event.request)
+  const requestUrl = new URL(event.request.url);
+  const isCoreAsset = ASSETS.some((asset) => {
+    const assetUrl = new URL(asset, self.location.origin);
+    return assetUrl.pathname === requestUrl.pathname;
+  });
+
+  if (isCoreAsset) {
+    // Network-First Strategy for Core Application Assets
+    event.respondWith(
+      fetch(event.request)
         .then((networkResponse) => {
           if (
             networkResponse &&
@@ -72,9 +79,30 @@ self.addEventListener("fetch", (event) => {
           }
           return networkResponse;
         })
-        .catch(() => cachedResponse);
+        .catch(() => caches.match(event.request)),
+    );
+  } else {
+    // Stale-While-Revalidate Strategy for Non-Core Requests
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        const fetchPromise = fetch(event.request)
+          .then((networkResponse) => {
+            if (
+              networkResponse &&
+              networkResponse.status === 200 &&
+              networkResponse.type === "basic"
+            ) {
+              const responseToCache = networkResponse.clone();
+              caches
+                .open(CACHE_NAME)
+                .then((cache) => cache.put(event.request, responseToCache));
+            }
+            return networkResponse;
+          })
+          .catch(() => cachedResponse);
 
-      return cachedResponse || fetchPromise;
-    }),
-  );
+        return cachedResponse || fetchPromise;
+      }),
+    );
+  }
 });
