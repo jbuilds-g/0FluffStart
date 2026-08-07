@@ -887,3 +887,40 @@ input[type="url"].bg-url-input {
   background: var(--delete);
   color: var(--text);
 }
+
+/* --- SCROLL TO TOP FLOATING BUTTON --- */
+.scroll-to-top-btn {
+  position: sticky;
+  bottom: 20px;
+  align-self: flex-end;
+  margin-top: -46px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.scroll-to-top-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.scroll-to-top-btn.hidden {
+  display: none !important;
+}

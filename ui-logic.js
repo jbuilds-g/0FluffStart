@@ -1,6 +1,6 @@
 /* global links:writable, settings, isEditingId:writable, searchEngines, store, customConfirm, showToast */
 /* global renderEngineDropdown, loadSettings, updateClock, autoSaveSettings */
-/* global saveBgToDB, getBgFromDB, handleImageUpload, clearBackground, triggerMaterialYou */
+/* global saveBgToDB, getBgFromDB, handleImageUpload, clearBackground */
 
 import {
   handleSuggestions,
@@ -9,6 +9,9 @@ import {
   clearHistory,
   clearSuggestionCache,
 } from "./suggestions.js";
+import { MaterialYouEngine } from "./material-you-engine.js";
+
+const materialYouEngine = new MaterialYouEngine();
 
 // --- STATE ---
 let currentFolderId = null;
@@ -261,18 +264,96 @@ function bindStaticEvents() {
       window.open("https://github.com/jbuilds-g/0FluffStart", "_blank"),
     );
 
+  let isBulkAnimating = false;
+
+  function updateScrollToTopBtn() {
+    const btn = document.getElementById("scrollToTopBtn");
+    const modalContent = document.querySelector(
+      "#settingsModal .modal-content",
+    );
+    if (!btn || !modalContent) return;
+
+    const panels = Array.from(
+      document.querySelectorAll("#settingsModal details.category-panel"),
+    ).filter((panel) => panel.offsetParent !== null);
+
+    const nonTopExpanded = panels.slice(1).some((panel) => panel.open);
+    const isScrolledDown = modalContent.scrollTop > 30;
+
+    btn.classList.toggle("hidden", !(nonTopExpanded && isScrolledDown));
+  }
+
+  async function animateToggleAllCategories() {
+    const modalContent = document.querySelector(
+      "#settingsModal .modal-content",
+    );
+    const panels = Array.from(
+      document.querySelectorAll("#settingsModal details.category-panel"),
+    ).filter((panel) => panel.offsetParent !== null);
+
+    if (!panels.length || !modalContent) return;
+
+    const openPanels = panels.filter((p) => p.open);
+    const closedPanels = panels.filter((p) => !p.open);
+
+    const shouldCollapse = openPanels.length >= closedPanels.length;
+
+    if (shouldCollapse) {
+      panels.forEach((panel) => (panel.open = false));
+      updateScrollToTopBtn();
+      return;
+    }
+
+    isBulkAnimating = true;
+    const isBottomOpen = panels[panels.length - 1].open;
+    const delayPerPanel = 100;
+
+    for (const panel of closedPanels) {
+      panel.open = true;
+      if (!isBottomOpen) {
+        panel.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      }
+      await new Promise((resolve) => setTimeout(resolve, delayPerPanel));
+    }
+    isBulkAnimating = false;
+    updateScrollToTopBtn();
+  }
+
   const toggleAllCategoriesBtn = document.getElementById(
     "toggleAllCategoriesBtn",
   );
   if (toggleAllCategoriesBtn) {
-    toggleAllCategoriesBtn.addEventListener("click", () => {
-      const panels = document.querySelectorAll(
-        "#settingsModal details.category-panel",
-      );
-      const anyClosed = Array.from(panels).some((panel) => !panel.open);
-      panels.forEach((panel) => (panel.open = anyClosed));
+    toggleAllCategoriesBtn.addEventListener(
+      "click",
+      animateToggleAllCategories,
+    );
+  }
+
+  const modalContent = document.querySelector("#settingsModal .modal-content");
+  if (modalContent) {
+    modalContent.addEventListener("scroll", updateScrollToTopBtn);
+  }
+
+  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+  if (scrollToTopBtn) {
+    scrollToTopBtn.addEventListener("click", () => {
+      modalContent?.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
+
+  document
+    .querySelectorAll("#settingsModal details.category-panel")
+    .forEach((panel) => {
+      panel.addEventListener("toggle", () => {
+        if (panel.open && !isBulkAnimating) {
+          panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        updateScrollToTopBtn();
+      });
+    });
 
   // --- MOBILE RESPONSIVE ENGINE ---
   const mobileSearchBtn = document.getElementById("mobileSearchBtn");
@@ -429,7 +510,10 @@ function bindStaticEvents() {
   // --- BACKGROUND & DATA BUTTONS (Safely Preserved) ---
   const bgInput = document.getElementById("bgImageInput");
   if (bgInput)
-    bgInput.addEventListener("change", () => handleImageUpload(bgInput));
+    bgInput.addEventListener("change", async () => {
+      await handleImageUpload(bgInput);
+      window.location.reload();
+    });
 
   const bgUrlInput = document.getElementById("bgUrlInput");
   if (bgUrlInput) {
@@ -440,14 +524,7 @@ function bindStaticEvents() {
         await saveBgToDB(url);
         settings.backgroundImage = "indexeddb";
         autoSaveSettings("background");
-        loadSettings();
-
-        const bgLabel = document.getElementById("bgFileName");
-        if (bgLabel) {
-          bgLabel.innerText = "URL Media Active";
-          bgLabel.style.color = "var(--accent)";
-        }
-        document.getElementById("resetBgBtn").style.display = "inline-block";
+        window.location.reload();
       } catch (e) {
         console.error("Failed to apply URL background:", e);
       }
@@ -464,6 +541,7 @@ function bindStaticEvents() {
     resetBgBtn.addEventListener("click", () => {
       clearBackground();
       autoSaveSettings("background");
+      window.location.reload();
     });
   }
 
@@ -1195,7 +1273,7 @@ async function loadSettings() {
   }
   updateClock();
   renderEngineDropdown();
-  triggerMaterialYou();
+  materialYouEngine.triggerMaterialYou(settings, getBgFromDB);
 }
 
 // --- FIXED AUTO-SAVE WITH SELECTIVE RENDERING ---
@@ -1261,7 +1339,7 @@ function autoSaveSettings(changedSetting = null) {
     changedSetting === "background"
   ) {
     document.body.className = settings.theme || "dark";
-    triggerMaterialYou();
+    materialYouEngine.triggerMaterialYou(settings, getBgFromDB);
   }
 
   if (!changedSetting || changedSetting === "clock") {
@@ -1421,191 +1499,6 @@ function restoreData(e) {
     }
   };
   reader.readAsText(file);
-}
-
-// ==========================================
-// MATERIAL YOU (MONET) ENGINE
-// ==========================================
-
-// Extracts the average RGB color from an image using a 1x1 canvas
-function getAverageColor(imgElement) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1;
-  canvas.height = 1;
-  const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  ctx.drawImage(imgElement, 0, 0, 1, 1);
-  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-  return { r, g, b };
-}
-
-// Converts RGB to HSL and returns the Hue (0-360)
-function rgbToHue(r, g, b) {
-  r /= 255;
-  g /= 255;
-  b /= 255;
-  const max = Math.max(r, g, b),
-    min = Math.min(r, g, b);
-  let h;
-  if (max === min) h = 0;
-  else {
-    const d = max - min;
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
-    }
-    h /= 6;
-  }
-  return Math.round(h * 360);
-}
-
-// Applies the Material You palette directly to the body
-function applyMaterialYouTheme(hue) {
-  const target = document.body;
-
-  const baseSat = 25;
-  target.style.setProperty("--bg", `hsl(${hue}, ${baseSat}%, 8%)`);
-  target.style.setProperty("--card", `hsl(${hue}, ${baseSat + 5}%, 14%)`);
-  target.style.setProperty(
-    "--card-hover",
-    `hsl(${hue}, ${baseSat + 10}%, 19%)`,
-  );
-  target.style.setProperty("--border", `hsl(${hue}, ${baseSat}%, 24%)`);
-  target.style.setProperty("--text", `hsl(${hue}, 45%, 82%)`);
-  target.style.setProperty("--accent", `hsl(${hue}, 65%, 68%)`);
-}
-
-// The Trigger that starts the Engine
-async function triggerMaterialYou() {
-  const target = document.body;
-
-  if (settings.theme !== "material-you") {
-    target.style.removeProperty("--bg");
-    target.style.removeProperty("--card");
-    target.style.removeProperty("--card-hover");
-    target.style.removeProperty("--border");
-    target.style.removeProperty("--text");
-    target.style.removeProperty("--accent");
-    return;
-  }
-
-  if (settings.backgroundImage === "indexeddb") {
-    try {
-      let url = window.activeBgObjectUrl;
-      let bgData = await getBgFromDB(); // Fetch to check file type
-
-      if (!url && bgData) {
-        url =
-          bgData instanceof Blob || bgData instanceof File
-            ? URL.createObjectURL(bgData)
-            : bgData;
-        if (bgData instanceof Blob || bgData instanceof File) {
-          window.activeBgObjectUrl = url;
-        }
-      }
-
-      if (url && bgData) {
-        // --- Video Color Extraction ---
-        const isVideo =
-          (bgData.type && bgData.type.startsWith("video/")) ||
-          (typeof bgData === "string" &&
-            bgData.match(/\.(mp4|webm|ogg)($|\?)/i));
-        if (isVideo) {
-          if (window.colorExtractionTimer) {
-            clearTimeout(window.colorExtractionTimer);
-            window.colorExtractionTimer = null;
-          }
-
-          if (!window.sharedColorVideo) {
-            window.sharedColorVideo = document.createElement("video");
-            window.sharedColorVideo.muted = true;
-            window.sharedColorVideo.playsInline = true;
-            window.sharedColorVideo.crossOrigin = "Anonymous";
-          }
-
-          if (!window.offscreenCanvas) {
-            window.offscreenCanvas = document.createElement("canvas");
-            window.offscreenCanvas.width = 1;
-            window.offscreenCanvas.height = 1;
-          }
-
-          if (window._colorLoadedHandler) {
-            window.sharedColorVideo.removeEventListener(
-              "loadeddata",
-              window._colorLoadedHandler,
-            );
-          }
-          if (window._colorSeekedHandler) {
-            window.sharedColorVideo.removeEventListener(
-              "seeked",
-              window._colorSeekedHandler,
-            );
-          }
-
-          window._colorLoadedHandler = () => {
-            window.sharedColorVideo.currentTime = Math.min(
-              1,
-              window.sharedColorVideo.duration / 2,
-            );
-          };
-
-          window._colorSeekedHandler = () => {
-            if (window.colorExtractionTimer)
-              clearTimeout(window.colorExtractionTimer);
-            window.colorExtractionTimer = setTimeout(() => {
-              const ctx = window.offscreenCanvas.getContext("2d", {
-                willReadFrequently: true,
-              });
-              ctx.drawImage(window.sharedColorVideo, 0, 0, 1, 1);
-              const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-              applyMaterialYouTheme(rgbToHue(r, g, b));
-            }, 150);
-          };
-
-          window.sharedColorVideo.addEventListener(
-            "loadeddata",
-            window._colorLoadedHandler,
-          );
-          window.sharedColorVideo.addEventListener(
-            "seeked",
-            window._colorSeekedHandler,
-          );
-
-          if (window.sharedColorVideo.src !== url) {
-            window.sharedColorVideo.src = url;
-          } else if (window.sharedColorVideo.readyState >= 2) {
-            const ctx = window.offscreenCanvas.getContext("2d", {
-              willReadFrequently: true,
-            });
-            ctx.drawImage(window.sharedColorVideo, 0, 0, 1, 1);
-            const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-            applyMaterialYouTheme(rgbToHue(r, g, b));
-          }
-        } else {
-          // Standard Image Color Extraction
-          const img = new Image();
-          img.crossOrigin = "Anonymous";
-          img.src = url;
-
-          img.onload = () => {
-            const { r, g, b } = getAverageColor(img);
-            const hue = rgbToHue(r, g, b);
-            applyMaterialYouTheme(hue);
-          };
-        }
-      }
-    } catch (e) {
-      console.error("Material You engine failed:", e);
-    }
-  } else {
-    applyMaterialYouTheme(210); // Default blue hue
-  }
 }
 
 // --- ASYNC DIALOG ENGINE ---
