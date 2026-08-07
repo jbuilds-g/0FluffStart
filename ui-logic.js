@@ -208,6 +208,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+async function checkMaterialYouReload() {
+  if (
+    settings.theme === "material-you" &&
+    settings.backgroundImage === "indexeddb"
+  ) {
+    const confirmed = await customConfirm(
+      "A quick page reload is required for Material You color extraction to take full effect.",
+      "Reload Required?",
+    );
+    if (confirmed) {
+      window.location.reload();
+    }
+  }
+}
+
 // --- EVENT BINDING ---
 function bindStaticEvents() {
   document
@@ -306,18 +321,18 @@ function bindStaticEvents() {
 
     isBulkAnimating = true;
     const isBottomOpen = panels[panels.length - 1].open;
-    const delayPerPanel = 100;
 
-    for (const panel of closedPanels) {
+    closedPanels.forEach((panel) => {
       panel.open = true;
-      if (!isBottomOpen) {
-        panel.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-        });
-      }
-      await new Promise((resolve) => setTimeout(resolve, delayPerPanel));
+    });
+
+    if (!isBottomOpen && closedPanels.length > 0) {
+      closedPanels[0].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
     }
+
     isBulkAnimating = false;
     updateScrollToTopBtn();
   }
@@ -507,12 +522,12 @@ function bindStaticEvents() {
     });
   }
 
-  // --- BACKGROUND & DATA BUTTONS (Safely Preserved) ---
+  // --- BACKGROUND & DATA BUTTONS ---
   const bgInput = document.getElementById("bgImageInput");
   if (bgInput)
     bgInput.addEventListener("change", async () => {
       await handleImageUpload(bgInput);
-      window.location.reload();
+      await checkMaterialYouReload();
     });
 
   const bgUrlInput = document.getElementById("bgUrlInput");
@@ -524,7 +539,8 @@ function bindStaticEvents() {
         await saveBgToDB(url);
         settings.backgroundImage = "indexeddb";
         autoSaveSettings("background");
-        window.location.reload();
+        await loadSettings();
+        await checkMaterialYouReload();
       } catch (e) {
         console.error("Failed to apply URL background:", e);
       }
@@ -538,10 +554,10 @@ function bindStaticEvents() {
 
   const resetBgBtn = document.getElementById("resetBgBtn");
   if (resetBgBtn) {
-    resetBgBtn.addEventListener("click", () => {
-      clearBackground();
+    resetBgBtn.addEventListener("click", async () => {
+      await clearBackground();
       autoSaveSettings("background");
-      window.location.reload();
+      await checkMaterialYouReload();
     });
   }
 
@@ -1229,16 +1245,21 @@ async function loadSettings() {
           window.activeBgObjectUrl = url;
         }
 
-        // --- PHASE 3: Route to Video or Image on page refresh ---
+        const bgImage = document.getElementById("bgImage");
         const isVideo =
           (bgData.type && bgData.type.startsWith("video/")) ||
           (typeof bgData === "string" &&
             bgData.match(/\.(mp4|webm|ogg)($|\?)/i));
         if (isVideo) {
-          document.body.style.backgroundImage = "";
+          if (bgImage) {
+            bgImage.style.backgroundImage = "";
+            bgImage.classList.add("hidden");
+            bgImage.classList.remove("active");
+          }
           if (bgVideo) {
             bgVideo.src = url;
             bgVideo.classList.remove("hidden");
+            bgVideo.classList.add("active");
             bgVideo
               .play()
               .catch((err) => console.warn("Playback prevented:", err));
@@ -1247,11 +1268,13 @@ async function loadSettings() {
           if (bgVideo) {
             bgVideo.src = "";
             bgVideo.classList.add("hidden");
+            bgVideo.classList.remove("active");
           }
-          document.body.style.backgroundImage = `url('${url}')`;
-          document.body.style.backgroundSize = "cover";
-          document.body.style.backgroundPosition = "center";
-          document.body.style.backgroundAttachment = "fixed";
+          if (bgImage) {
+            bgImage.style.backgroundImage = `url('${url}')`;
+            bgImage.classList.remove("hidden");
+            bgImage.classList.add("active");
+          }
         }
 
         if (overlay) overlay.style.opacity = "1";
@@ -1264,10 +1287,16 @@ async function loadSettings() {
       URL.revokeObjectURL(window.activeBgObjectUrl);
       window.activeBgObjectUrl = null;
     }
-    document.body.style.backgroundImage = "";
+    const bgImage = document.getElementById("bgImage");
+    if (bgImage) {
+      bgImage.style.backgroundImage = "";
+      bgImage.classList.add("hidden");
+      bgImage.classList.remove("active");
+    }
     if (bgVideo) {
       bgVideo.src = "";
       bgVideo.classList.add("hidden");
+      bgVideo.classList.remove("active");
     }
     if (overlay) overlay.style.opacity = "0";
   }
@@ -1340,6 +1369,9 @@ function autoSaveSettings(changedSetting = null) {
   ) {
     document.body.className = settings.theme || "dark";
     materialYouEngine.triggerMaterialYou(settings, getBgFromDB);
+    if (changedSetting === "theme") {
+      checkMaterialYouReload();
+    }
   }
 
   if (!changedSetting || changedSetting === "clock") {

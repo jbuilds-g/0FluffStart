@@ -176,25 +176,36 @@ async function handleImageUpload(input) {
       window.activeBgObjectUrls.add(objectUrl);
 
       const bgVideo = document.getElementById("bgVideo");
+      const bgImage = document.getElementById("bgImage");
       const bgOverlay = document.getElementById("bgOverlay");
 
       if (file.type.startsWith("video/")) {
         // Route to Video Player
-        document.body.style.backgroundImage = ""; // Clear fallback image
+        if (bgImage) {
+          bgImage.style.backgroundImage = "";
+          bgImage.classList.add("hidden");
+          bgImage.classList.remove("active");
+        }
         if (bgVideo) {
           bgVideo.src = objectUrl;
           bgVideo.classList.remove("hidden");
+          bgVideo.classList.add("active");
+          bgVideo
+            .play()
+            .catch((err) => console.warn("Playback prevented:", err));
         }
       } else {
-        // Route to CSS Background
+        // Route to Image Container
         if (bgVideo) {
           bgVideo.src = "";
           bgVideo.classList.add("hidden");
+          bgVideo.classList.remove("active");
         }
-        document.body.style.backgroundImage = `url('${objectUrl}')`;
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundPosition = "center";
-        document.body.style.backgroundAttachment = "fixed";
+        if (bgImage) {
+          bgImage.style.backgroundImage = `url('${objectUrl}')`;
+          bgImage.classList.remove("hidden");
+          bgImage.classList.add("active");
+        }
       }
 
       if (fileNameEl) fileNameEl.innerText = file.name;
@@ -223,13 +234,19 @@ async function clearBackground() {
     window.activeBgObjectUrls.clear();
   }
 
-  document.body.style.backgroundImage = "";
+  const bgImage = document.getElementById("bgImage");
+  if (bgImage) {
+    bgImage.style.backgroundImage = "";
+    bgImage.classList.add("hidden");
+    bgImage.classList.remove("active");
+  }
 
   // Kill the video player explicitly
   const bgVideo = document.getElementById("bgVideo");
   if (bgVideo) {
     bgVideo.src = "";
     bgVideo.classList.add("hidden");
+    bgVideo.classList.remove("active");
   }
 
   const inputEl = document.getElementById("bgImageInput");

@@ -116,10 +116,18 @@ body.material .engine-switcher {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
 }
 
 .engine-dropdown.hidden {
-  display: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .engine-option {
@@ -160,6 +168,18 @@ body.material .engine-switcher {
   padding: 0;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+.suggestions-container.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .suggestions-container::-webkit-scrollbar {
@@ -205,7 +225,6 @@ body.material .suggestions-container {
 
 /* --- MOBILE SEARCH OVERLAY SYSTEM --- */
 .search-backdrop {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -213,13 +232,25 @@ body.material .suggestions-container {
   height: 100vh;
   height: 100dvh;
   background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
   z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    backdrop-filter 0.3s ease,
+    -webkit-backdrop-filter 0.3s ease;
 }
 
 .search-backdrop.active {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* Hide the default inline search bar on mobile (unless desktop mode is forced or expanded) */

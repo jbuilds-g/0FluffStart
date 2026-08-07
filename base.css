@@ -45,7 +45,31 @@ body {
   transition: opacity 0.5s;
 }
 
-/* --- BACKGROUND VIDEO STYLING --- */
+/* --- BACKGROUND MEDIA STYLING --- */
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.5s ease,
+    visibility 0.5s ease;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.bg-image.active {
+  opacity: 1;
+  visibility: visible;
+}
+
 .bg-video {
   position: fixed;
   top: 0;
@@ -54,10 +78,21 @@ body {
   height: 100vh;
   height: 100dvh;
   object-fit: cover;
-  z-index: -2; /* Keeps it strictly behind the UI and overlay */
+  z-index: -2;
   pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.5s ease,
+    visibility 0.5s ease;
 }
 
 .bg-video.hidden {
-  display: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.bg-video.active {
+  opacity: 1;
+  visibility: visible;
 }
