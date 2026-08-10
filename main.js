@@ -1,7 +1,11 @@
 import { store } from "./store.js";
 import { debounce, sanitizeUrl } from "./utils.js";
 import { backupData, restoreData } from "./storage.js";
-import { handleSuggestions, handleSuggestionKeyDown } from "./suggestions.js";
+import {
+  handleSuggestions,
+  handleSuggestionKeyDown,
+  clearHistory,
+} from "./suggestions.js";
 import {
   loadSettings,
   autoSaveSettings,
@@ -17,6 +21,7 @@ import {
   handleImageUpload,
   clearBackground,
   initCustomSelects,
+  checkMaterialYouReload,
 } from "./ui.js";
 import {
   renderLinks,
@@ -363,8 +368,12 @@ function bindStaticEvents() {
     userNameInput.addEventListener("input", debouncedSaveUsername);
 
   const themeSelect = document.getElementById("themeSelect");
-  if (themeSelect)
-    themeSelect.addEventListener("change", () => autoSaveSettings());
+  if (themeSelect) {
+    themeSelect.addEventListener("change", async () => {
+      autoSaveSettings();
+      await checkMaterialYouReload();
+    });
+  }
 
   const clockStyleSelect = document.getElementById("clockStyleSelect");
   if (clockStyleSelect)
@@ -418,6 +427,7 @@ function bindStaticEvents() {
   if (bgInput) {
     bgInput.addEventListener("change", async () => {
       await handleImageUpload(bgInput);
+      await checkMaterialYouReload();
     });
   }
 
@@ -425,6 +435,19 @@ function bindStaticEvents() {
   if (resetBgBtn) {
     resetBgBtn.addEventListener("click", async () => {
       await clearBackground();
+      await checkMaterialYouReload();
+    });
+  }
+
+  const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+  if (clearHistoryBtn) {
+    clearHistoryBtn.addEventListener("click", () => {
+      clearHistory({
+        store,
+        customConfirmFn: customConfirm,
+        showToastFn: showToast,
+        inputEl: document.getElementById("searchInput"),
+      });
     });
   }
 
