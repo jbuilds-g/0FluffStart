@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluff-v89";
+const CACHE_NAME = "0fluff-v90";
 
 const ASSETS = [
   "./",
@@ -6,11 +6,13 @@ const ASSETS = [
   "./manifest.json",
   "./pwa-manifest.json",
   "./core.css",
+  "./main.js",
   "./store.js",
-  "./state.js",
-  "./utilities.js",
+  "./utils.js",
+  "./storage.js",
+  "./links.js",
+  "./ui.js",
   "./suggestions.js",
-  "./ui-logic.js",
   "./material-you-engine.js",
   "./icon.png",
 ];

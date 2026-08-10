@@ -731,6 +731,9 @@ select:hover {
   body:not(.force-desktop-mode) .mobile-only-setting {
     display: block !important;
   }
+  body.force-desktop-mode .mobile-only-setting {
+    display: block !important;
+  }
 }
 
 .setting-group-desktop {
