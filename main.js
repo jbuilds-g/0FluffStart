@@ -463,6 +463,21 @@ function bindStaticEvents() {
     });
   }
 
+  document.querySelectorAll(".help-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const parent =
+        btn.closest(".setting-item") ||
+        btn.closest(".setting-header") ||
+        btn.parentElement;
+      const textEl = parent?.nextElementSibling;
+      if (textEl && textEl.classList.contains("help-text")) {
+        textEl.classList.toggle("show");
+        btn.classList.toggle("active");
+      }
+    });
+  });
+
   const grid = document.getElementById("linkGrid");
   if (grid) {
     grid.addEventListener("click", (e) => {

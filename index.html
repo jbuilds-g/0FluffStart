@@ -517,6 +517,21 @@
                 <p id="bgFileName" class="bg-file-name">No media selected.</p>
               </div>
             </div>
+
+            <div class="setting-group mobile-only-setting">
+              <div class="setting-header">
+                <h3>Force Desktop Mode</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Bypasses mobile-specific layout adjustments and restores the
+                desktop search bar.
+              </div>
+              <label class="radio-option radio-option-start-sm">
+                <input type="checkbox" id="forceDesktopToggle" /> Force Desktop
+                Layout
+              </label>
+            </div>
           </div>
         </details>
 
@@ -637,49 +652,6 @@
               <label class="radio-option radio-option-start-sm">
                 <input type="checkbox" id="historyEnabledToggle" /> Enable Local
                 Search History
-              </label>
-            </div>
-          </div>
-        </details>
-
-        <details class="category-panel mobile-only-setting" id="advancedPanel">
-          <summary>
-            Advanced
-            <svg
-              class="chevron"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </summary>
-          <div class="category-content">
-            <div class="setting-group">
-              <div class="setting-header">
-                <h3>Force Desktop Mode</h3>
-                <button class="help-btn">?</button>
-              </div>
-              <div class="help-text">
-                Bypasses mobile-specific layout adjustments and restores the
-                desktop search bar.
-              </div>
-              <label
-                class="radio-option"
-                style="
-                  justify-content: flex-start;
-                  display: flex;
-                  align-items: center;
-                  gap: 6px;
-                "
-              >
-                <input type="checkbox" id="forceDesktopToggle" /> Force Desktop
-                Layout
               </label>
             </div>
           </div>
