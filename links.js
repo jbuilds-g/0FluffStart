@@ -2,6 +2,9 @@ import { store } from "./store.js";
 import { generateId, sanitizeUrl } from "./utils.js";
 import { customConfirm, showToast } from "./ui.js";
 
+/** @type {Set<string>} Tracks expanded folder sub-containers in manager */
+const expandedFolderIds = new Set();
+
 const folderTemplate = document.createElement("div");
 folderTemplate.className = "link-item is-folder";
 folderTemplate.innerHTML = `
@@ -35,7 +38,6 @@ export function navigateToFolder(folderId) {
 export function renderLinks() {
   const grid = document.getElementById("linkGrid");
   if (!grid) return;
-  grid.innerHTML = "";
 
   const state = store.getState();
   const links = state.links || [];
@@ -47,18 +49,37 @@ export function renderLinks() {
   const visibleLinks = links.filter(
     (l) => (l.parentId || null) === currentFolderId,
   );
-  const fragment = document.createDocumentFragment();
+  const targetIds = new Set(visibleLinks.map((l) => l.id));
+  const existingNodesMap = new Map();
 
-  visibleLinks.forEach((link) => {
-    let item;
-    if (link.isFolder) {
-      item = folderTemplate.cloneNode(true);
-      item.dataset.id = link.id;
-      item.querySelector(".link-name").textContent = link.name;
-    } else {
-      item = linkTemplate.cloneNode(true);
-      item.dataset.id = link.id;
+  Array.from(grid.children).forEach((child) => {
+    if (child.classList.contains("link-item") && child.dataset.id) {
+      if (!targetIds.has(child.dataset.id)) {
+        child.remove();
+      } else {
+        existingNodesMap.set(child.dataset.id, child);
+      }
+    } else if (!child.classList.contains("folder-exit-container")) {
+      child.remove();
+    }
+  });
 
+  visibleLinks.forEach((link, index) => {
+    let item = existingNodesMap.get(link.id);
+
+    if (!item) {
+      item = link.isFolder
+        ? folderTemplate.cloneNode(true)
+        : linkTemplate.cloneNode(true);
+      item.dataset.id = link.id;
+    }
+
+    const nameEl = item.querySelector(".link-name");
+    if (nameEl && nameEl.textContent !== link.name) {
+      nameEl.textContent = link.name;
+    }
+
+    if (!link.isFolder) {
       const words = link.name.split(" ").filter((w) => w.length > 0);
       let acronym = words.map((word) => word.charAt(0).toUpperCase()).join("");
       if (words.length === 1 && acronym.length === 1 && link.name.length > 1) {
@@ -73,31 +94,39 @@ export function renderLinks() {
             : "1.2rem";
 
       const span = item.querySelector(".link-acronym");
-      span.textContent = display;
-      span.style.fontSize = fontSize;
-      item.querySelector(".link-name").textContent = link.name;
+      if (span) {
+        if (span.textContent !== display) span.textContent = display;
+        if (span.style.fontSize !== fontSize) span.style.fontSize = fontSize;
+      }
     }
 
-    fragment.appendChild(item);
+    const currentChildAtIndex = grid.children[index];
+    if (currentChildAtIndex !== item) {
+      grid.insertBefore(item, currentChildAtIndex || null);
+    }
   });
 
-  grid.appendChild(fragment);
-
+  let exitContainer = grid.querySelector(".folder-exit-container");
   if (currentFolderId !== null) {
-    const exitContainer = document.createElement("div");
-    exitContainer.className = "folder-exit-container";
-    exitContainer.innerHTML = `
-      <div class="back-pill" title="Back to Dashboard">
-        <div class="back-icon-circle">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+    if (!exitContainer) {
+      exitContainer = document.createElement("div");
+      exitContainer.className = "folder-exit-container";
+      exitContainer.innerHTML = `
+        <div class="back-pill" title="Back to Dashboard">
+          <div class="back-icon-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </div>
+          <span class="back-text">DASHBOARD</span>
         </div>
-        <span class="back-text">DASHBOARD</span>
-      </div>
-    `;
-
-    const backBtn = exitContainer.querySelector(".back-pill");
-    backBtn.addEventListener("click", () => navigateToFolder(null));
-    grid.appendChild(exitContainer);
+      `;
+      const backBtn = exitContainer.querySelector(".back-pill");
+      backBtn.addEventListener("click", () => navigateToFolder(null));
+      grid.appendChild(exitContainer);
+    } else {
+      grid.appendChild(exitContainer);
+    }
+  } else if (exitContainer) {
+    exitContainer.remove();
   }
 }
 
@@ -169,7 +198,7 @@ export function renderLinkManager() {
     if (link.isFolder) {
       const toggleSpan = document.createElement("span");
       toggleSpan.className = "folder-toggle";
-      toggleSpan.textContent = "▶";
+      toggleSpan.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`;
       nameSpan.appendChild(toggleSpan);
       item.classList.add("is-folder-item");
     }
@@ -268,17 +297,26 @@ export function renderLinkManager() {
       if (link.isFolder) {
         const subContainer = document.createElement("div");
         subContainer.className = "folder-sub-container";
-        subContainer.style.display = "none";
+        const isExpanded = expandedFolderIds.has(link.id);
+        subContainer.style.display = isExpanded ? "block" : "none";
         subContainer.style.marginTop = "4px";
         subContainer.style.marginBottom = "10px";
 
         const toggleBtn = row.querySelector(".folder-toggle");
         if (toggleBtn) {
+          toggleBtn.classList.toggle("expanded", isExpanded);
           row.addEventListener("click", (e) => {
             if (e.target.closest(".link-actions")) return;
             const isHidden = subContainer.style.display === "none";
-            subContainer.style.display = isHidden ? "block" : "none";
-            toggleBtn.innerText = isHidden ? "▼" : "▶";
+            if (isHidden) {
+              subContainer.style.display = "block";
+              expandedFolderIds.add(link.id);
+              toggleBtn.classList.add("expanded");
+            } else {
+              subContainer.style.display = "none";
+              expandedFolderIds.delete(link.id);
+              toggleBtn.classList.remove("expanded");
+            }
           });
         }
 
@@ -360,12 +398,12 @@ export function openEditor(id = null, parentId = null) {
 
       if (link.isFolder) {
         if (urlInput) {
-          urlInput.style.display = "none";
+          urlInput.classList.add("field-hidden");
           urlInput.value = "";
         }
       } else {
         if (urlInput) {
-          urlInput.style.display = "block";
+          urlInput.classList.remove("field-hidden");
           urlInput.value = link.url || "";
         }
       }
@@ -374,7 +412,7 @@ export function openEditor(id = null, parentId = null) {
     if (titleEl) titleEl.innerText = "Add New Link";
     if (nameInput) nameInput.value = "";
     if (urlInput) {
-      urlInput.style.display = "block";
+      urlInput.classList.remove("field-hidden");
       urlInput.value = "";
     }
   }
@@ -391,7 +429,10 @@ export function saveLink() {
   const urlInput = document.getElementById("editUrl");
   const name = nameInput ? nameInput.value.trim() : "";
   const url = urlInput ? urlInput.value.trim() : "";
-  const isFolderCreation = urlInput && urlInput.style.display === "none";
+  const isFolderCreation =
+    urlInput &&
+    (urlInput.classList.contains("field-hidden") ||
+      urlInput.style.display === "none");
 
   if (!name) return showToast("Please fill in the name.", "error");
 
@@ -486,6 +527,6 @@ export function addFolder() {
   if (nameInput) nameInput.value = "";
   if (urlInput) {
     urlInput.value = "";
-    urlInput.style.display = "none";
+    urlInput.classList.add("field-hidden");
   }
 }

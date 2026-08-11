@@ -13,7 +13,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: var(--z-modal) !important;
+  z-index: var(--z-modal);
   visibility: hidden;
   opacity: 0;
   backdrop-filter: blur(0px);
@@ -346,6 +346,64 @@ select:hover {
   margin: 0;
 }
 
+/* Reusable Theme-Reactive Toggle Switch */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 38px;
+  height: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  flex-shrink: 0;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: var(--dim);
+  border-radius: 50%;
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.2s ease;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--card-hover);
+  border-color: var(--accent);
+}
+
+input[type="checkbox"]:checked::after {
+  transform: translateX(18px);
+  background: var(--accent);
+}
+
+/* Maintain standard checkbox appearance for manager selection mode */
+input[type="checkbox"].manager-checkbox {
+  appearance: auto;
+  -webkit-appearance: checkbox;
+  width: auto;
+  height: auto;
+  background: initial;
+  border: initial;
+  position: static;
+}
+
+input[type="checkbox"].manager-checkbox::after {
+  content: none;
+  display: none;
+}
+
 /* --- BUTTON VARIANTS --- */
 .save-btn {
   width: 100%;
@@ -480,18 +538,22 @@ select:hover {
 }
 
 .select-arrow {
-  display: inline-block;
-  font-size: 0.75rem;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: rotate(-90deg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dim);
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.2s ease;
 }
 
 .custom-select.open .select-arrow {
-  transform: rotate(0deg);
+  transform: rotate(90deg);
+  color: var(--accent);
 }
 
 .select-dropdown.hidden {
-  display: none !important;
+  display: none;
 }
 
 .select-option {
@@ -565,11 +627,15 @@ select:hover {
 .folder-toggle {
   margin-right: 8px;
   color: var(--accent);
-  font-size: 12px;
-  width: 12px;
-  display: inline-block;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.folder-toggle.expanded {
+  transform: rotate(90deg);
 }
 
 .folder-sub-container {
@@ -724,15 +790,13 @@ select:hover {
 }
 
 .mobile-only-setting {
-  display: none !important;
+  display: none;
 }
 
 @media (max-width: 850px) and (pointer: coarse) {
-  body:not(.force-desktop-mode) .mobile-only-setting {
-    display: block !important;
-  }
+  body:not(.force-desktop-mode) .mobile-only-setting,
   body.force-desktop-mode .mobile-only-setting {
-    display: block !important;
+    display: block;
   }
 }
 
@@ -819,7 +883,7 @@ input[type="url"].bg-url-input {
 }
 
 .reset-bg-btn {
-  display: none;
+  display: flex;
   height: 36px;
   width: 36px;
   min-width: 36px;
@@ -835,11 +899,112 @@ input[type="url"].bg-url-input {
   border-radius: var(--radius);
 }
 
+.reset-bg-btn.hidden {
+  display: none;
+}
+
+.field-hidden {
+  display: none;
+}
+
+.bg-overlay-active {
+  opacity: 1;
+}
+
 .bg-file-name {
   font-size: 0.85rem;
   color: var(--dim);
   margin: 0;
   word-break: break-all;
+}
+
+.sub-collapsible {
+  position: relative;
+  width: 100%;
+  user-select: none;
+}
+
+.sub-collapsible.open .select-arrow {
+  transform: rotate(90deg);
+  color: var(--accent);
+}
+
+.sub-collapsible-content {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sub-collapsible-content.hidden {
+  display: none;
+}
+
+.engine-selection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.engine-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--card-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+.engine-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.engine-item-left .engine-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+}
+
+.engine-item-left .engine-icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: currentColor;
+  color: currentColor;
+}
+
+.engine-item-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.engine-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.engine-delete-btn {
+  background: none;
+  border: none;
+  color: var(--delete);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  transition: background 0.2s;
+}
+
+.engine-delete-btn:hover {
+  background: rgba(255, 0, 0, 0.1);
 }
 
 .custom-proxy-container {
@@ -935,5 +1100,5 @@ input[type="url"].bg-url-input {
 }
 
 .scroll-to-top-btn.hidden {
-  display: none !important;
+  display: none;
 }

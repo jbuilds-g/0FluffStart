@@ -134,32 +134,32 @@ h1 {
 /* --- TOUCH MOBILE OVERRIDES (Floating Settings) --- */
 @media (max-width: 850px) and (pointer: coarse) {
   body:not(.force-desktop-mode) .floating-settings {
-    top: auto !important;
-    bottom: 92px !important;
-    right: 30px !important;
-    left: auto !important;
-    position: fixed !important;
-    z-index: var(--z-floating) !important;
-    pointer-events: none !important;
-    display: flex !important;
-    justify-content: center !important;
-    width: 36px !important;
+    top: auto;
+    bottom: 92px;
+    right: 30px;
+    left: auto;
+    position: fixed;
+    z-index: var(--z-floating);
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    width: 36px;
   }
 
   body:not(.force-desktop-mode) #settingsToggleBtn {
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 50% !important;
-    pointer-events: auto !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   body.force-desktop-mode .floating-settings {
-    top: 24px !important;
-    right: 24px !important;
-    bottom: auto !important;
-    left: auto !important;
+    top: 24px;
+    right: 24px;
+    bottom: auto;
+    left: auto;
   }
 }

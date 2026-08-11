@@ -92,7 +92,7 @@ body.material .link-item:hover .link-icon-circle span {
 /* --- SMART TITLE HOVER LOGIC --- */
 /* If the user has NOT checked "Show Titles", hide them by default... */
 .link-grid:not(.show-titles) .link-name {
-  display: block !important;
+  display: block;
   opacity: 0;
   transform: translateY(5px);
   transition:
@@ -130,9 +130,9 @@ body.material .link-item:hover .link-icon-circle span {
   border-radius: 50%;
 
   /* HIDE & DISABLE BY DEFAULT */
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important; /* Block interaction when invisible */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* Block interaction when invisible */
   transition:
     opacity 0.2s,
     visibility 0.2s;
@@ -141,9 +141,9 @@ body.material .link-item:hover .link-icon-circle span {
 
 /* Show on Hover (Desktop) */
 .link-item:hover .link-edit-overlay {
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: all !important; /* Allow click on hover */
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all; /* Allow click on hover */
 }
 
 .link-edit-overlay .edit-icon {

@@ -22,6 +22,7 @@ import {
   clearBackground,
   initCustomSelects,
   checkMaterialYouReload,
+  renderEngineSelectionList,
 } from "./ui.js";
 import {
   renderLinks,
@@ -340,7 +341,7 @@ function bindStaticEvents() {
       const activeFolderId = state.activeFolderId;
 
       if (selectedLinkIds.length === 0) {
-        return alert("Please select at least one link.");
+        return showToast("Please select at least one link.", "error");
       }
 
       const updatedLinks = state.links.map((link) => {
@@ -466,6 +467,98 @@ function bindStaticEvents() {
     restoreInput.addEventListener("change", (e) =>
       restoreData(e, customConfirm, showToast),
     );
+  }
+
+  const engineCollapsibleTrigger = document.getElementById(
+    "engineCollapsibleTrigger",
+  );
+  if (engineCollapsibleTrigger) {
+    engineCollapsibleTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const container = document.getElementById("engineCollapsible");
+      const content = document.getElementById("engineSectionContent");
+      if (container && content) {
+        const isOpen = container.classList.toggle("open");
+        content.classList.toggle("hidden", !isOpen);
+      }
+    });
+
+    const parentDetails = engineCollapsibleTrigger.closest("details");
+    if (parentDetails) {
+      parentDetails.addEventListener("toggle", () => {
+        if (!parentDetails.open) {
+          const container = document.getElementById("engineCollapsible");
+          const content = document.getElementById("engineSectionContent");
+          if (container && content) {
+            container.classList.remove("open");
+            content.classList.add("hidden");
+          }
+        }
+      });
+    }
+  }
+
+  const addCustomEngineBtn = document.getElementById("addCustomEngineBtn");
+  if (addCustomEngineBtn) {
+    addCustomEngineBtn.addEventListener("click", () => {
+      const nameInput = document.getElementById("customEngineName");
+      const urlInput = document.getElementById("customEngineUrl");
+      const name = nameInput?.value.trim();
+      let url = urlInput?.value.trim();
+
+      if (!name) return showToast("Please enter an engine title.", "error");
+      if (!url) return showToast("Please enter a search URL.", "error");
+
+      if (
+        !url.includes("?q=") &&
+        !url.includes("=") &&
+        !url.includes("query=")
+      ) {
+        url = url.includes("?") ? `${url}&q=` : `${url}?q=`;
+      }
+
+      const currentCustom = store.getState().settings?.customEngines || [];
+      const newEngine = {
+        id: `ce_${Date.now()}`,
+        name,
+        url,
+      };
+
+      autoSaveSettings({ customEngines: [...currentCustom, newEngine] });
+
+      if (nameInput) nameInput.value = "";
+      if (urlInput) urlInput.value = "";
+
+      document.getElementById("customEngineEditor")?.classList.add("hidden");
+
+      renderEngineSelectionList();
+      renderEngineDropdown();
+      showToast(`Added custom engine "${name}"`, "success");
+    });
+  }
+
+  const showAddEngineBtn = document.getElementById("showAddEngineBtn");
+  if (showAddEngineBtn) {
+    showAddEngineBtn.addEventListener("click", () => {
+      const editor = document.getElementById("customEngineEditor");
+      if (editor) {
+        editor.classList.remove("hidden");
+        document.getElementById("customEngineName")?.focus();
+      }
+    });
+  }
+
+  const cancelCustomEngineBtn = document.getElementById(
+    "cancelCustomEngineBtn",
+  );
+  if (cancelCustomEngineBtn) {
+    cancelCustomEngineBtn.addEventListener("click", () => {
+      const nameInput = document.getElementById("customEngineName");
+      const urlInput = document.getElementById("customEngineUrl");
+      if (nameInput) nameInput.value = "";
+      if (urlInput) urlInput.value = "";
+      document.getElementById("customEngineEditor")?.classList.add("hidden");
+    });
   }
 
   const resetSettingsBtn = document.getElementById("resetSettingsBtn");

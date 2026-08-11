@@ -91,13 +91,29 @@ body.material .engine-switcher {
 }
 
 /* --- SEARCH ENGINE SVG SIZING --- */
-.engine-switcher svg,
+.engine-switcher #currentEngineIcon svg,
 #engineDropdown .engine-option svg {
   width: 18px;
   height: 18px;
   display: block;
-  fill: currentColor; /* For Bootstrap */
-  color: currentColor; /* For Lucide/Feather */
+  fill: currentColor;
+  color: currentColor;
+}
+
+.engine-btn .chevron {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  fill: none;
+  color: var(--dim);
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.2s ease;
+}
+
+.engine-switcher:has(#engineDropdown:not(.hidden)) .chevron {
+  transform: rotate(90deg);
+  color: var(--accent);
 }
 
 /* Engine Dropdown */
@@ -111,7 +127,8 @@ body.material .engine-switcher {
   width: 180px;
   z-index: 9999;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
+  max-height: 220px;
+  overflow-y: auto;
   padding: 5px;
   display: flex;
   flex-direction: column;
@@ -119,9 +136,15 @@ body.material .engine-switcher {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   transition:
     opacity 0.2s ease,
     visibility 0.2s ease;
+}
+
+.engine-dropdown::-webkit-scrollbar {
+  display: none;
 }
 
 .engine-dropdown.hidden {

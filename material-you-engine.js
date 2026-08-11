@@ -48,6 +48,20 @@ export class MaterialYouEngine {
   }
 
   /**
+   * Centralizes creation and tracking of background media Object URLs.
+   * @param {Blob|File|string} blobOrFile
+   * @returns {string|null}
+   */
+  createMediaObjectUrl(blobOrFile) {
+    this.revokeActiveObjectUrl();
+    if (blobOrFile instanceof Blob || blobOrFile instanceof File) {
+      this._activeBgObjectUrl = URL.createObjectURL(blobOrFile);
+      return this._activeBgObjectUrl;
+    }
+    return typeof blobOrFile === "string" ? blobOrFile : null;
+  }
+
+  /**
    * Extracts average RGB values from an image via a 1x1 canvas context.
    * @private
    * @param {HTMLImageElement} imgElement
