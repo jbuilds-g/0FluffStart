@@ -82,8 +82,8 @@
 
 .modal-footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
   margin-top: 25px;
   padding-top: 15px;
   border-top: 1px solid var(--border);
@@ -92,21 +92,33 @@
   font-weight: 500;
 }
 
-.footer-right {
+.footer-top-row {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  width: 100%;
+}
+
+.footer-credit {
+  padding-left: 8px;
+}
+
+.footer-bottom-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .modal-footer a {
-  color: var(--text);
+  color: var(--dim);
   text-decoration: none;
-  font-weight: 600;
-  transition: color 0.2s ease;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
 }
 
 .modal-footer a:hover {
-  color: var(--accent);
+  opacity: 0.8;
 }
 
 /* Desktop Drawer Mode */
