@@ -58,7 +58,7 @@ h1 {
 .greeting {
   font-size: 1rem;
   color: var(--dim);
-  margin-bottom: 30px;
+  margin-bottom: 8px;
   font-weight: 500;
 }
 

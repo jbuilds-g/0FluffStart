@@ -600,6 +600,23 @@
               </label>
             </div>
 
+            <div class="setting-group" id="customProxyContainer">
+              <div class="setting-header">
+                <h3>Custom Proxy Endpoint</h3>
+                <button class="help-btn">?</button>
+              </div>
+              <div class="help-text">
+                Specify an optional custom reverse proxy endpoint URL if you
+                prefer not to use the default serverless Cloudflare Edge Worker.
+              </div>
+              <input
+                type="url"
+                id="customProxyInput"
+                placeholder="e.g., https://my-proxy.com/?"
+                class="custom-proxy-input"
+              />
+            </div>
+
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Suggestion Caching</h3>
@@ -732,23 +749,6 @@
               </div>
             </div>
 
-            <div class="setting-group" id="customProxyContainer">
-              <div class="setting-header">
-                <h3>Custom Proxy Endpoint</h3>
-                <button class="help-btn">?</button>
-              </div>
-              <div class="help-text">
-                Specify an optional custom reverse proxy endpoint URL if you
-                prefer not to use the default serverless Cloudflare Edge Worker.
-              </div>
-              <input
-                type="url"
-                id="customProxyInput"
-                placeholder="e.g., https://my-proxy.com/?"
-                class="custom-proxy-input"
-              />
-            </div>
-
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Search History Control</h3>
@@ -876,7 +876,7 @@
               rel="noopener noreferrer"
               class="footer-version"
               title="View Source on GitHub"
-              >v4.0.0</a
+              >v5.0.0</a
             >
           </div>
           <div class="footer-bottom-row">

@@ -518,6 +518,22 @@ export function autoSaveSettings(updates = null) {
   applyClockStyle();
   updateClock();
   materialYouEngine.triggerMaterialYou(newSettings, getBgFromDB);
+  updateSuggestSettingsVisibility();
+}
+
+export function updateSuggestSettingsVisibility() {
+  const isEnabled = !!document.getElementById("externalSuggestToggle")?.checked;
+  const cacheGroup = document
+    .getElementById("cacheSuggestToggle")
+    ?.closest(".setting-group");
+  const providerGroup = document
+    .getElementById("suggestProviderSelect")
+    ?.closest(".setting-group");
+  const proxyGroup = document.getElementById("customProxyContainer");
+
+  if (cacheGroup) cacheGroup.classList.toggle("hidden", !isEnabled);
+  if (providerGroup) providerGroup.classList.toggle("hidden", !isEnabled);
+  if (proxyGroup) proxyGroup.classList.toggle("hidden", !isEnabled);
 }
 
 export async function loadSettings() {
@@ -613,6 +629,7 @@ export async function loadSettings() {
   renderEngineDropdown();
   renderEngineSelectionList();
   materialYouEngine.triggerMaterialYou(settings, getBgFromDB);
+  updateSuggestSettingsVisibility();
 }
 
 export function toggleSettings() {

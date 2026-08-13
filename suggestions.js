@@ -31,20 +31,297 @@ const MAX_HISTORY_ITEMS = 20;
 const DEFAULT_PROVIDER = "DuckDuckGo";
 const ALL_PROVIDERS = Object.freeze(["DuckDuckGo", "Google", "Bing", "Brave"]);
 
-// --- MODULE STATE ---
-let debounceTimer = null;
-let activeFetchController = null;
-let originalSearchText = "";
-let lastInteractionBy = "keyboard";
+const DEFAULT_WORKER_PROXY_URL =
+  "https://0fluffstart-suggest-proxy.jbuilds.workers.dev";
 
-/** @type {Map<string, string[]>} */
-const suggestionCache = new Map();
+/**
+ * Service encapsulating autocomplete logic, API provider fallback execution, and LRU suggestion caching.
+ */
+export class SuggestionService {
+  /**
+   * @param {AppSettings} [settings={}] - Initial application settings.
+   * @param {string} [defaultWorkerProxyUrl=DEFAULT_WORKER_PROXY_URL] - Fallback Cloudflare Worker proxy URL.
+   */
+  constructor(settings = {}, defaultWorkerProxyUrl = DEFAULT_WORKER_PROXY_URL) {
+    /** @type {AppSettings} */
+    this.settings = settings;
+    /** @type {string} */
+    this.defaultWorkerProxyUrl = defaultWorkerProxyUrl;
+    /** @type {Map<string, string[]>} */
+    this.suggestionCache = new Map();
+    /** @type {ReturnType<typeof setTimeout> | null} */
+    this.debounceTimer = null;
+    /** @type {AbortController | null} */
+    this.activeFetchController = null;
+    /** @type {string} */
+    this.originalSearchText = "";
+  }
+
+  /**
+   * Clears the internal in-memory suggestion cache.
+   */
+  clearSuggestionCache() {
+    this.suggestionCache.clear();
+  }
+
+  /**
+   * Stores suggestion results in the in-memory cache with LRU eviction.
+   * @param {string} key - Cache key formatted as `provider:normalizedQuery`.
+   * @param {string[]} results - Array of suggestion phrases.
+   * @param {AppSettings} [settings=this.settings] - Application settings object.
+   */
+  setCachedSuggestions(key, results, settings = this.settings) {
+    if (
+      settings?.cacheSuggestions !== false &&
+      Array.isArray(results) &&
+      results.length > 0
+    ) {
+      if (this.suggestionCache.size >= MAX_CACHE_SIZE) {
+        const firstKey = this.suggestionCache.keys().next().value;
+        if (firstKey) this.suggestionCache.delete(firstKey);
+      }
+      this.suggestionCache.set(key, results);
+    }
+  }
+
+  /**
+   * Validates whether a response text is valid JSON.
+   * @param {string} text - Raw fetch response text.
+   * @returns {boolean} True if response appears to be valid JSON.
+   */
+  isValidJsonResponse(text) {
+    if (!text) return false;
+    const trimmed = text.trim().toLowerCase();
+    return !(
+      trimmed.startsWith("<") ||
+      trimmed.includes("<html") ||
+      trimmed.includes("<!doctype")
+    );
+  }
+
+  /**
+   * Constructs the target suggest API URL for a given provider and query.
+   * @param {string} engineName - Search engine provider name.
+   * @param {string} query - Unencoded search query.
+   * @returns {string} Target API URL.
+   */
+  getEngineSuggestUrl(engineName, query) {
+    const encoded = encodeURIComponent(query);
+    switch (engineName) {
+      case "Google":
+        return `https://www.google.com/complete/search?client=chrome&q=${encoded}`;
+      case "Bing":
+        return `https://api.bing.com/osjson.aspx?query=${encoded}`;
+      case "Brave":
+        return `https://search.brave.com/api/suggest?q=${encoded}`;
+      case "DuckDuckGo":
+      default:
+        return `https://ac.duckduckgo.com/ac/?q=${encoded}&type=json`;
+    }
+  }
+
+  /**
+   * Normalizes and parses raw API responses across search engines into string arrays.
+   * @param {any} data - Raw parsed JSON object or envelope.
+   * @returns {string[]} Array of suggestion phrase strings.
+   */
+  parseEngineSuggestions(data) {
+    if (!data) return [];
+    if (data.contents) {
+      try {
+        data =
+          typeof data.contents === "string"
+            ? JSON.parse(data.contents)
+            : data.contents;
+      } catch {
+        return [];
+      }
+    }
+    if (!Array.isArray(data)) return [];
+    if (Array.isArray(data[1])) {
+      return data[1]
+        .map((s) =>
+          typeof s === "string" ? s : s?.q || s?.name || s?.phrase || "",
+        )
+        .filter(Boolean);
+    }
+    return data
+      .map((item) =>
+        typeof item === "string" ? item : item?.phrase || item?.q || "",
+      )
+      .filter(Boolean);
+  }
+
+  /**
+   * Generates sequential provider execution queue based on settings.
+   * @param {AppSettings} [settings=this.settings] - Application settings object.
+   * @returns {string[]} Ordered array of provider names.
+   */
+  getProviderQueue(settings = this.settings) {
+    const providerMode = settings?.suggestProvider || "auto";
+    if (providerMode !== "auto") {
+      return [providerMode];
+    }
+    const activeEngine = settings?.searchEngine || DEFAULT_PROVIDER;
+    const primary = ALL_PROVIDERS.includes(activeEngine)
+      ? activeEngine
+      : DEFAULT_PROVIDER;
+    return [primary, ...ALL_PROVIDERS.filter((p) => p !== primary)];
+  }
+
+  /**
+   * Fetches external search suggestions across available proxy and provider fallbacks.
+   * Fixes query casing mismatches by passing normalized query to cache keys and API calls.
+   * @param {string} query - Search input text.
+   * @param {AppSettings} [settings=this.settings] - Application settings.
+   * @returns {Promise<string[]>} Resolves to array of suggestion phrases.
+   */
+  async fetchExternalSuggestions(query, settings = this.settings) {
+    const normalizedQuery = query.toLowerCase().trim();
+    if (!normalizedQuery) return [];
+
+    const queue = this.getProviderQueue(settings);
+
+    if (settings?.cacheSuggestions !== false) {
+      for (const provider of queue) {
+        const cacheKey = `${provider}:${normalizedQuery}`;
+        if (this.suggestionCache.has(cacheKey)) {
+          console.log(`[Suggestions] Resolved from local cache (${cacheKey})`);
+          return this.suggestionCache.get(cacheKey) || [];
+        }
+      }
+    }
+
+    if (this.activeFetchController) {
+      this.activeFetchController.abort();
+    }
+    this.activeFetchController = new AbortController();
+    const signal = this.activeFetchController.signal;
+
+    const cacheBuster = `&_cb=${Date.now()}`;
+
+    for (const provider of queue) {
+      const targetUrl =
+        this.getEngineSuggestUrl(provider, normalizedQuery) + cacheBuster;
+      const cacheKey = `${provider}:${normalizedQuery}`;
+
+      // STRATEGY 0: Custom User Proxy
+      if (settings?.customProxyUrl) {
+        try {
+          const isWorker = settings.customProxyUrl.includes("workers.dev");
+          const proxyUrl = isWorker
+            ? `${settings.customProxyUrl.split("?")[0]}?engine=${encodeURIComponent(provider.toLowerCase())}&q=${encodeURIComponent(normalizedQuery)}`
+            : settings.customProxyUrl.endsWith("=") ||
+                settings.customProxyUrl.endsWith("?")
+              ? `${settings.customProxyUrl}${encodeURIComponent(targetUrl)}`
+              : `${settings.customProxyUrl}?url=${encodeURIComponent(targetUrl)}`;
+
+          const res = await fetch(proxyUrl, { signal });
+          if (res.ok) {
+            const text = await res.text();
+            if (this.isValidJsonResponse(text)) {
+              const data = JSON.parse(text);
+              const suggestions = this.parseEngineSuggestions(data);
+              if (suggestions.length > 0) {
+                console.log(
+                  `[Suggestions] Successfully fetched via Worker Proxy (${provider}):`,
+                  suggestions,
+                );
+                this.setCachedSuggestions(cacheKey, suggestions, settings);
+                return suggestions;
+              }
+            }
+          } else {
+            console.warn(
+              `[Suggestions] Custom proxy status ${res.status} for ${provider}`,
+            );
+          }
+        } catch (e) {
+          if (/** @type {Error} */ (e).name === "AbortError") return [];
+          console.error(`[Suggestions] Custom proxy error for ${provider}:`, e);
+        }
+        continue;
+      }
+
+      // STRATEGY 1: Cloudflare Edge Worker Proxy (Default)
+      try {
+        const baseWorkerUrl = this.defaultWorkerProxyUrl;
+        const proxyUrl = `${baseWorkerUrl.split("?")[0]}?engine=${encodeURIComponent(provider.toLowerCase())}&q=${encodeURIComponent(normalizedQuery)}`;
+        const res = await fetch(proxyUrl, { signal });
+        if (res.ok) {
+          const text = await res.text();
+          if (this.isValidJsonResponse(text)) {
+            const data = JSON.parse(text);
+            const suggestions = this.parseEngineSuggestions(data);
+            if (suggestions.length > 0) {
+              console.log(
+                `[Suggestions] Resolved via Worker Proxy (${provider}):`,
+                suggestions,
+              );
+              this.setCachedSuggestions(cacheKey, suggestions, settings);
+              return suggestions;
+            }
+          }
+        } else if (res.status === 429) {
+          console.warn(
+            `[Suggestions] Worker proxy rate limited (429) for ${provider}. Falling back to AllOrigins...`,
+          );
+        } else {
+          console.warn(
+            `[Suggestions] Worker proxy returned HTTP ${res.status} for ${provider}`,
+          );
+        }
+      } catch (e) {
+        if (/** @type {Error} */ (e).name === "AbortError") return [];
+        console.warn(
+          `[Suggestions] Worker proxy fetch failed for ${provider}:`,
+          e,
+        );
+      }
+
+      // STRATEGY 2: AllOrigins Raw (Fallback Proxy)
+      try {
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+        const res = await fetch(proxyUrl, { signal });
+        if (res.ok) {
+          const text = await res.text();
+          if (this.isValidJsonResponse(text)) {
+            const data = JSON.parse(text);
+            const suggestions = this.parseEngineSuggestions(data);
+            if (suggestions.length > 0) {
+              console.log(
+                `[Suggestions] Resolved via AllOrigins Raw (${provider})`,
+              );
+              this.setCachedSuggestions(cacheKey, suggestions, settings);
+              return suggestions;
+            }
+          }
+        } else {
+          console.warn(
+            `[Suggestions] AllOrigins returned HTTP ${res.status} for ${provider}`,
+          );
+        }
+      } catch (e) {
+        if (/** @type {Error} */ (e).name === "AbortError") return [];
+        console.warn(
+          `[Suggestions] AllOrigins proxy fetch failed for ${provider}:`,
+          e,
+        );
+      }
+    }
+
+    return [];
+  }
+}
+
+// Default singleton instance for fallback export
+const defaultSuggestionService = new SuggestionService();
 
 /**
  * Clears the in-memory suggestion cache.
  */
 export function clearSuggestionCache() {
-  suggestionCache.clear();
+  defaultSuggestionService.clearSuggestionCache();
 }
 
 /**
@@ -53,246 +330,14 @@ export function clearSuggestionCache() {
  * @param {string[]} results - Array of suggestion phrases.
  * @param {AppSettings} settings - Application settings object.
  */
-function setCachedSuggestions(key, results, settings) {
-  if (
-    settings?.cacheSuggestions !== false &&
-    Array.isArray(results) &&
-    results.length > 0
-  ) {
-    if (suggestionCache.size >= MAX_CACHE_SIZE) {
-      const firstKey = suggestionCache.keys().next().value;
-      if (firstKey) suggestionCache.delete(firstKey);
-    }
-    suggestionCache.set(key, results);
-  }
-}
-
 /**
- * Validates whether a response text is valid JSON and not an HTML error page.
- * @param {string} text - Raw fetch response text.
- * @returns {boolean} True if the response appears to be valid JSON.
- */
-function isValidJsonResponse(text) {
-  if (!text) return false;
-  const trimmed = text.trim().toLowerCase();
-  return !(
-    trimmed.startsWith("<") ||
-    trimmed.includes("<html") ||
-    trimmed.includes("<!doctype")
-  );
-}
-
-/**
- * Constructs the target suggest API URL for a given provider and query.
- * @param {string} engineName - Search engine provider name.
- * @param {string} query - Unencoded search query.
- * @returns {string} Target API URL.
- */
-function getEngineSuggestUrl(engineName, query) {
-  const encoded = encodeURIComponent(query);
-  switch (engineName) {
-    case "Google":
-      return `https://www.google.com/complete/search?client=chrome&q=${encoded}`;
-    case "Bing":
-      return `https://api.bing.com/osjson.aspx?query=${encoded}`;
-    case "Brave":
-      return `https://search.brave.com/api/suggest?q=${encoded}`;
-    case "DuckDuckGo":
-    default:
-      return `https://ac.duckduckgo.com/ac/?q=${encoded}&type=json`;
-  }
-}
-
-/**
- * Normalizes and parses raw API responses across various search engines into string arrays.
- * @param {any} data - Raw parsed JSON object or envelope.
- * @returns {string[]} Array of suggestion phrase strings.
- */
-function parseEngineSuggestions(data) {
-  if (!data) return [];
-  if (data.contents) {
-    try {
-      data =
-        typeof data.contents === "string"
-          ? JSON.parse(data.contents)
-          : data.contents;
-    } catch {
-      return [];
-    }
-  }
-  if (!Array.isArray(data)) return [];
-  if (Array.isArray(data[1])) {
-    return data[1]
-      .map((s) =>
-        typeof s === "string" ? s : s?.q || s?.name || s?.phrase || "",
-      )
-      .filter(Boolean);
-  }
-  return data
-    .map((item) =>
-      typeof item === "string" ? item : item?.phrase || item?.q || "",
-    )
-    .filter(Boolean);
-}
-
-/**
- * Generates the sequential execution queue of providers based on settings.
- * @param {AppSettings} settings - Application settings object.
- * @returns {string[]} Ordered array of provider names.
- */
-function getProviderQueue(settings) {
-  const providerMode = settings?.suggestProvider || "auto";
-  if (providerMode !== "auto") {
-    return [providerMode];
-  }
-  const activeEngine = settings?.searchEngine || DEFAULT_PROVIDER;
-  const primary = ALL_PROVIDERS.includes(activeEngine)
-    ? activeEngine
-    : DEFAULT_PROVIDER;
-  return [primary, ...ALL_PROVIDERS.filter((p) => p !== primary)];
-}
-
-/**
- * Fetches external search suggestions across available proxy and provider fallbacks.
+ * Standalone wrapper for fetching external search suggestions using default SuggestionService instance.
  * @param {string} query - Search input text.
  * @param {AppSettings} [settings={}] - Application settings.
  * @returns {Promise<string[]>} Resolves to array of suggestion phrases.
  */
 export async function fetchExternalSuggestions(query, settings = {}) {
-  const normalizedQuery = query.toLowerCase().trim();
-  if (!normalizedQuery) return [];
-
-  const queue = getProviderQueue(settings);
-
-  // Check cache against available providers in queue order using the resolving provider key
-  if (settings?.cacheSuggestions !== false) {
-    for (const provider of queue) {
-      const cacheKey = `${provider}:${normalizedQuery}`;
-      if (suggestionCache.has(cacheKey)) {
-        console.log(`[Suggestions] Resolved from local cache (${cacheKey})`);
-        return suggestionCache.get(cacheKey) || [];
-      }
-    }
-  }
-
-  if (activeFetchController) {
-    activeFetchController.abort();
-  }
-  activeFetchController = new AbortController();
-  const signal = activeFetchController.signal;
-
-  const cacheBuster = `&_cb=${Date.now()}`;
-
-  for (const provider of queue) {
-    const targetUrl = getEngineSuggestUrl(provider, query) + cacheBuster;
-    const cacheKey = `${provider}:${normalizedQuery}`;
-
-    // STRATEGY 0: Custom User Proxy (Cloudflare Worker & Standard Proxies)
-    if (settings?.customProxyUrl) {
-      try {
-        const isWorker = settings.customProxyUrl.includes("workers.dev");
-        const proxyUrl = isWorker
-          ? `${settings.customProxyUrl.split("?")[0]}?engine=${encodeURIComponent(provider.toLowerCase())}&q=${encodeURIComponent(query)}`
-          : settings.customProxyUrl.endsWith("=") ||
-              settings.customProxyUrl.endsWith("?")
-            ? `${settings.customProxyUrl}${encodeURIComponent(targetUrl)}`
-            : `${settings.customProxyUrl}?url=${encodeURIComponent(targetUrl)}`;
-
-        const res = await fetch(proxyUrl, { signal });
-        if (res.ok) {
-          const text = await res.text();
-          if (isValidJsonResponse(text)) {
-            const data = JSON.parse(text);
-            const suggestions = parseEngineSuggestions(data);
-            if (suggestions.length > 0) {
-              console.log(
-                `[Suggestions] Successfully fetched via Worker Proxy (${provider}):`,
-                suggestions,
-              );
-              setCachedSuggestions(cacheKey, suggestions, settings);
-              return suggestions;
-            }
-          }
-        } else {
-          console.warn(
-            `[Suggestions] Custom proxy status ${res.status} for ${provider}`,
-          );
-        }
-      } catch (e) {
-        if (/** @type {Error} */ (e).name === "AbortError") return [];
-        console.error(`[Suggestions] Custom proxy error for ${provider}:`, e);
-      }
-      // Continue loop to fallback providers if custom proxy fails
-      continue;
-    }
-
-    // STRATEGY 1: Cloudflare Edge Worker Proxy (Default)
-    try {
-      const proxyUrl = `https://0fluffstart-suggest-proxy.jbuilds.workers.dev?engine=${encodeURIComponent(provider.toLowerCase())}&q=${encodeURIComponent(query)}`;
-      const res = await fetch(proxyUrl, { signal });
-      if (res.ok) {
-        const text = await res.text();
-        if (isValidJsonResponse(text)) {
-          const data = JSON.parse(text);
-          const suggestions = parseEngineSuggestions(data);
-          if (suggestions.length > 0) {
-            console.log(
-              `[Suggestions] Resolved via Worker Proxy (${provider}):`,
-              suggestions,
-            );
-            setCachedSuggestions(cacheKey, suggestions, settings);
-            return suggestions;
-          }
-        }
-      } else if (res.status === 429) {
-        console.warn(
-          `[Suggestions] Worker proxy rate limited (429) for ${provider}. Falling back to AllOrigins...`,
-        );
-      } else {
-        console.warn(
-          `[Suggestions] Worker proxy returned HTTP ${res.status} for ${provider}`,
-        );
-      }
-    } catch (e) {
-      if (/** @type {Error} */ (e).name === "AbortError") return [];
-      console.warn(
-        `[Suggestions] Worker proxy fetch failed for ${provider}:`,
-        e,
-      );
-    }
-
-    // STRATEGY 2: AllOrigins Raw (Fallback Proxy)
-    try {
-      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-      const res = await fetch(proxyUrl, { signal });
-      if (res.ok) {
-        const text = await res.text();
-        if (isValidJsonResponse(text)) {
-          const data = JSON.parse(text);
-          const suggestions = parseEngineSuggestions(data);
-          if (suggestions.length > 0) {
-            console.log(
-              `[Suggestions] Resolved via AllOrigins Raw (${provider})`,
-            );
-            setCachedSuggestions(cacheKey, suggestions, settings);
-            return suggestions;
-          }
-        }
-      } else {
-        console.warn(
-          `[Suggestions] AllOrigins returned HTTP ${res.status} for ${provider}`,
-        );
-      }
-    } catch (e) {
-      if (/** @type {Error} */ (e).name === "AbortError") return [];
-      console.warn(
-        `[Suggestions] AllOrigins proxy fetch failed for ${provider}:`,
-        e,
-      );
-    }
-  }
-
-  return [];
+  return defaultSuggestionService.fetchExternalSuggestions(query, settings);
 }
 
 /**
@@ -308,6 +353,7 @@ export async function fetchExternalSuggestions(query, settings = {}) {
  */
 export function handleSuggestions(e, deps) {
   const {
+    suggestionService = defaultSuggestionService,
     links = [],
     settings = {},
     searchHistory = [],
@@ -322,10 +368,12 @@ export function handleSuggestions(e, deps) {
   const normalizedInput = inputVal.toLowerCase().trim();
 
   if (e && e.type === "input") {
-    originalSearchText = inputVal;
+    suggestionService.originalSearchText = inputVal;
   }
 
-  if (debounceTimer) clearTimeout(debounceTimer);
+  if (suggestionService.debounceTimer) {
+    clearTimeout(suggestionService.debounceTimer);
+  }
 
   if (normalizedInput.length < MIN_QUERY_LENGTH) {
     containerEl.innerHTML = "";
@@ -361,23 +409,25 @@ export function handleSuggestions(e, deps) {
 
   // 2. External Matches (Debounced)
   if (settings.externalSuggest) {
-    debounceTimer = setTimeout(() => {
-      fetchExternalSuggestions(normalizedInput, settings).then((external) => {
-        const uniqueExternal = external
-          .map((name) => ({
-            name,
-            type: /** @type {const} */ ("Search"),
-          }))
-          .filter(
-            (ext) =>
-              !localSuggestions.some(
-                (s) => s.name.toLowerCase() === ext.name.toLowerCase(),
-              ),
-          );
+    suggestionService.debounceTimer = setTimeout(() => {
+      suggestionService
+        .fetchExternalSuggestions(normalizedInput, settings)
+        .then((external) => {
+          const uniqueExternal = external
+            .map((name) => ({
+              name,
+              type: /** @type {const} */ ("Search"),
+            }))
+            .filter(
+              (ext) =>
+                !localSuggestions.some(
+                  (s) => s.name.toLowerCase() === ext.name.toLowerCase(),
+                ),
+            );
 
-        const finalSuggestions = [...localSuggestions, ...uniqueExternal];
-        renderSuggestions(finalSuggestions, containerEl, selectSuggestionFn);
-      });
+          const finalSuggestions = [...localSuggestions, ...uniqueExternal];
+          renderSuggestions(finalSuggestions, containerEl, selectSuggestionFn);
+        });
     }, DEBOUNCE_DELAY_MS);
   }
 }
@@ -417,7 +467,6 @@ export function renderSuggestions(suggestions, container, selectSuggestionFn) {
       );
       if (currentlyActive) currentlyActive.classList.remove("active");
       item.classList.add("active");
-      lastInteractionBy = "mouse";
     });
 
     const nameEl = document.createElement("span");
@@ -447,6 +496,7 @@ export function handleSuggestionKeyDown(
   inputEl,
   containerEl,
   selectSuggestionFn,
+  deps,
 ) {
   if (!containerEl || containerEl.classList.contains("hidden")) return;
 
@@ -458,9 +508,10 @@ export function handleSuggestionKeyDown(
     ? parseInt(activeItem.getAttribute("data-index") || "-1", 10)
     : -1;
 
+  const suggestionService = deps?.suggestionService || defaultSuggestionService;
+
   if (e.key === "ArrowDown" || e.key === "ArrowUp") {
     e.preventDefault();
-    lastInteractionBy = "keyboard";
 
     if (activeItem) activeItem.classList.remove("active");
 
@@ -486,13 +537,15 @@ export function handleSuggestionKeyDown(
         selectSuggestionFn({
           name: activeItem.dataset.name || "",
           url: activeItem.dataset.url || "",
-          type: /** @type {any} */ (activeItem.dataset.type),
+          type: /** @type {SuggestionItem['type']} */ (
+            activeItem.dataset.type || "Search"
+          ),
         });
       }
     }
   } else if (e.key === "Escape") {
     e.preventDefault();
-    if (inputEl) inputEl.value = originalSearchText;
+    if (inputEl) inputEl.value = suggestionService.originalSearchText;
     if (activeItem) activeItem.classList.remove("active");
     containerEl.classList.add("hidden");
   }

@@ -166,7 +166,7 @@ body.material .link-item:hover .link-icon-circle span {
   grid-column: 1 / -1;
   display: flex;
   justify-content: center;
-  padding: 40px 0 20px;
+  padding: clamp(30px, 6vh, 60px) 0 20px;
   width: 100%;
 }
 
