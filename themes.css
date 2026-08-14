@@ -277,6 +277,49 @@ body.night-glow .link-item:hover .link-icon-circle {
   display: inline-block;
 }
 
+.clock-style-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--accent);
+  font-weight: 700;
+}
+
+.clock-style-gradient {
+  background: linear-gradient(135deg, var(--accent), var(--text));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.clock-style-glitch {
+  font-family: "Courier New", monospace;
+  font-weight: 800;
+  color: var(--text);
+  text-shadow:
+    2px 2px 0px var(--dim),
+    -2px -2px 0px var(--accent);
+}
+
+.clock-style-glass {
+  background: linear-gradient(180deg, var(--text) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px var(--accent);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.clock-style-threed {
+  font-weight: 900;
+  color: var(--accent);
+  text-shadow:
+    1px 1px 0px var(--dim),
+    2px 2px 0px var(--dim),
+    3px 3px 0px var(--dim),
+    4px 4px 0px var(--dim),
+    5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
 /* --- 3. SHAPE-BASED MORPHING ENGINE v2.1 --- */
 .link-item {
   transition: transform 0.2s ease;
@@ -397,7 +440,7 @@ body.nord .link-item:hover .link-icon-circle span,
 body.sunset .link-item:hover .link-icon-circle span,
 body.night-glow .link-item:hover .link-icon-circle span,
 body.material-you .link-item:hover .link-icon-circle span {
-  color: var(--bg) !important;
+  color: var(--card) !important;
 }
 
 body.evergreen-archive .link-item:hover .link-icon-circle svg,
@@ -405,6 +448,19 @@ body.nord .link-item:hover .link-icon-circle svg,
 body.sunset .link-item:hover .link-icon-circle svg,
 body.night-glow .link-item:hover .link-icon-circle svg,
 body.material-you .link-item:hover .link-icon-circle svg {
-  stroke: var(--bg) !important;
-  color: var(--bg) !important;
+  stroke: var(--card) !important;
+  color: var(--card) !important;
+}
+
+/* True Black (AMOLED) Standalone Theme */
+body.amoled {
+  --bg: #000000;
+  --card: #000000;
+  --card-hover: #121212;
+  --accent: #ffffff;
+  --text: #ffffff;
+  --dim: #888888;
+  --border: #222222;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 1);
+  background-color: #000000;
 }

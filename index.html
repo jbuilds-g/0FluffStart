@@ -66,14 +66,12 @@
             width="20"
             height="20"
             viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
           >
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              fill="currentColor"
+              d="m15.5 14l5 5l-1.5 1.5l-5-5v-.79l-.27-.28A6.47 6.47 0 0 1 9.5 16A6.5 6.5 0 0 1 3 9.5A6.5 6.5 0 0 1 9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.57 4.23l.28.27zm-6-9.5l-.55.03c-.24.52-.61 1.4-.88 2.47h2.86c-.27-1.07-.64-1.95-.88-2.47c-.18-.03-.36-.03-.55-.03M13.83 7a4.94 4.94 0 0 0-2.68-2.22c.24.53.55 1.3.78 2.22zM5.17 7h1.9c.23-.92.54-1.69.78-2.22A4.94 4.94 0 0 0 5.17 7M4.5 9.5c0 .5.08 1.03.23 1.5h2.14l-.12-1.5l.12-1.5H4.73c-.15.47-.23 1-.23 1.5m9.77 1.5c.15-.47.23-1 .23-1.5s-.08-1.03-.23-1.5h-2.14a9.5 9.5 0 0 1 0 3zm-6.4-3l-.12 1.5l.12 1.5h3.26a9.5 9.5 0 0 0 0-3zm1.63 6.5c.18 0 .36 0 .53-.03c.25-.52.63-1.4.9-2.47H8.07c.27 1.07.65 1.95.9 2.47zm4.33-2.5h-1.9c-.23.92-.54 1.69-.78 2.22A4.94 4.94 0 0 0 13.83 12m-8.66 0a4.94 4.94 0 0 0 2.68 2.22c-.24-.53-.55-1.3-.78-2.22z"
+            />
           </svg>
         </button>
 
@@ -183,7 +181,10 @@
               </div>
 
               <div class="help-text">
-                Add, edit, or remove the shortcut icons on your main dashboard.
+                Add, edit, organize, or delete dashboard shortcut icons and
+                folders. Use bulk selection to move items between folders, or
+                toggle whether shortcut titles are always visible under each
+                icon.
               </div>
 
               <div id="linkListContainer">
@@ -246,20 +247,12 @@
                   </button>
                 </div>
               </div>
-            </div>
 
-            <div
-              class="setting-group desktop-only-setting setting-group-desktop"
-            >
-              <div class="setting-header setting-header-start">
+              <div class="desktop-only-setting" style="margin-top: 14px">
                 <label class="radio-option radio-option-no-margin">
                   <input type="checkbox" id="showTitlesToggle" /> Show Quick
                   Link Titles
                 </label>
-                <button class="help-btn">?</button>
-              </div>
-              <div class="help-text">
-                When off, link names stay hidden until you hover over the icon.
               </div>
             </div>
           </div>
@@ -333,6 +326,9 @@
                 <div class="select-dropdown hidden">
                   <div class="select-option" data-value="dark">
                     OLED Dark (Default)
+                  </div>
+                  <div class="select-option" data-value="amoled">
+                    True Black (AMOLED)
                   </div>
                   <div class="select-option" data-value="light">
                     Clean Light
@@ -424,6 +420,21 @@
                     Ultra Minimal
                   </div>
                   <div class="select-option" data-value="block">Card Block</div>
+                  <div class="select-option" data-value="outline">
+                    Outline Stroke
+                  </div>
+                  <div class="select-option" data-value="gradient">
+                    Gradient Flow
+                  </div>
+                  <div class="select-option" data-value="glitch">
+                    Cyber Glitch
+                  </div>
+                  <div class="select-option" data-value="glass">
+                    Glassmorphism
+                  </div>
+                  <div class="select-option" data-value="threed">
+                    3D Extruded
+                  </div>
                 </div>
               </div>
 
@@ -581,70 +592,49 @@
           <div class="category-content">
             <div class="setting-group">
               <div class="setting-header">
-                <h3>Live Search Suggestions</h3>
+                <h3>Search Suggestions & Autocomplete</h3>
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Fetches real-time autocomplete suggestions from search engines
-                as you type.
+                Turn on live search autocomplete to see real-time search results
+                as you type. Choose your favorite suggestion provider, save
+                search queries locally to speed up future requests, or set a
+                custom proxy server for routing.
                 <br /><br />
                 <span style="opacity: 0.85">
-                  ⚠️ <b>Privacy Note:</b> Requests are routed through a secure
-                  proxy layer to enable cross-origin suggestions. Keep disabled
-                  if you prefer strictly local searches.
+                  ⚠️ <b>Privacy Note:</b> Suggestions are routed through a
+                  secure CORS proxy. Keep this turned off if you prefer strictly
+                  local offline searches.
                 </span>
               </div>
+
               <label class="radio-option radio-option-start-sm">
                 <input type="checkbox" id="externalSuggestToggle" /> Enable Live
                 Suggestions
               </label>
-            </div>
 
-            <div class="setting-group" id="customProxyContainer">
-              <div class="setting-header">
-                <h3>Custom Proxy Endpoint</h3>
-                <button class="help-btn">?</button>
+              <div id="customProxyContainer" style="margin-top: 12px">
+                <input
+                  type="url"
+                  id="customProxyInput"
+                  placeholder="Custom Proxy (e.g., https://my-proxy.com/?)"
+                  class="custom-proxy-input"
+                />
               </div>
-              <div class="help-text">
-                Specify an optional custom reverse proxy endpoint URL if you
-                prefer not to use the default serverless Cloudflare Edge Worker.
-              </div>
-              <input
-                type="url"
-                id="customProxyInput"
-                placeholder="e.g., https://my-proxy.com/?"
-                class="custom-proxy-input"
-              />
-            </div>
 
-            <div class="setting-group">
-              <div class="setting-header">
-                <h3>Suggestion Caching</h3>
-                <button class="help-btn">?</button>
-              </div>
-              <div class="help-text">
-                Stores recent suggestion results in temporary local memory to
-                accelerate response times and minimize network requests.
-              </div>
-              <label class="radio-option radio-option-start-sm">
+              <label
+                class="radio-option radio-option-start-sm"
+                style="margin-top: 12px"
+              >
                 <input type="checkbox" id="cacheSuggestToggle" checked /> Cache
                 Search Suggestions
               </label>
-            </div>
 
-            <div class="setting-group">
-              <div class="setting-header">
-                <h3>Suggestion Provider</h3>
-                <button class="help-btn">?</button>
-              </div>
-              <div class="help-text">
-                Choose your preferred autocomplete provider or let Automatic
-                match your active search engine with fallback support.
-              </div>
               <div
                 class="custom-select"
                 id="suggestProviderSelect"
                 data-value="auto"
+                style="margin-top: 12px"
               >
                 <div class="select-trigger">
                   <span class="selected-text"
@@ -786,41 +776,15 @@
           <div class="category-content">
             <div class="setting-group">
               <div class="setting-header">
-                <h3>Search History Cleanup</h3>
+                <h3>Storage & Data Maintenance</h3>
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Purges the private transaction log indices of your local
-                navigation history parameters.
+                Manage your saved dashboard state. Save or restore JSON backup
+                files, clear your saved local search history, or run a factory
+                reset to wipe all custom links and settings.
               </div>
-              <button id="clearHistoryBtn" class="secondary danger-btn">
-                Clear All Search History
-              </button>
-            </div>
 
-            <div class="setting-group">
-              <div class="setting-header">
-                <h3>Reset Preferences</h3>
-                <button class="help-btn">?</button>
-              </div>
-              <div class="help-text">
-                Wipes all custom settings and returns the dashboard to its
-                original factory state.
-              </div>
-              <button id="resetSettingsBtn" class="secondary danger-btn">
-                Factory Reset Settings
-              </button>
-            </div>
-
-            <div class="setting-group">
-              <div class="setting-header">
-                <h3 class="margin-top-zero">Data Backup & Restore</h3>
-                <button class="help-btn">?</button>
-              </div>
-              <div class="help-text">
-                Download your links and settings as a file, or load a previous
-                backup.
-              </div>
               <div class="action-btn-row">
                 <button id="backupDataBtn" class="secondary">
                   Backup (Save)
@@ -835,6 +799,15 @@
                 accept=".json"
                 class="hidden-input"
               />
+
+              <div class="action-btn-row" style="margin-top: 12px">
+                <button id="clearHistoryBtn" class="secondary danger-btn">
+                  Clear Search History
+                </button>
+                <button id="resetSettingsBtn" class="secondary danger-btn">
+                  Factory Reset
+                </button>
+              </div>
             </div>
           </div>
         </details>

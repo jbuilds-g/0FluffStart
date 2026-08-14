@@ -531,17 +531,15 @@ export function autoSaveSettings(updates = null) {
 
 export function updateSuggestSettingsVisibility() {
   const isEnabled = !!document.getElementById("externalSuggestToggle")?.checked;
-  const cacheGroup = document
-    .getElementById("cacheSuggestToggle")
-    ?.closest(".setting-group");
-  const providerGroup = document
-    .getElementById("suggestProviderSelect")
-    ?.closest(".setting-group");
   const proxyGroup = document.getElementById("customProxyContainer");
+  const cacheToggle = document
+    .getElementById("cacheSuggestToggle")
+    ?.closest(".radio-option");
+  const providerSelect = document.getElementById("suggestProviderSelect");
 
-  if (cacheGroup) cacheGroup.classList.toggle("hidden", !isEnabled);
-  if (providerGroup) providerGroup.classList.toggle("hidden", !isEnabled);
   if (proxyGroup) proxyGroup.classList.toggle("hidden", !isEnabled);
+  if (cacheToggle) cacheToggle.classList.toggle("hidden", !isEnabled);
+  if (providerSelect) providerSelect.classList.toggle("hidden", !isEnabled);
 }
 
 export async function loadSettings() {

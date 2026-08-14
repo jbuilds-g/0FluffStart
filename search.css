@@ -45,8 +45,9 @@ body.material .search-bar {
 }
 
 .search-icon {
-  width: 44px;
+  width: 50px;
   height: 100%;
+  border-radius: 0 var(--radius) var(--radius) 0;
   background: transparent;
   color: var(--accent);
   display: flex;
@@ -54,6 +55,25 @@ body.material .search-bar {
   justify-content: center;
   border: none;
   cursor: pointer;
+  transition:
+    color 0.2s ease,
+    transform 0.1s ease,
+    background 0.2s ease;
+}
+
+.search-icon:hover {
+  color: var(--text);
+  background: var(--card-hover);
+}
+
+.search-icon:active {
+  transform: scale(0.92);
+}
+
+.search-icon svg {
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
 }
 
 /* Material 3 Override: Fix icon radius due to pill shape */
