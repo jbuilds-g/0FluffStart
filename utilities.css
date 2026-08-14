@@ -55,14 +55,14 @@ body.modal-open {
 /* --- TOAST NOTIFICATION ENGINE --- */
 .toast-container {
   position: fixed !important;
-  top: 24px !important;
+  top: var(--space-lg) !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   z-index: var(--z-toast) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: var(--space-sm) !important;
   pointer-events: none !important;
   width: 90% !important;
   max-width: 400px !important;
@@ -79,10 +79,10 @@ body.modal-open {
   background: var(--card);
   color: var(--text);
   border: 1px solid var(--border);
-  padding: 12px 20px;
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  font-size: 0.9rem;
+  box-shadow: var(--shadow-lg);
+  font-size: var(--font-size-sm);
   font-family: var(--font-main);
   pointer-events: auto;
   opacity: 0;

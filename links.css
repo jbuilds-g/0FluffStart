@@ -6,7 +6,7 @@
 .link-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
+  gap: var(--space-md);
   justify-content: center;
 }
 
@@ -74,7 +74,7 @@ body.material .link-item:hover .link-icon-circle span {
 
 .link-name {
   color: var(--text);
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
   text-align: center;
   width: 100%;
   white-space: nowrap;
@@ -85,7 +85,7 @@ body.material .link-item:hover .link-icon-circle span {
 
 .link-acronym {
   font-family: var(--font-main);
-  font-weight: 800;
+  font-weight: var(--font-weight-extrabold);
   color: var(--accent);
 }
 
@@ -173,16 +173,15 @@ body.material .link-item:hover .link-icon-circle span {
 .back-pill {
   display: flex;
   align-items: center;
-  gap: 12px;
-  /* 8px padding on the left to tightly hug the circle, 24px on right for the text */
-  padding: 8px 24px 8px 8px;
-  background: var(--card); /* Solid color 1 (Main Element) */
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg) var(--space-sm) var(--space-sm);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: 50px;
   color: var(--text);
   font-family: var(--font-main);
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 1.5px;
   cursor: pointer;
   transition:
@@ -211,7 +210,7 @@ body.material .link-item:hover .link-icon-circle span {
 /* Solid hover state */
 .back-pill:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   border-color: var(--accent);
 }
 

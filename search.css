@@ -45,9 +45,8 @@ body.material .search-bar {
 }
 
 .search-icon {
-  width: 50px;
+  width: 44px;
   height: 100%;
-  border-radius: 0 var(--radius) var(--radius) 0;
   background: transparent;
   color: var(--accent);
   display: flex;
@@ -126,10 +125,10 @@ body.material .engine-switcher {
   border-radius: var(--radius);
   width: 180px;
   z-index: 9999;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-lg);
   max-height: 220px;
   overflow-y: auto;
-  padding: 5px;
+  padding: var(--space-xs);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -185,7 +184,7 @@ body.material .engine-switcher {
   border-radius: var(--radius);
   overflow: hidden;
   z-index: 999;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-lg);
   max-height: 250px;
   overflow-y: auto;
   padding: 0;
@@ -254,7 +253,7 @@ body.material .suggestions-container {
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--overlay-backdrop-color);
   backdrop-filter: blur(0px);
   -webkit-backdrop-filter: blur(0px);
   z-index: 99;

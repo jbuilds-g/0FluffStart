@@ -11,7 +11,9 @@ body.light {
   --accent: #007aff;
   --dim: #8e8e93;
   --border: #d1d1d6;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --shadow: var(--shadow-md);
+  --overlay-backdrop-color: rgba(0, 0, 0, 0.35);
 }
 
 body.cyberpunk {
@@ -59,7 +61,9 @@ body.paper {
   --dim: #777777;
   --border: #d1cfc8;
   --radius: 2px;
-  --shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  --shadow-color: rgba(0, 0, 0, 0.06);
+  --shadow: var(--shadow-sm);
+  --overlay-backdrop-color: rgba(0, 0, 0, 0.3);
 }
 
 body.paper .search-bar,
@@ -182,6 +186,8 @@ body.night-glow {
   --border: rgba(255, 255, 255, 0.4);
   --dim: #aaaaaa;
   --delete: #ff4444;
+  --shadow-color: rgba(255, 255, 255, 0.15);
+  --overlay-backdrop-color: rgba(0, 0, 0, 0.8);
 }
 
 body.night-glow .clock,
@@ -190,8 +196,8 @@ body.night-glow .link-name,
 body.night-glow h2,
 body.night-glow h3 {
   text-shadow:
-    0 0 10px rgba(255, 255, 255, 0.8),
-    0 0 20px rgba(255, 255, 255, 0.3);
+    0 0 10px var(--fg),
+    0 0 20px var(--shadow-color);
 }
 
 body.night-glow .search-bar,
@@ -202,22 +208,22 @@ body.night-glow .suggestions-container,
 body.night-glow .engine-dropdown,
 body.night-glow input,
 body.night-glow select {
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 15px var(--shadow-color);
   border: 1px solid var(--border);
   background: var(--bg);
 }
 
 body.night-glow .clock.clock-style-neon {
   text-shadow:
-    0 0 5px #fff,
-    0 0 15px #fff,
-    0 0 30px rgba(255, 255, 255, 0.8),
-    0 0 60px rgba(255, 255, 255, 0.5);
+    0 0 5px var(--fg),
+    0 0 15px var(--fg),
+    0 0 30px var(--fg),
+    0 0 60px var(--shadow-color);
 }
 
 body.night-glow .link-item:hover .link-icon-circle {
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-  border-color: #ffffff;
+  box-shadow: 0 0 20px var(--fg);
+  border-color: var(--fg);
 }
 
 /* --- 2. ADAPTIVE CLOCK STYLES --- */
