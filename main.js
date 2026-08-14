@@ -98,8 +98,16 @@ document.addEventListener("DOMContentLoaded", () => {
   updateClock();
   setInterval(updateClock, 1000);
 
-  store.subscribe(() => {
-    renderLinks();
+  store.subscribe((prevState, currentState) => {
+    const linksChanged = prevState.links !== currentState.links;
+    const folderChanged =
+      prevState.currentFolderId !== currentState.currentFolderId;
+    const titlesChanged =
+      prevState.settings?.showTitles !== currentState.settings?.showTitles;
+
+    if (linksChanged || folderChanged || titlesChanged) {
+      renderLinks();
+    }
   });
 
   const searchInput = document.getElementById("searchInput");

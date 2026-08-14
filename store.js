@@ -80,8 +80,34 @@ function loadInitialState() {
     activeFolderId: null,
     editorTargetFolderId: null,
     isEditingId: null,
+    expandedFolderIds: [],
+    isCreatingFolder: false,
   };
 }
+
+/**
+ * @typedef {Object} Link
+ * @property {string} id
+ * @property {string} name
+ * @property {string} [url]
+ * @property {boolean} [isFolder]
+ * @property {string|null} [parentId]
+ */
+
+/**
+ * @typedef {Object} StoreState
+ * @property {Link[]} links
+ * @property {Object} settings
+ * @property {string[]} searchHistory
+ * @property {string|null} currentFolderId
+ * @property {boolean} isSelectionMode
+ * @property {string[]} selectedLinkIds
+ * @property {string|null} activeFolderId
+ * @property {string|null} editorTargetFolderId
+ * @property {string|null} isEditingId
+ * @property {string[]} expandedFolderIds
+ * @property {boolean} isCreatingFolder
+ */
 
 let state = loadInitialState();
 const listeners = new Set();
@@ -95,12 +121,20 @@ const saveToStorage = (key, data) => {
 };
 
 export const store = {
+  /**
+   * @returns {StoreState}
+   */
   getState() {
     return state;
   },
+  /**
+   * Updates store state and notifies listeners with previous and next states.
+   * @param {Partial<StoreState>|((prevState: StoreState) => Partial<StoreState>)} update
+   */
   setState(update) {
-    const nextState = typeof update === "function" ? update(state) : update;
-    state = { ...state, ...nextState };
+    const prevState = state;
+    const nextState = typeof update === "function" ? update(prevState) : update;
+    state = { ...prevState, ...nextState };
 
     if ("links" in nextState) saveToStorage("0fluff_links", state.links);
     if ("settings" in nextState)
@@ -108,12 +142,19 @@ export const store = {
     if ("searchHistory" in nextState)
       saveToStorage("0fluff_history", state.searchHistory);
 
-    listeners.forEach((listener) => listener(state));
+    listeners.forEach((listener) => listener(prevState, state));
   },
+  /**
+   * @param {(prevState: StoreState, currentState: StoreState) => void} listener
+   * @returns {() => void} Unsubscribe callback
+   */
   subscribe(listener) {
     listeners.add(listener);
     return () => listeners.delete(listener);
   },
+  /**
+   * @param {(prevState: StoreState, currentState: StoreState) => void} listener
+   */
   unsubscribe(listener) {
     listeners.delete(listener);
   },

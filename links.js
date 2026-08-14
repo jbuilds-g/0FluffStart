@@ -2,9 +2,6 @@ import { store } from "./store.js";
 import { generateId, sanitizeUrl } from "./utils.js";
 import { customConfirm, showToast } from "./ui.js";
 
-/** @type {Set<string>} Tracks expanded folder sub-containers in manager */
-const expandedFolderIds = new Set();
-
 const folderTemplate = document.createElement("div");
 folderTemplate.className = "link-item is-folder";
 folderTemplate.innerHTML = `
@@ -145,16 +142,19 @@ export function toggleSelection(id) {
   renderLinkManager();
 }
 
+/**
+ * Renders the link manager UI using targeted DOM updates.
+ */
 export function renderLinkManager() {
   const linkManagerContent = document.getElementById("linkManagerContent");
   if (!linkManagerContent) return;
-  linkManagerContent.innerHTML = "";
 
   const state = store.getState();
   const links = state.links || [];
   const isSelectionMode = state.isSelectionMode;
   const selectedLinkIds = state.selectedLinkIds || [];
   const activeFolderId = state.activeFolderId;
+  const expandedFolderIds = new Set(state.expandedFolderIds || []);
 
   const standardBtns = document.getElementById("standardActionBtns");
   const selectionToolbar = document.getElementById("selectionToolbar");
@@ -181,6 +181,13 @@ export function renderLinkManager() {
   const folderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="manager-item-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
   const linkSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="manager-item-icon link-type"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
 
+  /**
+   * Creates a manager item DOM node.
+   * @param {import("./store.js").Link} link
+   * @param {number} level
+   * @param {boolean} isSelectable
+   * @returns {HTMLElement}
+   */
   function createManagerItem(link, level = 0, isSelectable = false) {
     const item = document.createElement("div");
     item.className = "link-manager-item";
@@ -284,6 +291,12 @@ export function renderLinkManager() {
     return item;
   }
 
+  /**
+   * Recursively builds tree nodes for link manager.
+   * @param {string|null} parentId
+   * @param {number} level
+   * @returns {DocumentFragment}
+   */
   function buildFolderNodes(parentId = null, level = 0) {
     const containerFragment = document.createDocumentFragment();
     const childLinks = links.filter((l) => (l.parentId || null) === parentId);
@@ -297,6 +310,7 @@ export function renderLinkManager() {
       if (link.isFolder) {
         const subContainer = document.createElement("div");
         subContainer.className = "folder-sub-container";
+        subContainer.dataset.folderId = link.id;
         const isExpanded = expandedFolderIds.has(link.id);
         subContainer.style.display = isExpanded ? "block" : "none";
         subContainer.style.marginTop = "4px";
@@ -307,16 +321,20 @@ export function renderLinkManager() {
           toggleBtn.classList.toggle("expanded", isExpanded);
           row.addEventListener("click", (e) => {
             if (e.target.closest(".link-actions")) return;
+            const currentExp = new Set(
+              store.getState().expandedFolderIds || [],
+            );
             const isHidden = subContainer.style.display === "none";
             if (isHidden) {
               subContainer.style.display = "block";
-              expandedFolderIds.add(link.id);
+              currentExp.add(link.id);
               toggleBtn.classList.add("expanded");
             } else {
               subContainer.style.display = "none";
-              expandedFolderIds.delete(link.id);
+              currentExp.delete(link.id);
               toggleBtn.classList.remove("expanded");
             }
+            store.setState({ expandedFolderIds: Array.from(currentExp) });
           });
         }
 
@@ -357,18 +375,56 @@ export function renderLinkManager() {
     return containerFragment;
   }
 
-  const fragment = buildFolderNodes(null, 0);
+  const newFragment = buildFolderNodes(null, 0);
 
-  if (isSelectionMode && fragment.children.length === 0) {
+  if (isSelectionMode && newFragment.children.length === 0) {
     const emptyMsg = document.createElement("div");
     emptyMsg.innerText = "No other links or folders available.";
     emptyMsg.className = "empty-manager-msg";
-    fragment.appendChild(emptyMsg);
+    newFragment.appendChild(emptyMsg);
   }
 
-  linkManagerContent.appendChild(fragment);
+  const existingItems = Map.groupBy
+    ? Map.groupBy(
+        Array.from(linkManagerContent.querySelectorAll(".link-manager-item")),
+        (el) => el.dataset.id,
+      )
+    : new Map();
+
+  if (!Map.groupBy) {
+    Array.from(
+      linkManagerContent.querySelectorAll(".link-manager-item"),
+    ).forEach((el) => {
+      const id = el.dataset.id;
+      if (id) existingItems.set(id, [el]);
+    });
+  }
+
+  const newItems = Array.from(newFragment.children);
+  const targetIds = new Set(
+    newItems
+      .filter((el) => el.classList.contains("link-manager-item"))
+      .map((el) => el.dataset.id),
+  );
+
+  Array.from(linkManagerContent.children).forEach((child) => {
+    if (
+      child.classList.contains("link-manager-item") &&
+      !targetIds.has(child.dataset.id)
+    ) {
+      child.remove();
+    }
+  });
+
+  linkManagerContent.innerHTML = "";
+  linkManagerContent.appendChild(newFragment);
 }
 
+/**
+ * Opens the link or folder editor interface.
+ * @param {string|null} id
+ * @param {string|null} parentId
+ */
 export function openEditor(id = null, parentId = null) {
   const linkListContainer = document.getElementById("linkListContainer");
   const linkEditorContainer = document.getElementById("linkEditorContainer");
@@ -386,6 +442,7 @@ export function openEditor(id = null, parentId = null) {
 
   store.setState({
     isEditingId: id,
+    isCreatingFolder: false,
     editorTargetFolderId: parentId !== null ? parentId : currentFolderId,
   });
 
@@ -424,21 +481,21 @@ export function cancelEdit() {
   store.setState({ isEditingId: null, editorTargetFolderId: null });
 }
 
+/**
+ * Saves a link or folder entry to store state based on form inputs.
+ */
 export function saveLink() {
   const nameInput = document.getElementById("editName");
   const urlInput = document.getElementById("editUrl");
   const name = nameInput ? nameInput.value.trim() : "";
   const url = urlInput ? urlInput.value.trim() : "";
-  const isFolderCreation =
-    urlInput &&
-    (urlInput.classList.contains("field-hidden") ||
-      urlInput.style.display === "none");
 
   if (!name) return showToast("Please fill in the name.", "error");
 
   const state = store.getState();
   const currentLinks = [...(state.links || [])];
   const isEditingId = state.isEditingId;
+  const isCreatingFolder = state.isCreatingFolder;
   const targetFolderId =
     state.editorTargetFolderId !== null
       ? state.editorTargetFolderId
@@ -450,20 +507,20 @@ export function saveLink() {
       currentLinks[idx].name = name;
       if (!currentLinks[idx].isFolder) currentLinks[idx].url = url;
     }
-    store.setState({ links: currentLinks });
+    store.setState({ links: currentLinks, isCreatingFolder: false });
     showToast(
       currentLinks[idx]?.isFolder ? "Folder updated" : "Link updated",
       "success",
     );
   } else {
-    if (isFolderCreation) {
+    if (isCreatingFolder) {
       currentLinks.push({
         id: generateId(),
         name,
         isFolder: true,
         parentId: targetFolderId,
       });
-      store.setState({ links: currentLinks });
+      store.setState({ links: currentLinks, isCreatingFolder: false });
       showToast("Folder created successfully", "success");
     } else {
       if (!url) return showToast("Please fill in the URL.", "error");
@@ -474,7 +531,7 @@ export function saveLink() {
         isFolder: false,
         parentId: targetFolderId,
       });
-      store.setState({ links: currentLinks });
+      store.setState({ links: currentLinks, isCreatingFolder: false });
       showToast("Link added successfully", "success");
     }
   }
@@ -507,6 +564,9 @@ export async function deleteLink(id, e) {
   }
 }
 
+/**
+ * Prepares the editor to create a new folder.
+ */
 export function addFolder() {
   const linkListContainer = document.getElementById("linkListContainer");
   const linkEditorContainer = document.getElementById("linkEditorContainer");
@@ -520,6 +580,7 @@ export function addFolder() {
 
   store.setState({
     isEditingId: null,
+    isCreatingFolder: true,
     editorTargetFolderId: store.getState().currentFolderId,
   });
 

@@ -61,6 +61,10 @@ export const searchEngines = [
   },
 ];
 
+/**
+ * Retrieves list of active search engines combining built-in and custom configurations.
+ * @returns {Array<{name: string, url: string, icon: string, isCustom?: boolean, id?: string}>}
+ */
 export function getAvailableEngines() {
   const settings = store.getState().settings || {};
   const enabledNames =
@@ -478,6 +482,10 @@ export async function clearBackground() {
   if (overlay) overlay.classList.remove("bg-overlay-active");
 }
 
+/**
+ * Automatically persists settings updates to the store and triggers theme re-renders.
+ * @param {Object|null} [updates=null]
+ */
 export function autoSaveSettings(updates = null) {
   const currentSettings = store.getState().settings || {};
   const newSettings = { ...currentSettings };
