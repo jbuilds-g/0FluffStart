@@ -255,10 +255,54 @@ export function toggleEngineDropdown() {
 
 export function handleSearch(e) {
   if (e.key === "Enter" || e.type === "click") {
-    const val = document.getElementById("searchInput")?.value.trim();
+    let val = document.getElementById("searchInput")?.value.trim();
     if (!val) return;
 
     const state = store.getState();
+    const available = getAvailableEngines();
+
+    const customEngines = state.settings?.customEngines || [];
+    const customTags = customEngines.map((c) => ({
+      tag: c.tag || `?${c.name.charAt(0).toLowerCase()}`,
+      name: c.name,
+    }));
+
+    const tagMap = [
+      ...customTags,
+      { tag: "?bi", name: "Bing" },
+      { tag: "?b", name: "Brave" },
+      { tag: "?st", name: "Startpage" },
+      { tag: "?s", name: "SearXNG" },
+      { tag: "?g", name: "Google" },
+      { tag: "?d", name: "DuckDuckGo" },
+      { tag: "?e", name: "Ecosia" },
+      { tag: "?k", name: "Kagi" },
+      { tag: "?w", name: "Wikipedia" },
+      { tag: "?y", name: "YouTube" },
+    ];
+
+    let targetEngine = null;
+    for (const item of tagMap) {
+      if (
+        val.toLowerCase().startsWith(item.tag + " ") ||
+        val.toLowerCase() === item.tag
+      ) {
+        targetEngine = available.find(
+          (eng) => eng.name.toLowerCase() === item.name.toLowerCase(),
+        );
+        val = val.slice(item.tag.length).trim();
+        break;
+      }
+    }
+
+    if (!val) return;
+
+    if (!targetEngine) {
+      targetEngine =
+        available.find((s) => s.name === state.settings?.searchEngine) ||
+        available[0];
+    }
+
     const history = state.searchHistory || [];
     if (state.settings?.historyEnabled !== false) {
       const updatedHistory = [
@@ -268,22 +312,27 @@ export function handleSearch(e) {
       store.setState({ searchHistory: updatedHistory });
     }
 
-    const available = getAvailableEngines();
-    const engine =
-      available.find((s) => s.name === state.settings?.searchEngine) ||
-      available[0];
     if (val.includes(".") && !val.includes(" ")) {
       const safeUrl = sanitizeUrl(val);
       if (safeUrl !== "#") window.location.href = safeUrl;
     } else {
-      window.location.href = `${engine.url}${encodeURIComponent(val)}`;
+      window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
     }
   }
 }
 
 export function selectSuggestion(suggestion) {
   const inputEl = document.getElementById("searchInput");
-  if (inputEl) inputEl.value = suggestion.name;
+  if (inputEl) {
+    const currentVal = inputEl.value.trim().toLowerCase();
+    const tags = ["?bi", "?b", "?st", "?s", "?g", "?d", "?e", "?k", "?w", "?y"];
+    const matchedTag = tags.find(
+      (t) => currentVal.startsWith(t + " ") || currentVal === t,
+    );
+    inputEl.value = matchedTag
+      ? `${matchedTag} ${suggestion.name}`
+      : suggestion.name;
+  }
 
   if (suggestion.type === "Link") {
     const safeUrl = sanitizeUrl(suggestion.url);

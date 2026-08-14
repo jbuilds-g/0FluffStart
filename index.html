@@ -675,8 +675,14 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Manage active search engines in your search bar quick switcher
-                or add custom search providers.
+                Manage active search engines, add custom search providers with
+                custom shortcut tags (like <b>?g</b> or <b>?bi</b>), and
+                configure your quick switcher list.<a
+                  href="https://github.com/jbuilds-g/0FluffStart/blob/main/TAGS.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Learn more about shortcut tags</a
+                >.
               </div>
               <div class="sub-collapsible" id="engineCollapsible">
                 <div class="select-trigger" id="engineCollapsibleTrigger">
@@ -716,6 +722,11 @@
                       type="text"
                       id="customEngineName"
                       placeholder="Title (e.g. Phind)"
+                    />
+                    <input
+                      type="text"
+                      id="customEngineTag"
+                      placeholder="Tag (e.g. ?ph)"
                     />
                     <input
                       type="url"

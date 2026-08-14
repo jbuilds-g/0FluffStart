@@ -506,16 +506,46 @@ function bindStaticEvents() {
     }
   }
 
+  const customEngineName = document.getElementById("customEngineName");
+  const customEngineTag = document.getElementById("customEngineTag");
+  let tagManuallyEdited = false;
+
+  if (customEngineTag) {
+    customEngineTag.addEventListener("input", () => {
+      tagManuallyEdited = customEngineTag.value.trim().length > 0;
+    });
+  }
+
+  if (customEngineName && customEngineTag) {
+    customEngineName.addEventListener("input", () => {
+      if (!tagManuallyEdited) {
+        const firstLetter = customEngineName.value
+          .trim()
+          .charAt(0)
+          .toLowerCase();
+        customEngineTag.value = firstLetter ? `?${firstLetter}` : "";
+      }
+    });
+  }
+
   const addCustomEngineBtn = document.getElementById("addCustomEngineBtn");
   if (addCustomEngineBtn) {
     addCustomEngineBtn.addEventListener("click", () => {
       const nameInput = document.getElementById("customEngineName");
+      const tagInput = document.getElementById("customEngineTag");
       const urlInput = document.getElementById("customEngineUrl");
       const name = nameInput?.value.trim();
+      let tag = tagInput?.value.trim();
       let url = urlInput?.value.trim();
 
       if (!name) return showToast("Please enter an engine title.", "error");
       if (!url) return showToast("Please enter a search URL.", "error");
+
+      if (!tag) {
+        tag = `?${name.charAt(0).toLowerCase()}`;
+      } else if (!tag.startsWith("?")) {
+        tag = `?${tag}`;
+      }
 
       if (
         !url.includes("?q=") &&
@@ -529,13 +559,16 @@ function bindStaticEvents() {
       const newEngine = {
         id: `ce_${Date.now()}`,
         name,
+        tag,
         url,
       };
 
       autoSaveSettings({ customEngines: [...currentCustom, newEngine] });
 
       if (nameInput) nameInput.value = "";
+      if (tagInput) tagInput.value = "";
       if (urlInput) urlInput.value = "";
+      tagManuallyEdited = false;
 
       document.getElementById("customEngineEditor")?.classList.add("hidden");
 
