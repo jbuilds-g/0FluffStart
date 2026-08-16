@@ -384,40 +384,26 @@ export function renderLinkManager() {
     newFragment.appendChild(emptyMsg);
   }
 
-  const existingItems = Map.groupBy
-    ? Map.groupBy(
-        Array.from(linkManagerContent.querySelectorAll(".link-manager-item")),
-        (el) => el.dataset.id,
-      )
-    : new Map();
-
-  if (!Map.groupBy) {
-    Array.from(
-      linkManagerContent.querySelectorAll(".link-manager-item"),
-    ).forEach((el) => {
-      const id = el.dataset.id;
-      if (id) existingItems.set(id, [el]);
-    });
-  }
-
-  const newItems = Array.from(newFragment.children);
-  const targetIds = new Set(
-    newItems
-      .filter((el) => el.classList.contains("link-manager-item"))
-      .map((el) => el.dataset.id),
+  const incomingNodes = Array.from(newFragment.childNodes);
+  const incomingKeys = new Set(
+    incomingNodes.map(
+      (node) => node.dataset?.id || node.dataset?.folderId || node.className,
+    ),
   );
 
-  Array.from(linkManagerContent.children).forEach((child) => {
-    if (
-      child.classList.contains("link-manager-item") &&
-      !targetIds.has(child.dataset.id)
-    ) {
+  Array.from(linkManagerContent.childNodes).forEach((child) => {
+    const key = child.dataset?.id || child.dataset?.folderId || child.className;
+    if (!key || !incomingKeys.has(key)) {
       child.remove();
     }
   });
 
-  linkManagerContent.innerHTML = "";
-  linkManagerContent.appendChild(newFragment);
+  incomingNodes.forEach((node, index) => {
+    const currentChild = linkManagerContent.childNodes[index];
+    if (currentChild !== node) {
+      linkManagerContent.insertBefore(node, currentChild || null);
+    }
+  });
 }
 
 /**

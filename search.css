@@ -273,26 +273,20 @@ body.material .suggestions-container {
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  background: var(--overlay-backdrop-color);
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 99;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition:
     opacity 0.3s ease,
-    visibility 0.3s ease,
-    backdrop-filter 0.3s ease,
-    -webkit-backdrop-filter 0.3s ease;
+    visibility 0.3s ease;
 }
 
 .search-backdrop.active {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 /* Hide the default inline search bar on mobile (unless desktop mode is forced or expanded) */

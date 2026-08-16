@@ -9,26 +9,23 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--overlay-backdrop-color);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: var(--z-modal);
   visibility: hidden;
   opacity: 0;
-  backdrop-filter: blur(0px);
   overflow: hidden;
   transition:
     opacity 0.3s ease,
-    visibility 0.3s ease,
-    backdrop-filter 0.3s ease;
+    visibility 0.3s ease;
   pointer-events: none;
 }
 
 .modal.active {
   visibility: visible;
   opacity: 1;
-  backdrop-filter: blur(3px);
   pointer-events: auto;
 }
 
@@ -57,7 +54,6 @@
   /* Performance & Smooth Touch Patches */
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
-  will-change: transform, scroll-position;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-overflow-scrolling: touch;

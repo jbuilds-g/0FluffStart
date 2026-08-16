@@ -2,7 +2,7 @@ import { store } from "./store.js";
 import { sanitizeUrl } from "./utils.js";
 import { saveBgToDB, getBgFromDB, clearBgFromDB } from "./storage.js";
 import { MaterialYouEngine } from "./material-you-engine.js";
-import { cancelEdit, renderLinkManager } from "./links.js";
+import { cancelEdit, openEditor, renderLinkManager } from "./links.js";
 
 const materialYouEngine = new MaterialYouEngine();
 
@@ -343,11 +343,12 @@ export function selectSuggestion(suggestion) {
   }
 }
 
-export async function checkMaterialYouReload() {
+export async function checkMaterialYouReload(prevTheme = null) {
   const settings = store.getState().settings || {};
   if (
     settings.theme === "material-you" &&
-    settings.backgroundImage === "indexeddb"
+    settings.backgroundImage === "indexeddb" &&
+    (prevTheme === null || prevTheme !== "material-you")
   ) {
     const confirmed = await customConfirm(
       "A quick page reload is required for Material You color extraction to take full effect.",
@@ -521,11 +522,13 @@ export async function clearBackground() {
   }
 
   const inputEl = document.getElementById("bgImageInput");
+  const bgUrlInput = document.getElementById("bgUrlInput");
   const nameEl = document.getElementById("bgFileName");
   const resetBtn = document.getElementById("resetBgBtn");
   const overlay = document.getElementById("bgOverlay");
 
   if (inputEl) inputEl.value = "";
+  if (bgUrlInput) bgUrlInput.value = "";
   if (nameEl) nameEl.innerText = "No media selected.";
   if (resetBtn) resetBtn.classList.add("hidden");
   if (overlay) overlay.classList.remove("bg-overlay-active");
@@ -664,8 +667,24 @@ export async function loadSettings() {
     } catch (e) {
       console.error("Background load fail:", e);
     }
+  } else if (
+    typeof settings.backgroundImage === "string" &&
+    settings.backgroundImage.trim() !== ""
+  ) {
+    materialYouEngine.revokeActiveObjectUrl();
+    const bgUrlInput = document.getElementById("bgUrlInput");
+    if (bgUrlInput) bgUrlInput.value = settings.backgroundImage;
+    const bgImage = document.getElementById("bgImage");
+    if (bgImage) {
+      bgImage.style.backgroundImage = `url('${settings.backgroundImage}')`;
+      bgImage.classList.remove("hidden");
+      bgImage.classList.add("active");
+    }
+    if (overlay) overlay.classList.add("bg-overlay-active");
   } else {
     materialYouEngine.revokeActiveObjectUrl();
+    const bgUrlInput = document.getElementById("bgUrlInput");
+    if (bgUrlInput) bgUrlInput.value = "";
     const bgImage = document.getElementById("bgImage");
     if (bgImage) {
       bgImage.style.backgroundImage = "";
@@ -687,9 +706,33 @@ export async function loadSettings() {
   updateSuggestSettingsVisibility();
 }
 
-export function toggleSettings() {
+export function toggleSettings(options = {}) {
   cancelEdit();
+
+  if (options.openDashboardLinks) {
+    const panels = document.querySelectorAll(
+      "#settingsModal details.category-panel",
+    );
+    panels.forEach((panel) => {
+      if (
+        panel.querySelector("summary")?.textContent.includes("Dashboard Links")
+      ) {
+        panel.open = true;
+      }
+    });
+  }
+
+  if (options.targetItemId && options.isFolder) {
+    const currentExpanded = store.getState().expandedFolderIds || [];
+    if (!currentExpanded.includes(options.targetItemId)) {
+      store.setState({
+        expandedFolderIds: [...currentExpanded, options.targetItemId],
+      });
+    }
+  }
+
   renderLinkManager();
+
   const modal = document.getElementById("settingsModal");
   if (modal) {
     modal.classList.add("active");
@@ -711,6 +754,19 @@ export function toggleSettings() {
         if (resetBtn) resetBtn.classList.add("hidden");
       }
     }
+
+    if (options.targetItemId) {
+      if (options.isFolder) {
+        const managerItem = document.querySelector(
+          `.link-manager-item[data-id="${options.targetItemId}"]`,
+        );
+        managerItem?.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        openEditor(options.targetItemId, null);
+        const editor = document.getElementById("linkEditorContainer");
+        editor?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
   }
 }
 
@@ -720,6 +776,12 @@ export function closeModal(id) {
     modal.classList.remove("active");
     if (!document.querySelector(".modal.active")) {
       document.body.classList.remove("modal-open");
+    }
+    if (id === "settingsModal") {
+      document
+        .querySelectorAll("#settingsModal details.category-panel")
+        .forEach((panel) => (panel.open = false));
+      store.setState({ expandedFolderIds: [] });
     }
   }
 }

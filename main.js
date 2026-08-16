@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      document.getElementById("settingsModal")?.classList.remove("active");
+      closeModal("settingsModal");
       document.getElementById("engineDropdown")?.classList.add("hidden");
       document.getElementById("suggestionsContainer")?.classList.add("hidden");
       document
@@ -399,8 +399,50 @@ function bindStaticEvents() {
   const externalSuggestToggle = document.getElementById(
     "externalSuggestToggle",
   );
-  if (externalSuggestToggle)
-    externalSuggestToggle.addEventListener("change", () => autoSaveSettings());
+  if (externalSuggestToggle) {
+    externalSuggestToggle.addEventListener("change", async () => {
+      if (
+        externalSuggestToggle.checked &&
+        typeof chrome !== "undefined" &&
+        chrome?.permissions
+      ) {
+        const origins = [
+          "https://0fluffstart-suggest-proxy.jbuilds.workers.dev/*",
+          "https://api.allorigins.win/*",
+        ];
+
+        try {
+          const hasPerm = await chrome.permissions.contains({ origins });
+          if (!hasPerm) {
+            const userAllowed = await customConfirm(
+              "Fetching live search suggestions requires network access to privacy proxy endpoints. Click Allow to grant permission on the browser prompt.",
+              "Enable Live Suggestions?",
+            );
+
+            if (!userAllowed) {
+              externalSuggestToggle.checked = false;
+              return;
+            }
+
+            const granted = await chrome.permissions.request({ origins });
+            if (!granted) {
+              externalSuggestToggle.checked = false;
+              showToast(
+                "Permission required to enable live search suggestions.",
+                "error",
+              );
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn("Permission check failed:", err);
+          externalSuggestToggle.checked = false;
+          return;
+        }
+      }
+      autoSaveSettings();
+    });
+  }
 
   const suggestProviderSelect = document.getElementById(
     "suggestProviderSelect",
@@ -681,19 +723,11 @@ function bindStaticEvents() {
       const link = links.find((l) => l.id === id);
       if (!link) return;
 
-      toggleSettings();
-
-      if (link.isFolder) {
-        cancelEdit();
-        const managerItem = document.querySelector(
-          `.link-manager-item[data-id="${link.id}"]`,
-        );
-        if (managerItem) {
-          managerItem.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      } else {
-        editLink(link.id);
-      }
+      toggleSettings({
+        openDashboardLinks: true,
+        targetItemId: link.id,
+        isFolder: !!link.isFolder,
+      });
     });
   }
 }

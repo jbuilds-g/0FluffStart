@@ -47,6 +47,14 @@ function loadInitialState() {
     console.error("Failed to parse search history from localStorage:", err);
   }
 
+  let expandedFolderIds = [];
+  try {
+    const rawExpanded = localStorage.getItem("0fluff_expanded_folders");
+    if (rawExpanded) expandedFolderIds = JSON.parse(rawExpanded);
+  } catch (err) {
+    console.error("Failed to parse expanded folders from localStorage:", err);
+  }
+
   let needsSave = false;
   links = links.map((item) => {
     if (!item.id) {
@@ -80,7 +88,7 @@ function loadInitialState() {
     activeFolderId: null,
     editorTargetFolderId: null,
     isEditingId: null,
-    expandedFolderIds: [],
+    expandedFolderIds,
     isCreatingFolder: false,
   };
 }
@@ -141,6 +149,8 @@ export const store = {
       saveToStorage("0fluff_settings", state.settings);
     if ("searchHistory" in nextState)
       saveToStorage("0fluff_history", state.searchHistory);
+    if ("expandedFolderIds" in nextState)
+      saveToStorage("0fluff_expanded_folders", state.expandedFolderIds);
 
     listeners.forEach((listener) => listener(prevState, state));
   },

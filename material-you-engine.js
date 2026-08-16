@@ -58,6 +58,7 @@ export class MaterialYouEngine {
       this._activeBgObjectUrl = URL.createObjectURL(blobOrFile);
       return this._activeBgObjectUrl;
     }
+    this._activeBgObjectUrl = null;
     return typeof blobOrFile === "string" ? blobOrFile : null;
   }
 
@@ -311,6 +312,7 @@ export class MaterialYouEngine {
         console.error("Material You engine failed:", e);
       }
     } else {
+      this.revokeActiveObjectUrl();
       this._applyTheme(DEFAULT_HUE);
     }
   }
