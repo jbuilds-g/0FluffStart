@@ -519,11 +519,30 @@ function bindStaticEvents() {
   if (customEngineName && customEngineTag) {
     customEngineName.addEventListener("input", () => {
       if (!tagManuallyEdited) {
-        const firstLetter = customEngineName.value
-          .trim()
-          .charAt(0)
-          .toLowerCase();
-        customEngineTag.value = firstLetter ? `?${firstLetter}` : "";
+        const clean = customEngineName.value.trim().toLowerCase();
+        if (!clean) {
+          customEngineTag.value = "";
+          return;
+        }
+        const defaults = [
+          "?bi",
+          "?b",
+          "?st",
+          "?s",
+          "?g",
+          "?d",
+          "?e",
+          "?k",
+          "?w",
+          "?y",
+        ];
+        const firstChar = `?${clean.charAt(0)}`;
+        if (defaults.includes(firstChar)) {
+          customEngineTag.value =
+            clean.length > 1 ? `?${clean.slice(0, 2)}` : "";
+        } else {
+          customEngineTag.value = firstChar;
+        }
       }
     });
   }

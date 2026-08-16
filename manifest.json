@@ -1,26 +1,12 @@
 {
   "manifest_version": 3,
   "name": "0flufStart",
-  "version": "5.0.0",
+  "version": "5.5.0",
   "description": "Zero-Fluff. All Speed. A privacy-first, minimalist start page.",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": ["storage", "unlimitedStorage"],
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "0fluffstart-v2@extension.local",
-      "strict_min_version": "109.0",
-      "data_collection_permissions": {
-        "required": ["none"]
-      }
-    }
-  },
-  "host_permissions": [
-    "https://www.google.com/*",
-    "https://api.bing.com/*",
-    "https://search.brave.com/*",
-    "https://ac.duckduckgo.com/*",
+  "optional_host_permissions": [
     "https://0fluffstart-suggest-proxy.jbuilds.workers.dev/*",
     "https://api.allorigins.win/*"
   ],
