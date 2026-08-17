@@ -732,6 +732,7 @@ export async function loadSettings() {
   renderEngineSelectionList();
   materialYouEngine.triggerMaterialYou(settings, getBgFromDB);
   updateSuggestSettingsVisibility();
+  loadInlineIcons();
 }
 
 export function toggleSettings(options = {}) {

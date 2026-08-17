@@ -42,6 +42,10 @@
   box-shadow: var(--shadow);
 }
 
+.link-item.is-folder .link-icon-circle {
+  color: var(--accent);
+}
+
 /* Theme specific overrides */
 body.cyberpunk .link-icon-circle {
   border-radius: 0;

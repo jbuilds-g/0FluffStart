@@ -325,18 +325,43 @@ body.material .suggestions-container {
   }
 }
 
-.inline-icon {
+.inline-icon,
+.inline-icon *,
+.link-icon-circle .inline-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 18px;
   height: 18px;
   color: inherit;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
 
 .inline-icon svg {
-  width: 100%;
-  height: 100%;
-  fill: currentColor;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  max-height: 100%;
   color: inherit;
+  display: block;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Enforce stroke-only rendering for outline icons */
+.inline-icon svg[stroke],
+.inline-icon svg[stroke] * {
+  fill: none !important;
+  stroke: currentColor !important;
+}
+
+/* Enforce fill-only rendering for solid brand logos */
+.inline-icon svg:not([stroke]),
+.inline-icon svg:not([stroke]) * {
+  fill: currentColor !important;
+  stroke: none !important;
 }
