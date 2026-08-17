@@ -53,8 +53,8 @@
 
 #### **Firefox**
 
-1. Download `0FluffStart.xpi` from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest).
-2. Drag and drop the `.xpi` file directly into Firefox (or open `about:addons` → Gear Icon → _Install Add-on From File..._).
+1. Install directly from the [Firefox Add-ons Store](https://addons.mozilla.org/en-US/firefox/addon/0flufstart/).
+2. Alternatively, download `0FluffStart.xpi` from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) and drag/drop it into Firefox (or open `about:addons` → Gear Icon → _Install Add-on From File..._).
 
 #### **Chromium (Chrome, Edge, Brave)**
 
