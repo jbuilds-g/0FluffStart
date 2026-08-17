@@ -6,9 +6,7 @@ const folderTemplate = document.createElement("div");
 folderTemplate.className = "link-item is-folder";
 folderTemplate.innerHTML = `
     <div class="link-icon-circle">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-        </svg>
+        <span class="icon-mask icon-folder" style="width:26px; height:26px; background-color:var(--accent);"></span>
     </div>
     <div class="link-name"></div>
 `;
@@ -175,11 +173,11 @@ export function renderLinkManager() {
     return;
   }
 
-  const editIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>`;
-  const deleteIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
-  const moveOutIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--delete)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
-  const folderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="manager-item-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
-  const linkSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="manager-item-icon link-type"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
+  const editIconSVG = `<span class="icon-mask icon-edit"></span>`;
+  const deleteIconSVG = `<span class="icon-mask icon-delete"></span>`;
+  const moveOutIconSVG = `<span class="icon-mask icon-close" style="background-color:var(--delete);"></span>`;
+  const folderSvg = `<span class="icon-mask icon-folder manager-item-icon" style="width:14px; height:14px;"></span>`;
+  const linkSvg = `<span class="icon-mask icon-link manager-item-icon link-type" style="width:14px; height:14px;"></span>`;
 
   /**
    * Creates a manager item DOM node.
@@ -205,7 +203,7 @@ export function renderLinkManager() {
     if (link.isFolder) {
       const toggleSpan = document.createElement("span");
       toggleSpan.className = "folder-toggle";
-      toggleSpan.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`;
+      toggleSpan.innerHTML = `<span class="icon-mask icon-chevron" style="width:12px; height:12px;"></span>`;
       nameSpan.appendChild(toggleSpan);
       item.classList.add("is-folder-item");
     }
