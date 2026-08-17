@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluff-v110";
+const CACHE_NAME = "0fluff-v111";
 
 const ASSETS = [
   "./",
@@ -16,6 +16,25 @@ const ASSETS = [
   "./js/utils.js",
   "./js/material-you-engine.js",
   "./icon.png",
+  "./assets/icons/folder.svg",
+  "./assets/icons/link.svg",
+  "./assets/icons/edit.svg",
+  "./assets/icons/delete.svg",
+  "./assets/icons/chevron.svg",
+  "./assets/icons/search.svg",
+  "./assets/icons/settings.svg",
+  "./assets/icons/close.svg",
+  "./assets/icons/arrow-up.svg",
+  "./assets/icons/google.svg",
+  "./assets/icons/duckduckgo.svg",
+  "./assets/icons/bing.svg",
+  "./assets/icons/brave.svg",
+  "./assets/icons/startpage.svg",
+  "./assets/icons/ecosia.svg",
+  "./assets/icons/kagi.svg",
+  "./assets/icons/searxng.svg",
+  "./assets/icons/wikipedia.svg",
+  "./assets/icons/youtube.svg",
 ];
 
 // Listen for immediate update activation messages from active clients
