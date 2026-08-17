@@ -310,6 +310,10 @@ body.material .link-item:hover .link-icon-circle span {
     flex: 0 0 auto !important;
   }
 
+  .link-grid .link-item {
+    width: 72px !important;
+  }
+
   body:not(.force-desktop-mode) header {
     display: flex !important;
     flex-direction: column !important;
