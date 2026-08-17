@@ -384,26 +384,8 @@ export function renderLinkManager() {
     newFragment.appendChild(emptyMsg);
   }
 
-  const incomingNodes = Array.from(newFragment.childNodes);
-  const incomingKeys = new Set(
-    incomingNodes.map(
-      (node) => node.dataset?.id || node.dataset?.folderId || node.className,
-    ),
-  );
-
-  Array.from(linkManagerContent.childNodes).forEach((child) => {
-    const key = child.dataset?.id || child.dataset?.folderId || child.className;
-    if (!key || !incomingKeys.has(key)) {
-      child.remove();
-    }
-  });
-
-  incomingNodes.forEach((node, index) => {
-    const currentChild = linkManagerContent.childNodes[index];
-    if (currentChild !== node) {
-      linkManagerContent.insertBefore(node, currentChild || null);
-    }
-  });
+  linkManagerContent.innerHTML = "";
+  linkManagerContent.appendChild(newFragment);
 }
 
 /**
@@ -473,7 +455,7 @@ export function cancelEdit() {
 export function saveLink() {
   const nameInput = document.getElementById("editName");
   const urlInput = document.getElementById("editUrl");
-  const name = nameInput ? nameInput.value.trim() : "";
+  const name = nameInput ? nameInput.value.trim().slice(0, 25) : "";
   const url = urlInput ? urlInput.value.trim() : "";
 
   if (!name) return showToast("Please fill in the name.", "error");

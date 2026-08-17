@@ -6,6 +6,10 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
+  "permissions": ["activeTab"],
+  "action": {
+    "default_popup": "popup.html"
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "0fluffstart-v2@extension.local",
