@@ -351,17 +351,3 @@ body.material .suggestions-container {
   background: transparent !important;
   background-color: transparent !important;
 }
-
-/* Enforce stroke-only rendering for outline icons */
-.inline-icon svg[stroke],
-.inline-icon svg[stroke] * {
-  fill: none !important;
-  stroke: currentColor !important;
-}
-
-/* Enforce fill-only rendering for solid brand logos */
-.inline-icon svg:not([stroke]),
-.inline-icon svg:not([stroke]) * {
-  fill: currentColor !important;
-  stroke: none !important;
-}

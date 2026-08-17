@@ -378,15 +378,16 @@ body.paper .link-item:hover .link-icon-circle svg,
 body.slate .link-item:hover .link-icon-circle svg,
 body.toxic-tide .link-item:hover .link-icon-circle svg,
 body.heatwave .link-item:hover .link-icon-circle svg,
-body.retro .link-item:hover .link-icon-circle .icon-mask,
-body.cyberpunk .link-item:hover .link-icon-circle .icon-mask,
-body.paper .link-item:hover .link-icon-circle .icon-mask,
-body.slate .link-item:hover .link-icon-circle .icon-mask,
-body.toxic-tide .link-item:hover .link-icon-circle .icon-mask,
-body.heatwave .link-item:hover .link-icon-circle .icon-mask {
+body.retro .link-item:hover .link-icon-circle .inline-icon,
+body.cyberpunk .link-item:hover .link-icon-circle .inline-icon,
+body.paper .link-item:hover .link-icon-circle .inline-icon,
+body.slate .link-item:hover .link-icon-circle .inline-icon,
+body.toxic-tide .link-item:hover .link-icon-circle .inline-icon,
+body.heatwave .link-item:hover .link-icon-circle .inline-icon {
   stroke: var(--accent) !important;
   color: var(--accent) !important;
-  background-color: var(--accent) !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* CATEGORY B: THE SQUIRCLES (Premium Soft Morph) */
@@ -419,13 +420,14 @@ body.forest .link-item:hover .link-icon-circle svg,
 body.rose .link-item:hover .link-icon-circle svg,
 body.luminous .link-item:hover .link-icon-circle svg,
 body.light .link-item:hover .link-icon-circle svg,
-body.forest .link-item:hover .link-icon-circle .icon-mask,
-body.rose .link-item:hover .link-icon-circle .icon-mask,
-body.luminous .link-item:hover .link-icon-circle .icon-mask,
-body.light .link-item:hover .link-icon-circle .icon-mask {
+body.forest .link-item:hover .link-icon-circle .inline-icon,
+body.rose .link-item:hover .link-icon-circle .inline-icon,
+body.luminous .link-item:hover .link-icon-circle .inline-icon,
+body.light .link-item:hover .link-icon-circle .inline-icon {
   stroke: var(--accent) !important;
   color: var(--accent) !important;
-  background-color: var(--accent) !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* CATEGORY C: THE CIRCLES (Blur & Tilt Flip) */
@@ -460,14 +462,15 @@ body.nord .link-item:hover .link-icon-circle svg,
 body.sunset .link-item:hover .link-icon-circle svg,
 body.night-glow .link-item:hover .link-icon-circle svg,
 body.material-you .link-item:hover .link-icon-circle svg,
-body.evergreen-archive .link-item:hover .link-icon-circle .icon-mask,
-body.nord .link-item:hover .link-icon-circle .icon-mask,
-body.sunset .link-item:hover .link-icon-circle .icon-mask,
-body.night-glow .link-item:hover .link-icon-circle .icon-mask,
-body.material-you .link-item:hover .link-icon-circle .icon-mask {
+body.evergreen-archive .link-item:hover .link-icon-circle .inline-icon,
+body.nord .link-item:hover .link-icon-circle .inline-icon,
+body.sunset .link-item:hover .link-icon-circle .inline-icon,
+body.night-glow .link-item:hover .link-icon-circle .inline-icon,
+body.material-you .link-item:hover .link-icon-circle .inline-icon {
   stroke: var(--card) !important;
   color: var(--card) !important;
-  background-color: var(--card) !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* True Black (AMOLED) Standalone Theme */

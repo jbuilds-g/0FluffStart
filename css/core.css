@@ -102,3 +102,9 @@
   mask-image: url("../assets/icons/youtube.svg");
   -webkit-mask-image: url("../assets/icons/youtube.svg");
 }
+
+.inline-icon svg[fill="none"],
+.inline-icon svg[fill="none"] * {
+  fill: none !important;
+  stroke: currentColor;
+}
