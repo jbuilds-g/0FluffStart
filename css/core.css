@@ -13,12 +13,19 @@
   width: 18px;
   height: 18px;
   background-color: currentColor;
+  mask-type: alpha;
+  -webkit-mask-type: alpha;
+  mask-mode: alpha;
+  -webkit-mask-mode: alpha;
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: contain;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transform: translateZ(0);
 }
 
 .icon-folder {
