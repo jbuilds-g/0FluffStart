@@ -119,21 +119,42 @@ export class MaterialYouEngine {
    */
   _applyTheme(hue) {
     const target = document.body;
-    target.style.setProperty("--bg", `hsl(${hue}, ${BASE_SATURATION}%, 8%)`);
-    target.style.setProperty(
-      "--card",
-      `hsl(${hue}, ${BASE_SATURATION + 5}%, 14%)`,
-    );
-    target.style.setProperty(
-      "--card-hover",
-      `hsl(${hue}, ${BASE_SATURATION + 10}%, 19%)`,
-    );
-    target.style.setProperty(
-      "--border",
-      `hsl(${hue}, ${BASE_SATURATION}%, 24%)`,
-    );
-    target.style.setProperty("--text", `hsl(${hue}, 45%, 82%)`);
-    target.style.setProperty("--accent", `hsl(${hue}, 65%, 68%)`);
+    const bg = `hsl(${hue}, ${BASE_SATURATION}%, 8%)`;
+    const card = `hsl(${hue}, ${BASE_SATURATION + 5}%, 14%)`;
+    const cardHover = `hsl(${hue}, ${BASE_SATURATION + 10}%, 19%)`;
+    const border = `hsl(${hue}, ${BASE_SATURATION}%, 24%)`;
+    const text = `hsl(${hue}, 45%, 82%)`;
+    const accent = `hsl(${hue}, 65%, 68%)`;
+
+    target.style.setProperty("--bg", bg);
+    target.style.setProperty("--card", card);
+    target.style.setProperty("--card-hover", cardHover);
+    target.style.setProperty("--border", border);
+    target.style.setProperty("--text", text);
+    target.style.setProperty("--accent", accent);
+
+    const palette = {
+      "--bg": bg,
+      "--card": card,
+      "--card-hover": cardHover,
+      "--border": border,
+      "--text": text,
+      "--accent": accent,
+    };
+    try {
+      const raw = localStorage.getItem("0fluff_settings");
+      if (raw) {
+        const settings = JSON.parse(raw);
+        settings.materialYouPalette = palette;
+        const serialized = JSON.stringify(settings);
+        localStorage.setItem("0fluff_settings", serialized);
+        if (typeof chrome !== "undefined" && chrome?.storage?.local) {
+          chrome.storage.local.set({ "0fluff_settings": serialized });
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to persist Material You palette:", e);
+    }
   }
 
   /**

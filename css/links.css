@@ -82,6 +82,8 @@ body.material .link-item:hover .link-icon-circle span {
   font-size: var(--font-size-xs);
   text-align: center;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

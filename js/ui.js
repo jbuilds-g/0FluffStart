@@ -628,7 +628,7 @@ export async function updateBackgroundMedia(sourceType, data) {
     if (overlay) overlay.classList.add("bg-overlay-active");
     if (bgImageInput) bgImageInput.value = "";
   } else {
-    autoSaveSettings({ backgroundImage: null });
+    autoSaveSettings({ backgroundImage: null, materialYouPalette: null });
     await clearBgFromDB();
     materialYouEngine.revokeActiveObjectUrl();
 

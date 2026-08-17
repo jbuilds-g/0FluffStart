@@ -6,7 +6,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (settingsRaw) {
       const settings =
         typeof settingsRaw === "string" ? JSON.parse(settingsRaw) : settingsRaw;
-      if (settings?.theme) document.body.className = settings.theme;
+      if (settings?.theme) {
+        document.body.className = settings.theme;
+        if (settings.theme === "material-you" && settings.materialYouPalette) {
+          Object.entries(settings.materialYouPalette).forEach(([prop, val]) => {
+            document.body.style.setProperty(prop, val);
+          });
+        }
+      }
     }
   } catch (e) {
     console.error("Failed to load popup theme:", e);
@@ -75,16 +82,66 @@ document.addEventListener("DOMContentLoaded", async () => {
   urlInput.addEventListener("input", updateDuplicateStatus);
   updateDuplicateStatus();
 
-  const folders = links.filter((l) => l.isFolder);
-  folders.forEach((f) => {
-    const opt = document.createElement("option");
-    opt.value = f.id;
-    opt.textContent = f.name;
-    folderSelect.insertBefore(opt, folderSelect.lastElementChild);
+  const folderDropdown = document.getElementById("folderDropdown");
+  const selectedText = folderSelect.querySelector(".selected-text");
+
+  const buildFolderOptions = () => {
+    folderDropdown.innerHTML = "";
+
+    const rootOpt = document.createElement("div");
+    rootOpt.className = "select-option selected";
+    rootOpt.dataset.value = "";
+    rootOpt.textContent = "Dashboard (Root)";
+    folderDropdown.appendChild(rootOpt);
+
+    const folders = links.filter((l) => l.isFolder);
+    folders.forEach((f) => {
+      const opt = document.createElement("div");
+      opt.className = "select-option";
+      opt.dataset.value = f.id;
+      opt.textContent = f.name;
+      folderDropdown.appendChild(opt);
+    });
+
+    const newOpt = document.createElement("div");
+    newOpt.className = "select-option";
+    newOpt.dataset.value = "__NEW__";
+    newOpt.textContent = "+ Create New Folder";
+    folderDropdown.appendChild(newOpt);
+  };
+
+  buildFolderOptions();
+
+  folderSelect
+    .querySelector(".select-trigger")
+    .addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = folderSelect.classList.contains("open");
+      folderSelect.classList.toggle("open", !isOpen);
+      folderDropdown.classList.toggle("hidden", isOpen);
+    });
+
+  document.addEventListener("click", () => {
+    folderSelect.classList.remove("open");
+    folderDropdown.classList.add("hidden");
   });
 
-  folderSelect.addEventListener("change", () => {
-    if (folderSelect.value === "__NEW__") {
+  folderDropdown.addEventListener("click", (e) => {
+    const option = e.target.closest(".select-option");
+    if (!option) return;
+
+    const val = option.dataset.value;
+    folderSelect.dataset.value = val;
+    selectedText.textContent = option.textContent;
+
+    folderDropdown.querySelectorAll(".select-option").forEach((opt) => {
+      opt.classList.toggle("selected", opt === option);
+    });
+
+    folderSelect.classList.remove("open");
+    folderDropdown.classList.add("hidden");
+
+    if (val === "__NEW__") {
       newFolderInput.classList.remove("hidden");
       newFolderInput.focus();
     } else {
@@ -97,7 +154,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const url = urlInput.value.trim();
     if (!name || !url) return;
 
-    let parentId = folderSelect.value;
+    let parentId = folderSelect.dataset.value || null;
 
     if (parentId === "__NEW__") {
       const newFolderName = newFolderInput.value.trim().slice(0, 50);

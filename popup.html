@@ -4,29 +4,57 @@
     <link rel="stylesheet" href="css/popup.css" />
     <meta charset="utf-8" />
   </head>
-  <body>
-    <h3>Save to Dashboard</h3>
-    <label>Title</label>
-    <input type="text" id="linkName" maxlength="25" />
+  <body class="dark">
+    <div class="popup-card">
+      <div class="modal-header">
+        <h2>Save to Dashboard</h2>
+      </div>
 
-    <label>URL</label>
-    <input type="text" id="linkUrl" />
+      <div class="setting-group">
+        <label class="input-label">Title</label>
+        <input
+          type="text"
+          id="linkName"
+          maxlength="50"
+          placeholder="Name (e.g. YouTube)"
+        />
 
-    <label>Folder</label>
-    <select id="folderSelect">
-      <option value="">Dashboard (Root)</option>
-      <option value="__NEW__">+ Create New Folder</option>
-    </select>
+        <label class="input-label">URL</label>
+        <input type="url" id="linkUrl" placeholder="URL (e.g. youtube.com)" />
 
-    <input
-      type="text"
-      id="newFolderName"
-      class="hidden"
-      placeholder="New folder name..."
-      style="margin-top: 6px"
-    />
+        <label class="input-label">Folder</label>
+        <div class="custom-select" id="folderSelect" data-value="">
+          <div class="select-trigger">
+            <span class="selected-text">Dashboard (Root)</span>
+            <span class="select-arrow">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </span>
+          </div>
+          <div class="select-dropdown hidden" id="folderDropdown"></div>
+        </div>
 
-    <button id="saveBtn">Save Link</button>
+        <input
+          type="text"
+          id="newFolderName"
+          class="hidden"
+          placeholder="New folder name..."
+          style="margin-top: 8px"
+        />
+
+        <button id="saveBtn" class="save-btn">Save Link</button>
+      </div>
+    </div>
     <script src="js/popup.js"></script>
   </body>
 </html>
