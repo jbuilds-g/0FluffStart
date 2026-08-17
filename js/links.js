@@ -453,7 +453,7 @@ export function cancelEdit() {
 /**
  * Saves a link or folder entry to store state based on form inputs.
  */
-export function saveLink() {
+export async function saveLink() {
   const nameInput = document.getElementById("editName");
   const urlInput = document.getElementById("editUrl");
   const name = nameInput ? nameInput.value.trim().slice(0, 50) : "";
@@ -476,7 +476,7 @@ export function saveLink() {
       currentLinks[idx].name = name;
       if (!currentLinks[idx].isFolder) currentLinks[idx].url = url;
     }
-    store.setState({ links: currentLinks, isCreatingFolder: false });
+    await store.setState({ links: currentLinks, isCreatingFolder: false });
     showToast(
       currentLinks[idx]?.isFolder ? "Folder updated" : "Link updated",
       "success",
@@ -489,7 +489,7 @@ export function saveLink() {
         isFolder: true,
         parentId: targetFolderId,
       });
-      store.setState({ links: currentLinks, isCreatingFolder: false });
+      await store.setState({ links: currentLinks, isCreatingFolder: false });
       showToast("Folder created successfully", "success");
     } else {
       if (!url) return showToast("Please fill in the URL.", "error");
@@ -500,7 +500,7 @@ export function saveLink() {
         isFolder: false,
         parentId: targetFolderId,
       });
-      store.setState({ links: currentLinks, isCreatingFolder: false });
+      await store.setState({ links: currentLinks, isCreatingFolder: false });
       showToast("Link added successfully", "success");
     }
   }
@@ -525,9 +525,10 @@ export async function deleteLink(id, e) {
     const updatedLinks = store
       .getState()
       .links.filter((l) => l.id !== id && l.parentId !== id);
-    store.setState({ links: updatedLinks });
+    await store.setState({ links: updatedLinks });
 
     if (store.getState().currentFolderId === id) navigateToFolder(null);
+    renderLinks();
     renderLinkManager();
     showToast("Item deleted", "info");
   }

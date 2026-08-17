@@ -19,6 +19,8 @@
   cursor: pointer;
   transition: transform 0.1s;
   isolation: isolate;
+  min-width: 0;
+  width: 100%;
 }
 
 .link-item:active {

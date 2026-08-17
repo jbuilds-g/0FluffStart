@@ -38,8 +38,8 @@ import {
   addFolder,
 } from "./links.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const CURRENT_VERSION = "v3.0.0";
+document.addEventListener("DOMContentLoaded", async () => {
+  const CURRENT_VERSION = "v5.5.0";
   const storedVersion = localStorage.getItem("0fluff_app_version");
 
   if (storedVersion !== CURRENT_VERSION) {
@@ -91,9 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  await store.init();
   initCustomSelects();
   bindStaticEvents();
-  loadSettings();
+  await loadSettings();
   renderLinks();
   renderEngineDropdown();
   updateClock();
@@ -405,6 +406,28 @@ function bindStaticEvents() {
   const forceDesktopToggle = document.getElementById("forceDesktopToggle");
   if (forceDesktopToggle)
     forceDesktopToggle.addEventListener("change", () => autoSaveSettings());
+
+  const shadowSlider = document.getElementById("shadowSlider");
+  const shadowInputNumber = document.getElementById("shadowInputNumber");
+
+  if (shadowSlider && shadowInputNumber) {
+    shadowSlider.addEventListener("input", () => {
+      shadowInputNumber.value = shadowSlider.value;
+      autoSaveSettings();
+    });
+
+    const syncNumberToSlider = () => {
+      let val = parseInt(shadowInputNumber.value, 10);
+      if (isNaN(val)) val = 100;
+      val = Math.max(0, Math.min(200, val));
+      shadowInputNumber.value = val;
+      shadowSlider.value = val;
+      autoSaveSettings();
+    };
+
+    shadowInputNumber.addEventListener("change", syncNumberToSlider);
+    shadowInputNumber.addEventListener("blur", syncNumberToSlider);
+  }
 
   const externalSuggestToggle = document.getElementById(
     "externalSuggestToggle",

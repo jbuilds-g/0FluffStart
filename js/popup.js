@@ -1,22 +1,16 @@
+import { store } from "./store.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const settingsRes = await chrome.storage.local.get(["0fluff_settings"]);
-    let settingsRaw =
-      settingsRes["0fluff_settings"] || localStorage.getItem("0fluff_settings");
-    if (settingsRaw) {
-      const settings =
-        typeof settingsRaw === "string" ? JSON.parse(settingsRaw) : settingsRaw;
-      if (settings?.theme) {
-        document.body.className = settings.theme;
-        if (settings.theme === "material-you" && settings.materialYouPalette) {
-          Object.entries(settings.materialYouPalette).forEach(([prop, val]) => {
-            document.body.style.setProperty(prop, val);
-          });
-        }
-      }
+  await store.init();
+
+  const settings = store.getState().settings || {};
+  if (settings.theme) {
+    document.body.className = settings.theme;
+    if (settings.theme === "material-you" && settings.materialYouPalette) {
+      Object.entries(settings.materialYouPalette).forEach(([prop, val]) => {
+        document.body.style.setProperty(prop, val);
+      });
     }
-  } catch (e) {
-    console.error("Failed to load popup theme:", e);
   }
 
   const nameInput = document.getElementById("linkName");
@@ -25,25 +19,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const newFolderInput = document.getElementById("newFolderName");
   const saveBtn = document.getElementById("saveBtn");
 
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (tab) {
-    const rawTitle = tab.title || "";
-    nameInput.value = rawTitle.slice(0, 50);
-    urlInput.value = tab.url || "";
-  }
-
-  let links = [];
-  try {
-    const res = await chrome.storage.local.get(["0fluff_links"]);
-    let raw = res["0fluff_links"];
-    if (!raw) {
-      raw = localStorage.getItem("0fluff_links");
+  if (typeof chrome !== "undefined" && chrome?.tabs?.query) {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    if (tab) {
+      const rawTitle = tab.title || "";
+      nameInput.value = rawTitle.slice(0, 50);
+      urlInput.value = tab.url || "";
     }
-    if (raw) {
-      links = typeof raw === "string" ? JSON.parse(raw) : raw;
-    }
-  } catch (e) {
-    console.error("Failed to load links:", e);
   }
 
   const checkDuplicate = (urlToCheck) => {
@@ -52,7 +37,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       .trim()
       .toLowerCase()
       .replace(/\/+$|^https?:\/\//, "");
-    return links.some((l) => {
+    const activeLinks = store.getState().links || [];
+    return activeLinks.some((l) => {
       if (l.isFolder || !l.url) return false;
       const cleanExisting = l.url
         .trim()
@@ -94,7 +80,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     rootOpt.textContent = "Dashboard (Root)";
     folderDropdown.appendChild(rootOpt);
 
-    const folders = links.filter((l) => l.isFolder);
+    const activeLinks = store.getState().links || [];
+    const folders = activeLinks.filter((l) => l.isFolder);
     folders.forEach((f) => {
       const opt = document.createElement("div");
       opt.className = "select-option";
@@ -155,12 +142,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!name || !url) return;
 
     let parentId = folderSelect.dataset.value || null;
+    const currentLinks = [...(store.getState().links || [])];
 
     if (parentId === "__NEW__") {
       const newFolderName = newFolderInput.value.trim().slice(0, 50);
       if (!newFolderName) return;
       const newFolderId = "f_" + Date.now();
-      links.push({
+      currentLinks.push({
         id: newFolderId,
         name: newFolderName,
         isFolder: true,
@@ -171,7 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       parentId = null;
     }
 
-    links.push({
+    currentLinks.push({
       id: "l_" + Date.now(),
       name,
       url,
@@ -179,20 +167,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       parentId,
     });
 
-    const serialized = JSON.stringify(links);
-    try {
-      await chrome.storage.local.set({ "0fluff_links": serialized });
-    } catch (e) {
-      console.warn(
-        "Chrome storage set failed, falling back to localStorage:",
-        e,
-      );
-    }
-    try {
-      localStorage.setItem("0fluff_links", serialized);
-    } catch (e) {
-      console.warn("LocalStorage set failed:", e);
-    }
+    await store.setState({ links: currentLinks });
     window.close();
   });
 });

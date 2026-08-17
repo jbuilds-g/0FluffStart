@@ -1047,6 +1047,41 @@ input[type="url"].bg-url-input {
   color: var(--delete);
 }
 
+.setting-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.theme-slider {
+  flex: 1;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.slider-number-input {
+  width: 44px !important;
+  height: 28px !important;
+  margin-bottom: 0 !important;
+  padding: 2px 4px !important;
+  text-align: center;
+  border-radius: var(--radius);
+  background: var(--card-hover);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.82rem;
+  box-sizing: border-box;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.slider-number-input::-webkit-outer-spin-button,
+.slider-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .margin-top-zero {
   margin-top: 0;
 }

@@ -108,3 +108,28 @@
   fill: none !important;
   stroke: currentColor;
 }
+
+:root {
+  --shadow-factor: 1;
+}
+
+.search-bar,
+.link-icon-circle,
+.floating-btn,
+.modal-content,
+.suggestions-container,
+.engine-dropdown,
+.clock-style-block {
+  filter: drop-shadow(
+    0px calc(4px * var(--shadow-factor)) calc(8px * var(--shadow-factor))
+      rgba(0, 0, 0, calc(0.3 * var(--shadow-factor)))
+  );
+}
+
+html.no-shadows,
+html.no-shadows *:not(.clock),
+body.no-shadows *:not(.clock) {
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}

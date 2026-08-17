@@ -2,6 +2,9 @@
 
 import { generateId } from "./utils.js";
 
+const isExtensionContext =
+  typeof chrome !== "undefined" && chrome?.storage?.local;
+
 const DEFAULT_SETTINGS = {
   theme: "dark",
   clockStyle: "default",
@@ -17,43 +20,71 @@ const DEFAULT_SETTINGS = {
   showTitles: false,
   forceDesktop: false,
   backgroundImage: null,
+  shadowIntensity: 100,
 };
 
-function loadInitialState() {
-  let links = [];
-  let settings = { ...DEFAULT_SETTINGS };
-  let searchHistory = [];
-
-  try {
-    const rawLinks = localStorage.getItem("0fluff_links");
-    if (rawLinks) links = JSON.parse(rawLinks);
-  } catch (err) {
-    console.error("Failed to parse links from localStorage:", err);
+/**
+ * Safely loads data asynchronously from extension storage or fallback localStorage.
+ * @param {string} key
+ * @returns {Promise<any|null>}
+ */
+async function loadFromStorage(key) {
+  if (isExtensionContext) {
+    try {
+      const res = await chrome.storage.local.get([key]);
+      let raw = res[key];
+      if (raw !== undefined && raw !== null) {
+        return typeof raw === "string" ? JSON.parse(raw) : raw;
+      }
+    } catch (err) {
+      console.warn(`chrome.storage.local read failed for ${key}:`, err);
+    }
   }
 
   try {
-    const rawSettings = localStorage.getItem("0fluff_settings");
-    if (rawSettings) {
-      settings = { ...DEFAULT_SETTINGS, ...JSON.parse(rawSettings) };
+    const rawLocal = localStorage.getItem(key);
+    if (rawLocal !== null) {
+      return JSON.parse(rawLocal);
     }
   } catch (err) {
-    console.error("Failed to parse settings from localStorage:", err);
+    console.error(`Failed parsing ${key} from localStorage:`, err);
   }
 
+  return null;
+}
+
+/**
+ * Persists data asynchronously to both localStorage and chrome.storage.local.
+ * @param {string} key
+ * @param {any} data
+ */
+async function saveToStorage(key, data) {
+  const serialized = JSON.stringify(data);
+
   try {
-    const rawHistory = localStorage.getItem("0fluff_history");
-    if (rawHistory) searchHistory = JSON.parse(rawHistory);
-  } catch (err) {
-    console.error("Failed to parse search history from localStorage:", err);
+    localStorage.setItem(key, serialized);
+  } catch (e) {
+    console.error(`Failed persisting ${key} to localStorage:`, e);
   }
 
-  let expandedFolderIds = [];
-  try {
-    const rawExpanded = localStorage.getItem("0fluff_expanded_folders");
-    if (rawExpanded) expandedFolderIds = JSON.parse(rawExpanded);
-  } catch (err) {
-    console.error("Failed to parse expanded folders from localStorage:", err);
+  if (isExtensionContext) {
+    try {
+      await chrome.storage.local.set({ [key]: serialized });
+    } catch (e) {
+      console.error(`Failed persisting ${key} to chrome.storage.local:`, e);
+    }
   }
+}
+
+async function loadInitialState() {
+  let links = (await loadFromStorage("0fluff_links")) || [];
+  let settingsRaw = await loadFromStorage("0fluff_settings");
+  let settings = settingsRaw
+    ? { ...DEFAULT_SETTINGS, ...settingsRaw }
+    : { ...DEFAULT_SETTINGS };
+  let searchHistory = (await loadFromStorage("0fluff_history")) || [];
+  let expandedFolderIds =
+    (await loadFromStorage("0fluff_expanded_folders")) || [];
 
   let needsSave = false;
   links = links.map((item) => {
@@ -71,11 +102,7 @@ function loadInitialState() {
   });
 
   if (needsSave) {
-    try {
-      localStorage.setItem("0fluff_links", JSON.stringify(links));
-    } catch (err) {
-      console.error("Failed to persist migrated links:", err);
-    }
+    await saveToStorage("0fluff_links", links);
   }
 
   return {
@@ -117,43 +144,67 @@ function loadInitialState() {
  * @property {boolean} isCreatingFolder
  */
 
-let state = loadInitialState();
-const listeners = new Set();
-
-const saveToStorage = (key, data) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch (e) {
-    console.error(`Failed persisting ${key} to localStorage:`, e);
-  }
+let state = {
+  links: [],
+  settings: { ...DEFAULT_SETTINGS },
+  searchHistory: [],
+  currentFolderId: null,
+  isSelectionMode: false,
+  selectedLinkIds: [],
+  activeFolderId: null,
+  editorTargetFolderId: null,
+  isEditingId: null,
+  expandedFolderIds: [],
+  isCreatingFolder: false,
 };
 
+let isInitialized = false;
+const listeners = new Set();
+
 export const store = {
+  /**
+   * Initializes store state from storage sources asynchronously.
+   */
+  async init() {
+    if (isInitialized) return state;
+    state = await loadInitialState();
+    isInitialized = true;
+    return state;
+  },
+
   /**
    * @returns {StoreState}
    */
   getState() {
     return state;
   },
+
   /**
-   * Updates store state and notifies listeners with previous and next states.
+   * Updates store state asynchronously and notifies listeners with previous and next states.
    * @param {Partial<StoreState>|((prevState: StoreState) => Partial<StoreState>)} update
    */
-  setState(update) {
+  async setState(update) {
     const prevState = state;
     const nextState = typeof update === "function" ? update(prevState) : update;
     state = { ...prevState, ...nextState };
 
-    if ("links" in nextState) saveToStorage("0fluff_links", state.links);
+    const savePromises = [];
+    if ("links" in nextState)
+      savePromises.push(saveToStorage("0fluff_links", state.links));
     if ("settings" in nextState)
-      saveToStorage("0fluff_settings", state.settings);
+      savePromises.push(saveToStorage("0fluff_settings", state.settings));
     if ("searchHistory" in nextState)
-      saveToStorage("0fluff_history", state.searchHistory);
+      savePromises.push(saveToStorage("0fluff_history", state.searchHistory));
     if ("expandedFolderIds" in nextState)
-      saveToStorage("0fluff_expanded_folders", state.expandedFolderIds);
+      savePromises.push(
+        saveToStorage("0fluff_expanded_folders", state.expandedFolderIds),
+      );
+
+    await Promise.all(savePromises);
 
     listeners.forEach((listener) => listener(prevState, state));
   },
+
   /**
    * @param {(prevState: StoreState, currentState: StoreState) => void} listener
    * @returns {() => void} Unsubscribe callback
@@ -162,6 +213,7 @@ export const store = {
     listeners.add(listener);
     return () => listeners.delete(listener);
   },
+
   /**
    * @param {(prevState: StoreState, currentState: StoreState) => void} listener
    */

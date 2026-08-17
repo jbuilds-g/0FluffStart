@@ -531,6 +531,12 @@ const SETTINGS_MAP = [
     type: "checkbox",
     defaultVal: false,
   },
+  {
+    key: "shadowIntensity",
+    id: "shadowSlider",
+    type: "range",
+    defaultVal: 100,
+  },
 ];
 
 export async function updateBackgroundMedia(sourceType, data) {
@@ -674,7 +680,7 @@ export async function clearBackground() {
  * Automatically persists settings updates to the store and triggers theme re-renders.
  * @param {Object|null} [updates=null]
  */
-export function autoSaveSettings(updates = null) {
+export async function autoSaveSettings(updates = null) {
   const currentSettings = store.getState().settings || {};
   const newSettings = { ...currentSettings };
 
@@ -691,6 +697,9 @@ export function autoSaveSettings(updates = null) {
       } else if (item.type === "checkbox") {
         const el = document.getElementById(item.id);
         if (el) newSettings[item.key] = !!el.checked;
+      } else if (item.type === "range") {
+        const el = document.getElementById(item.id);
+        if (el) newSettings[item.key] = parseInt(el.value, 10);
       } else if (item.type === "radio-group") {
         const radios = document.getElementsByName(item.name);
         for (let r of radios) {
@@ -700,7 +709,7 @@ export function autoSaveSettings(updates = null) {
     });
   }
 
-  store.setState({ settings: newSettings });
+  await store.setState({ settings: newSettings });
 
   document.body.className = newSettings.theme || "dark";
   document.body.classList.toggle(
@@ -711,9 +720,21 @@ export function autoSaveSettings(updates = null) {
     .getElementById("linkGrid")
     ?.classList.toggle("show-titles", !!newSettings.showTitles);
 
+  const rawVal = newSettings.shadowIntensity ?? 100;
+  const shadowVal = rawVal / 100;
+  document.documentElement.style.setProperty("--shadow-factor", shadowVal);
+  document.documentElement.classList.toggle("no-shadows", rawVal === 0);
+
+  const sliderEl = document.getElementById("shadowSlider");
+  const numInputEl = document.getElementById("shadowInputNumber");
+  if (sliderEl && parseInt(sliderEl.value, 10) !== rawVal)
+    sliderEl.value = rawVal;
+  if (numInputEl && parseInt(numInputEl.value, 10) !== rawVal)
+    numInputEl.value = rawVal;
+
   applyClockStyle();
   updateClock();
-  materialYouEngine.triggerMaterialYou(newSettings, getBgFromDB);
+  await materialYouEngine.triggerMaterialYou(newSettings, getBgFromDB);
   updateSuggestSettingsVisibility();
 }
 
@@ -745,6 +766,9 @@ export async function loadSettings() {
     } else if (item.type === "checkbox") {
       const el = document.getElementById(item.id);
       if (el) el.checked = !!val;
+    } else if (item.type === "range") {
+      const el = document.getElementById(item.id);
+      if (el) el.value = val;
     } else if (item.type === "radio-group") {
       const radios = document.getElementsByName(item.name);
       for (let r of radios) {
@@ -755,6 +779,13 @@ export async function loadSettings() {
 
   document.body.className = settings.theme || "dark";
   document.body.classList.toggle("force-desktop-mode", !!settings.forceDesktop);
+
+  const rawVal = settings.shadowIntensity ?? 100;
+  document.documentElement.style.setProperty("--shadow-factor", rawVal / 100);
+  document.documentElement.classList.toggle("no-shadows", rawVal === 0);
+  const numInputEl = document.getElementById("shadowInputNumber");
+  if (numInputEl) numInputEl.value = rawVal;
+
   applyClockStyle();
 
   const overlay = document.getElementById("bgOverlay");
