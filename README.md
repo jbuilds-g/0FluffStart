@@ -72,7 +72,14 @@ _alternatively_
 
 1. Open **settings**.
 2. Navigate to **Homepage** and turn it **on**.
-3. Type/paste the **live URL** `jbuilds-g.github.io/0FluffStart/`
+3. Type or paste the **live URL** `jbuilds-g.github.io/0FluffStart/`
+
+#### Firefox
+
+1. Open **Settings** in Firefox.
+2. Select **Homepage** -> **Custom URL**.
+3. Type or paste the **Live URL**: `https://jbuilds-g.github.io/0FluffStart/`
+4. Tap **Set**. New tabs and homepage opens will now load the dashboard directly.
 
 #### iOS (Safari)
 
