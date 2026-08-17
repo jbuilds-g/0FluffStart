@@ -324,3 +324,19 @@ body.material .suggestions-container {
     top: 68px;
   }
 }
+
+.inline-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: inherit;
+}
+
+.inline-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  color: inherit;
+}

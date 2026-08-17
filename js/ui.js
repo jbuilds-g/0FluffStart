@@ -6,58 +6,82 @@ import { cancelEdit, openEditor, renderLinkManager } from "./links.js";
 
 const materialYouEngine = new MaterialYouEngine();
 
-const GENERIC_SEARCH_ICON = `<span class="icon-mask icon-search" style="width:16px; height:16px;"></span>`;
+const svgCache = new Map();
+
+export async function loadInlineIcons(root = document) {
+  const nodes = root.querySelectorAll("[data-icon]");
+  for (const node of nodes) {
+    const name = node.dataset.icon;
+    if (!name) continue;
+    if (!svgCache.has(name)) {
+      try {
+        const res = await fetch(`./assets/icons/${name}.svg`);
+        if (res.ok) {
+          const text = await res.text();
+          svgCache.set(name, text);
+        }
+      } catch (e) {
+        console.warn(`Failed to fetch icon: ${name}`, e);
+      }
+    }
+    if (svgCache.has(name) && node.isConnected) {
+      node.innerHTML = svgCache.get(name);
+    }
+  }
+}
+
+const GENERIC_SEARCH_ICON = `<span class="inline-icon" data-icon="search"></span>`;
 
 export const searchEngines = [
   {
     name: "Google",
     url: "https://www.google.com/search?q=",
-    icon: `<span class="icon-mask icon-google" style="width:16px; height:16px;"></span>`,
+    icon: `<span class="inline-icon" data-icon="google"></span>`,
   },
   {
     name: "DuckDuckGo",
     url: "https://duckduckgo.com/?q=",
-    icon: `<span class="icon-mask icon-duckduckgo" style="width:16px; height:16px;"></span>`,
+    icon: `<span class="inline-icon" data-icon="duckduckgo"></span>`,
   },
   {
     name: "Bing",
     url: "https://www.bing.com/search?q=",
-    icon: `<span class="icon-mask icon-bing" style="width:16px; height:16px;"></span>`,
+    icon: `<span class="inline-icon" data-icon="bing"></span>`,
   },
   {
     name: "Brave",
     url: "https://search.brave.com/search?q=",
-    icon: `<span class="icon-mask icon-brave" style="width:16px; height:16px;"></span>`,
+    icon: `<span class="inline-icon" data-icon="brave"></span>`,
   },
   {
     name: "Startpage",
     url: "https://www.startpage.com/sp/search?query=",
-    icon: `<span class="icon-mask icon-startpage" style="width:16px; height:16px;"></span>`,
+    icon: `<span class="inline-icon" data-icon="startpage"></span>`,
   },
   {
     name: "Ecosia",
     url: "https://www.ecosia.org/search?q=",
-    icon: `<span class="icon-mask icon-ecosia" style="width:16px; height:16px;"></span>`,
+    icon: `<span class="inline-icon" data-icon="ecosia"></span>`,
   },
   {
     name: "Kagi",
     url: "https://kagi.com/search?q=",
-    icon: `<span class="icon-mask icon-kagi" style="width:16px; height:16px;"></span>`,
+    icon: `<span class="inline-icon" data-icon="kagi"></span>`,
   },
   {
     name: "SearXNG",
     url: "https://searx.be/search?q=",
-    icon: `<span class="icon-mask icon-searxng" style="width:16px; height:16px;"></span>`,
+    icon: `<span class="inline-icon" data-icon="searxng"></span>`,
   },
   {
     name: "Wikipedia",
     url: "https://en.wikipedia.org/wiki/Special:Search?search=",
-    icon: `<span class="icon-mask icon-wikipedia" style="width:16px; height:16px;"></span>`,
+    icon: `<span class="inline-icon" data-icon="wikipedia"></span>`,
   },
   {
     name: "YouTube",
     url: "https://www.youtube.com/results?search_query=",
-    icon: `<span class="icon-mask icon-youtube" style="width:16px; height:16px;"></span>`,
+    icon: `<span class="inline-icon" data-icon="youtube"></span>`,
   },
 ];
 
@@ -247,6 +271,10 @@ export function renderEngineDropdown() {
     });
     dropdown.appendChild(div);
   });
+
+  const switcher = document.querySelector(".engine-switcher");
+  if (switcher) loadInlineIcons(switcher);
+  loadInlineIcons(dropdown);
 }
 
 export function toggleEngineDropdown() {
