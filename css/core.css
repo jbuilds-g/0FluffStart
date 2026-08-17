@@ -12,7 +12,8 @@
   display: inline-block;
   width: 18px;
   height: 18px;
-  background-color: currentColor;
+  background-color: var(--text, currentColor);
+  forced-color-adjust: none;
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;
@@ -21,12 +22,8 @@
   -webkit-mask-size: contain;
   vertical-align: middle;
   flex-shrink: 0;
-  opacity: 1 !important;
-  filter: contrast(125%);
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-  isolation: auto;
-  will-change: transform;
 }
 
 .icon-folder {
