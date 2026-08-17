@@ -1,19 +1,20 @@
-const CACHE_NAME = "0fluff-v103";
+const CACHE_NAME = "0fluff-v104";
 
 const ASSETS = [
   "./",
   "./index.html",
-  "./manifest.json",
   "./pwa-manifest.json",
-  "./core.css",
-  "./main.js",
-  "./store.js",
-  "./utils.js",
-  "./storage.js",
-  "./links.js",
-  "./ui.js",
-  "./suggestions.js",
-  "./material-you-engine.js",
+  "./css/core.css",
+  "./css/modal.css",
+  "./css/search.css",
+  "./js/main.js",
+  "./js/ui.js",
+  "./js/store.js",
+  "./js/links.js",
+  "./js/suggestions.js",
+  "./js/storage.js",
+  "./js/utils.js",
+  "./js/material-you-engine.js",
   "./icon.png",
 ];
 
