@@ -362,12 +362,74 @@ export function selectSuggestion(suggestion) {
       : suggestion.name;
   }
 
+  document.getElementById("suggestionsContainer")?.classList.add("hidden");
+
   if (suggestion.type === "Link") {
     const safeUrl = sanitizeUrl(suggestion.url);
     if (safeUrl !== "#") window.location.href = safeUrl;
   } else {
-    document.getElementById("suggestionsContainer")?.classList.add("hidden");
-    handleSearch({ key: "Enter", type: "synthetic" });
+    let val = suggestion.name.trim();
+    if (!val) return;
+
+    const state = store.getState();
+    const available = getAvailableEngines();
+    const customEngines = state.settings?.customEngines || [];
+    const customTags = customEngines.map((c) => ({
+      tag: c.tag || `?${c.name.charAt(0).toLowerCase()}`,
+      name: c.name,
+    }));
+
+    const tagMap = [
+      ...customTags,
+      { tag: "?bi", name: "Bing" },
+      { tag: "?b", name: "Brave" },
+      { tag: "?st", name: "Startpage" },
+      { tag: "?s", name: "SearXNG" },
+      { tag: "?g", name: "Google" },
+      { tag: "?d", name: "DuckDuckGo" },
+      { tag: "?e", name: "Ecosia" },
+      { tag: "?k", name: "Kagi" },
+      { tag: "?w", name: "Wikipedia" },
+      { tag: "?y", name: "YouTube" },
+    ];
+
+    let targetEngine = null;
+    for (const item of tagMap) {
+      if (
+        val.toLowerCase().startsWith(item.tag + " ") ||
+        val.toLowerCase() === item.tag
+      ) {
+        targetEngine = available.find(
+          (eng) => eng.name.toLowerCase() === item.name.toLowerCase(),
+        );
+        val = val.slice(item.tag.length).trim();
+        break;
+      }
+    }
+
+    if (!val) return;
+
+    if (!targetEngine) {
+      targetEngine =
+        available.find((s) => s.name === state.settings?.searchEngine) ||
+        available[0];
+    }
+
+    const history = state.searchHistory || [];
+    if (state.settings?.historyEnabled !== false) {
+      const updatedHistory = [
+        val,
+        ...history.filter((item) => item !== val),
+      ].slice(0, 50);
+      store.setState({ searchHistory: updatedHistory });
+    }
+
+    if (val.includes(".") && !val.includes(" ")) {
+      const safeUrl = sanitizeUrl(val);
+      if (safeUrl !== "#") window.location.href = safeUrl;
+    } else {
+      window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
+    }
   }
 }
 
@@ -471,26 +533,24 @@ const SETTINGS_MAP = [
   },
 ];
 
-export async function handleImageUpload(input) {
-  const file = input.files[0];
+export async function updateBackgroundMedia(sourceType, data) {
   const fileNameEl = document.getElementById("bgFileName");
   const resetBtn = document.getElementById("resetBgBtn");
+  const bgUrlInput = document.getElementById("bgUrlInput");
+  const bgImageInput = document.getElementById("bgImageInput");
+  const overlay = document.getElementById("bgOverlay");
+  const bgImage = document.getElementById("bgImage");
+  const bgVideo = document.getElementById("bgVideo");
 
-  if (
-    file &&
-    (file.type.startsWith("image/") || file.type.startsWith("video/"))
-  ) {
+  if (sourceType === "file" && data) {
     try {
-      await saveBgToDB(file);
+      await saveBgToDB(data);
       autoSaveSettings({ backgroundImage: "indexeddb" });
 
-      const objectUrl = materialYouEngine.createMediaObjectUrl(file);
+      const objectUrl = materialYouEngine.createMediaObjectUrl(data);
+      const isVideo = data.type && data.type.startsWith("video/");
 
-      const bgVideo = document.getElementById("bgVideo");
-      const bgImage = document.getElementById("bgImage");
-      const bgOverlay = document.getElementById("bgOverlay");
-
-      if (file.type.startsWith("video/")) {
+      if (isVideo) {
         if (bgImage) {
           bgImage.style.backgroundImage = "";
           bgImage.classList.add("hidden");
@@ -517,49 +577,97 @@ export async function handleImageUpload(input) {
         }
       }
 
-      if (fileNameEl) fileNameEl.innerText = file.name;
+      if (fileNameEl) fileNameEl.innerText = data.name || "Custom Media Active";
       if (resetBtn) resetBtn.classList.remove("hidden");
-      if (bgOverlay) bgOverlay.classList.add("bg-overlay-active");
+      if (overlay) overlay.classList.add("bg-overlay-active");
+      if (bgUrlInput) bgUrlInput.value = "";
     } catch (e) {
       console.error("Failed to save media to DB", e);
       showToast("Failed to save background media. Database error.", "error");
     }
+  } else if (
+    sourceType === "url" &&
+    data &&
+    typeof data === "string" &&
+    data.trim()
+  ) {
+    const trimmedUrl = data.trim();
+    materialYouEngine.revokeActiveObjectUrl();
+    await clearBgFromDB();
+    autoSaveSettings({ backgroundImage: trimmedUrl });
+
+    const isVideo = trimmedUrl.match(/\.(mp4|webm|ogg)($|\?)/i);
+
+    if (isVideo) {
+      if (bgImage) {
+        bgImage.style.backgroundImage = "";
+        bgImage.classList.add("hidden");
+        bgImage.classList.remove("active");
+      }
+      if (bgVideo) {
+        bgVideo.src = trimmedUrl;
+        bgVideo.classList.remove("hidden");
+        bgVideo.classList.add("active");
+        bgVideo.play().catch((err) => console.warn("Playback prevented:", err));
+      }
+    } else {
+      if (bgVideo) {
+        bgVideo.src = "";
+        bgVideo.classList.add("hidden");
+        bgVideo.classList.remove("active");
+      }
+      if (bgImage) {
+        bgImage.style.backgroundImage = `url('${trimmedUrl}')`;
+        bgImage.classList.remove("hidden");
+        bgImage.classList.add("active");
+      }
+    }
+
+    if (fileNameEl) fileNameEl.innerText = "URL Media Active";
+    if (resetBtn) resetBtn.classList.remove("hidden");
+    if (overlay) overlay.classList.add("bg-overlay-active");
+    if (bgImageInput) bgImageInput.value = "";
   } else {
-    await clearBackground();
+    autoSaveSettings({ backgroundImage: null });
+    await clearBgFromDB();
+    materialYouEngine.revokeActiveObjectUrl();
+
+    if (bgImage) {
+      bgImage.style.backgroundImage = "";
+      bgImage.classList.add("hidden");
+      bgImage.classList.remove("active");
+    }
+    if (bgVideo) {
+      bgVideo.src = "";
+      bgVideo.classList.add("hidden");
+      bgVideo.classList.remove("active");
+    }
+
+    if (bgImageInput) bgImageInput.value = "";
+    if (bgUrlInput) bgUrlInput.value = "";
+    if (fileNameEl) fileNameEl.innerText = "No media selected.";
+    if (resetBtn) resetBtn.classList.add("hidden");
+    if (overlay) overlay.classList.remove("bg-overlay-active");
+  }
+
+  const settings = store.getState().settings || {};
+  materialYouEngine.triggerMaterialYou(settings, getBgFromDB);
+}
+
+export async function handleImageUpload(input) {
+  const file = input.files[0];
+  if (
+    file &&
+    (file.type.startsWith("image/") || file.type.startsWith("video/"))
+  ) {
+    await updateBackgroundMedia("file", file);
+  } else {
+    await updateBackgroundMedia("clear", null);
   }
 }
 
 export async function clearBackground() {
-  autoSaveSettings({ backgroundImage: null });
-  await clearBgFromDB();
-
-  materialYouEngine.revokeActiveObjectUrl();
-
-  const bgImage = document.getElementById("bgImage");
-  if (bgImage) {
-    bgImage.style.backgroundImage = "";
-    bgImage.classList.add("hidden");
-    bgImage.classList.remove("active");
-  }
-
-  const bgVideo = document.getElementById("bgVideo");
-  if (bgVideo) {
-    bgVideo.src = "";
-    bgVideo.classList.add("hidden");
-    bgVideo.classList.remove("active");
-  }
-
-  const inputEl = document.getElementById("bgImageInput");
-  const bgUrlInput = document.getElementById("bgUrlInput");
-  const nameEl = document.getElementById("bgFileName");
-  const resetBtn = document.getElementById("resetBgBtn");
-  const overlay = document.getElementById("bgOverlay");
-
-  if (inputEl) inputEl.value = "";
-  if (bgUrlInput) bgUrlInput.value = "";
-  if (nameEl) nameEl.innerText = "No media selected.";
-  if (resetBtn) resetBtn.classList.add("hidden");
-  if (overlay) overlay.classList.remove("bg-overlay-active");
+  await updateBackgroundMedia("clear", null);
 }
 
 /**

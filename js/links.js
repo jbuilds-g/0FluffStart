@@ -456,7 +456,7 @@ export function cancelEdit() {
 export function saveLink() {
   const nameInput = document.getElementById("editName");
   const urlInput = document.getElementById("editUrl");
-  const name = nameInput ? nameInput.value.trim().slice(0, 25) : "";
+  const name = nameInput ? nameInput.value.trim().slice(0, 50) : "";
   const url = urlInput ? urlInput.value.trim() : "";
 
   if (!name) return showToast("Please fill in the name.", "error");

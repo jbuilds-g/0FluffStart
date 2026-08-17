@@ -6,7 +6,7 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage"],
   "action": {
     "default_popup": "popup.html"
   },

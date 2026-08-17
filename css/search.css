@@ -351,3 +351,14 @@ body.material .suggestions-container {
   background: transparent !important;
   background-color: transparent !important;
 }
+
+.inline-icon svg,
+.inline-icon svg * {
+  fill: currentColor !important;
+}
+
+.inline-icon svg[fill="none"],
+.inline-icon svg[fill="none"] * {
+  fill: none !important;
+  stroke: currentColor !important;
+}

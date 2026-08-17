@@ -20,6 +20,7 @@ import {
   showToast,
   handleImageUpload,
   clearBackground,
+  updateBackgroundMedia,
   initCustomSelects,
   checkMaterialYouReload,
   renderEngineSelectionList,
@@ -122,6 +123,15 @@ document.addEventListener("DOMContentLoaded", () => {
       !e.target.closest("#suggestionsContainer")
     ) {
       document.getElementById("suggestionsContainer")?.classList.add("hidden");
+    }
+
+    const searchBarContainer = document.querySelector(".search-bar");
+    if (
+      searchBarContainer?.classList.contains("mobile-expanded") &&
+      !e.target.closest(".search-bar") &&
+      !e.target.closest("#mobileSearchBtn")
+    ) {
+      closeMobileSearch();
     }
   });
 
@@ -480,6 +490,22 @@ function bindStaticEvents() {
       await handleImageUpload(bgInput);
       await checkMaterialYouReload();
     });
+  }
+
+  const bgUrlInput = document.getElementById("bgUrlInput");
+  if (bgUrlInput) {
+    bgUrlInput.addEventListener(
+      "input",
+      debounce(async () => {
+        const val = bgUrlInput.value.trim();
+        if (val) {
+          await updateBackgroundMedia("url", val);
+        } else {
+          await updateBackgroundMedia("clear", null);
+        }
+        await checkMaterialYouReload();
+      }, 400),
+    );
   }
 
   const resetBgBtn = document.getElementById("resetBgBtn");

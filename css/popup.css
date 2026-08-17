@@ -1,0 +1,147 @@
+body {
+  width: 320px;
+  padding: 16px;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg, #000);
+  color: var(--text, #fff);
+  box-sizing: border-box;
+}
+
+body.light {
+  --bg: #f2f2f7;
+  --card: #ffffff;
+  --text: #000000;
+  --accent: #007aff;
+  --border: #d1d1d6;
+}
+body.cyberpunk {
+  --bg: #050505;
+  --card: #121212;
+  --text: #00ff41;
+  --accent: #f0e600;
+  --border: #333;
+}
+body.sunset {
+  --bg: #2d1b2e;
+  --card: #442646;
+  --text: #ffd166;
+  --accent: #ef476f;
+  --border: #6d4b68;
+}
+body.forest {
+  --bg: #1a2f1a;
+  --card: #2d4c2d;
+  --text: #e1efe1;
+  --accent: #c3e6c3;
+  --border: #3a5c3a;
+}
+body.paper {
+  --bg: #f9f7f2;
+  --card: #ffffff;
+  --text: #1a1a1a;
+  --accent: #222222;
+  --border: #d1cfc8;
+}
+body.luminous {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --text: #f8fafc;
+  --accent: #38bdf8;
+  --border: #475569;
+}
+body.nord {
+  --bg: #2e3440;
+  --card: #3b4252;
+  --text: #eceff4;
+  --accent: #88c0d0;
+  --border: #4c566a;
+}
+body.dracula {
+  --bg: #282a36;
+  --card: #44475a;
+  --text: #f8f8f2;
+  --accent: #bd93f9;
+  --border: #44475a;
+}
+body.retro {
+  --bg: #0d0202;
+  --card: #1a0505;
+  --text: #ffb000;
+  --accent: #ffb000;
+  --border: #ffb000;
+}
+body.rose {
+  --bg: #191724;
+  --card: #1f1d2e;
+  --text: #e0def4;
+  --accent: #ebbcba;
+  --border: #403d52;
+}
+body.heatwave {
+  --bg: #1f0a00;
+  --card: #2d0f02;
+  --text: #ffe6d5;
+  --accent: #ff4500;
+  --border: #521c04;
+}
+body.slate {
+  --bg: #1a1a1a;
+  --card: #252525;
+  --text: #d1d1d1;
+  --accent: #ffd700;
+  --border: #4d4615;
+}
+body.toxic-tide {
+  --bg: #041614;
+  --card: #09201d;
+  --text: #f4f19b;
+  --accent: #2fbfa2;
+  --border: #13483f;
+}
+body.evergreen-archive {
+  --bg: #1a2416;
+  --card: #253321;
+  --text: #d9c588;
+  --accent: #d9c588;
+  --border: #3b4e35;
+}
+body.amoled {
+  --bg: #000000;
+  --card: #000000;
+  --text: #ffffff;
+  --accent: #ffffff;
+  --border: #222222;
+}
+body.material-you {
+  --bg: #1e1e1e;
+  --card: #282828;
+  --text: #e0e0e0;
+  --accent: #a8c7fa;
+  --border: #444444;
+}
+
+input,
+select,
+button {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border, #333);
+  background: var(--card, #141418);
+  color: var(--text, #fff);
+  box-sizing: border-box;
+}
+
+button {
+  background: var(--accent, #00aaff);
+  color: var(--bg, #000);
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+
+.hidden {
+  display: none;
+}
