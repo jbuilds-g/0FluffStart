@@ -21,6 +21,8 @@
   -webkit-mask-size: contain;
   vertical-align: middle;
   flex-shrink: 0;
+  opacity: 1 !important;
+  filter: contrast(125%);
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   isolation: auto;
