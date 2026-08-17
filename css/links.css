@@ -18,6 +18,7 @@
   position: relative;
   cursor: pointer;
   transition: transform 0.1s;
+  isolation: isolate;
 }
 
 .link-item:active {

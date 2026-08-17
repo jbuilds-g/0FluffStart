@@ -111,12 +111,13 @@ body.material .engine-switcher {
 
 /* --- SEARCH ENGINE SVG SIZING --- */
 .engine-switcher #currentEngineIcon svg,
-#engineDropdown .engine-option svg {
+.engine-switcher #currentEngineIcon .icon-mask,
+#engineDropdown .engine-option svg,
+#engineDropdown .engine-option .icon-mask {
   width: 18px;
   height: 18px;
-  display: block;
-  fill: currentColor;
-  color: currentColor;
+  display: inline-block;
+  color: inherit;
 }
 
 .engine-btn .chevron {
