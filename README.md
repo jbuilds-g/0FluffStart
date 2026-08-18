@@ -62,9 +62,13 @@
 
 #### **Chromium (Chrome, Edge, Brave)**
 
-1. Download the source code `.zip` from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) and extract it.
-2. Go to `chrome://extensions` and enable **Developer Mode** (top right).
-3. Click **Load Unpacked** and select the extracted folder.
+- **Chrome Web Store Submission:** _(Submitted & Pending Review)_
+- **Manual Unpacked Loading:**
+  - Download `0fluffstart-chrome-(version)zip` from the Releases page.
+  - Extract the archive to a local directory.
+  - Open `chrome://extensions` in your browser.
+  - Enable **Developer Mode** in the top-right corner.
+  - Click **Load Unpacked** and select the extracted folder.
 
 ### Mobile & Live Web (PWA)
 
