@@ -1,44 +1,90 @@
 /**
- * @fileoverview Material You (Monet) dynamic HSL theming engine.
- * Extracts dominant hues from image or video backgrounds and applies CSS custom variables.
+ * @fileoverview Material You dynamic HSL theming engine.
+ *
+ * Execution Flow:
+ * Media Source (File / Blob / URL)
+ *   └─> Render frame to 1x1 Canvas Context
+ *         └─> Downsample pixel data to average RGB
+ *               └─> Map RGB to HSL Hue Angle (0° - 360°)
+ *                     └─> Apply HSL variables & palette object to DOM & Storage
  */
 
+/** Default Hue angle (blue-slate) applied when no media is active. */
 const DEFAULT_HUE = 210;
+
+/** Baseline saturation percentage applied across generated theme shades. */
 const BASE_SATURATION = 25;
+
+/** Debounce delay (ms) to avoid layout thrashing during video frame seeks. */
 const VIDEO_SEEK_DEBOUNCE_MS = 150;
 
 /**
  * @typedef {Object} AppSettings
- * @property {string} [theme]
- * @property {string} [backgroundImage]
+ * @property {string} [theme] Active theme identifier (e.g. "material-you").
+ * @property {string} [backgroundImage] Background mode ("indexeddb", URL, or null).
  */
 
 /**
- * Encapsulates dynamic color extraction and CSS theme mutation state.
+ * Encapsulates dynamic color extraction, palette generation, and CSS variable updates.
  */
 export class MaterialYouEngine {
   constructor() {
-    /** @type {string|null} */
+    /**
+     * Tracked Object URL created from user Blobs/Files.
+     * @type {string|null}
+     * @private
+     */
     this._activeBgObjectUrl = null;
 
-    /** @type {HTMLVideoElement|null} */
+    /**
+     * Shared offscreen HTMLVideoElement used to sample video frames without DOM insertion.
+     * @type {HTMLVideoElement|null}
+     * @private
+     */
     this._sharedColorVideo = null;
 
-    /** @type {HTMLCanvasElement|null} */
-    this._offscreenCanvas = null;
+    /**
+     * Offscreen 1x1 canvas element used for fast color downsampling.
+     * @type {HTMLCanvasElement|null}
+     * @private
+     */
+    this._offscreenCanvas = document.createElement("canvas");
+    this._offscreenCanvas.width = 1;
+    this._offscreenCanvas.height = 1;
 
-    /** @type {number|null} */
+    /**
+     * Pre-allocated 2D rendering context for offscreen sampling.
+     * @type {CanvasRenderingContext2D|null}
+     * @private
+     */
+    this._offscreenCanvasCtx = this._offscreenCanvas.getContext("2d", {
+      willReadFrequently: true,
+    });
+
+    /**
+     * Timer handle for debouncing video seeking color updates.
+     * @type {number|null}
+     * @private
+     */
     this._extractionTimer = null;
 
-    /** @type {EventListener|null} */
+    /**
+     * Cached event listener reference for video data load events.
+     * @type {EventListener|null}
+     * @private
+     */
     this._colorLoadedHandler = null;
 
-    /** @type {EventListener|null} */
+    /**
+     * Cached event listener reference for video frame seek completion events.
+     * @type {EventListener|null}
+     * @private
+     */
     this._colorSeekedHandler = null;
   }
 
   /**
-   * Safely revokes active object URLs to prevent memory leaks.
+   * Revokes active Object URLs to free browser memory and prevent memory leaks.
    */
   revokeActiveObjectUrl() {
     if (this._activeBgObjectUrl) {
@@ -48,9 +94,11 @@ export class MaterialYouEngine {
   }
 
   /**
-   * Centralizes creation and tracking of background media Object URLs.
-   * @param {Blob|File|string} blobOrFile
-   * @returns {string|null}
+   * Normalizes media input (Blob, File, or URL string) into a usable media URL.
+   * Automatically revokes previous Object URLs to maintain memory efficiency.
+   *
+   * @param {Blob|File|string} blobOrFile - Raw file object or remote image/video URL.
+   * @returns {string|null} A valid object URL string or direct URL string.
    */
   createMediaObjectUrl(blobOrFile) {
     this.revokeActiveObjectUrl();
@@ -63,28 +111,37 @@ export class MaterialYouEngine {
   }
 
   /**
-   * Extracts average RGB values from an image via a 1x1 canvas context.
+   * Downsamples an image to a single 1x1 pixel using Canvas 2D rendering.
+   * Browser GPU rendering automatically averages color values across the full image.
+   *
    * @private
-   * @param {HTMLImageElement} imgElement
-   * @returns {{r: number, g: number, b: number}}
+   * @param {HTMLImageElement} imgElement - Loaded HTML image element.
+   * @returns {{r: number, g: number, b: number}} Extracted RGB values (0-255).
    */
   _getAverageColor(imgElement) {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1;
-    canvas.height = 1;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    ctx.drawImage(imgElement, 0, 0, 1, 1);
-    const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+    if (!this._offscreenCanvasCtx) return { r: 0, g: 0, b: 0 };
+    this._offscreenCanvasCtx.drawImage(imgElement, 0, 0, 1, 1);
+    const [r, g, b] = this._offscreenCanvasCtx.getImageData(0, 0, 1, 1).data;
     return { r, g, b };
   }
 
   /**
-   * Converts RGB values to a Hue angle in degrees (0-360).
+   * Converts RGB color channels to an HSL Hue angle in degrees (0° to 360°).
+   *
+   * Algorithm Details:
+   * 1. Normalize R, G, B to floating values between 0.0 and 1.0.
+   * 2. Identify max and min channel values to establish color range delta.
+   * 3. Calculate Hue offset based on which channel holds the maximum value:
+   *    - If Red is max: H = (G - B) / delta
+   *    - If Green is max: H = (B - R) / delta + 2
+   *    - If Blue is max: H = (R - G) / delta + 4
+   * 4. Multiply fraction by 60° to yield full circle hue degree (0° - 360°).
+   *
    * @private
-   * @param {number} r
-   * @param {number} g
-   * @param {number} b
-   * @returns {number}
+   * @param {number} r - Red channel (0-255).
+   * @param {number} g - Green channel (0-255).
+   * @param {number} b - Blue channel (0-255).
+   * @returns {number} Hue angle rounded to an integer (0-360).
    */
   _rgbToHue(r, g, b) {
     r /= 255;
@@ -113,12 +170,16 @@ export class MaterialYouEngine {
   }
 
   /**
-   * Applies calculated HSL variables to document body.
+   * Generates derivative theme colors based on extracted Hue angle and updates CSS rules.
+   * Persists generated HSL palette to LocalStorage and extension storage.
+   *
    * @private
-   * @param {number} hue
+   * @param {number} hue - Dominant hue angle in degrees (0-360).
    */
   _applyTheme(hue) {
     const target = document.body;
+
+    // Construct harmonious HSL palette based on extracted hue angle
     const bg = `hsl(${hue}, ${BASE_SATURATION}%, 8%)`;
     const card = `hsl(${hue}, ${BASE_SATURATION + 5}%, 14%)`;
     const cardHover = `hsl(${hue}, ${BASE_SATURATION + 10}%, 19%)`;
@@ -126,6 +187,7 @@ export class MaterialYouEngine {
     const text = `hsl(${hue}, 45%, 82%)`;
     const accent = `hsl(${hue}, 65%, 68%)`;
 
+    // Inject custom properties directly into document element
     target.style.setProperty("--bg", bg);
     target.style.setProperty("--card", card);
     target.style.setProperty("--card-hover", cardHover);
@@ -141,16 +203,23 @@ export class MaterialYouEngine {
       "--text": text,
       "--accent": accent,
     };
+
+    // Cache current palette to storage for fast load restoration
     try {
+      let settings = {};
       const raw = localStorage.getItem("0fluff_settings");
       if (raw) {
-        const settings = JSON.parse(raw);
-        settings.materialYouPalette = palette;
-        const serialized = JSON.stringify(settings);
-        localStorage.setItem("0fluff_settings", serialized);
-        if (typeof chrome !== "undefined" && chrome?.storage?.local) {
-          chrome.storage.local.set({ "0fluff_settings": serialized });
+        try {
+          settings = JSON.parse(raw);
+        } catch (parseError) {
+          console.warn("Failed to parse settings JSON:", parseError);
         }
+      }
+      settings.materialYouPalette = palette;
+      const serialized = JSON.stringify(settings);
+      localStorage.setItem("0fluff_settings", serialized);
+      if (typeof chrome !== "undefined" && chrome?.storage?.local) {
+        chrome.storage.local.set({ "0fluff_settings": serialized });
       }
     } catch (e) {
       console.warn("Failed to persist Material You palette:", e);
@@ -158,7 +227,9 @@ export class MaterialYouEngine {
   }
 
   /**
-   * Resets Material You CSS custom properties from document body.
+   * Clears custom Material You HSL properties from document body.
+   * Restores default CSS theme variable fallbacks.
+   *
    * @private
    */
   _clearThemeProperties() {
@@ -172,9 +243,11 @@ export class MaterialYouEngine {
   }
 
   /**
-   * Handles image color extraction with cached image checks and event listener cleanup.
+   * Asynchronously loads an image URL, extracts its dominant hue, and updates the theme.
+   * Includes lifecycle event cleanup and cached image handling.
+   *
    * @private
-   * @param {string} url
+   * @param {string} url - Target image URL string or Object URL.
    */
   _extractImageColor(url) {
     const img = new Image();
@@ -202,22 +275,58 @@ export class MaterialYouEngine {
 
     img.src = url;
 
+    // Handle cached images that load synchronously
     if (img.complete && img.naturalWidth > 0) {
       handleImageLoad();
     }
   }
 
   /**
-   * Handles video frame extraction by seeking to midpoint and drawing to offscreen canvas.
+   * Extracts average color from a video source by seeking to the midpoint frame.
+   * Uses a hidden offscreen video element and canvas to prevent DOM layout impact.
+   *
    * @private
-   * @param {string} url
+   * @param {string} url - Video source URL or Object URL.
+   */
+  /**
+   * Cleans up attached video event listeners and resets handler references.
+   * @private
+   */
+  _cleanupVideoListeners() {
+    if (
+      this._sharedColorVideo &&
+      this._colorLoadedHandler &&
+      this._colorSeekedHandler
+    ) {
+      this._sharedColorVideo.removeEventListener(
+        "loadeddata",
+        this._colorLoadedHandler,
+      );
+      this._sharedColorVideo.removeEventListener(
+        "seeked",
+        this._colorSeekedHandler,
+      );
+      this._colorLoadedHandler = null;
+      this._colorSeekedHandler = null;
+    }
+  }
+
+  /**
+   * Extracts average color from a video source by seeking to the midpoint frame.
+   * Uses a hidden offscreen video element and canvas to prevent DOM layout impact.
+   *
+   * @private
+   * @param {string} url - Video source URL or Object URL.
    */
   _extractVideoColor(url) {
+    this._cleanupVideoListeners();
+
     if (this._extractionTimer) {
       clearTimeout(this._extractionTimer);
       this._extractionTimer = null;
     }
 
+    // Lazy instantiate reusable offscreen video element
     if (!this._sharedColorVideo) {
       this._sharedColorVideo = document.createElement("video");
       this._sharedColorVideo.muted = true;
@@ -225,25 +334,7 @@ export class MaterialYouEngine {
       this._sharedColorVideo.crossOrigin = "Anonymous";
     }
 
-    if (!this._offscreenCanvas) {
-      this._offscreenCanvas = document.createElement("canvas");
-      this._offscreenCanvas.width = 1;
-      this._offscreenCanvas.height = 1;
-    }
-
-    if (this._colorLoadedHandler) {
-      this._sharedColorVideo.removeEventListener(
-        "loadeddata",
-        this._colorLoadedHandler,
-      );
-    }
-    if (this._colorSeekedHandler) {
-      this._sharedColorVideo.removeEventListener(
-        "seeked",
-        this._colorSeekedHandler,
-      );
-    }
-
+    // Seek to midpoint frame once media metadata loads
     this._colorLoadedHandler = () => {
       if (this._sharedColorVideo) {
         this._sharedColorVideo.currentTime = Math.min(
@@ -253,18 +344,19 @@ export class MaterialYouEngine {
       }
     };
 
+    // Extract frame pixels when seeking finishes
     this._colorSeekedHandler = () => {
       if (this._extractionTimer) clearTimeout(this._extractionTimer);
       this._extractionTimer = setTimeout(() => {
-        if (!this._offscreenCanvas || !this._sharedColorVideo) return;
-        const ctx = this._offscreenCanvas.getContext("2d", {
-          willReadFrequently: true,
-        });
-        if (ctx) {
-          ctx.drawImage(this._sharedColorVideo, 0, 0, 1, 1);
-          const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-          this._applyTheme(this._rgbToHue(r, g, b));
-        }
+        if (!this._offscreenCanvasCtx || !this._sharedColorVideo) return;
+        this._offscreenCanvasCtx.drawImage(this._sharedColorVideo, 0, 0, 1, 1);
+        const [r, g, b] = this._offscreenCanvasCtx.getImageData(
+          0,
+          0,
+          1,
+          1,
+        ).data;
+        this._applyTheme(this._rgbToHue(r, g, b));
       }, VIDEO_SEEK_DEBOUNCE_MS);
     };
 
@@ -277,12 +369,14 @@ export class MaterialYouEngine {
     if (this._sharedColorVideo.src !== url) {
       this._sharedColorVideo.src = url;
     } else if (this._sharedColorVideo.readyState >= 2) {
-      const ctx = this._offscreenCanvas.getContext("2d", {
-        willReadFrequently: true,
-      });
-      if (ctx) {
-        ctx.drawImage(this._sharedColorVideo, 0, 0, 1, 1);
-        const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+      if (this._offscreenCanvasCtx) {
+        this._offscreenCanvasCtx.drawImage(this._sharedColorVideo, 0, 0, 1, 1);
+        const [r, g, b] = this._offscreenCanvasCtx.getImageData(
+          0,
+          0,
+          1,
+          1,
+        ).data;
         this._applyTheme(this._rgbToHue(r, g, b));
       }
     }
@@ -290,8 +384,9 @@ export class MaterialYouEngine {
 
   /**
    * Main entry point to evaluate theme requirements and trigger extraction.
-   * @param {AppSettings} [settings]
-   * @param {Function} [getBgFromDB]
+   *
+   * @param {AppSettings} [settings] - Current application configuration state.
+   * @param {Function} [getBgFromDB] - Async getter callback to retrieve background media from IndexedDB.
    */
   async triggerMaterialYou(settings, getBgFromDB) {
     if (settings?.theme !== "material-you") {
@@ -306,13 +401,11 @@ export class MaterialYouEngine {
 
         if (bgData) {
           let url = this._activeBgObjectUrl;
-
           if (!url) {
             url =
               bgData instanceof Blob || bgData instanceof File
                 ? URL.createObjectURL(bgData)
                 : bgData;
-
             if (bgData instanceof Blob || bgData instanceof File) {
               this._activeBgObjectUrl = url;
             }
