@@ -433,23 +433,6 @@ export function selectSuggestion(suggestion) {
   }
 }
 
-export async function checkMaterialYouReload(prevTheme = null) {
-  const settings = store.getState().settings || {};
-  if (
-    settings.theme === "material-you" &&
-    settings.backgroundImage === "indexeddb" &&
-    (prevTheme === null || prevTheme !== "material-you")
-  ) {
-    const confirmed = await customConfirm(
-      "A quick page reload is required for Material You color extraction to take full effect.",
-      "Reload Required?",
-    );
-    if (confirmed) {
-      window.location.reload();
-    }
-  }
-}
-
 /**
  * Declarative specification mapping setting keys to DOM element attributes and control types.
  */

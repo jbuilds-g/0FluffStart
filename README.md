@@ -6,8 +6,9 @@
   <p><b>The Final Minimalist Dashboard for Desktop & Mobile.</b></p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Version: 5.5.0](https://img.shields.io/badge/Version-5.5.0-blue)
+![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-blue)
 ![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
+![downloads](https://img.shields.io/github/downloads/jbuilds-g/0FluffStart/total?)
 
 <br><br>
 
@@ -53,55 +54,35 @@
 
 #### **Firefox**
 
-1. Install directly from the [Firefox Add-ons Store](https://addons.mozilla.org/en-US/firefox/addon/0flufstart/).
-2. Alternatively, download `0FluffStart.xpi` from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) and drag/drop it into Firefox (or open `about:addons` → Gear Icon → _Install Add-on From File..._).
+1. Install directly from the Firefox Add-ons Store
+
+<a href="https://addons.mozilla.org/firefox/addon/0flufstart/"><img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Download from Mozilla Add-ons" height="48" /></a>
+
+2. Alternatively, download the latest`0FluffStart-(version).xpi` from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) and drag/drop it into Firefox (or open `about:addons` → Gear Icon → _Install Add-on From File..._).
 
 #### **Chromium (Chrome, Edge, Brave)**
 
-1. Download the source code `.zip` from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) and extract it.
+- _Chrome Web Store listing pending review (Coming Soon)._
+
+1. Download the latest `0fluffstart-chrome(version).zip`from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) and extract it.
 2. Go to `chrome://extensions` and enable **Developer Mode** (top right).
 3. Click **Load Unpacked** and select the extracted folder.
-
-### Mobile & Live Web (PWA)
-
-The hosted version is a fully compliant **PWA**, meaning it can be installed as a standalone app that works even without an internet connection.
-
-#### Android (Chrome)
-
-1.  Navigate to the [Live URL](https://jbuilds-g.github.io/0FluffStart/).
-2.  Tap the three dots (Menu) and select **Add to Home Screen**.
-3.  The dashboard will appear in your app drawer as a native application.
-
-_alternatively_
-
-> It can be set as a custom homepage.
-
-1. Open **settings**.
-2. Navigate to **Homepage** and turn it **on**.
-3. Type or paste the **live URL** `jbuilds-g.github.io/0FluffStart/`
-
-#### Firefox
-
-1. Open **Settings** in Firefox.
-2. Select **Homepage** -> **Custom URL**.
-3. Type or paste the **Live URL**: `https://jbuilds-g.github.io/0FluffStart/`
-4. Tap **Set**. New tabs and homepage opens will now load the dashboard directly.
 
 ---
 
 ### Mobile & Web (PWA)
 
-#### **Android (Chrome)**
+#### **Chrome (Android)**
 
 - **Option A (PWA App):** Go to the [Live App](https://jbuilds-g.github.io/0FluffStart/), tap the menu (⋮), and select **Add to Home Screen**.
 - **Option B (Homepage):** Go to **Settings** → **Homepage** → turn **On** → paste `https://jbuilds-g.github.io/0FluffStart/`.
 
-#### **Android (Firefox)**
+#### **Firefox**
 
 1. Go to **Settings** → **Homepage** → **Custom URL**.
 2. Paste `https://jbuilds-g.github.io/0FluffStart/` and tap **Set**.
 
-#### **iOS (Safari)**
+#### **Safari (iOS)**
 
 1. Open the [Live App](https://jbuilds-g.github.io/0FluffStart/) in Safari.
 2. Tap **Share** → **Add to Home Screen**.

@@ -16,14 +16,28 @@ body.modal-open {
   display: none !important;
 }
 
-@media (max-width: 850px) and (pointer: coarse) {
+@media (max-width: 850px) {
+  /* Hide duplicate desktop notes icon on mobile, keeping Settings gear at top-right */
+  #notesBtnDesktop {
+    display: none !important;
+  }
+
   .mobile-dock {
-    display: block !important;
+    display: none !important;
+  }
+}
+
+@media (max-width: 850px) and (pointer: coarse) {
+  body:not(.force-desktop-mode) .mobile-dock {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
     position: fixed !important;
     bottom: 24px !important;
     right: 24px !important;
-    width: 48px !important;
-    height: 48px !important;
+    width: auto !important;
+    height: auto !important;
     z-index: var(--z-floating) !important;
     pointer-events: none !important;
   }
@@ -33,23 +47,17 @@ body.modal-open {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    width: 48px !important;
-    height: 48px !important;
+    width: 44px !important;
+    height: 44px !important;
     border-radius: 50% !important;
     padding: 0 !important;
     color: var(--text) !important;
+    flex-shrink: 0 !important;
   }
+}
 
-  #mobileSearchBtn svg {
-    width: 22px !important;
-    height: 22px !important;
-    display: block;
-  }
-
-  /* Hide mobile floating search button when desktop mode is active */
-  body.force-desktop-mode .mobile-dock {
-    display: none !important;
-  }
+body.force-desktop-mode .mobile-dock {
+  display: none !important;
 }
 
 /* --- TOAST NOTIFICATION ENGINE --- */

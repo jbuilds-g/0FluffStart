@@ -22,7 +22,6 @@ import {
   clearBackground,
   updateBackgroundMedia,
   initCustomSelects,
-  checkMaterialYouReload,
   renderEngineSelectionList,
 } from "./ui.js";
 import {
@@ -389,10 +388,7 @@ function bindStaticEvents() {
 
   const themeSelect = document.getElementById("themeSelect");
   if (themeSelect) {
-    themeSelect.addEventListener("change", async () => {
-      autoSaveSettings();
-      await checkMaterialYouReload();
-    });
+    themeSelect.addEventListener("change", () => autoSaveSettings());
   }
 
   const clockStyleSelect = document.getElementById("clockStyleSelect");
@@ -511,7 +507,6 @@ function bindStaticEvents() {
   if (bgInput) {
     bgInput.addEventListener("change", async () => {
       await handleImageUpload(bgInput);
-      await checkMaterialYouReload();
     });
   }
 
@@ -526,7 +521,6 @@ function bindStaticEvents() {
         } else {
           await updateBackgroundMedia("clear", null);
         }
-        await checkMaterialYouReload();
       }, 400),
     );
   }
@@ -535,7 +529,6 @@ function bindStaticEvents() {
   if (resetBgBtn) {
     resetBgBtn.addEventListener("click", async () => {
       await clearBackground();
-      await checkMaterialYouReload();
     });
   }
 

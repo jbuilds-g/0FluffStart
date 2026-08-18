@@ -276,6 +276,8 @@ body.material .link-item:hover .link-icon-circle span {
     margin-left: -20px !important;
     padding-left: 20px !important;
     padding-right: 100px !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
     box-sizing: border-box !important;
   }
 

@@ -72,6 +72,10 @@ h1 {
   left: auto;
   z-index: var(--z-floating);
   pointer-events: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
   will-change: transform;
@@ -85,6 +89,8 @@ h1 {
   border-radius: 50%;
   width: 36px;
   height: 36px;
+  flex-shrink: 0;
+  box-sizing: border-box;
   box-shadow: var(--shadow-md);
   display: flex;
   align-items: center;
@@ -96,6 +102,12 @@ h1 {
     transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
     box-shadow 0.3s,
     background 0.3s;
+}
+
+@media (max-width: 850px) {
+  #notesBtnDesktop {
+    display: none !important;
+  }
 }
 
 .floating-btn svg {
