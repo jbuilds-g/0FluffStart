@@ -51,7 +51,9 @@
     transform 0.2s ease-out,
     opacity 0.2s ease-out;
 
-  /* Performance & Smooth Touch Patches */
+  /* Contain layout paint & touch boundaries */
+  contain: paint layout;
+  touch-action: pan-y;
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
