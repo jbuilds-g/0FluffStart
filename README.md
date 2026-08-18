@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Version: 5.5.0](https://img.shields.io/badge/Version-5.5.0-blue)
 ![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
-[downloads](https://img.shields.io/github/downloads/jbuilds-g/0FluffStart/total?)
+![downloads](https://img.shields.io/github/downloads/jbuilds-g/0FluffStart/total?)
 
 
 <br><br>
