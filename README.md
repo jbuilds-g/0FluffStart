@@ -6,7 +6,7 @@
   <p><b>The Final Minimalist Dashboard for Desktop & Mobile.</b></p>
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
-![Version](https://img.shields.io/github/v/release/jbuilds-g/0FluffStart/.svg?logo=github&label=Release&cacheSeconds=3600)
+![Version](https://img.shields.io/github/v/release/jbuilds-g/0FluffStart?logo=github&label=Release&cacheSeconds=3600)
 ![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
 ![downloads](https://img.shields.io/github/downloads/jbuilds-g/0FluffStart/total?logo=github&cacheSeconds=3600)
 
