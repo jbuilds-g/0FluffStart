@@ -5,7 +5,7 @@
 
   <p><b>The Final Minimalist Dashboard for Desktop & Mobile.</b></p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
 ![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-blue)
 ![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
 ![downloads](https://img.shields.io/github/downloads/jbuilds-g/0FluffStart/total?)
