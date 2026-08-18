@@ -62,11 +62,34 @@
 
 #### **Chromium (Chrome, Edge, Brave)**
 
-- _Chrome Web Store listing pending review (Coming Soon)._
-
-1. Download the latest `0fluffstart-chrome(version).zip`from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) and extract it.
+1. Download the source code `.zip` from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) and extract it.
 2. Go to `chrome://extensions` and enable **Developer Mode** (top right).
 3. Click **Load Unpacked** and select the extracted folder.
+
+### Mobile & Live Web (PWA)
+
+The hosted version is a fully compliant **PWA**, meaning it can be installed as a standalone app that works even without an internet connection.
+
+#### Android (Chrome)
+
+1.  Navigate to the [Live URL](https://jbuilds-g.github.io/0FluffStart/).
+2.  Tap the three dots (Menu) and select **Add to Home Screen**.
+3.  The dashboard will appear in your app drawer as a native application.
+
+_alternatively_
+
+> It can be set as a custom homepage.
+
+1. Open **settings**.
+2. Navigate to **Homepage** and turn it **on**.
+3. Type or paste the **live URL** `jbuilds-g.github.io/0FluffStart/`
+
+#### Firefox
+
+1. Open **Settings** in Firefox.
+2. Select **Homepage** -> **Custom URL**.
+3. Type or paste the **Live URL**: `https://jbuilds-g.github.io/0FluffStart/`
+4. Tap **Set**. New tabs and homepage opens will now load the dashboard directly.
 
 ---
 
