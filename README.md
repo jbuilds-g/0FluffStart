@@ -151,6 +151,8 @@ Data is stored locally in `localStorage` and `IndexedDB`. To sync between device
 └── sw.js                 # Service Worker (Offline PWA logic)
 
 ```
+## License
+Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0-only). See [LICENSE](LICENSE) for details.
 
 ## License
 
