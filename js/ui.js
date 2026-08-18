@@ -860,6 +860,26 @@ export async function loadSettings() {
 export function toggleSettings(options = {}) {
   cancelEdit();
 
+  const modalContent = document.querySelector("#settingsModal .modal-content");
+  if (modalContent && !modalContent.dataset.touchBound) {
+    modalContent.dataset.touchBound = "true";
+    modalContent.addEventListener(
+      "touchstart",
+      (e) => {
+        const top = modalContent.scrollTop;
+        const totalScroll = modalContent.scrollHeight;
+        const currentScroll = top + modalContent.offsetHeight;
+
+        if (top === 0) {
+          modalContent.scrollTop = 1;
+        } else if (currentScroll === totalScroll) {
+          modalContent.scrollTop = top - 1;
+        }
+      },
+      { passive: true },
+    );
+  }
+
   if (options.openDashboardLinks) {
     const panels = document.querySelectorAll(
       "#settingsModal details.category-panel",
