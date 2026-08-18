@@ -293,6 +293,15 @@ function bindStaticEvents() {
     .querySelectorAll("#settingsModal details.category-panel")
     .forEach((panel) => {
       panel.addEventListener("toggle", () => {
+        if (panel.open && !isBulkAnimating) {
+          const modalContent = document.querySelector(
+            "#settingsModal .modal-content",
+          );
+          if (modalContent) {
+            const panelTop = panel.offsetTop - modalContent.offsetTop;
+            modalContent.scrollTo({ top: panelTop, behavior: "smooth" });
+          }
+        }
         updateScrollToTopBtn();
       });
     });

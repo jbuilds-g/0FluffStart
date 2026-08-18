@@ -51,14 +51,7 @@
     transform 0.2s ease-out,
     opacity 0.2s ease-out;
 
-  /* Contain layout paint & touch boundaries */
-  contain: paint layout;
-  touch-action: pan-y;
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-overflow-scrolling: touch;
+  /* Prevent GPU layout recalculation jumps on Android */
   overscroll-behavior: contain;
 }
 
