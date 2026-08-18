@@ -53,7 +53,8 @@
     transform 0.2s ease-out,
     opacity 0.2s ease-out;
 
-  /* Lock touch boundaries on Android */
+  /* Disable Chrome Scroll Anchoring thrashing */
+  overflow-anchor: none;
   touch-action: pan-y;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
