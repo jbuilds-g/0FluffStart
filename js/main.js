@@ -294,7 +294,13 @@ function bindStaticEvents() {
     .forEach((panel) => {
       panel.addEventListener("toggle", () => {
         if (panel.open && !isBulkAnimating) {
-          panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          const modalContent = document.querySelector(
+            "#settingsModal .modal-content",
+          );
+          if (modalContent) {
+            const panelTop = panel.offsetTop - modalContent.offsetTop;
+            modalContent.scrollTo({ top: panelTop, behavior: "smooth" });
+          }
         }
         updateScrollToTopBtn();
       });
