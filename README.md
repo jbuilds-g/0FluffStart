@@ -73,17 +73,17 @@
 
 ### Mobile & Web (PWA)
 
-#### **Android (Chrome)**
+#### **Chrome (Android)**
 
 - **Option A (PWA App):** Go to the [Live App](https://jbuilds-g.github.io/0FluffStart/), tap the menu (⋮), and select **Add to Home Screen**.
 - **Option B (Homepage):** Go to **Settings** → **Homepage** → turn **On** → paste `https://jbuilds-g.github.io/0FluffStart/`.
 
-#### **Android (Firefox)**
+#### **Firefox**
 
 1. Go to **Settings** → **Homepage** → **Custom URL**.
 2. Paste `https://jbuilds-g.github.io/0FluffStart/` and tap **Set**.
 
-#### **iOS (Safari)**
+#### **Safari (iOS)**
 
 1. Open the [Live App](https://jbuilds-g.github.io/0FluffStart/) in Safari.
 2. Tap **Share** → **Add to Home Screen**.
