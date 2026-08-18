@@ -886,6 +886,12 @@ export function toggleSettings(options = {}) {
 
   const modal = document.getElementById("settingsModal");
   if (modal) {
+    const scrollY = window.scrollY;
+    document.documentElement.style.setProperty(
+      "--scroll-lock-top",
+      `-${scrollY}px`,
+    );
+    document.body.classList.add("scroll-lock-body");
     modal.classList.add("active");
     document.body.classList.add("modal-open");
 
@@ -927,6 +933,13 @@ export function closeModal(id) {
     modal.classList.remove("active");
     if (!document.querySelector(".modal.active")) {
       document.body.classList.remove("modal-open");
+      const scrollLockTop = getComputedStyle(
+        document.documentElement,
+      ).getPropertyValue("--scroll-lock-top");
+      const storedScrollY = Math.abs(parseInt(scrollLockTop, 10)) || 0;
+      document.body.classList.remove("scroll-lock-body");
+      window.scrollTo(0, storedScrollY);
+      document.documentElement.style.removeProperty("--scroll-lock-top");
     }
     if (id === "settingsModal") {
       document
