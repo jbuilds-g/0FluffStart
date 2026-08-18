@@ -861,22 +861,35 @@ export function toggleSettings(options = {}) {
   cancelEdit();
 
   const modalContent = document.querySelector("#settingsModal .modal-content");
-  if (modalContent && !modalContent.dataset.touchBound) {
-    modalContent.dataset.touchBound = "true";
+  if (modalContent && !modalContent.dataset.scrollTrap) {
+    modalContent.dataset.scrollTrap = "true";
+    let startY = 0;
+
     modalContent.addEventListener(
       "touchstart",
       (e) => {
-        const top = modalContent.scrollTop;
-        const totalScroll = modalContent.scrollHeight;
-        const currentScroll = top + modalContent.offsetHeight;
-
-        if (top === 0) {
-          modalContent.scrollTop = 1;
-        } else if (currentScroll === totalScroll) {
-          modalContent.scrollTop = top - 1;
-        }
+        startY = e.touches[0].pageY;
       },
       { passive: true },
+    );
+
+    modalContent.addEventListener(
+      "touchmove",
+      (e) => {
+        const currentY = e.touches[0].pageY;
+        const isScrollingUp = currentY > startY;
+        const isScrollingDown = currentY < startY;
+        const scrollTop = modalContent.scrollTop;
+        const maxScroll = modalContent.scrollHeight - modalContent.clientHeight;
+
+        if (
+          (scrollTop <= 0 && isScrollingUp) ||
+          (scrollTop >= maxScroll && isScrollingDown)
+        ) {
+          if (e.cancelable) e.preventDefault();
+        }
+      },
+      { passive: false },
     );
   }
 

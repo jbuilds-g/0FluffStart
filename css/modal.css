@@ -53,8 +53,10 @@
     transform 0.2s ease-out,
     opacity 0.2s ease-out;
 
-  /* Prevent GPU layout recalculation jumps on Android */
+  /* Lock touch boundaries on Android */
+  touch-action: pan-y;
   overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-content::-webkit-scrollbar {
