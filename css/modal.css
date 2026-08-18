@@ -17,6 +17,8 @@
   visibility: hidden;
   opacity: 0;
   overflow: hidden;
+  overscroll-behavior: contain;
+  touch-action: none;
   transition:
     opacity 0.3s ease,
     visibility 0.3s ease;
@@ -52,7 +54,7 @@
     opacity 0.2s ease-out;
 
   /* Prevent GPU layout recalculation jumps on Android */
-  overscroll-behavior: contain;
+  overscroll-behavior: none;
 }
 
 .modal-content::-webkit-scrollbar {
