@@ -1118,7 +1118,6 @@ input[type="url"].bg-url-input {
   position: sticky;
   bottom: 20px;
   align-self: flex-end;
-  margin-top: -36px;
   margin-bottom: 0;
   margin-right: var(--space-sm);
   width: 36px;
@@ -1133,6 +1132,7 @@ input[type="url"].bg-url-input {
   cursor: pointer;
   box-shadow: var(--shadow-md);
   z-index: 10;
+  will-change: transform;
   transition:
     opacity 0.2s ease,
     transform 0.2s ease,
