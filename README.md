@@ -64,7 +64,7 @@
 
 - **Chrome Web Store Submission:** _(Submitted & Pending Review)_
 - **Manual Unpacked Loading:**
-  - Download `0fluffstart-chrome-(version)zip` from the Releases page.
+  - Download `0fluffstart-chrome-(version)zip` from the [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest).
   - Extract the archive to a local directory.
   - Open `chrome://extensions` in your browser.
   - Enable **Developer Mode** in the top-right corner.
