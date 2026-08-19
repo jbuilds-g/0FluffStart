@@ -441,3 +441,39 @@ body.material .link-item:hover .link-icon-circle span {
     font-size: 0.85rem !important;
   }
 }
+
+/* Drag and Drop Visual States & Handle */
+.drag-handle {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  padding: 0 6px;
+  opacity: 0.7;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: currentColor;
+  display: inline-block;
+  letter-spacing: -1px;
+  transition: opacity 0.2s ease;
+}
+
+.drag-handle:hover,
+.drag-handle:active {
+  opacity: 1;
+  cursor: grabbing;
+}
+
+.link-item.dragging {
+  opacity: 0.4;
+  transform: scale(0.96);
+}
+
+.link-item.drag-over-item {
+  outline: 2px dashed var(--accent, #3b82f6);
+  outline-offset: 2px;
+}
+
+.link-item.is-folder.drag-over-folder {
+  outline: 2px solid var(--accent, #3b82f6);
+  background-color: rgba(59, 130, 246, 0.15);
+}

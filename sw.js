@@ -1,6 +1,6 @@
-const CACHE_NAME = "0fluff-v132";
+const CACHE_NAME = "0fluffstart-cache-v1";
 
-const ASSETS = [
+const CORE_APP_SHELL = [
   "./",
   "./index.html",
   "./pwa-manifest.json",
@@ -8,33 +8,7 @@ const ASSETS = [
   "./css/modal.css",
   "./css/search.css",
   "./js/main.js",
-  "./js/ui.js",
-  "./js/store.js",
-  "./js/links.js",
-  "./js/suggestions.js",
-  "./js/storage.js",
-  "./js/utils.js",
-  "./js/material-you-engine.js",
   "./icon.png",
-  "./assets/icons/folder.svg",
-  "./assets/icons/link.svg",
-  "./assets/icons/edit.svg",
-  "./assets/icons/delete.svg",
-  "./assets/icons/chevron.svg",
-  "./assets/icons/search.svg",
-  "./assets/icons/settings.svg",
-  "./assets/icons/close.svg",
-  "./assets/icons/arrow-up.svg",
-  "./assets/icons/google.svg",
-  "./assets/icons/duckduckgo.svg",
-  "./assets/icons/bing.svg",
-  "./assets/icons/brave.svg",
-  "./assets/icons/startpage.svg",
-  "./assets/icons/ecosia.svg",
-  "./assets/icons/kagi.svg",
-  "./assets/icons/searxng.svg",
-  "./assets/icons/wikipedia.svg",
-  "./assets/icons/youtube.svg",
 ];
 
 // Listen for immediate update activation messages from active clients
@@ -44,12 +18,12 @@ self.addEventListener("message", (event) => {
   }
 });
 
-// 1. INSTALL: Cache new files, then skip waiting once caching succeeds
+// 1. INSTALL: Cache minimal App Shell, then skip waiting
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(ASSETS))
+      .then((cache) => cache.addAll(CORE_APP_SHELL))
       .then(() => self.skipWaiting()),
   );
 });
@@ -74,18 +48,18 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// 3. FETCH: Hybrid Strategy (Network-First for Core Assets, Stale-While-Revalidate for Others)
+// 3. FETCH: Network-First for App Shell, Stale-While-Revalidate + Dynamic Cache for All Other Assets
 self.addEventListener("fetch", (event) => {
   if (!event.request.url.startsWith("http")) return;
 
   const requestUrl = new URL(event.request.url);
-  const isCoreAsset = ASSETS.some((asset) => {
+  const isCoreAsset = CORE_APP_SHELL.some((asset) => {
     const assetUrl = new URL(asset, self.location.origin);
     return assetUrl.pathname === requestUrl.pathname;
   });
 
   if (isCoreAsset) {
-    // Network-First Strategy for Core Application Assets
+    // Network-First Strategy for App Shell
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {
@@ -104,7 +78,7 @@ self.addEventListener("fetch", (event) => {
         .catch(() => caches.match(event.request)),
     );
   } else {
-    // Stale-While-Revalidate Strategy for Non-Core Requests
+    // Stale-While-Revalidate Strategy for Dynamic JS Modules, CSS, and SVG Assets
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
         const fetchPromise = fetch(event.request)
@@ -112,7 +86,8 @@ self.addEventListener("fetch", (event) => {
             if (
               networkResponse &&
               networkResponse.status === 200 &&
-              networkResponse.type === "basic"
+              (networkResponse.type === "basic" ||
+                networkResponse.type === "cors")
             ) {
               const responseToCache = networkResponse.clone();
               caches

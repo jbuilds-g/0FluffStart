@@ -269,6 +269,81 @@ export function renderLinkManager() {
         actionsDiv.appendChild(moveOutBtn);
       }
 
+      const dragHandle = document.createElement("span");
+      dragHandle.className = "drag-handle";
+      dragHandle.title = "Drag to reorder";
+      dragHandle.textContent = "::";
+
+      dragHandle.onpointerdown = (e) => {
+        e.stopPropagation();
+        item.classList.add("dragging");
+        dragHandle.setPointerCapture(e.pointerId);
+
+        let currentTarget = null;
+
+        dragHandle.onpointermove = (pe) => {
+          pe.preventDefault();
+          item.style.pointerEvents = "none";
+          const targetEl = document
+            .elementFromPoint(pe.clientX, pe.clientY)
+            ?.closest(".link-manager-item");
+          document
+            .querySelectorAll(
+              ".link-manager-item.drag-over-item, .link-manager-item.drag-over-folder",
+            )
+            .forEach((el) => {
+              el.classList.remove("drag-over-item", "drag-over-folder");
+            });
+
+          if (targetEl && targetEl !== item) {
+            const targetId = targetEl.dataset.id;
+            const targetLink = links.find((l) => l.id === targetId);
+            if (targetLink?.isFolder) {
+              targetEl.classList.add("drag-over-folder");
+            } else {
+              targetEl.classList.add("drag-over-item");
+            }
+            currentTarget = targetEl;
+          } else {
+            currentTarget = null;
+          }
+        };
+
+        dragHandle.onpointerup = async (pe) => {
+          dragHandle.releasePointerCapture(pe.pointerId);
+          dragHandle.onpointermove = null;
+          dragHandle.onpointerup = null;
+          item.style.pointerEvents = "";
+          item.classList.remove("dragging");
+          document
+            .querySelectorAll(
+              ".link-manager-item.drag-over-item, .link-manager-item.drag-over-folder",
+            )
+            .forEach((el) => {
+              el.classList.remove("drag-over-item", "drag-over-folder");
+            });
+
+          if (!currentTarget) return;
+          const targetId = currentTarget.dataset.id;
+          const currentLinks = [...store.getState().links];
+          const draggedIdx = currentLinks.findIndex((l) => l.id === link.id);
+          const targetIdx = currentLinks.findIndex((l) => l.id === targetId);
+          if (draggedIdx === -1 || targetIdx === -1) return;
+
+          const targetLink = currentLinks[targetIdx];
+          if (targetLink.isFolder && !link.isFolder) {
+            currentLinks[draggedIdx].parentId = targetLink.id;
+          } else {
+            const [moved] = currentLinks.splice(draggedIdx, 1);
+            currentLinks.splice(targetIdx, 0, moved);
+          }
+
+          await store.setState({ links: currentLinks });
+          renderLinks();
+          renderLinkManager();
+        };
+      };
+
       const editBtn = document.createElement("button");
       editBtn.className = "icon-btn secondary";
       editBtn.title = "Edit";
@@ -281,6 +356,7 @@ export function renderLinkManager() {
       deleteBtn.innerHTML = deleteIconSVG;
       deleteBtn.addEventListener("click", (e) => deleteLink(link.id, e));
 
+      actionsDiv.appendChild(dragHandle);
       actionsDiv.appendChild(editBtn);
       actionsDiv.appendChild(deleteBtn);
 
