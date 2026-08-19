@@ -3,6 +3,8 @@ import { sanitizeUrl } from "./utils.js";
 import { saveBgToDB, getBgFromDB, clearBgFromDB } from "./storage.js";
 import { MaterialYouEngine } from "./material-you-engine.js";
 import { cancelEdit, openEditor, renderLinkManager } from "./links.js";
+import { APP_VERSION } from "./version.js";
+// import { initNotes } from "./notes.js"; -- FEATURE DISABLED: Unhooked for future potential use
 
 const materialYouEngine = new MaterialYouEngine();
 
@@ -734,8 +736,16 @@ export function updateSuggestSettingsVisibility() {
   if (providerSelect) providerSelect.classList.toggle("hidden", !isEnabled);
 }
 
+export function applyVersionToUI() {
+  document.querySelectorAll("[data-version]").forEach((el) => {
+    el.textContent = `v${APP_VERSION}`;
+  });
+}
+
 export async function loadSettings() {
   const settings = store.getState().settings || {};
+  applyVersionToUI();
+  // initNotes(); -- FEATURE DISABLED: Unhooked for future potential use
 
   SETTINGS_MAP.forEach((item) => {
     const val =

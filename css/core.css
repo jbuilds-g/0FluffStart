@@ -1,3 +1,4 @@
+/* @import "notes.css"; -- FEATURE DISABLED: Unhooked for future potential use */
 @import "variables.css";
 @import "base.css";
 @import "layout.css";
@@ -38,6 +39,16 @@
   mask-image: url("../assets/icons/edit.svg");
   -webkit-mask-image: url("../assets/icons/edit.svg");
 }
+/* FEATURE DISABLED: Unhooked Notes SVG Masks
+.icon-save {
+  mask-image: url("../assets/icons/save.svg");
+  -webkit-mask-image: url("../assets/icons/save.svg");
+}
+.icon-todo {
+  mask-image: url("../assets/icons/todo.svg");
+  -webkit-mask-image: url("../assets/icons/todo.svg");
+}
+*/
 .icon-delete {
   mask-image: url("../assets/icons/delete.svg");
   -webkit-mask-image: url("../assets/icons/delete.svg");

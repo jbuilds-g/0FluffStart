@@ -6,7 +6,9 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": ["storage"],
+  "permissions": [
+    "storage"
+  ],
   "optional_host_permissions": [
     "https://0fluffstart-suggest-proxy.jbuilds.workers.dev/*",
     "https://api.allorigins.win/*"
