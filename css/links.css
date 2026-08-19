@@ -447,8 +447,9 @@ body.material .link-item:hover .link-icon-circle span {
   cursor: grab;
   user-select: none;
   touch-action: none;
-  padding: 0 6px;
-  opacity: 0.7;
+  -webkit-touch-callout: none;
+  padding: 4px 10px;
+  opacity: 0.6;
   font-weight: 700;
   font-size: 1.1rem;
   color: currentColor;
@@ -463,17 +464,48 @@ body.material .link-item:hover .link-icon-circle span {
   cursor: grabbing;
 }
 
-.link-item.dragging {
-  opacity: 0.4;
-  transform: scale(0.96);
+.link-manager-item {
+  position: relative;
+  transition:
+    transform 0.15s cubic-bezier(0.2, 0, 0, 1),
+    opacity 0.15s ease,
+    background-color 0.15s ease;
 }
 
-.link-item.drag-over-item {
+.link-manager-item.is-dragging {
+  opacity: 0.3;
+  transform: scale(0.97);
+  z-index: 100;
+}
+
+.link-manager-item.shift-down {
+  transform: translateY(28px);
+}
+
+.link-manager-item.shift-up {
+  transform: translateY(-28px);
+}
+
+.link-manager-item.drag-over-folder {
   outline: 2px dashed var(--accent, #3b82f6);
-  outline-offset: 2px;
+  background-color: rgba(59, 130, 246, 0.18);
+  border-radius: 6px;
 }
 
-.link-item.is-folder.drag-over-folder {
-  outline: 2px solid var(--accent, #3b82f6);
-  background-color: rgba(59, 130, 246, 0.15);
+.drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none !important;
+  z-index: 9999;
+  opacity: 0.9;
+  transform: translate3d(-50%, -50%, 0) scale(1.02);
+  box-shadow: var(--shadow-md, 0 8px 24px rgba(0, 0, 0, 0.3));
+  border-radius: 8px;
+  background: var(--card);
+  padding: 6px 12px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }

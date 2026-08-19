@@ -271,77 +271,218 @@ export function renderLinkManager() {
 
       const dragHandle = document.createElement("span");
       dragHandle.className = "drag-handle";
-      dragHandle.title = "Drag to reorder";
+      dragHandle.title = "Drag to reorder or move into folder";
       dragHandle.textContent = "::";
 
-      dragHandle.onpointerdown = (e) => {
-        e.stopPropagation();
-        item.classList.add("dragging");
-        dragHandle.setPointerCapture(e.pointerId);
+      dragHandle.onpointerdown = (pointerEvent) => {
+        if (pointerEvent.button !== 0) return;
+        pointerEvent.stopPropagation();
 
-        let currentTarget = null;
+        const activePointerId = pointerEvent.pointerId;
+        const startX = pointerEvent.clientX;
+        const startY = pointerEvent.clientY;
+        let isDraggingStarted = false;
+        let ghostEl = null;
+        let activeTarget = null;
+        let dropPosition = "below";
+        let animFrameId = null;
+        let lastTimestamp = 0;
+        let scrollSpeed = 0;
 
-        dragHandle.onpointermove = (pe) => {
-          pe.preventDefault();
-          item.style.pointerEvents = "none";
-          const targetEl = document
-            .elementFromPoint(pe.clientX, pe.clientY)
-            ?.closest(".link-manager-item");
+        const container =
           document
-            .querySelectorAll(
-              ".link-manager-item.drag-over-item, .link-manager-item.drag-over-folder",
-            )
-            .forEach((el) => {
-              el.classList.remove("drag-over-item", "drag-over-folder");
-            });
+            .getElementById("linkManagerContent")
+            ?.closest(".modal-content") ||
+          document.getElementById("linkManagerContent");
 
-          if (targetEl && targetEl !== item) {
-            const targetId = targetEl.dataset.id;
-            const targetLink = links.find((l) => l.id === targetId);
-            if (targetLink?.isFolder) {
-              targetEl.classList.add("drag-over-folder");
-            } else {
-              targetEl.classList.add("drag-over-item");
-            }
-            currentTarget = targetEl;
+        const isDescendantOf = (candidateId, parentCheckId) => {
+          let curr = candidateId;
+          while (curr) {
+            if (curr === parentCheckId) return true;
+            const node = links.find((l) => l.id === curr);
+            curr = node ? node.parentId : null;
+          }
+          return false;
+        };
+
+        const autoScrollLoop = (now) => {
+          if (scrollSpeed !== 0 && container) {
+            const dt = lastTimestamp ? (now - lastTimestamp) / 16.6 : 1;
+            lastTimestamp = now;
+            container.scrollTop += scrollSpeed * dt;
+            animFrameId = requestAnimationFrame(autoScrollLoop);
           } else {
-            currentTarget = null;
+            animFrameId = null;
+            lastTimestamp = 0;
           }
         };
 
-        dragHandle.onpointerup = async (pe) => {
-          dragHandle.releasePointerCapture(pe.pointerId);
-          dragHandle.onpointermove = null;
-          dragHandle.onpointerup = null;
-          item.style.pointerEvents = "";
-          item.classList.remove("dragging");
-          document
-            .querySelectorAll(
-              ".link-manager-item.drag-over-item, .link-manager-item.drag-over-folder",
-            )
-            .forEach((el) => {
-              el.classList.remove("drag-over-item", "drag-over-folder");
-            });
+        const updateAutoScroll = (clientY) => {
+          if (!container) return;
+          const rect = container.getBoundingClientRect();
+          const threshold = 50;
+          const maxSpeed = 18;
 
-          if (!currentTarget) return;
-          const targetId = currentTarget.dataset.id;
+          if (clientY < rect.top + threshold) {
+            const normalized = Math.min(
+              1,
+              (rect.top + threshold - clientY) / threshold,
+            );
+            scrollSpeed = -1 * maxSpeed * Math.pow(normalized, 2);
+          } else if (clientY > rect.bottom - threshold) {
+            const normalized = Math.min(
+              1,
+              (clientY - (rect.bottom - threshold)) / threshold,
+            );
+            scrollSpeed = maxSpeed * Math.pow(normalized, 2);
+          } else {
+            scrollSpeed = 0;
+          }
+
+          if (scrollSpeed !== 0 && !animFrameId) {
+            lastTimestamp = performance.now();
+            animFrameId = requestAnimationFrame(autoScrollLoop);
+          }
+        };
+
+        const onPointerMove = (pe) => {
+          if (pe.pointerId !== activePointerId) return;
+          pe.preventDefault();
+
+          if (!isDraggingStarted) {
+            const dist = Math.hypot(pe.clientX - startX, pe.clientY - startY);
+            if (dist < 8) return;
+
+            isDraggingStarted = true;
+            item.classList.add("is-dragging");
+
+            ghostEl = item.cloneNode(true);
+            ghostEl.className = "drag-ghost";
+            ghostEl.style.width = `${item.offsetWidth}px`;
+            ghostEl.style.left = `${pe.clientX}px`;
+            ghostEl.style.top = `${pe.clientY}px`;
+            document.body.appendChild(ghostEl);
+          }
+
+          const touchOffsetY = pe.pointerType === "touch" ? 40 : 0;
+          const targetY = pe.clientY - touchOffsetY;
+
+          if (ghostEl) {
+            ghostEl.style.left = `${pe.clientX}px`;
+            ghostEl.style.top = `${targetY}px`;
+          }
+
+          updateAutoScroll(pe.clientY);
+
+          document.querySelectorAll(".link-manager-item").forEach((el) => {
+            el.classList.remove("shift-down", "shift-up", "drag-over-folder");
+          });
+
+          const hoverEl = document
+            .elementFromPoint(pe.clientX, targetY)
+            ?.closest(".link-manager-item");
+
+          if (hoverEl && hoverEl !== item) {
+            const targetId = hoverEl.dataset.id;
+
+            if (isDescendantOf(targetId, link.id)) {
+              activeTarget = null;
+              return;
+            }
+
+            activeTarget = hoverEl;
+            const targetLink = links.find((l) => l.id === targetId);
+            const rect = hoverEl.getBoundingClientRect();
+            const ratio = Math.max(
+              0,
+              Math.min(1, (pe.clientY - rect.top) / rect.height),
+            );
+
+            const subContainer = hoverEl.nextElementSibling;
+            const isFolderExpanded =
+              subContainer &&
+              subContainer.classList.contains("folder-sub-container") &&
+              subContainer.style.display !== "none";
+
+            if (targetLink?.isFolder && isFolderExpanded) {
+              if (ratio < 0.25) {
+                dropPosition = "above";
+                hoverEl.classList.add("shift-down");
+              } else if (ratio > 0.75) {
+                dropPosition = "below";
+                hoverEl.classList.add("shift-up");
+              } else {
+                dropPosition = "inside";
+                hoverEl.classList.add("drag-over-folder");
+              }
+            } else {
+              if (ratio < 0.5) {
+                dropPosition = "above";
+                hoverEl.classList.add("shift-down");
+              } else {
+                dropPosition = "below";
+                hoverEl.classList.add("shift-up");
+              }
+            }
+          } else {
+            activeTarget = null;
+          }
+        };
+
+        const cleanupDrag = () => {
+          if (animFrameId) cancelAnimationFrame(animFrameId);
+          window.removeEventListener("pointermove", onPointerMove);
+          window.removeEventListener("pointerup", onPointerUp);
+          window.removeEventListener("pointercancel", cleanupDrag);
+
+          if (ghostEl) {
+            ghostEl.remove();
+            ghostEl = null;
+          }
+
+          item.classList.remove("is-dragging");
+          document.querySelectorAll(".link-manager-item").forEach((el) => {
+            el.classList.remove("shift-down", "shift-up", "drag-over-folder");
+          });
+        };
+
+        const onPointerUp = async (pe) => {
+          if (pe.pointerId !== activePointerId) return;
+          cleanupDrag();
+
+          if (!isDraggingStarted || !activeTarget) return;
+
+          const targetId = activeTarget.dataset.id;
           const currentLinks = [...store.getState().links];
           const draggedIdx = currentLinks.findIndex((l) => l.id === link.id);
           const targetIdx = currentLinks.findIndex((l) => l.id === targetId);
+
           if (draggedIdx === -1 || targetIdx === -1) return;
 
           const targetLink = currentLinks[targetIdx];
-          if (targetLink.isFolder && !link.isFolder) {
-            currentLinks[draggedIdx].parentId = targetLink.id;
+          const [movedItem] = currentLinks.splice(draggedIdx, 1);
+
+          if (dropPosition === "inside" && targetLink.isFolder) {
+            movedItem.parentId = targetLink.id;
+            currentLinks.push(movedItem);
           } else {
-            const [moved] = currentLinks.splice(draggedIdx, 1);
-            currentLinks.splice(targetIdx, 0, moved);
+            movedItem.parentId = targetLink.parentId || null;
+            const newTargetIdx = currentLinks.findIndex(
+              (l) => l.id === targetId,
+            );
+            const insertIdx =
+              dropPosition === "above" ? newTargetIdx : newTargetIdx + 1;
+            currentLinks.splice(insertIdx, 0, movedItem);
           }
 
           await store.setState({ links: currentLinks });
           renderLinks();
           renderLinkManager();
         };
+
+        window.addEventListener("pointermove", onPointerMove);
+        window.addEventListener("pointerup", onPointerUp);
+        window.addEventListener("pointercancel", cleanupDrag);
       };
 
       const editBtn = document.createElement("button");
