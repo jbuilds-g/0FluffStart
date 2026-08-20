@@ -56,9 +56,7 @@ export class CustomCursorEngine {
       this.stopLoop();
       this.unbindEvents();
       this.isDragging = false;
-      this.container.classList.remove("is-visible", "is-active");
-      document.documentElement.removeAttribute("data-custom-cursor");
-      document.body.classList.remove("custom-cursor-active");
+      this.setVisible(false);
     }
   }
 

@@ -727,6 +727,12 @@ export async function autoSaveSettings(updates = null) {
   updateClock();
   await materialYouEngine.triggerMaterialYou(newSettings, getBgFromDB);
   updateSuggestSettingsVisibility();
+
+  if (window.customCursorInstance) {
+    window.customCursorInstance.toggleEnabled(
+      newSettings.customCursorEnabled !== false,
+    );
+  }
 }
 
 export function updateSuggestSettingsVisibility() {
