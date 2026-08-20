@@ -244,10 +244,7 @@ export function applyClockStyle() {
 
 export function renderEngineDropdown() {
   const switcher = document.querySelector(".engine-switcher");
-  if (typeof chrome !== "undefined" && chrome.search && chrome.search.query) {
-    if (switcher) switcher.style.display = "none";
-    return;
-  }
+  if (switcher) switcher.style.display = "";
 
   const settings = store.getState().settings || {};
   const dropdown = document.getElementById("engineDropdown");
@@ -1102,11 +1099,8 @@ export function renderEngineSelectionList() {
   const container = document.getElementById("engineSelectionList");
   if (!container) return;
 
-  if (typeof chrome !== "undefined" && chrome.search && chrome.search.query) {
-    const parentCategory = container.closest(".category-panel");
-    if (parentCategory) parentCategory.style.display = "none";
-    return;
-  }
+  const parentCategory = container.closest(".category-panel");
+  if (parentCategory) parentCategory.style.display = "";
 
   container.innerHTML = "";
 
