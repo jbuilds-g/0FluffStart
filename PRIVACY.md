@@ -9,9 +9,10 @@
 - **Local Storage:** All user configurations, custom quick links, custom backgrounds, and theme preferences are stored exclusively on your device using standard browser storage mechanisms (`localStorage` and `IndexedDB`).
 - **No Server Analytics:** 0FluffStart does not use tracking scripts, telemetry, or third-party analytics services.
 
-## 2. External Network Requests
+## 2. External Network Requests & Search Execution
 
 - **Disabled by Default:** 0FluffStart does not send network requests out of the box. Search auto-suggestions are strictly opt-in and can be toggled on or off in Settings at any time.
+- **Search Dispatching:** User-initiated searches are executed directly via the selected search provider's endpoint or shortcut tags (`?g`, `?d`, `?y`, etc.) using client-side URL parameters, or routed via standard browser navigation.
 - **Why Proxies Are Used:** Upstream search autocomplete APIs (Google, Bing, DuckDuckGo, Brave) do not return permissive cross-origin (CORS) headers for standard web, PWA, or extension environments. To make live search suggestions work securely across origins, requests pass through a dedicated proxy layer.
 - **Strict Execution Chain:**
   1. **Custom Proxy (User-Defined):** If you configure a custom proxy URL in Settings, all suggestion requests pass exclusively through that URL.
@@ -29,4 +30,4 @@ For questions or concerns regarding this privacy policy, open an issue on the of
 
 ---
 
-> **Policy Version:** 1.0.0
+> **Policy Version:** 1.1.0
