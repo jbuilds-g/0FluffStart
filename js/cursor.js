@@ -1,3 +1,5 @@
+import { store } from "./store.js";
+
 export class CustomCursorEngine {
   constructor() {
     this.container = document.getElementById("customCursorEngine");
@@ -14,6 +16,7 @@ export class CustomCursorEngine {
     this.isTouchDevice = false;
     this.isTracking = false;
     this.isDragging = false;
+    this.isFirstMove = true;
     this.rafId = null;
 
     this.onPointerMove = this.onPointerMove.bind(this);
@@ -44,6 +47,7 @@ export class CustomCursorEngine {
   toggleEnabled(enabled) {
     this.isEnabled = enabled;
     if (enabled) {
+      this.isFirstMove = true;
       this.unbindEvents();
       this.bindEvents();
       this.startLoop();
@@ -99,6 +103,13 @@ export class CustomCursorEngine {
       this.deactivateTouch();
       return;
     }
+
+    if (this.isFirstMove) {
+      this.currentX = e.clientX;
+      this.currentY = e.clientY;
+      this.isFirstMove = false;
+    }
+
     this.targetX = e.clientX;
     this.targetY = e.clientY;
 
