@@ -17,7 +17,6 @@
 - **Strict Execution Chain:**
   1. **Custom Proxy (User-Defined):** If you configure a custom proxy URL in Settings, all suggestion requests pass exclusively through that URL.
   2. **Cloudflare Edge Worker Proxy (Default):** If no custom proxy is defined, requests are routed through a dedicated serverless Cloudflare Edge Worker (`0fluffstart-suggest-proxy.jbuilds.workers.dev`). It enforces origin verification and rate-limiting (40 requests per minute per IP) to prevent service abuse without logging user queries or personal identifiers.
-  3. **AllOrigins Fallback:** If the primary edge worker is unreachable or rate-limited, requests automatically fall back to `api.allorigins.win`.
 - **Zero Tracking:** Suggestion requests carry only the raw query string and target search engine parameter. No cookies, persistent identifiers, or telemetry data are ever attached, logged, or stored.
 
 ## 3. Data Control & Portability
