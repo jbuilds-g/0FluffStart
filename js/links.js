@@ -359,6 +359,10 @@ export function renderLinkManager() {
             isDraggingStarted = true;
             item.classList.add("is-dragging");
 
+            if (window.customCursorInstance) {
+              window.customCursorInstance.setDragState(true);
+            }
+
             ghostEl = item.cloneNode(true);
             ghostEl.className = "drag-ghost";
             ghostEl.style.width = `${item.offsetWidth}px`;
@@ -437,6 +441,10 @@ export function renderLinkManager() {
           window.removeEventListener("pointermove", onPointerMove);
           window.removeEventListener("pointerup", onPointerUp);
           window.removeEventListener("pointercancel", cleanupDrag);
+
+          if (window.customCursorInstance) {
+            window.customCursorInstance.setDragState(false);
+          }
 
           if (ghostEl) {
             ghostEl.remove();

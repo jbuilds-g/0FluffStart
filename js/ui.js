@@ -517,6 +517,12 @@ const SETTINGS_MAP = [
     defaultVal: false,
   },
   {
+    key: "customCursorEnabled",
+    id: "customCursorToggle",
+    type: "checkbox",
+    defaultVal: true,
+  },
+  {
     key: "shadowIntensity",
     id: "shadowSlider",
     type: "range",
@@ -865,6 +871,12 @@ export async function loadSettings() {
   materialYouEngine.triggerMaterialYou(settings, getBgFromDB);
   updateSuggestSettingsVisibility();
   loadInlineIcons();
+
+  if (window.customCursorInstance) {
+    window.customCursorInstance.toggleEnabled(
+      settings.customCursorEnabled !== false,
+    );
+  }
 }
 
 export function toggleSettings(options = {}) {

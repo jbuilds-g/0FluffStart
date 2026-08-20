@@ -411,6 +411,16 @@ function bindStaticEvents() {
   if (forceDesktopToggle)
     forceDesktopToggle.addEventListener("change", () => autoSaveSettings());
 
+  const customCursorToggle = document.getElementById("customCursorToggle");
+  if (customCursorToggle) {
+    customCursorToggle.addEventListener("change", () => {
+      autoSaveSettings();
+      if (window.customCursorInstance) {
+        window.customCursorInstance.toggleEnabled(customCursorToggle.checked);
+      }
+    });
+  }
+
   const shadowSlider = document.getElementById("shadowSlider");
   const shadowInputNumber = document.getElementById("shadowInputNumber");
 

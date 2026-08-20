@@ -18,8 +18,8 @@
   .custom-cursor {
     display: block;
   }
-  body.custom-cursor-active,
-  body.custom-cursor-active * {
+  html[data-custom-cursor="active"],
+  html[data-custom-cursor="active"] * {
     cursor: none !important;
   }
 }

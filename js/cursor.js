@@ -3,6 +3,8 @@ export class CustomCursorEngine {
     this.container = document.getElementById("customCursorEngine");
     if (!this.container) return;
 
+    window.customCursorInstance = this;
+
     this.iconEl = this.container.querySelector(".custom-cursor-icon");
     this.targetX = 0;
     this.targetY = 0;
@@ -11,6 +13,7 @@ export class CustomCursorEngine {
     this.isVisible = false;
     this.isTouchDevice = false;
     this.isTracking = false;
+    this.isDragging = false;
     this.rafId = null;
 
     this.onPointerMove = this.onPointerMove.bind(this);
@@ -30,8 +33,40 @@ export class CustomCursorEngine {
       this.isTouchDevice = true;
       return;
     }
+
     this.bindEvents();
     this.startLoop();
+
+    const settings = store.getState().settings || {};
+    this.toggleEnabled(settings.customCursorEnabled !== false);
+  }
+
+  toggleEnabled(enabled) {
+    this.isEnabled = enabled;
+    if (enabled) {
+      this.unbindEvents();
+      this.bindEvents();
+      this.startLoop();
+      this.setVisible(true);
+    } else {
+      this.stopLoop();
+      this.unbindEvents();
+      this.isDragging = false;
+      this.container.classList.remove("is-visible", "is-active");
+      document.documentElement.removeAttribute("data-custom-cursor");
+      document.body.classList.remove("custom-cursor-active");
+    }
+  }
+
+  unbindEvents() {
+    window.removeEventListener("pointermove", this.onPointerMove);
+    window.removeEventListener("pointerdown", this.onPointerDown);
+    window.removeEventListener("pointerup", this.onPointerUp);
+    document.body.removeEventListener("pointerover", this.onPointerOver);
+    document.body.removeEventListener("pointerout", this.onPointerOut);
+    document.documentElement.removeEventListener("mouseleave", this.onLeave);
+    document.documentElement.removeEventListener("mouseenter", this.onEnter);
+    window.removeEventListener("blur", this.onLeave);
   }
 
   bindEvents() {
@@ -72,19 +107,24 @@ export class CustomCursorEngine {
     }
   }
 
-  onPointerDown(e) {
+  onPointerDown() {
     if (this.isTouchDevice) return;
     this.container.classList.add("is-active");
-
-    const dragHandle = e.target.closest(".drag-handle");
-    if (dragHandle && this.iconEl) {
-      this.setCursorClass("icon-drag-grip-cursor");
-    }
   }
 
-  onPointerUp() {
+  onPointerUp(e) {
     if (this.isTouchDevice) return;
     this.container.classList.remove("is-active");
+
+    if (this.isDragging) {
+      if (
+        e.target.hasPointerCapture &&
+        e.target.hasPointerCapture(e.pointerId)
+      ) {
+        e.target.releasePointerCapture(e.pointerId);
+      }
+      this.isDragging = false;
+    }
 
     const hoveredEl = document.elementFromPoint(this.targetX, this.targetY);
     if (hoveredEl) {
@@ -95,12 +135,12 @@ export class CustomCursorEngine {
   }
 
   onPointerOver(e) {
-    if (this.isTouchDevice) return;
+    if (this.isTouchDevice || this.isDragging) return;
     this.updateCursorForElement(e.target);
   }
 
   onPointerOut(e) {
-    if (this.isTouchDevice) return;
+    if (this.isTouchDevice || this.isDragging) return;
     const related = e.relatedTarget;
     if (related) {
       this.updateCursorForElement(related);
@@ -109,35 +149,45 @@ export class CustomCursorEngine {
     }
   }
 
+  setCursorClass(className) {
+    if (!this.iconEl) return;
+    this.iconEl.className = `custom-cursor-icon ${className}`;
+  }
+
+  setDragState(isDragging) {
+    this.isDragging = isDragging;
+    if (isDragging) {
+      this.setCursorClass("icon-drag-grip-cursor");
+    } else {
+      const hoveredEl = document.elementFromPoint(this.targetX, this.targetY);
+      if (hoveredEl) {
+        this.updateCursorForElement(hoveredEl);
+      } else {
+        this.setCursorClass("icon-default-mouse-pointer");
+      }
+    }
+  }
+
   updateCursorForElement(element) {
-    if (!element || !this.iconEl) return;
+    if (!element || !this.iconEl || this.isDragging) return;
 
     const textInput = element.closest(
-      "input[type='text'], input[type='url'], textarea, [contenteditable='true']",
+      "input[type='text'], input[type='url'], input[type='number'], textarea, [contenteditable='true']",
     );
     const dragHandle = element.closest(".drag-handle");
     const interactive = element.closest(
-      "a, button, select, .link-item, .icon-btn, .custom-select, .select-option, summary",
+      "a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content",
     );
 
     if (textInput) {
       this.setCursorClass("icon-text-i-beam-cursor");
     } else if (dragHandle) {
-      if (this.container.classList.contains("is-active")) {
-        this.setCursorClass("icon-drag-grip-cursor");
-      } else {
-        this.setCursorClass("icon-multidirectional-drag-handle");
-      }
+      this.setCursorClass("icon-drag-grip-cursor");
     } else if (interactive) {
       this.setCursorClass("icon-interactive-hover-ring-target");
     } else {
       this.setCursorClass("icon-default-mouse-pointer");
     }
-  }
-
-  setCursorClass(className) {
-    if (!this.iconEl) return;
-    this.iconEl.className = `custom-cursor-icon ${className}`;
   }
 
   onLeave() {
@@ -150,12 +200,12 @@ export class CustomCursorEngine {
 
   setVisible(visible) {
     this.isVisible = visible;
-    if (visible) {
+    if (visible && this.isEnabled) {
       this.container.classList.add("is-visible");
-      document.body.classList.add("custom-cursor-active");
+      document.documentElement.setAttribute("data-custom-cursor", "active");
     } else {
       this.container.classList.remove("is-visible");
-      document.body.classList.remove("custom-cursor-active");
+      document.documentElement.removeAttribute("data-custom-cursor");
     }
   }
 
