@@ -36,6 +36,7 @@ import {
   navigateToFolder,
   addFolder,
 } from "./links.js";
+import { CustomCursorEngine } from "./cursor.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const CURRENT_VERSION = "v5.5.0";
@@ -98,6 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderEngineDropdown();
   updateClock();
   setInterval(updateClock, 1000);
+  new CustomCursorEngine();
 
   store.subscribe((prevState, currentState) => {
     const linksChanged = prevState.links !== currentState.links;

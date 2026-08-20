@@ -70,19 +70,6 @@
     </div>
 
     <div class="floating-settings">
-      <!-- FEATURE DISABLED: Quick Notes Floating Trigger (Desktop)
-      <button
-        id="notesBtnDesktop"
-        class="icon-btn floating-btn"
-        title="Quick Notes"
-      >
-        <span
-          class="inline-icon"
-          data-icon="edit"
-          style="width: 20px; height: 20px"
-        ></span>
-      </button>
-      -->
       <button
         id="settingsToggleBtn"
         class="icon-btn floating-btn"
@@ -876,22 +863,12 @@
         </div>
       </div>
     </div>
+    <div id="customCursorEngine" class="custom-cursor" aria-hidden="true">
+      <span class="custom-cursor-icon icon-default-mouse-pointer"></span>
+    </div>
     <script type="module" src="js/main.js"></script>
 
     <div class="mobile-dock floating-search" id="mobileDock">
-      <!-- FEATURE DISABLED: Quick Notes Dock Trigger (Mobile)
-      <button
-        class="floating-btn notes-mobile-btn"
-        id="notesBtnMobile"
-        title="Quick Notes"
-      >
-        <span
-          class="inline-icon"
-          data-icon="edit"
-          style="width: 20px; height: 20px"
-        ></span>
-      </button>
-      -->
       <button class="floating-btn" id="mobileSearchBtn">
         <span
           class="inline-icon"
@@ -926,95 +903,5 @@
         </div>
       </div>
     </div>
-    <!-- FEATURE DISABLED: Notes Widget Overlay (Unhooked for potential future use)
-    <div id="notesOverlay" class="notes-modal-overlay">
-      <div class="notes-widget-panel">
-        <div class="notes-header">
-          <div class="notes-tabs">
-            <button
-              class="notes-tab-btn active"
-              data-target="notesScratchpadView"
-            >
-              Scratchpad
-            </button>
-            <button class="notes-tab-btn" data-target="notesVaultView">
-              Vault
-            </button>
-          </div>
-          <div class="notes-header-actions">
-            <button
-              id="notesModeToggleBtn"
-              class="notes-icon-btn"
-              title="Switch Mode"
-            >
-              <span
-                class="inline-icon"
-                data-icon="todo"
-                style="width: 16px; height: 16px"
-              ></span>
-            </button>
-            <button
-              id="notesSaveBtn"
-              class="notes-icon-btn"
-              title="Save to Vault"
-            >
-              <span
-                class="inline-icon"
-                data-icon="save"
-                style="width: 16px; height: 16px"
-              ></span>
-            </button>
-            <button
-              id="notesAddBtn"
-              class="notes-icon-btn"
-              title="New Note (Shelve Draft)"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <button id="notesCloseBtn" class="notes-icon-btn" title="Close">
-              <span
-                class="inline-icon"
-                data-icon="close"
-                style="width: 16px; height: 16px"
-              ></span>
-            </button>
-          </div>
-        </div>
-
-        <div class="notes-body">
-          <div id="notesScratchpadView" class="notes-view active">
-            <textarea
-              id="notesTextarea"
-              class="notes-textarea"
-              placeholder="Type quick thoughts..."
-            ></textarea>
-            <div
-              id="notesTodoContainer"
-              class="todo-container"
-              style="display: none"
-            >
-              <div class="todo-input-group">
-                <input
-                  type="text"
-                  id="todoInput"
-                  class="todo-input"
-                  placeholder="Add a task and press Enter..."
-                />
-              </div>
-              <div id="todoList" class="todo-list"></div>
-            </div>
-          </div>
-
-          <div id="notesVaultView" class="notes-view">
-            <div id="vaultList" class="vault-list"></div>
-          </div>
-        </div>
-
-        <div class="notes-footer">
-          <span id="notesStatus" class="notes-status">Ready</span>
-        </div>
-      </div>
-    </div>
-    -->
   </body>
 </html>

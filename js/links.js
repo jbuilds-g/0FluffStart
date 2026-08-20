@@ -226,16 +226,19 @@ export function renderLinkManager() {
       checkbox.checked = selectedLinkIds.includes(link.id);
       checkbox.className = "manager-checkbox";
 
+      checkbox.onclick = (e) => {
+        e.stopPropagation();
+      };
+
+      checkbox.onchange = () => {
+        toggleSelection(link.id);
+      };
+
       leftContainer.appendChild(checkbox);
       leftContainer.appendChild(nameSpan);
 
       item.appendChild(leftContainer);
       item.classList.add("is-folder-item");
-      item.onclick = (e) => {
-        if (e.target.classList.contains("folder-toggle")) return;
-        if (e.target !== checkbox) checkbox.checked = !checkbox.checked;
-        toggleSelection(link.id);
-      };
     } else {
       const actionsDiv = document.createElement("div");
       actionsDiv.className = "link-actions";
@@ -536,8 +539,8 @@ export function renderLinkManager() {
         const toggleBtn = row.querySelector(".folder-toggle");
         if (toggleBtn) {
           toggleBtn.classList.toggle("expanded", isExpanded);
-          row.addEventListener("click", (e) => {
-            if (e.target.closest(".link-actions")) return;
+          const handleToggle = (e) => {
+            e.stopPropagation();
             const currentExp = new Set(
               store.getState().expandedFolderIds || [],
             );
@@ -552,7 +555,16 @@ export function renderLinkManager() {
               toggleBtn.classList.remove("expanded");
             }
             store.setState({ expandedFolderIds: Array.from(currentExp) });
-          });
+          };
+
+          row.onclick = (e) => {
+            if (
+              e.target.closest(".link-actions") ||
+              e.target.closest(".manager-checkbox")
+            )
+              return;
+            handleToggle(e);
+          };
         }
 
         subContainer.appendChild(buildFolderNodes(link.id, level + 1));

@@ -1,0 +1,83 @@
+/* --- CUSTOM CURSOR ENGINE --- */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none !important;
+  z-index: 999999;
+  contain: layout style;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor {
+    display: block;
+  }
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+.custom-cursor.is-visible {
+  opacity: 1;
+}
+
+/* Base Icon Mask Container */
+.custom-cursor-icon {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  width: 24px;
+  height: 24px;
+  background-color: var(--text, currentColor);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transition:
+    transform 0.15s ease,
+    background-color 0.2s ease;
+}
+
+/* Default Mouse Pointer */
+.icon-default-mouse-pointer {
+  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%204v14l4.5-3.5L12%2021.5l3-1.5-3.5-7H18L4%204z%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%204v14l4.5-3.5L12%2021.5l3-1.5-3.5-7H18L4%204z%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* Interactive Hover Target */
+.icon-interactive-hover-ring-target {
+  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%2 r%3D%227%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222%22%20fill%3D%22currentColor%22%2F%3E%3Cpath%20d%3D%22M12%202v3m0%2014v3M2%2012h3m14%200h3%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%227%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222%22%20fill%3D%22currentColor%22%2F%3E%3Cpath%20d%3D%22M12%202v3m0%2014v3M2%2012h3m14%200h3%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* Text I-Beam Cursor */
+.icon-text-i-beam-cursor {
+  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%204h8%22%2F%3E%3Cpath%20d%3D%22M12%204v16%22%2F%3E%3Cpath%20d%3D%22M8%2020h8%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%204h8%22%2F%3E%3Cpath%20d%3D%22M12%204v16%22%2F%3E%3Cpath%20d%3D%22M8%2020h8%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* Multidirectional Drag Handle */
+.icon-multidirectional-drag-handle {
+  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222.5%22%2F%3E%3Cpath%20d%3D%22M12%202v6%22%2F%3E%3Cpath%20d%3D%22M12%2016v6%22%2F%3E%3Cpath%20d%3D%22M2%2012h6%22%2F%3E%3Cpath%20d%3D%22M16%2012h6%22%2F%3E%3Cpath%20d%3D%22m9%205%203-3%203%203%22%2F%3E%3Cpath%20d%3D%22m9%2019%203%203%203-3%22%2F%3E%3Cpath%20d%3D%22m5%209-3%203%203%203%22%2F%3E%3Cpath%20d%3D%22m19%209%203%203-3%203%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222.5%22%2F%3E%3Cpath%20d%3D%22M12%202v6%22%2F%3E%3Cpath%20d%3D%22M12%2016v6%22%2F%3E%3Cpath%20d%3D%22M2%2012h6%22%2F%3E%3Cpath%20d%3D%22M16%2012h6%22%2F%3E%3Cpath%20d%3D%22m9%205%203-3%203%203%22%2F%3E%3Cpath%20d%3D%22m9%2019%203%203%203-3%22%2F%3E%3Cpath%20d%3D%22m5%209-3%203%203%203%22%2F%3E%3Cpath%20d%3D%22m19%209%203%203-3%203%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* Active Drag Grip Hand */
+.icon-drag-grip-cursor {
+  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17%2011v-3.5c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v7.5%22%2F%3E%3Cpath%20d%3D%22M12%207.5v-2c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v9.5%22%2F%3E%3Cpath%20d%3D%22M7%208v-1c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v6c0%204.42%203.58%208%208%208h5c2.21%200%204-1.79%204-4v-3c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17%2011v-3.5c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v7.5%22%2F%3E%3Cpath%20d%3D%22M12%207.5v-2c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v9.5%22%2F%3E%3Cpath%20d%3D%22M7%208v-1c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v6c0%204.42%203.58%208%208%208h5c2.21%200%204-1.79%204-4v-3c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* Transform Modifications */
+.custom-cursor.is-active .custom-cursor-icon {
+  transform: scale(0.9);
+}
