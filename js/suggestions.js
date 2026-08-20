@@ -291,35 +291,7 @@ export class SuggestionService {
         );
       }
 
-      // STRATEGY 2: AllOrigins Raw (Fallback Proxy)
-      try {
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-        const res = await fetch(proxyUrl, { signal });
-        if (res.ok) {
-          const text = await res.text();
-          if (this.isValidJsonResponse(text)) {
-            const data = JSON.parse(text);
-            const suggestions = this.parseEngineSuggestions(data);
-            if (suggestions.length > 0) {
-              console.log(
-                `[Suggestions] Resolved via AllOrigins Raw (${provider})`,
-              );
-              this.setCachedSuggestions(cacheKey, suggestions, settings);
-              return suggestions;
-            }
-          }
-        } else {
-          console.warn(
-            `[Suggestions] AllOrigins returned HTTP ${res.status} for ${provider}`,
-          );
-        }
-      } catch (e) {
-        if (/** @type {Error} */ (e).name === "AbortError") return [];
-        console.warn(
-          `[Suggestions] AllOrigins proxy fetch failed for ${provider}:`,
-          e,
-        );
-      }
+      // Strategy ends with dedicated Worker Proxy
     }
 
     return [];

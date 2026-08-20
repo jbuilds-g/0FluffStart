@@ -243,6 +243,12 @@ export function applyClockStyle() {
 }
 
 export function renderEngineDropdown() {
+  const switcher = document.querySelector(".engine-switcher");
+  if (typeof chrome !== "undefined" && chrome.search && chrome.search.query) {
+    if (switcher) switcher.style.display = "none";
+    return;
+  }
+
   const settings = store.getState().settings || {};
   const dropdown = document.getElementById("engineDropdown");
   if (!dropdown) return;
@@ -274,7 +280,6 @@ export function renderEngineDropdown() {
     dropdown.appendChild(div);
   });
 
-  const switcher = document.querySelector(".engine-switcher");
   if (switcher) loadInlineIcons(switcher);
   loadInlineIcons(dropdown);
 }
@@ -346,7 +351,19 @@ export function handleSearch(e) {
       const safeUrl = sanitizeUrl(val);
       if (safeUrl !== "#") window.location.href = safeUrl;
     } else {
-      window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
+      if (
+        typeof chrome !== "undefined" &&
+        chrome.search &&
+        chrome.search.query
+      ) {
+        try {
+          chrome.search.query({ text: val, disposition: "CURRENT_TAB" });
+        } catch (err) {
+          window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
+        }
+      } else {
+        window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
+      }
     }
   }
 }
@@ -430,7 +447,19 @@ export function selectSuggestion(suggestion) {
       const safeUrl = sanitizeUrl(val);
       if (safeUrl !== "#") window.location.href = safeUrl;
     } else {
-      window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
+      if (
+        typeof chrome !== "undefined" &&
+        chrome.search &&
+        chrome.search.query
+      ) {
+        try {
+          chrome.search.query({ text: val, disposition: "CURRENT_TAB" });
+        } catch (err) {
+          window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
+        }
+      } else {
+        window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
+      }
     }
   }
 }
@@ -1072,6 +1101,13 @@ export function showToast(message, type = "info", duration = 3000) {
 export function renderEngineSelectionList() {
   const container = document.getElementById("engineSelectionList");
   if (!container) return;
+
+  if (typeof chrome !== "undefined" && chrome.search && chrome.search.query) {
+    const parentCategory = container.closest(".category-panel");
+    if (parentCategory) parentCategory.style.display = "none";
+    return;
+  }
+
   container.innerHTML = "";
 
   const settings = store.getState().settings || {};
