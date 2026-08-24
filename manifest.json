@@ -6,11 +6,8 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": [
-    "storage",
-    "search"
-  ],
-  "optional_host_permissions": [
+  "permissions": ["storage", "search"],
+  "host_permissions": [
     "https://0fluffstart-suggest-proxy.jbuilds.workers.dev/*"
   ],
   "icons": {

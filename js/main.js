@@ -443,19 +443,35 @@ function bindStaticEvents() {
     shadowInputNumber.addEventListener("blur", syncNumberToSlider);
   }
 
+  const quickSuggestToggleBtn = document.getElementById(
+    "quickSuggestToggleBtn",
+  );
+  if (quickSuggestToggleBtn) {
+    quickSuggestToggleBtn.addEventListener("click", () => {
+      const externalSuggestToggle = document.getElementById(
+        "externalSuggestToggle",
+      );
+      if (externalSuggestToggle) {
+        externalSuggestToggle.checked = !externalSuggestToggle.checked;
+        externalSuggestToggle.dispatchEvent(new Event("change"));
+      }
+    });
+  }
+
   const externalSuggestToggle = document.getElementById(
     "externalSuggestToggle",
   );
   if (externalSuggestToggle) {
     externalSuggestToggle.addEventListener("change", async () => {
+      const isFirefox = navigator.userAgent.includes("Firefox");
       if (
         externalSuggestToggle.checked &&
+        isFirefox &&
         typeof chrome !== "undefined" &&
         chrome?.permissions
       ) {
         const origins = [
           "https://0fluffstart-suggest-proxy.jbuilds.workers.dev/*",
-          "https://api.allorigins.win/*",
         ];
 
         try {

@@ -149,6 +149,10 @@ body {
   mask-image: url("../assets/icons/search.svg");
   -webkit-mask-image: url("../assets/icons/search.svg");
 }
+.icon-suggest {
+  mask-image: url("../assets/icons/suggest.svg");
+  -webkit-mask-image: url("../assets/icons/suggest.svg");
+}
 .icon-settings {
   mask-image: url("../assets/icons/settings.svg");
   -webkit-mask-image: url("../assets/icons/settings.svg");
@@ -202,10 +206,43 @@ body {
   -webkit-mask-image: url("../assets/icons/youtube.svg");
 }
 
+/* --- INLINE SVG ICON ENGINE --- */
+.inline-icon,
+.inline-icon *,
+.link-icon-circle .inline-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: inherit;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.inline-icon svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  max-height: 100%;
+  color: inherit;
+  display: block;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.inline-icon svg,
+.inline-icon svg * {
+  fill: currentColor !important;
+}
+
 .inline-icon svg[fill="none"],
 .inline-icon svg[fill="none"] * {
   fill: none !important;
-  stroke: currentColor;
+  stroke: currentColor !important;
 }
 
 :root {

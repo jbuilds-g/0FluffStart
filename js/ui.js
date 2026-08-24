@@ -768,10 +768,17 @@ export function updateSuggestSettingsVisibility() {
     .getElementById("cacheSuggestToggle")
     ?.closest(".radio-option");
   const providerSelect = document.getElementById("suggestProviderSelect");
+  const quickToggle = document.getElementById("quickSuggestToggleBtn");
 
   if (proxyGroup) proxyGroup.classList.toggle("hidden", !isEnabled);
   if (cacheToggle) cacheToggle.classList.toggle("hidden", !isEnabled);
   if (providerSelect) providerSelect.classList.toggle("hidden", !isEnabled);
+  if (quickToggle) {
+    quickToggle.classList.toggle("active", isEnabled);
+    quickToggle.title = isEnabled
+      ? "Disable Live Suggestions"
+      : "Enable Live Suggestions";
+  }
 }
 
 export function applyVersionToUI() {

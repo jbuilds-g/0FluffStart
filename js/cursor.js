@@ -185,7 +185,7 @@ export class CustomCursorEngine {
     );
     const dragHandle = element.closest(".drag-handle");
     const interactive = element.closest(
-      "a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content",
+      "a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content, .floating-btn, .back-btn, .back-pill, .back-icon-circle, .modal-close, [role='button']",
     );
 
     if (textInput) {

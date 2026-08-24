@@ -227,7 +227,7 @@
   background: var(--card-hover);
   border: 1px solid var(--border);
   color: var(--dim);
-  border-radius: 50%;
+  border-radius: var(--radius);
   width: 20px;
   height: 20px;
   font-size: 0.7rem;
@@ -362,7 +362,7 @@ input[type="checkbox"] {
   height: 20px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 20px;
+  border-radius: var(--radius);
   position: relative;
   cursor: pointer;
   outline: none;
@@ -380,7 +380,7 @@ input[type="checkbox"]::after {
   width: 14px;
   height: 14px;
   background: var(--dim);
-  border-radius: 50%;
+  border-radius: calc(var(--radius) / 2);
   transition:
     transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
     background 0.2s ease;
@@ -598,6 +598,70 @@ input[type="checkbox"].manager-checkbox::after {
   border-radius: var(--radius);
   border: 1px solid var(--border);
   box-sizing: border-box;
+  position: relative;
+  transition:
+    transform 0.15s cubic-bezier(0.2, 0, 0, 1),
+    opacity 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.drag-handle {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  padding: 4px 10px;
+  opacity: 0.6;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: currentColor;
+  display: inline-block;
+  letter-spacing: -1px;
+  transition: opacity 0.2s ease;
+}
+
+.drag-handle:hover,
+.drag-handle:active {
+  opacity: 1;
+  cursor: grabbing;
+}
+
+.link-manager-item.is-dragging {
+  opacity: 0.3;
+  transform: scale(0.97);
+  z-index: 100;
+}
+
+.link-manager-item.shift-down {
+  transform: translateY(28px);
+}
+
+.link-manager-item.shift-up {
+  transform: translateY(-28px);
+}
+
+.link-manager-item.drag-over-folder {
+  outline: 2px dashed var(--accent, #3b82f6);
+  background-color: rgba(59, 130, 246, 0.18);
+  border-radius: 6px;
+}
+
+.drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none !important;
+  z-index: 9999;
+  opacity: 0.9;
+  transform: translate3d(-50%, -50%, 0) scale(1.02);
+  box-shadow: var(--shadow-md, 0 8px 24px rgba(0, 0, 0, 0.3));
+  border-radius: 8px;
+  background: var(--card);
+  padding: 6px 12px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .link-manager-item.nested-level {
@@ -700,7 +764,7 @@ input[type="checkbox"].manager-checkbox::after {
 .modal-footer .icon-btn {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--card-hover);
   display: flex;
@@ -802,16 +866,7 @@ input[type="checkbox"].manager-checkbox::after {
   border: 1px solid var(--border);
 }
 
-.mobile-only-setting {
-  display: none;
-}
-
-@media (max-width: 850px) and (pointer: coarse) {
-  body:not(.force-desktop-mode) .mobile-only-setting,
-  body.force-desktop-mode .mobile-only-setting {
-    display: block;
-  }
-}
+/* Mobile settings visibility rules consolidated in utilities.css */
 
 .setting-group-desktop {
   margin-top: 20px;
@@ -1123,7 +1178,7 @@ input[type="url"].bg-url-input {
   margin-right: var(--space-sm);
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: var(--radius);
   background: var(--card);
   border: 1px solid var(--border);
   color: var(--text);

@@ -6,9 +6,7 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": [
-    "storage"
-  ],
+  "permissions": ["storage"],
   "browser_specific_settings": {
     "gecko": {
       "id": "0fluffstart-v2@extension.local",
@@ -16,8 +14,7 @@
     }
   },
   "optional_host_permissions": [
-    "https://0fluffstart-suggest-proxy.jbuilds.workers.dev/*",
-    "https://api.allorigins.win/*"
+    "https://0fluffstart-suggest-proxy.jbuilds.workers.dev/*"
   ],
   "icons": {
     "16": "icon.png",

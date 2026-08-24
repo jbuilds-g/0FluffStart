@@ -87,6 +87,30 @@ body.material .search-icon {
   position: relative;
   height: 100%;
   border-right: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+}
+
+.quick-suggest-btn {
+  height: 100%;
+  padding: 0 10px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.4;
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease;
+}
+
+.quick-suggest-btn.active {
+  opacity: 1;
+  color: var(--accent);
 }
 
 body.material .engine-switcher {
@@ -325,40 +349,4 @@ body.material .suggestions-container {
   }
 }
 
-.inline-icon,
-.inline-icon *,
-.link-icon-circle .inline-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  color: inherit;
-  flex-shrink: 0;
-  overflow: hidden;
-  background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-}
-
-.inline-icon svg {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100%;
-  max-height: 100%;
-  color: inherit;
-  display: block;
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-.inline-icon svg,
-.inline-icon svg * {
-  fill: currentColor !important;
-}
-
-.inline-icon svg[fill="none"],
-.inline-icon svg[fill="none"] * {
-  fill: none !important;
-  stroke: currentColor !important;
-}
+/* Inline icon engine rules consolidated in base.css */

@@ -136,7 +136,7 @@ body.material .link-item:hover .link-icon-circle span {
   justify-content: center;
   cursor: pointer;
   background: var(--card-hover);
-  border-radius: 50%;
+  border-radius: var(--radius);
 
   /* HIDE & DISABLE BY DEFAULT */
   opacity: 0;
@@ -170,58 +170,7 @@ body.material .link-item:hover .link-icon-circle span {
   }
 }
 
-/* --- THE SOLID PILL BACK BUTTON --- */
-.folder-exit-container {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: center;
-  padding: clamp(30px, 6vh, 60px) 0 20px;
-  width: 100%;
-}
-
-.back-pill {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-lg) var(--space-sm) var(--space-sm);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 50px;
-  color: var(--text);
-  font-family: var(--font-main);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
-}
-
-/* Inner circle for arrow */
-.back-icon-circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: var(--accent); /* Solid color 2 (Circle Element) */
-  border-radius: 50%;
-  color: var(--bg); /* Keeps arrow visible against accent color */
-}
-
-.back-icon-circle svg {
-  width: 16px;
-  height: 16px;
-}
-
-/* Solid hover state */
-.back-pill:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--accent);
-}
+/* Moved folder exit container and back pill styles to links.css */
 
 /* --- DESKTOP LINK GRID OVERRIDES --- */
 @media (min-width: 768px) {
@@ -316,23 +265,7 @@ body.material .link-item:hover .link-icon-circle span {
     width: 72px !important;
   }
 
-  body:not(.force-desktop-mode) header {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    text-align: left !important;
-    margin-top: max(28px, env(safe-area-inset-top, 28px)) !important;
-  }
-
-  body:not(.force-desktop-mode) .clock {
-    font-size: 2.8rem !important;
-    font-weight: 400 !important;
-  }
-
-  body:not(.force-desktop-mode) .greeting {
-    font-size: 1.25rem !important;
-    margin-bottom: 20px !important;
-  }
+  /* Mobile header, clock, and greeting rules moved to layout.css */
 
   /* Center and scale Back Button for Mobile */
   .folder-exit-container {
@@ -442,70 +375,55 @@ body.material .link-item:hover .link-icon-circle span {
   }
 }
 
-/* Drag and Drop Visual States & Handle */
-.drag-handle {
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
-  -webkit-touch-callout: none;
-  padding: 4px 10px;
-  opacity: 0.6;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: currentColor;
-  display: inline-block;
-  letter-spacing: -1px;
-  transition: opacity 0.2s ease;
+/* --- SOLID PILL BACK BUTTON --- */
+.folder-exit-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  padding: clamp(30px, 6vh, 60px) 0 20px;
+  width: 100%;
 }
 
-.drag-handle:hover,
-.drag-handle:active {
-  opacity: 1;
-  cursor: grabbing;
-}
-
-.link-manager-item {
-  position: relative;
-  transition:
-    transform 0.15s cubic-bezier(0.2, 0, 0, 1),
-    opacity 0.15s ease,
-    background-color 0.15s ease;
-}
-
-.link-manager-item.is-dragging {
-  opacity: 0.3;
-  transform: scale(0.97);
-  z-index: 100;
-}
-
-.link-manager-item.shift-down {
-  transform: translateY(28px);
-}
-
-.link-manager-item.shift-up {
-  transform: translateY(-28px);
-}
-
-.link-manager-item.drag-over-folder {
-  outline: 2px dashed var(--accent, #3b82f6);
-  background-color: rgba(59, 130, 246, 0.18);
-  border-radius: 6px;
-}
-
-.drag-ghost {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none !important;
-  z-index: 9999;
-  opacity: 0.9;
-  transform: translate3d(-50%, -50%, 0) scale(1.02);
-  box-shadow: var(--shadow-md, 0 8px 24px rgba(0, 0, 0, 0.3));
-  border-radius: 8px;
-  background: var(--card);
-  padding: 6px 12px;
-  color: var(--text);
+.back-pill {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg) var(--space-sm) var(--space-sm);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-main);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
+
+.back-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: calc(var(--radius) / 2);
+  color: var(--bg);
+}
+
+.back-icon-circle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.back-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
+}
+
+/* Drag and drop rules moved to modal.css */

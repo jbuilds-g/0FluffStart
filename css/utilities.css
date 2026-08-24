@@ -49,7 +49,7 @@ body.modal-open {
     align-items: center !important;
     width: 44px !important;
     height: 44px !important;
-    border-radius: 50% !important;
+    border-radius: var(--radius) !important;
     padding: 0 !important;
     color: var(--text) !important;
     flex-shrink: 0 !important;
