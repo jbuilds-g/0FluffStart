@@ -97,6 +97,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadSettings();
   renderLinks();
   renderEngineDropdown();
+
+  if (!localStorage.getItem("0fluff_has_opened_engine_dropdown")) {
+    toggleEngineDropdown();
+    localStorage.setItem("0fluff_has_opened_engine_dropdown", "true");
+  }
+
   updateClock();
   setInterval(updateClock, 1000);
   new CustomCursorEngine();
