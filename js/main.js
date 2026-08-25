@@ -521,6 +521,40 @@ function bindStaticEvents() {
   if (customProxyInput)
     customProxyInput.addEventListener("input", debouncedSaveProxy);
 
+  const showEngineDropdownToggle = document.getElementById(
+    "showEngineDropdownToggle",
+  );
+  if (showEngineDropdownToggle)
+    showEngineDropdownToggle.addEventListener("change", () =>
+      autoSaveSettings(),
+    );
+
+  const showQuickSuggestToggle = document.getElementById(
+    "showQuickSuggestToggle",
+  );
+  if (showQuickSuggestToggle)
+    showQuickSuggestToggle.addEventListener("change", () => autoSaveSettings());
+
+  const showAllSearchControlsToggle = document.getElementById(
+    "showAllSearchControlsToggle",
+  );
+  if (showAllSearchControlsToggle)
+    showAllSearchControlsToggle.addEventListener("change", () =>
+      autoSaveSettings(),
+    );
+
+  const showSearchSubmitToggle = document.getElementById(
+    "showSearchSubmitToggle",
+  );
+  if (showSearchSubmitToggle)
+    showSearchSubmitToggle.addEventListener("change", () => autoSaveSettings());
+
+  const searchBarLayoutSelect = document.getElementById(
+    "searchBarLayoutSelect",
+  );
+  if (searchBarLayoutSelect)
+    searchBarLayoutSelect.addEventListener("change", () => autoSaveSettings());
+
   const historyEnabledToggle = document.getElementById("historyEnabledToggle");
   if (historyEnabledToggle)
     historyEnabledToggle.addEventListener("change", () => autoSaveSettings());

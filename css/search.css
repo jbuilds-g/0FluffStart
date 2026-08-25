@@ -119,18 +119,75 @@ body.material .engine-switcher {
 }
 
 .engine-btn {
-  height: 100%;
-  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   background: transparent;
   border: none;
   color: var(--text);
-  font-weight: bold;
-  font-family: var(--font-main);
   cursor: pointer;
+  padding: 0 10px 0 14px;
+  height: 100%;
+}
+
+.quick-suggest-btn {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 1rem;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0 12px;
+  height: 100%;
+  opacity: 0.6;
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease;
+}
+
+.engine-switcher > button:not(.hidden) + button:not(.hidden) {
+  border-left: 1px solid var(--border);
+}
+
+.quick-suggest-btn:hover,
+.quick-suggest-btn.active {
+  opacity: 1;
+  color: var(--accent);
+}
+
+/* --- SEGMENTED SEARCH BAR LAYOUT --- */
+.search-bar.segmented {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  gap: 10px;
+}
+
+.search-bar.segmented .engine-switcher {
+  background: var(--card, #141418);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  height: 100%;
+}
+
+.search-bar.segmented #searchInput {
+  background: var(--card, #141418) !important;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  height: 100%;
+}
+
+.search-bar.segmented .search-icon {
+  background: var(--card, #141418);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  height: 100%;
+  width: 50px;
+  justify-content: center;
 }
 
 /* --- SEARCH ENGINE SVG SIZING --- */

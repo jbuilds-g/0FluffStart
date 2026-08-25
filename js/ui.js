@@ -554,6 +554,36 @@ const SETTINGS_MAP = [
     type: "range",
     defaultVal: 100,
   },
+  {
+    key: "showAllSearchControls",
+    id: "showAllSearchControlsToggle",
+    type: "checkbox",
+    defaultVal: true,
+  },
+  {
+    key: "showEngineDropdown",
+    id: "showEngineDropdownToggle",
+    type: "checkbox",
+    defaultVal: true,
+  },
+  {
+    key: "showQuickSuggest",
+    id: "showQuickSuggestToggle",
+    type: "checkbox",
+    defaultVal: true,
+  },
+  {
+    key: "showSearchSubmit",
+    id: "showSearchSubmitToggle",
+    type: "checkbox",
+    defaultVal: true,
+  },
+  {
+    key: "searchBarLayout",
+    id: "searchBarLayoutSelect",
+    type: "custom-select",
+    defaultVal: "unified",
+  },
 ];
 
 export async function updateBackgroundMedia(sourceType, data) {
@@ -749,10 +779,63 @@ export async function autoSaveSettings(updates = null) {
   if (numInputEl && parseInt(numInputEl.value, 10) !== rawVal)
     numInputEl.value = rawVal;
 
+  const searchBar = document.querySelector(".search-bar");
+  if (searchBar) {
+    searchBar.classList.toggle(
+      "segmented",
+      newSettings.searchBarLayout === "segmented",
+    );
+  }
+
+  // Sub-control settings are preserved independently as configured by the user.
+  const showAll = newSettings.showAllSearchControls !== false;
+  const showEngine = showAll && newSettings.showEngineDropdown !== false;
+  const showSuggest = showAll && newSettings.showQuickSuggest !== false;
+  const showSubmit = showAll && newSettings.showSearchSubmit !== false;
+
+  const engineDropdownBtn = document.getElementById("engineDropdownBtn");
+  if (engineDropdownBtn) {
+    engineDropdownBtn.classList.toggle("hidden", !showEngine);
+  }
+
+  const quickSuggestBtn = document.getElementById("quickSuggestToggleBtn");
+  if (quickSuggestBtn) {
+    quickSuggestBtn.classList.toggle("hidden", !showSuggest);
+  }
+
+  const engineSwitcher = document.getElementById("engineSwitcher");
+  if (engineSwitcher) {
+    engineSwitcher.classList.toggle("hidden", !showEngine && !showSuggest);
+  }
+
+  const searchSubmitBtn = document.getElementById("searchSubmitBtn");
+  if (searchSubmitBtn) {
+    searchSubmitBtn.classList.toggle("hidden", !showSubmit);
+  }
+
+  // Pure master collapse: Group only hides when Master Toggle is explicitly turned OFF
+  const individualGroup = document.getElementById(
+    "individualSearchControlsGroup",
+  );
+  if (individualGroup) {
+    individualGroup.classList.toggle("hidden", !showAll);
+  }
+
+  // Style select grays out only if master toggle is OFF or all sub-controls are OFF
+  const layoutSelect = document.getElementById("searchBarLayoutSelect");
+  if (layoutSelect) {
+    const hasActiveControls =
+      showAll && (showEngine || showSuggest || showSubmit);
+    layoutSelect.classList.toggle("disabled", !hasActiveControls);
+    layoutSelect.style.opacity = hasActiveControls ? "1" : "0.5";
+    layoutSelect.style.pointerEvents = hasActiveControls ? "auto" : "none";
+  }
+
   applyClockStyle();
   updateClock();
   await materialYouEngine.triggerMaterialYou(newSettings, getBgFromDB);
   updateSuggestSettingsVisibility();
+  renderEngineSelectionList();
 
   if (window.customCursorInstance) {
     window.customCursorInstance.toggleEnabled(
@@ -825,6 +908,55 @@ export async function loadSettings() {
   if (numInputEl) numInputEl.value = rawVal;
 
   applyClockStyle();
+
+  const searchBar = document.querySelector(".search-bar");
+  if (searchBar) {
+    searchBar.classList.toggle(
+      "segmented",
+      settings.searchBarLayout === "segmented",
+    );
+  }
+
+  const showAll = settings.showAllSearchControls !== false;
+  const showEngine = showAll && settings.showEngineDropdown !== false;
+  const showSuggest = showAll && settings.showQuickSuggest !== false;
+  const showSubmit = showAll && settings.showSearchSubmit !== false;
+
+  const engineDropdownBtn = document.getElementById("engineDropdownBtn");
+  if (engineDropdownBtn) {
+    engineDropdownBtn.classList.toggle("hidden", !showEngine);
+  }
+
+  const quickSuggestBtn = document.getElementById("quickSuggestToggleBtn");
+  if (quickSuggestBtn) {
+    quickSuggestBtn.classList.toggle("hidden", !showSuggest);
+  }
+
+  const engineSwitcher = document.getElementById("engineSwitcher");
+  if (engineSwitcher) {
+    engineSwitcher.classList.toggle("hidden", !showEngine && !showSuggest);
+  }
+
+  const searchSubmitBtn = document.getElementById("searchSubmitBtn");
+  if (searchSubmitBtn) {
+    searchSubmitBtn.classList.toggle("hidden", !showSubmit);
+  }
+
+  const individualGroup = document.getElementById(
+    "individualSearchControlsGroup",
+  );
+  if (individualGroup) {
+    individualGroup.classList.toggle("hidden", !showAll);
+  }
+
+  const layoutSelect = document.getElementById("searchBarLayoutSelect");
+  if (layoutSelect) {
+    const hasActiveControls =
+      showAll && (showEngine || showSuggest || showSubmit);
+    layoutSelect.classList.toggle("disabled", !hasActiveControls);
+    layoutSelect.style.opacity = hasActiveControls ? "1" : "0.5";
+    layoutSelect.style.pointerEvents = hasActiveControls ? "auto" : "none";
+  }
 
   const overlay = document.getElementById("bgOverlay");
   const bgVideo = document.getElementById("bgVideo");
@@ -1137,11 +1269,21 @@ export function renderEngineSelectionList() {
     const actions = document.createElement("div");
     actions.className = "engine-item-actions";
 
+    const showDropdown = settings.showEngineDropdown !== false;
     const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = enabledNames.includes(engine.name);
+    checkbox.type = showDropdown ? "checkbox" : "radio";
+    if (!showDropdown) checkbox.name = "defaultEngineRadio";
+    checkbox.checked = showDropdown
+      ? enabledNames.includes(engine.name)
+      : (settings.searchEngine || "Google") === engine.name;
 
     checkbox.addEventListener("change", () => {
+      if (!showDropdown) {
+        autoSaveSettings({ searchEngine: engine.name });
+        renderEngineSelectionList();
+        renderEngineDropdown();
+        return;
+      }
       const currentEnabled =
         store.getState().settings?.enabledEngines ||
         searchEngines.map((e) => e.name);
@@ -1212,4 +1354,6 @@ export function renderEngineSelectionList() {
     item.appendChild(actions);
     container.appendChild(item);
   });
+
+  loadInlineIcons(container);
 }
