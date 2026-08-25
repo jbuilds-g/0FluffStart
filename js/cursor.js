@@ -185,10 +185,22 @@ export class CustomCursorEngine {
     );
     const dragHandle = element.closest(".drag-handle");
     const interactive = element.closest(
-      "a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content, .floating-btn, .back-btn, .back-pill, .back-icon-circle, .modal-close, [role='button']",
+      "a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .suggestion-item, .suggestions-container *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content, .floating-btn, .back-btn, .back-pill, .back-icon-circle, .modal-close, [role='button']",
     );
 
-    if (textInput) {
+    const isTextElement = element.closest(
+      "p, h1, h2, h3, h4, h5, h6, .link-grid .link-name, .greeting, .clock, code, .help-text",
+    );
+    const computedStyle = isTextElement
+      ? window.getComputedStyle(isTextElement)
+      : null;
+    const isSelectableText =
+      isTextElement &&
+      computedStyle &&
+      computedStyle.userSelect !== "none" &&
+      isTextElement.textContent.trim().length > 0;
+
+    if (textInput || isSelectableText) {
       this.setCursorClass("icon-text-i-beam-cursor");
     } else if (dragHandle) {
       this.setCursorClass("icon-drag-grip-cursor");

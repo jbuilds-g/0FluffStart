@@ -589,7 +589,6 @@ const SETTINGS_MAP = [
 export async function updateBackgroundMedia(sourceType, data) {
   const fileNameEl = document.getElementById("bgFileName");
   const resetBtn = document.getElementById("resetBgBtn");
-  const bgUrlInput = document.getElementById("bgUrlInput");
   const bgImageInput = document.getElementById("bgImageInput");
   const overlay = document.getElementById("bgOverlay");
   const bgImage = document.getElementById("bgImage");
@@ -633,53 +632,10 @@ export async function updateBackgroundMedia(sourceType, data) {
       if (fileNameEl) fileNameEl.innerText = data.name || "Custom Media Active";
       if (resetBtn) resetBtn.classList.remove("hidden");
       if (overlay) overlay.classList.add("bg-overlay-active");
-      if (bgUrlInput) bgUrlInput.value = "";
     } catch (e) {
       console.error("Failed to save media to DB", e);
       showToast("Failed to save background media. Database error.", "error");
     }
-  } else if (
-    sourceType === "url" &&
-    data &&
-    typeof data === "string" &&
-    data.trim()
-  ) {
-    const trimmedUrl = data.trim();
-    materialYouEngine.revokeActiveObjectUrl();
-    await clearBgFromDB();
-    autoSaveSettings({ backgroundImage: trimmedUrl });
-
-    const isVideo = trimmedUrl.match(/\.(mp4|webm|ogg)($|\?)/i);
-
-    if (isVideo) {
-      if (bgImage) {
-        bgImage.style.backgroundImage = "";
-        bgImage.classList.add("hidden");
-        bgImage.classList.remove("active");
-      }
-      if (bgVideo) {
-        bgVideo.src = trimmedUrl;
-        bgVideo.classList.remove("hidden");
-        bgVideo.classList.add("active");
-        bgVideo.play().catch((err) => console.warn("Playback prevented:", err));
-      }
-    } else {
-      if (bgVideo) {
-        bgVideo.src = "";
-        bgVideo.classList.add("hidden");
-        bgVideo.classList.remove("active");
-      }
-      if (bgImage) {
-        bgImage.style.backgroundImage = `url('${trimmedUrl}')`;
-        bgImage.classList.remove("hidden");
-        bgImage.classList.add("active");
-      }
-    }
-
-    if (fileNameEl) fileNameEl.innerText = "URL Media Active";
-    if (resetBtn) resetBtn.classList.remove("hidden");
-    if (overlay) overlay.classList.add("bg-overlay-active");
-    if (bgImageInput) bgImageInput.value = "";
   } else {
     autoSaveSettings({ backgroundImage: null, materialYouPalette: null });
     await clearBgFromDB();
@@ -697,7 +653,6 @@ export async function updateBackgroundMedia(sourceType, data) {
     }
 
     if (bgImageInput) bgImageInput.value = "";
-    if (bgUrlInput) bgUrlInput.value = "";
     if (fileNameEl) fileNameEl.innerText = "No media selected.";
     if (resetBtn) resetBtn.classList.add("hidden");
     if (overlay) overlay.classList.remove("bg-overlay-active");
@@ -967,10 +922,7 @@ export async function loadSettings() {
       if (bgData) {
         const url = materialYouEngine.createMediaObjectUrl(bgData);
         const bgImage = document.getElementById("bgImage");
-        const isVideo =
-          (bgData.type && bgData.type.startsWith("video/")) ||
-          (typeof bgData === "string" &&
-            bgData.match(/\.(mp4|webm|ogg)($|\?)/i));
+        const isVideo = bgData.type && bgData.type.startsWith("video/");
 
         if (isVideo) {
           if (bgImage) {
@@ -1004,24 +956,8 @@ export async function loadSettings() {
     } catch (e) {
       console.error("Background load fail:", e);
     }
-  } else if (
-    typeof settings.backgroundImage === "string" &&
-    settings.backgroundImage.trim() !== ""
-  ) {
-    materialYouEngine.revokeActiveObjectUrl();
-    const bgUrlInput = document.getElementById("bgUrlInput");
-    if (bgUrlInput) bgUrlInput.value = settings.backgroundImage;
-    const bgImage = document.getElementById("bgImage");
-    if (bgImage) {
-      bgImage.style.backgroundImage = `url('${settings.backgroundImage}')`;
-      bgImage.classList.remove("hidden");
-      bgImage.classList.add("active");
-    }
-    if (overlay) overlay.classList.add("bg-overlay-active");
   } else {
     materialYouEngine.revokeActiveObjectUrl();
-    const bgUrlInput = document.getElementById("bgUrlInput");
-    if (bgUrlInput) bgUrlInput.value = "";
     const bgImage = document.getElementById("bgImage");
     if (bgImage) {
       bgImage.style.backgroundImage = "";
