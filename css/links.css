@@ -164,9 +164,9 @@ body.material .link-item:hover .link-icon-circle span {
 /* Force show on smaller screens for better touch target */
 @media (max-width: 480px) {
   .link-edit-overlay {
-    opacity: 0.8 !important;
-    visibility: visible !important;
-    pointer-events: all !important;
+    opacity: 0.8;
+    visibility: visible;
+    pointer-events: all;
   }
 }
 
@@ -202,109 +202,107 @@ body.material .link-item:hover .link-icon-circle span {
 
 /* --- MOBILE HORIZONTAL TOUCH-SCROLLING GRID LOGIC --- */
 @media (max-width: 850px) and (pointer: coarse) {
-  .container {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100dvh !important; /* Full viewport height */
-    padding-bottom: 0 !important;
+  body:not(.force-desktop-mode) .container {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    padding-bottom: 0;
   }
 
-  .link-grid {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    justify-content: flex-start !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    touch-action: pan-x !important;
+  body:not(.force-desktop-mode) .link-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    touch-action: pan-x;
     scroll-snap-type: x mandatory;
     gap: 15px;
 
     /* Viewport alignment for right-side scroll physics */
-    width: 100vw !important;
-    margin-left: -20px !important;
-    padding-left: 20px !important;
-    padding-right: 100px !important;
-    padding-top: 12px !important;
-    padding-bottom: 12px !important;
-    box-sizing: border-box !important;
-  }
-
-  .link-grid:not(:has(.folder-exit-container)) {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      black 0%,
-      black calc(100% - 110px),
-      transparent calc(100% - 20px)
+    width: 100vw;
+    margin-left: calc(-1 * var(--mobile-spacing-x));
+    padding-left: var(--mobile-spacing-x);
+    padding-right: calc(
+      var(--mobile-link-grid-mask-fade-width) +
+        var(--mobile-link-grid-mask-offset)
     );
-    mask-image: linear-gradient(
-      to right,
-      black 0%,
-      black calc(100% - 110px),
-      transparent calc(100% - 20px)
-    );
-  }
-
-  .link-grid {
-    margin-top: auto !important;
-    margin-bottom: 90px !important;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    box-sizing: border-box;
+    margin-top: auto;
+    margin-bottom: 90px;
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
 
-  .link-grid::-webkit-scrollbar {
+  body:not(.force-desktop-mode) .link-grid:not(:has(.folder-exit-container)) {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      black 0%,
+      black calc(100% - var(--mobile-link-grid-mask-fade-width)),
+      transparent calc(100% - var(--mobile-link-grid-mask-offset))
+    );
+    mask-image: linear-gradient(
+      to right,
+      black 0%,
+      black calc(100% - var(--mobile-link-grid-mask-fade-width)),
+      transparent calc(100% - var(--mobile-link-grid-mask-offset))
+    );
+  }
+
+  body:not(.force-desktop-mode) .link-grid::-webkit-scrollbar {
     display: none;
   }
 
-  .link-grid > * {
+  body:not(.force-desktop-mode) .link-grid > * {
     scroll-snap-align: start;
-    flex: 0 0 auto !important;
+    flex: 0 0 auto;
   }
 
-  .link-grid .link-item {
-    width: 72px !important;
+  body:not(.force-desktop-mode) .link-grid .link-item {
+    width: var(--mobile-link-grid-item-size);
   }
-
-  /* Mobile header, clock, and greeting rules moved to layout.css */
 
   /* Center and scale Back Button for Mobile */
-  .folder-exit-container {
-    position: fixed !important;
-    bottom: 24px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    padding: 0 !important;
-    width: auto !important;
-    z-index: 50 !important;
+  body:not(.force-desktop-mode) .folder-exit-container {
+    position: fixed;
+    bottom: var(--mobile-spacing-y);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0;
+    width: auto;
+    z-index: 50;
   }
 
-  .back-pill {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-    padding: 6px 16px 6px 6px !important;
-    font-size: 0.75rem !important;
-    gap: 8px !important;
+  body:not(.force-desktop-mode) .back-pill {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    padding: 6px 16px 6px 6px;
+    font-size: 0.75rem;
+    gap: 8px;
   }
 
-  .back-pill .back-icon-circle {
-    width: 26px !important;
-    height: 26px !important;
+  body:not(.force-desktop-mode) .back-pill .back-icon-circle {
+    width: 26px;
+    height: 26px;
   }
 
-  .back-pill .back-icon-circle svg {
-    width: 14px !important;
-    height: 14px !important;
+  body:not(.force-desktop-mode) .back-pill .back-icon-circle svg {
+    width: 14px;
+    height: 14px;
   }
 
   /* Lock mobile touch items */
   body:not(.force-desktop-mode) .link-grid .link-item:active {
-    transform: none !important;
+    transform: none;
   }
 
   body:not(.force-desktop-mode) .link-grid .link-item:hover .link-icon-circle,
   body:not(.force-desktop-mode) .link-grid .link-item:active .link-icon-circle {
-    transform: none !important;
-    background: var(--card) !important;
-    box-shadow: var(--shadow) !important;
+    transform: none;
+    background: var(--card);
+    box-shadow: var(--shadow);
   }
 
   body:not(.force-desktop-mode)
@@ -317,7 +315,7 @@ body.material .link-item:hover .link-icon-circle span {
     .link-item:active
     .link-icon-circle
     span {
-    color: var(--accent) !important;
+    color: var(--accent);
   }
 
   body:not(.force-desktop-mode)
@@ -330,15 +328,15 @@ body.material .link-item:hover .link-icon-circle span {
     .link-item:active
     .link-icon-circle
     svg {
-    stroke: var(--accent) !important;
+    stroke: var(--accent);
   }
 
   /* Force Titles visible on mobile */
-  .link-grid .link-name {
-    opacity: 1 !important;
-    transform: none !important;
-    display: block !important;
-    pointer-events: auto !important;
+  body:not(.force-desktop-mode) .link-grid .link-name {
+    opacity: 1;
+    transform: none;
+    display: block;
+    pointer-events: auto;
   }
 
   /* Force Desktop Mode Grid Overrides */

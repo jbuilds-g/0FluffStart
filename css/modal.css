@@ -199,7 +199,12 @@
 
 /* --- SETTINGS GROUPS & HELP TOOLTIPS --- */
 .setting-group {
+  margin-top: 18px;
   margin-bottom: 25px;
+}
+
+.setting-group:first-child {
+  margin-top: 0;
 }
 
 .setting-group:last-child,
@@ -431,11 +436,13 @@ input[type="checkbox"].manager-checkbox::after {
   background: var(--card-hover);
   color: var(--text);
   width: 100%;
-  padding: 12px;
+  padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1.25;
   font-family: var(--font-main);
 }
 
@@ -1100,6 +1107,9 @@ input[type="url"].bg-url-input {
   width: 100%;
   border: 1px solid var(--delete);
   color: var(--delete);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  line-height: 1.25;
 }
 
 .setting-slider-row {

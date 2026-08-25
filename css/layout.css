@@ -142,17 +142,19 @@ h1 {
 
 /* --- TOUCH MOBILE OVERRIDES (Floating Settings & Header) --- */
 @media (max-width: 850px) and (pointer: coarse) {
+  body:not(.force-desktop-mode) .container {
+    height: 100dvh;
+    padding-bottom: 0;
+  }
+
   body:not(.force-desktop-mode) .floating-settings {
     top: auto;
-    bottom: 92px;
-    right: 30px;
+    bottom: calc(24px + 44px + 16px);
+    right: 24px;
     left: auto;
-    position: fixed;
-    z-index: var(--z-floating);
-    pointer-events: none;
-    display: flex;
     justify-content: center;
-    width: 36px;
+    align-items: center;
+    width: 44px;
   }
 
   body:not(.force-desktop-mode) #settingsToggleBtn {
@@ -163,6 +165,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 auto;
   }
 
   body.force-desktop-mode .floating-settings {
@@ -173,20 +176,23 @@ h1 {
   }
 
   body:not(.force-desktop-mode) header {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    text-align: left !important;
-    margin-top: max(28px, env(safe-area-inset-top, 28px)) !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    margin-top: max(
+      var(--mobile-header-top-offset),
+      env(safe-area-inset-top, var(--mobile-header-top-offset))
+    );
   }
 
   body:not(.force-desktop-mode) .clock {
-    font-size: 2.8rem !important;
-    font-weight: 400 !important;
+    font-size: 2.8rem;
+    font-weight: 400;
   }
 
   body:not(.force-desktop-mode) .greeting {
-    font-size: 1.25rem !important;
-    margin-bottom: 20px !important;
+    font-size: 1.25rem;
+    margin-bottom: var(--mobile-spacing-x);
   }
 }
