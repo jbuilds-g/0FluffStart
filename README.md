@@ -39,12 +39,13 @@
 ## 🔥 Key Features
 
 - **GPU-Accelerated Performance:** Global hardware acceleration and optimized CSS layers ensure smooth 60fps interactions.
-- **Privacy-First Architecture:** No external analytics, trackers, or cloud sync. Your data stays on your hardware. _(Optional search suggestions use DuckDuckGo API)._
+- **Privacy-First Architecture:** No external analytics, trackers, or cloud sync. Your data stays strictly on your hardware.
+- **Modular Search Bar Engine:** Switch between a unified search bar or a segmented floating card layout with granular control toggles for individual buttons.
+- **Inline Quick Suggestion Toggle:** Instant control over live search autocomplete feeds directly inside the search switcher.
 - **Offline-Ready PWA:** Instant load times and offline functionality via Service Worker caching.
-- **Smart Link Management:** Organize your dashboard with nested folders and quick links.
-- **Theming Engine:** Material You dynamic colors and 10+ built-in themes (OLED, Cyberpunk, Clean Light, etc.).
-- **Custom Backgrounds:** High-resolution image and video upload support with persistent local storage.
-- **Integrated Search Hub:** Instant engine switching with private search suggestions and local history.
+- **Smart Link Management:** Organize your dashboard with nested folders, quick links, and pointer-driven drag-and-drop spatial reordering.
+- **Theming Engine:** Material You dynamic color extraction and built-in dark/light theme presets.
+- **Local Media Storage & Serialization:** Custom high-resolution image and video upload support stored in IndexedDB with full base64 JSON export/import support.
 - **Ultra-Minimalist Codebase:** Built with 100% Vanilla JS/CSS—zero frameworks, zero dependencies.
 
 ---
@@ -125,7 +126,7 @@ _alternatively_
 
 ## 💾 Data Sync & Management
 
-Data is stored locally in `localStorage` and `IndexedDB`. To sync between devices:
+Data is stored locally in `localStorage` and `IndexedDB`. Background media images and videos are serialized directly into base64 JSON backups.
 
 1. **Export:** Go to _Settings > Data Management_ → Click **Backup (Save)**.
 2. **Transfer:** Send the `.json` file to your target device.
@@ -136,21 +137,37 @@ Data is stored locally in `localStorage` and `IndexedDB`. To sync between device
 ## 🏛️ Project Structure
 
 ```text
-├── css/                  # Modular stylesheets
-├── js/                   # Core application scripts
-│   ├── main.js           # Entry point & static event binding
-│   ├── store.js          # Centralized reactive state store
-│   ├── ui.js             # UI state managers & background handlers
-│   ├── links.js          # Link manager & folder tree engine
-│   ├── suggestions.js    # Live search & history management
-│   ├── storage.js        # IndexedDB & backup/restore utilities
-│   ├── material-you-engine.js # Monet HSL dynamic color extractor
-│   └── utils.js          # Helpers, sanitizers & debouncers
-├── index.html            # Application entry point
-├── manifest.json         # Extension & PWA configuration
-├── manifest.firefox.json # Gecko extension configuration
-└── sw.js                 # Service Worker (Offline PWA logic)
-
+├── assets/
+│   └── icons/            # SVG vector icons for UI and search engines
+├── css/                  # Modular design system stylesheets
+│   ├── base.css          # Core resets & typography
+│   ├── core.css          # Main stylesheet entry point (@imports)
+│   ├── cursor.css        # Vector cursor engine styles
+│   ├── layout.css        # Main container, header & responsive grid
+│   ├── links.css         # Quick links & folder management UI
+│   ├── modal.css         # Settings modal & dialog components
+│   ├── search.css        # Search bar & autocomplete dropdown
+│   ├── themes.css        # Built-in theme preset definitions
+│   ├── utilities.css     # Helper classes & responsive overrides
+│   └── variables.css     # Design tokens & CSS custom properties
+├── js/                   # Modular ES application architecture
+│   ├── main.js           # App entry point & event initialization
+│   ├── cursor.js         # Theme-adaptive custom vector cursor
+│   ├── links.js          # Link management & drag-and-drop tree engine
+│   ├── material-you-engine.js # Dynamic Monet HSL color extractor
+│   ├── storage.js        # IndexedDB & base64 backup/restore handlers
+│   ├── store.js          # Centralized reactive state engine
+│   ├── suggestions.js    # Live search & history log controllers
+│   ├── ui.js             # UI render state & settings management
+│   ├── utils.js          # Shared sanitizers, debouncers & helpers
+│   └── version.js        # Application version metadata
+├── index.html            # Core HTML5 application entry point
+├── manifest.json         # Manifest V3 extension configuration (Chromium)
+├── manifest.firefox.json # Gecko extension manifest configuration
+├── pwa-manifest.json     # PWA web application manifest
+├── PRIVACY.md            # Privacy policy documentation
+├── TAGS.md               # Search engine shortcut tag reference
+└── sw.js                 # Service Worker (Offline PWA engine)
 ```
 
 ## License
