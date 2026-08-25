@@ -72,13 +72,38 @@ export async function clearBgFromDB() {
   });
 }
 
-export function backupData() {
+export async function backupData() {
   const { links, settings, searchHistory } = store.getState();
+  let bgMediaData = null;
+
+  if (settings?.backgroundImage === "indexeddb") {
+    try {
+      const rawBg = await getBgFromDB();
+      if (rawBg && (rawBg instanceof Blob || rawBg instanceof File)) {
+        const buffer = await rawBg.arrayBuffer();
+        const bytes = new Uint8Array(buffer);
+        let binary = "";
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        bgMediaData = {
+          type: rawBg.type,
+          name: rawBg.name || "background",
+          base64: btoa(binary),
+        };
+      }
+    } catch (e) {
+      console.warn("Failed exporting background media from DB:", e);
+    }
+  }
+
   const data = {
     links: links || [],
     settings: settings || {},
     history: searchHistory || [],
+    bgMediaData,
   };
+
   const blob = new Blob([JSON.stringify(data, null, 2)], {
     type: "application/json",
   });
@@ -109,13 +134,37 @@ export function restoreData(e, customConfirmFn, showToastFn) {
         "Restore Backup?",
       );
       if (confirmed) {
-        store.setState({
+        if (data.bgMediaData) {
+          try {
+            let bgBlob = data.bgMediaData;
+            if (data.bgMediaData.base64) {
+              const binary = atob(data.bgMediaData.base64);
+              const bytes = new Uint8Array(binary.length);
+              for (let i = 0; i < binary.length; i++) {
+                bytes[i] = binary.charCodeAt(i);
+              }
+              bgBlob = new File(
+                [bytes],
+                data.bgMediaData.name || "background",
+                {
+                  type: data.bgMediaData.type,
+                },
+              );
+            }
+            await saveBgToDB(bgBlob);
+          } catch (e) {
+            console.warn("Failed restoring background payload to DB:", e);
+          }
+        }
+
+        await store.setState({
           links: data.links || [],
           settings: data.settings || {},
           searchHistory: data.history || [],
         });
+
         toast("Backup restored successfully", "success");
-        setTimeout(() => window.location.reload(), 1000);
+        setTimeout(() => window.location.reload(), 500);
       }
     } catch (err) {
       const toast =

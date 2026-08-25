@@ -1,6 +1,6 @@
 import { store } from "./store.js";
 import { debounce, sanitizeUrl } from "./utils.js";
-import { backupData, restoreData } from "./storage.js";
+import { backupData, restoreData, clearBgFromDB } from "./storage.js";
 import {
   handleSuggestions,
   handleSuggestionKeyDown,
@@ -781,12 +781,53 @@ function bindStaticEvents() {
         "Reset Everything?",
       );
       if (confirmed) {
-        localStorage.removeItem("0fluff_settings");
-        localStorage.removeItem("0fluff_links");
-        localStorage.removeItem("0fluff_history");
-        store.setState({ links: [], searchHistory: [] });
+        localStorage.clear();
+        sessionStorage.clear();
+        await clearBgFromDB();
+
+        if (typeof chrome !== "undefined" && chrome?.storage?.local) {
+          try {
+            await chrome.storage.local.clear();
+          } catch (err) {
+            console.warn("Failed clearing chrome.storage.local:", err);
+          }
+        }
+
+        await store.setState({
+          links: [],
+          settings: {
+            theme: "dark",
+            clockStyle: "default",
+            clockFormat: "24h",
+            showSeconds: true,
+            userName: "",
+            searchEngine: "Google",
+            externalSuggest: false,
+            cacheSuggestions: true,
+            suggestProvider: "auto",
+            customProxyUrl: "",
+            historyEnabled: true,
+            showTitles: false,
+            forceDesktop: false,
+            customCursorEnabled: true,
+            backgroundImage: null,
+            shadowIntensity: 100,
+            showAllSearchControls: true,
+            showEngineDropdown: true,
+            showQuickSuggest: true,
+            showSearchSubmit: true,
+            searchBarLayout: "unified",
+          },
+          searchHistory: [],
+          expandedFolderIds: [],
+          currentFolderId: null,
+          activeFolderId: null,
+          isSelectionMode: false,
+          selectedLinkIds: [],
+        });
+
         showToast("App completely reset to factory defaults", "success");
-        setTimeout(() => window.location.reload(), 1000);
+        setTimeout(() => window.location.reload(), 500);
       }
     });
   }
