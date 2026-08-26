@@ -126,6 +126,66 @@ document.addEventListener("DOMContentLoaded", async () => {
   const searchInput = document.getElementById("searchInput");
   if (searchInput) searchInput.focus();
 
+  // --- DEEP LINKING ROUTER ---
+  const urlParams = new URLSearchParams(window.location.search);
+  const hash = window.location.hash;
+  let hasDeepLinkAction = false;
+
+  const targetFolderQuery = urlParams.get("folder");
+  if (targetFolderQuery) {
+    const links = store.getState().links || [];
+    const matchedFolder = links.find(
+      (l) =>
+        l.isFolder &&
+        (l.id === targetFolderQuery ||
+          l.name.toLowerCase() === targetFolderQuery.toLowerCase()),
+    );
+    if (matchedFolder) {
+      navigateToFolder(matchedFolder.id);
+      hasDeepLinkAction = true;
+    }
+  }
+
+  if (hash === "#settings") {
+    toggleSettings();
+    hasDeepLinkAction = true;
+  }
+
+  const queryParam = urlParams.get("q");
+  if (queryParam) {
+    const engineParam = urlParams.get("engine");
+    let queryPrefix = "";
+
+    if (engineParam) {
+      const tagMap = {
+        google: "?g",
+        ddg: "?d",
+        duckduckgo: "?d",
+        bing: "?bi",
+        brave: "?b",
+        startpage: "?st",
+        searxng: "?s",
+        ecosia: "?e",
+        kagi: "?k",
+        wikipedia: "?w",
+        youtube: "?y",
+      };
+      queryPrefix =
+        (tagMap[engineParam.toLowerCase()] || `?${engineParam.toLowerCase()}`) +
+        " ";
+    }
+
+    if (searchInput) {
+      searchInput.value = `${queryPrefix}${queryParam}`;
+      handleSearch({ key: "Enter", type: "keydown", preventDefault: () => {} });
+      hasDeepLinkAction = true;
+    }
+  }
+
+  if (hasDeepLinkAction) {
+    history.replaceState({}, document.title, window.location.pathname);
+  }
+
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".engine-switcher")) {
       document.getElementById("engineDropdown")?.classList.add("hidden");
