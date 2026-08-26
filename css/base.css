@@ -250,16 +250,13 @@ body {
 }
 
 .search-bar,
-.link-icon-circle,
 .floating-btn,
+.link-icon-circle,
 .modal-content,
 .suggestions-container,
 .engine-dropdown,
 .clock-style-block {
-  filter: drop-shadow(
-    0px calc(4px * var(--shadow-factor)) calc(8px * var(--shadow-factor))
-      rgba(0, 0, 0, calc(0.3 * var(--shadow-factor)))
-  );
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.15));
 }
 
 html.no-shadows,

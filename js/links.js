@@ -289,8 +289,6 @@ export function renderLinkManager() {
         let activeTarget = null;
         let dropPosition = "below";
         let animFrameId = null;
-        let lastTimestamp = 0;
-        let scrollSpeed = 0;
 
         const container =
           document
@@ -308,69 +306,21 @@ export function renderLinkManager() {
           return false;
         };
 
-        const autoScrollLoop = (now) => {
-          if (scrollSpeed !== 0 && container) {
-            const dt = lastTimestamp ? (now - lastTimestamp) / 16.6 : 1;
-            lastTimestamp = now;
-            container.scrollTop += scrollSpeed * dt;
-            animFrameId = requestAnimationFrame(autoScrollLoop);
-          } else {
-            animFrameId = null;
-            lastTimestamp = 0;
+        const startDragSession = () => {
+          isDraggingStarted = true;
+          item.classList.add("is-dragging");
+          if (window.customCursorInstance) {
+            window.customCursorInstance.setDragState(true);
           }
+          ghostEl = item.cloneNode(true);
+          ghostEl.className = "drag-ghost";
+          ghostEl.style.width = `${item.offsetWidth}px`;
+          ghostEl.style.left = `${startX}px`;
+          ghostEl.style.top = `${startY}px`;
+          document.body.appendChild(ghostEl);
         };
 
-        const updateAutoScroll = (clientY) => {
-          if (!container) return;
-          const rect = container.getBoundingClientRect();
-          const threshold = 50;
-          const maxSpeed = 18;
-
-          if (clientY < rect.top + threshold) {
-            const normalized = Math.min(
-              1,
-              (rect.top + threshold - clientY) / threshold,
-            );
-            scrollSpeed = -1 * maxSpeed * Math.pow(normalized, 2);
-          } else if (clientY > rect.bottom - threshold) {
-            const normalized = Math.min(
-              1,
-              (clientY - (rect.bottom - threshold)) / threshold,
-            );
-            scrollSpeed = maxSpeed * Math.pow(normalized, 2);
-          } else {
-            scrollSpeed = 0;
-          }
-
-          if (scrollSpeed !== 0 && !animFrameId) {
-            lastTimestamp = performance.now();
-            animFrameId = requestAnimationFrame(autoScrollLoop);
-          }
-        };
-
-        const onPointerMove = (pe) => {
-          if (pe.pointerId !== activePointerId) return;
-          pe.preventDefault();
-
-          if (!isDraggingStarted) {
-            const dist = Math.hypot(pe.clientX - startX, pe.clientY - startY);
-            if (dist < 8) return;
-
-            isDraggingStarted = true;
-            item.classList.add("is-dragging");
-
-            if (window.customCursorInstance) {
-              window.customCursorInstance.setDragState(true);
-            }
-
-            ghostEl = item.cloneNode(true);
-            ghostEl.className = "drag-ghost";
-            ghostEl.style.width = `${item.offsetWidth}px`;
-            ghostEl.style.left = `${pe.clientX}px`;
-            ghostEl.style.top = `${pe.clientY}px`;
-            document.body.appendChild(ghostEl);
-          }
-
+        const updateDragVisuals = (pe) => {
           const touchOffsetY = pe.pointerType === "touch" ? 40 : 0;
           const targetY = pe.clientY - touchOffsetY;
 
@@ -378,8 +328,6 @@ export function renderLinkManager() {
             ghostEl.style.left = `${pe.clientX}px`;
             ghostEl.style.top = `${targetY}px`;
           }
-
-          updateAutoScroll(pe.clientY);
 
           document.querySelectorAll(".link-manager-item").forEach((el) => {
             el.classList.remove("shift-down", "shift-up", "drag-over-folder");
@@ -391,7 +339,6 @@ export function renderLinkManager() {
 
           if (hoverEl && hoverEl !== item) {
             const targetId = hoverEl.dataset.id;
-
             if (isDescendantOf(targetId, link.id)) {
               activeTarget = null;
               return;
@@ -436,31 +383,7 @@ export function renderLinkManager() {
           }
         };
 
-        const cleanupDrag = () => {
-          if (animFrameId) cancelAnimationFrame(animFrameId);
-          window.removeEventListener("pointermove", onPointerMove);
-          window.removeEventListener("pointerup", onPointerUp);
-          window.removeEventListener("pointercancel", cleanupDrag);
-
-          if (window.customCursorInstance) {
-            window.customCursorInstance.setDragState(false);
-          }
-
-          if (ghostEl) {
-            ghostEl.remove();
-            ghostEl = null;
-          }
-
-          item.classList.remove("is-dragging");
-          document.querySelectorAll(".link-manager-item").forEach((el) => {
-            el.classList.remove("shift-down", "shift-up", "drag-over-folder");
-          });
-        };
-
-        const onPointerUp = async (pe) => {
-          if (pe.pointerId !== activePointerId) return;
-          cleanupDrag();
-
+        const handleDrop = async () => {
           if (!isDraggingStarted || !activeTarget) return;
 
           const targetId = activeTarget.dataset.id;
@@ -491,9 +414,52 @@ export function renderLinkManager() {
           renderLinkManager();
         };
 
+        const cleanupDragSession = () => {
+          if (animFrameId) cancelAnimationFrame(animFrameId);
+          window.removeEventListener("pointermove", onPointerMove);
+          window.removeEventListener("pointerup", onPointerUp);
+          window.removeEventListener("pointercancel", cleanupDragSession);
+
+          if (window.customCursorInstance) {
+            window.customCursorInstance.setDragState(false);
+          }
+
+          if (ghostEl) {
+            ghostEl.remove();
+            ghostEl = null;
+          }
+
+          item.classList.remove("is-dragging");
+          document.querySelectorAll(".link-manager-item").forEach((el) => {
+            el.classList.remove("shift-down", "shift-up", "drag-over-folder");
+          });
+        };
+
+        const onPointerMove = (pe) => {
+          if (pe.pointerId !== activePointerId) return;
+          pe.preventDefault();
+
+          if (!isDraggingStarted) {
+            const dist = Math.hypot(pe.clientX - startX, pe.clientY - startY);
+            if (dist < 8) return;
+            startDragSession();
+          }
+
+          updateDragVisuals(pe);
+        };
+
+        const onPointerUp = async (pe) => {
+          if (pe.pointerId !== activePointerId) return;
+          const shouldDrop = isDraggingStarted && activeTarget;
+          cleanupDragSession();
+          if (shouldDrop) {
+            await handleDrop();
+          }
+        };
+
         window.addEventListener("pointermove", onPointerMove);
         window.addEventListener("pointerup", onPointerUp);
-        window.addEventListener("pointercancel", cleanupDrag);
+        window.addEventListener("pointercancel", cleanupDragSession);
       };
 
       const editBtn = document.createElement("button");

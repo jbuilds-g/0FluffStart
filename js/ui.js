@@ -119,6 +119,29 @@ let greetingEl = null;
 let cachedTimeString = null;
 
 export function initCustomSelects() {
+  document.querySelectorAll(".custom-select").forEach((cs) => {
+    const trigger = cs.querySelector(".select-trigger");
+    const dropdown = cs.querySelector(".select-dropdown");
+    const options = cs.querySelectorAll(".select-option");
+
+    if (trigger) {
+      trigger.setAttribute("role", "combobox");
+      trigger.setAttribute("aria-haspopup", "listbox");
+      trigger.setAttribute("aria-expanded", "false");
+      trigger.setAttribute("tabindex", "0");
+    }
+    if (dropdown) {
+      dropdown.setAttribute("role", "listbox");
+    }
+    options.forEach((opt) => {
+      opt.setAttribute("role", "option");
+      opt.setAttribute(
+        "aria-selected",
+        opt.classList.contains("selected") ? "true" : "false",
+      );
+    });
+  });
+
   document.addEventListener("click", (e) => {
     const trigger = e.target.closest(".select-trigger");
     const selectContainer = e.target.closest(".custom-select");
@@ -126,7 +149,10 @@ export function initCustomSelects() {
     document.querySelectorAll(".custom-select").forEach((cs) => {
       if (cs !== selectContainer) {
         cs.classList.remove("open");
-        cs.querySelector(".select-dropdown")?.classList.add("hidden");
+        const csDropdown = cs.querySelector(".select-dropdown");
+        const csTrigger = cs.querySelector(".select-trigger");
+        csDropdown?.classList.add("hidden");
+        csTrigger?.setAttribute("aria-expanded", "false");
       }
     });
 
@@ -135,6 +161,7 @@ export function initCustomSelects() {
       const isOpening = dropdown?.classList.contains("hidden");
       selectContainer.classList.toggle("open", isOpening);
       dropdown?.classList.toggle("hidden");
+      trigger.setAttribute("aria-expanded", isOpening ? "true" : "false");
       return;
     }
 
@@ -144,17 +171,67 @@ export function initCustomSelects() {
       const label = option.textContent.trim();
       const labelEl = selectContainer.querySelector(".selected-text");
       const dropdown = selectContainer.querySelector(".select-dropdown");
+      const currentTrigger = selectContainer.querySelector(".select-trigger");
 
       if (labelEl) labelEl.textContent = label;
       selectContainer.dataset.value = value;
 
       selectContainer.querySelectorAll(".select-option").forEach((opt) => {
-        opt.classList.toggle("selected", opt === option);
+        const isSelected = opt === option;
+        opt.classList.toggle("selected", isSelected);
+        opt.setAttribute("aria-selected", isSelected ? "true" : "false");
       });
 
       selectContainer.classList.remove("open");
       dropdown?.classList.add("hidden");
+      currentTrigger?.setAttribute("aria-expanded", "false");
       selectContainer.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    const activeTrigger = document.activeElement?.closest(".select-trigger");
+    if (!activeTrigger) return;
+    const selectContainer = activeTrigger.closest(".custom-select");
+    if (!selectContainer) return;
+
+    const dropdown = selectContainer.querySelector(".select-dropdown");
+    const options = Array.from(
+      selectContainer.querySelectorAll(".select-option"),
+    );
+    let selectedIdx = options.findIndex((opt) =>
+      opt.classList.contains("selected"),
+    );
+
+    if (["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(e.key)) {
+      e.preventDefault();
+
+      if (e.key === "Escape") {
+        selectContainer.classList.remove("open");
+        dropdown?.classList.add("hidden");
+        activeTrigger.setAttribute("aria-expanded", "false");
+      } else if (e.key === "Enter") {
+        const isClosed = dropdown?.classList.contains("hidden");
+        if (isClosed) {
+          selectContainer.classList.add("open");
+          dropdown?.classList.remove("hidden");
+          activeTrigger.setAttribute("aria-expanded", "true");
+        } else if (selectedIdx >= 0) {
+          options[selectedIdx].click();
+        }
+      } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        if (dropdown?.classList.contains("hidden")) {
+          selectContainer.classList.add("open");
+          dropdown?.classList.remove("hidden");
+          activeTrigger.setAttribute("aria-expanded", "true");
+        }
+        if (e.key === "ArrowDown") {
+          selectedIdx = (selectedIdx + 1) % options.length;
+        } else {
+          selectedIdx = (selectedIdx - 1 + options.length) % options.length;
+        }
+        options[selectedIdx].click();
+      }
     }
   });
 }
@@ -285,56 +362,63 @@ export function toggleEngineDropdown() {
   document.getElementById("engineDropdown")?.classList.toggle("hidden");
 }
 
+export function resolveSearchQueryAndEngine(inputValue) {
+  let val = (inputValue || "").trim();
+  if (!val) return { query: "", targetEngine: null };
+
+  const state = store.getState();
+  const available = getAvailableEngines();
+
+  const customEngines = state.settings?.customEngines || [];
+  const customTags = customEngines.map((c) => ({
+    tag: c.tag || `?${c.name.charAt(0).toLowerCase()}`,
+    name: c.name,
+  }));
+
+  const tagMap = [
+    ...customTags,
+    { tag: "?bi", name: "Bing" },
+    { tag: "?b", name: "Brave" },
+    { tag: "?st", name: "Startpage" },
+    { tag: "?s", name: "SearXNG" },
+    { tag: "?g", name: "Google" },
+    { tag: "?d", name: "DuckDuckGo" },
+    { tag: "?e", name: "Ecosia" },
+    { tag: "?k", name: "Kagi" },
+    { tag: "?w", name: "Wikipedia" },
+    { tag: "?y", name: "YouTube" },
+  ];
+
+  let targetEngine = null;
+  for (const item of tagMap) {
+    if (
+      val.toLowerCase().startsWith(item.tag + " ") ||
+      val.toLowerCase() === item.tag
+    ) {
+      targetEngine = available.find(
+        (eng) => eng.name.toLowerCase() === item.name.toLowerCase(),
+      );
+      val = val.slice(item.tag.length).trim();
+      break;
+    }
+  }
+
+  if (!targetEngine) {
+    targetEngine =
+      available.find((s) => s.name === state.settings?.searchEngine) ||
+      available[0];
+  }
+
+  return { query: val, targetEngine };
+}
+
 export function handleSearch(e) {
   if (e.key === "Enter" || e.type === "click") {
-    let val = document.getElementById("searchInput")?.value.trim();
-    if (!val) return;
+    const rawVal = document.getElementById("searchInput")?.value.trim();
+    const { query: val, targetEngine } = resolveSearchQueryAndEngine(rawVal);
+    if (!val || !targetEngine) return;
 
     const state = store.getState();
-    const available = getAvailableEngines();
-
-    const customEngines = state.settings?.customEngines || [];
-    const customTags = customEngines.map((c) => ({
-      tag: c.tag || `?${c.name.charAt(0).toLowerCase()}`,
-      name: c.name,
-    }));
-
-    const tagMap = [
-      ...customTags,
-      { tag: "?bi", name: "Bing" },
-      { tag: "?b", name: "Brave" },
-      { tag: "?st", name: "Startpage" },
-      { tag: "?s", name: "SearXNG" },
-      { tag: "?g", name: "Google" },
-      { tag: "?d", name: "DuckDuckGo" },
-      { tag: "?e", name: "Ecosia" },
-      { tag: "?k", name: "Kagi" },
-      { tag: "?w", name: "Wikipedia" },
-      { tag: "?y", name: "YouTube" },
-    ];
-
-    let targetEngine = null;
-    for (const item of tagMap) {
-      if (
-        val.toLowerCase().startsWith(item.tag + " ") ||
-        val.toLowerCase() === item.tag
-      ) {
-        targetEngine = available.find(
-          (eng) => eng.name.toLowerCase() === item.name.toLowerCase(),
-        );
-        val = val.slice(item.tag.length).trim();
-        break;
-      }
-    }
-
-    if (!val) return;
-
-    if (!targetEngine) {
-      targetEngine =
-        available.find((s) => s.name === state.settings?.searchEngine) ||
-        available[0];
-    }
-
     const history = state.searchHistory || [];
     if (state.settings?.historyEnabled !== false) {
       const updatedHistory = [
@@ -384,53 +468,12 @@ export function selectSuggestion(suggestion) {
     const safeUrl = sanitizeUrl(suggestion.url);
     if (safeUrl !== "#") window.location.href = safeUrl;
   } else {
-    let val = suggestion.name.trim();
-    if (!val) return;
+    const { query: val, targetEngine } = resolveSearchQueryAndEngine(
+      suggestion.name,
+    );
+    if (!val || !targetEngine) return;
 
     const state = store.getState();
-    const available = getAvailableEngines();
-    const customEngines = state.settings?.customEngines || [];
-    const customTags = customEngines.map((c) => ({
-      tag: c.tag || `?${c.name.charAt(0).toLowerCase()}`,
-      name: c.name,
-    }));
-
-    const tagMap = [
-      ...customTags,
-      { tag: "?bi", name: "Bing" },
-      { tag: "?b", name: "Brave" },
-      { tag: "?st", name: "Startpage" },
-      { tag: "?s", name: "SearXNG" },
-      { tag: "?g", name: "Google" },
-      { tag: "?d", name: "DuckDuckGo" },
-      { tag: "?e", name: "Ecosia" },
-      { tag: "?k", name: "Kagi" },
-      { tag: "?w", name: "Wikipedia" },
-      { tag: "?y", name: "YouTube" },
-    ];
-
-    let targetEngine = null;
-    for (const item of tagMap) {
-      if (
-        val.toLowerCase().startsWith(item.tag + " ") ||
-        val.toLowerCase() === item.tag
-      ) {
-        targetEngine = available.find(
-          (eng) => eng.name.toLowerCase() === item.name.toLowerCase(),
-        );
-        val = val.slice(item.tag.length).trim();
-        break;
-      }
-    }
-
-    if (!val) return;
-
-    if (!targetEngine) {
-      targetEngine =
-        available.find((s) => s.name === state.settings?.searchEngine) ||
-        available[0];
-    }
-
     const history = state.searchHistory || [];
     if (state.settings?.historyEnabled !== false) {
       const updatedHistory = [

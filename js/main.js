@@ -6,6 +6,7 @@ import {
   handleSuggestionKeyDown,
   clearHistory,
 } from "./suggestions.js";
+import { APP_VERSION } from "./version.js";
 import {
   loadSettings,
   autoSaveSettings,
@@ -39,11 +40,10 @@ import {
 import { CustomCursorEngine } from "./cursor.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const CURRENT_VERSION = "v5.5.0";
   const storedVersion = localStorage.getItem("0fluff_app_version");
 
-  if (storedVersion !== CURRENT_VERSION) {
-    localStorage.setItem("0fluff_app_version", CURRENT_VERSION);
+  if (storedVersion !== APP_VERSION) {
+    localStorage.setItem("0fluff_app_version", APP_VERSION);
     if ("caches" in window) {
       caches.keys().then((names) => {
         for (let name of names) caches.delete(name);
@@ -86,7 +86,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       if (!refreshing) {
         refreshing = true;
-        window.location.reload();
+        showToast(
+          "A new version of 0FluffStart is available. Click here or refresh to update.",
+          "info",
+          8000,
+        );
       }
     });
   }

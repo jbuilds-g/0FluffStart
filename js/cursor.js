@@ -223,9 +223,11 @@ export class CustomCursorEngine {
     this.isVisible = visible;
     if (visible && this.isEnabled) {
       this.container.classList.add("is-visible");
+      this.container.removeAttribute("aria-hidden");
       document.documentElement.setAttribute("data-custom-cursor", "active");
     } else {
       this.container.classList.remove("is-visible");
+      this.container.setAttribute("aria-hidden", "true");
       document.documentElement.removeAttribute("data-custom-cursor");
     }
   }

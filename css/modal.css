@@ -523,6 +523,17 @@ input[type="checkbox"].manager-checkbox::after {
   transition: border-color 0.2s;
 }
 
+.select-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.select-option[aria-selected="true"] {
+  background: var(--card-hover);
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .select-trigger:hover {
   border-color: var(--accent);
 }
