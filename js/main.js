@@ -157,22 +157,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     let queryPrefix = "";
 
     if (engineParam) {
-      const tagMap = {
-        google: "?g",
-        ddg: "?d",
-        duckduckgo: "?d",
-        bing: "?bi",
-        brave: "?b",
-        startpage: "?st",
-        searxng: "?s",
-        ecosia: "?e",
-        kagi: "?k",
-        wikipedia: "?w",
-        youtube: "?y",
-      };
-      queryPrefix =
-        (tagMap[engineParam.toLowerCase()] || `?${engineParam.toLowerCase()}`) +
-        " ";
+      const tag = engineParam.trim();
+      queryPrefix = (tag.startsWith("?") ? tag : `?${tag}`) + " ";
     }
 
     if (searchInput) {
