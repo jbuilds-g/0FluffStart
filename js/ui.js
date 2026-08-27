@@ -124,6 +124,14 @@ export function initCustomSelects() {
     const dropdown = cs.querySelector(".select-dropdown");
     const options = cs.querySelectorAll(".select-option");
 
+    cs.addEventListener("click", () => {
+      document
+        .querySelectorAll("#settingsModal .setting-highlight-flash")
+        .forEach((el) => {
+          el.classList.remove("setting-highlight-flash");
+        });
+    });
+
     if (trigger) {
       trigger.setAttribute("role", "combobox");
       trigger.setAttribute("aria-haspopup", "listbox");
@@ -842,6 +850,224 @@ export async function autoSaveSettings(updates = null) {
   }
 }
 
+export function initSettingsSearch() {
+  const input = document.getElementById("settingsSearchInput");
+  const clearBtn = document.getElementById("settingsSearchClearBtn");
+  const resultsContainer = document.getElementById("settingsSearchResults");
+  if (!input || !resultsContainer) return;
+
+  const jumpToSetting = (targetEl, panel) => {
+    input.value = "";
+    if (clearBtn) clearBtn.classList.add("hidden");
+    resultsContainer.classList.add("hidden");
+    resultsContainer.innerHTML = "";
+
+    document
+      .querySelectorAll("#settingsModal .setting-highlight-flash")
+      .forEach((el) => {
+        el.classList.remove("setting-highlight-flash");
+      });
+
+    const panels = document.querySelectorAll(
+      "#settingsModal details.category-panel",
+    );
+    panels.forEach((p) => (p.style.display = ""));
+
+    if (panel) panel.open = true;
+
+    const subCollapsible = targetEl.closest(".sub-collapsible");
+    if (subCollapsible) {
+      subCollapsible.classList.add("open");
+      const subContent = subCollapsible.querySelector(
+        ".sub-collapsible-content",
+      );
+      if (subContent) subContent.classList.remove("hidden");
+    }
+
+    setTimeout(() => {
+      const customSelect = targetEl.closest(".custom-select");
+      if (customSelect) {
+        customSelect.classList.add("open");
+        const dropdown = customSelect.querySelector(".select-dropdown");
+        if (dropdown) dropdown.classList.remove("hidden");
+        const trigger = customSelect.querySelector(".select-trigger");
+        if (trigger) trigger.setAttribute("aria-expanded", "true");
+        customSelect.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      if (targetEl.classList.contains("select-option")) {
+        targetEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      document
+        .querySelectorAll("#settingsModal .setting-highlight-flash")
+        .forEach((el) => el.classList.remove("setting-highlight-flash"));
+
+      void targetEl.offsetWidth;
+      targetEl.classList.add("setting-highlight-flash");
+    }, 100);
+  };
+
+  const handleFilter = () => {
+    const query = input.value.trim().toLowerCase();
+    if (clearBtn) clearBtn.classList.toggle("hidden", query.length === 0);
+
+    const panels = document.querySelectorAll(
+      "#settingsModal details.category-panel",
+    );
+
+    if (query === "") {
+      resultsContainer.classList.add("hidden");
+      resultsContainer.innerHTML = "";
+      panels.forEach((p) => (p.style.display = ""));
+      return;
+    }
+
+    panels.forEach((p) => (p.style.display = "none"));
+    resultsContainer.classList.remove("hidden");
+    resultsContainer.innerHTML = "";
+
+    const matches = [];
+
+    panels.forEach((panel) => {
+      const categoryTitle =
+        panel.querySelector("summary")?.childNodes[0]?.textContent?.trim() ||
+        "Settings";
+      const items = panel.querySelectorAll(
+        ".setting-group, .setting-item, .radio-option, .custom-select, .sub-collapsible, .engine-list-item",
+      );
+
+      items.forEach((item) => {
+        const checkMatch = (targetText, targetEl) => {
+          if (targetText && targetText.toLowerCase().includes(query)) {
+            if (!matches.some((m) => m.element === targetEl)) {
+              let snippetText = "";
+              const directHelp =
+                targetEl.querySelector(".help-text") ||
+                targetEl.closest(".setting-group")?.querySelector(".help-text");
+              if (directHelp) {
+                snippetText = directHelp.textContent
+                  .trim()
+                  .replace(/\s+/g, " ");
+              }
+
+              matches.push({
+                title: targetText,
+                category: categoryTitle,
+                snippet: snippetText,
+                element: targetEl,
+                panel: panel,
+              });
+            }
+          }
+        };
+
+        if (item.classList.contains("custom-select")) {
+          const groupHeader = item
+            .closest(".setting-group")
+            ?.querySelector("h3, h4");
+          const parentTitle = groupHeader ? groupHeader.textContent.trim() : "";
+
+          item.querySelectorAll(".select-option").forEach((opt) => {
+            const optText = opt.textContent.trim();
+            const displayTitle = parentTitle
+              ? `${parentTitle} › ${optText}`
+              : optText;
+            checkMatch(displayTitle, opt);
+          });
+        } else if (item.classList.contains("sub-collapsible")) {
+          const parentTitle =
+            item.querySelector(".selected-text")?.textContent.trim() ||
+            "Section";
+          item
+            .querySelectorAll(".engine-list-item, button, input")
+            .forEach((subEl) => {
+              const subTitle =
+                subEl.querySelector(".engine-item-name")?.textContent.trim() ||
+                subEl.textContent.trim();
+              if (subTitle) {
+                checkMatch(`${parentTitle} › ${subTitle}`, subEl);
+              }
+            });
+        } else {
+          let titleText = "";
+          const header = item.querySelector("h3, h4, .engine-item-name");
+
+          if (header) {
+            titleText = header.textContent.trim();
+          } else if (
+            item.classList.contains("radio-option") ||
+            item.classList.contains("select-option")
+          ) {
+            titleText = item.textContent.trim();
+          } else {
+            titleText = item.textContent.split("\n")[0].trim();
+          }
+
+          checkMatch(titleText, item);
+        }
+      });
+    });
+
+    if (matches.length === 0) {
+      resultsContainer.innerHTML = `<div class="search-no-results">No settings found matching "${query}"</div>`;
+      return;
+    }
+
+    matches.forEach((match) => {
+      const row = document.createElement("div");
+      row.className = "search-result-item";
+      row.setAttribute("role", "button");
+      row.setAttribute("tabindex", "0");
+
+      const header = document.createElement("div");
+      header.className = "search-result-header";
+
+      const title = document.createElement("div");
+      title.className = "search-result-title";
+      title.textContent = match.title;
+
+      const category = document.createElement("div");
+      category.className = "search-result-category";
+      category.textContent = match.category;
+
+      header.appendChild(title);
+      header.appendChild(category);
+      row.appendChild(header);
+
+      if (match.snippet) {
+        const snippet = document.createElement("div");
+        snippet.className = "search-result-snippet";
+        snippet.textContent = match.snippet;
+        row.appendChild(snippet);
+      }
+
+      const executeJump = () => jumpToSetting(match.element, match.panel);
+      row.addEventListener("click", executeJump);
+      row.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          executeJump();
+        }
+      });
+
+      resultsContainer.appendChild(row);
+    });
+  };
+
+  input.addEventListener("input", handleFilter);
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      input.value = "";
+      handleFilter();
+      input.focus();
+    });
+  }
+}
+
 export function updateSuggestSettingsVisibility() {
   const isEnabled = !!document.getElementById("externalSuggestToggle")?.checked;
   const proxyGroup = document.getElementById("customProxyContainer");
@@ -1020,6 +1246,7 @@ export async function loadSettings() {
   renderEngineSelectionList();
   materialYouEngine.triggerMaterialYou(settings, getBgFromDB);
   updateSuggestSettingsVisibility();
+  initSettingsSearch();
   loadInlineIcons();
 
   if (window.customCursorInstance) {

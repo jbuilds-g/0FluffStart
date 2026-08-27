@@ -97,41 +97,66 @@
     <div class="modal" id="settingsModal">
       <div class="modal-content">
         <div class="modal-header">
-          <h2>Settings</h2>
-          <div class="header-actions">
-            <button
-              id="toggleAllCategoriesBtn"
-              class="icon-btn"
-              title="Expand / Collapse All"
-            >
-              <svg
-                class="chevron-all"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+          <div class="modal-header-top">
+            <h2>Settings</h2>
+            <div class="header-actions">
+              <button
+                id="toggleAllCategoriesBtn"
+                class="icon-btn"
+                title="Expand / Collapse All"
               >
-                <path d="m7 15 5 5 5-5" />
-                <path d="m7 9 5-5 5 5" />
-              </svg>
-            </button>
+                <svg
+                  class="chevron-all"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m7 15 5 5 5-5" />
+                  <path d="m7 9 5-5 5 5" />
+                </svg>
+              </button>
+              <button
+                id="closeSettingsBtn"
+                class="icon-btn"
+                title="Close Settings"
+              >
+                <span
+                  class="inline-icon"
+                  data-icon="close"
+                  style="width: 20px; height: 20px"
+                ></span>
+              </button>
+            </div>
+          </div>
+          <div class="settings-search-wrapper">
+            <input
+              type="text"
+              id="settingsSearchInput"
+              class="settings-search-input"
+              placeholder="Search settings..."
+            />
             <button
-              id="closeSettingsBtn"
-              class="icon-btn"
-              title="Close Settings"
+              id="settingsSearchClearBtn"
+              class="settings-search-clear hidden"
+              title="Clear search"
             >
               <span
                 class="inline-icon"
                 data-icon="close"
-                style="width: 20px; height: 20px"
+                style="width: 14px; height: 14px"
               ></span>
             </button>
           </div>
         </div>
+        <div
+          id="settingsSearchResults"
+          class="settings-search-results hidden"
+        ></div>
         <details class="category-panel">
           <summary>
             Dashboard Links
