@@ -58,6 +58,7 @@
   touch-action: pan-y;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 130px;
 }
 
 .modal-content::-webkit-scrollbar {
@@ -310,6 +311,7 @@
   margin-bottom: 10px;
   overflow: hidden;
   flex-shrink: 0;
+  scroll-margin-top: 130px;
 }
 
 .category-panel summary {
@@ -341,7 +343,6 @@
 
 .category-content {
   padding: 0 16px 16px 16px;
-  animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {

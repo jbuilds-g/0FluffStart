@@ -4,7 +4,14 @@ import { saveBgToDB, getBgFromDB, clearBgFromDB } from "./storage.js";
 import { MaterialYouEngine } from "./material-you-engine.js";
 import { cancelEdit, openEditor, renderLinkManager } from "./links.js";
 import { APP_VERSION } from "./version.js";
-// import { initNotes } from "./notes.js"; -- FEATURE DISABLED: Unhooked for future potential use
+import {
+  searchEngines,
+  getAvailableEngines,
+  resolveSearchQueryAndEngine,
+  executeSearch,
+  handleSearch,
+  selectSuggestion,
+} from "./search.js";
 
 const materialYouEngine = new MaterialYouEngine();
 
@@ -34,83 +41,14 @@ export async function loadInlineIcons(root = document) {
 
 const GENERIC_SEARCH_ICON = `<span class="inline-icon" data-icon="search"></span>`;
 
-export const searchEngines = [
-  {
-    name: "Google",
-    url: "https://www.google.com/search?q=",
-    icon: `<span class="inline-icon" data-icon="google"></span>`,
-  },
-  {
-    name: "DuckDuckGo",
-    url: "https://duckduckgo.com/?q=",
-    icon: `<span class="inline-icon" data-icon="duckduckgo"></span>`,
-  },
-  {
-    name: "Bing",
-    url: "https://www.bing.com/search?q=",
-    icon: `<span class="inline-icon" data-icon="bing"></span>`,
-  },
-  {
-    name: "Brave",
-    url: "https://search.brave.com/search?q=",
-    icon: `<span class="inline-icon" data-icon="brave"></span>`,
-  },
-  {
-    name: "Startpage",
-    url: "https://www.startpage.com/sp/search?query=",
-    icon: `<span class="inline-icon" data-icon="startpage"></span>`,
-  },
-  {
-    name: "Ecosia",
-    url: "https://www.ecosia.org/search?q=",
-    icon: `<span class="inline-icon" data-icon="ecosia"></span>`,
-  },
-  {
-    name: "Kagi",
-    url: "https://kagi.com/search?q=",
-    icon: `<span class="inline-icon" data-icon="kagi"></span>`,
-  },
-  {
-    name: "SearXNG",
-    url: "https://searx.be/search?q=",
-    icon: `<span class="inline-icon" data-icon="searxng"></span>`,
-  },
-  {
-    name: "Wikipedia",
-    url: "https://en.wikipedia.org/wiki/Special:Search?search=",
-    icon: `<span class="inline-icon" data-icon="wikipedia"></span>`,
-  },
-  {
-    name: "YouTube",
-    url: "https://www.youtube.com/results?search_query=",
-    icon: `<span class="inline-icon" data-icon="youtube"></span>`,
-  },
-];
-
-/**
- * Retrieves list of active search engines combining built-in and custom configurations.
- * @returns {Array<{name: string, url: string, icon: string, isCustom?: boolean, id?: string}>}
- */
-export function getAvailableEngines() {
-  const settings = store.getState().settings || {};
-  const enabledNames =
-    settings.enabledEngines || searchEngines.map((e) => e.name);
-  const custom = settings.customEngines || [];
-
-  const activeBuiltIn = searchEngines.filter((e) =>
-    enabledNames.includes(e.name),
-  );
-  const activeCustom = custom.map((c) => ({
-    name: c.name,
-    url: c.url,
-    icon: GENERIC_SEARCH_ICON,
-    isCustom: true,
-    id: c.id,
-  }));
-
-  const combined = [...activeBuiltIn, ...activeCustom];
-  return combined.length > 0 ? combined : [searchEngines[0]];
-}
+export {
+  searchEngines,
+  getAvailableEngines,
+  resolveSearchQueryAndEngine,
+  executeSearch,
+  handleSearch,
+  selectSuggestion,
+};
 
 let cachedHour = null;
 let cachedUserName = null;
@@ -370,147 +308,7 @@ export function toggleEngineDropdown() {
   document.getElementById("engineDropdown")?.classList.toggle("hidden");
 }
 
-export function resolveSearchQueryAndEngine(inputValue) {
-  let val = (inputValue || "").trim();
-  if (!val) return { query: "", targetEngine: null };
-
-  const state = store.getState();
-  const available = getAvailableEngines();
-
-  const customEngines = state.settings?.customEngines || [];
-  const customTags = customEngines.map((c) => ({
-    tag: c.tag || `?${c.name.charAt(0).toLowerCase()}`,
-    name: c.name,
-  }));
-
-  const tagMap = [
-    ...customTags,
-    { tag: "?bi", name: "Bing" },
-    { tag: "?b", name: "Brave" },
-    { tag: "?st", name: "Startpage" },
-    { tag: "?s", name: "SearXNG" },
-    { tag: "?g", name: "Google" },
-    { tag: "?d", name: "DuckDuckGo" },
-    { tag: "?e", name: "Ecosia" },
-    { tag: "?k", name: "Kagi" },
-    { tag: "?w", name: "Wikipedia" },
-    { tag: "?y", name: "YouTube" },
-  ];
-
-  let targetEngine = null;
-  for (const item of tagMap) {
-    if (
-      val.toLowerCase().startsWith(item.tag + " ") ||
-      val.toLowerCase() === item.tag
-    ) {
-      targetEngine = available.find(
-        (eng) => eng.name.toLowerCase() === item.name.toLowerCase(),
-      );
-      val = val.slice(item.tag.length).trim();
-      break;
-    }
-  }
-
-  if (!targetEngine) {
-    targetEngine =
-      available.find((s) => s.name === state.settings?.searchEngine) ||
-      available[0];
-  }
-
-  return { query: val, targetEngine };
-}
-
-export function handleSearch(e) {
-  if (e.key === "Enter" || e.type === "click") {
-    const rawVal = document.getElementById("searchInput")?.value.trim();
-    const { query: val, targetEngine } = resolveSearchQueryAndEngine(rawVal);
-    if (!val || !targetEngine) return;
-
-    const state = store.getState();
-    const history = state.searchHistory || [];
-    if (state.settings?.historyEnabled !== false) {
-      const updatedHistory = [
-        val,
-        ...history.filter((item) => item !== val),
-      ].slice(0, 50);
-      store.setState({ searchHistory: updatedHistory });
-    }
-
-    if (val.includes(".") && !val.includes(" ")) {
-      const safeUrl = sanitizeUrl(val);
-      if (safeUrl !== "#") window.location.href = safeUrl;
-    } else {
-      if (
-        typeof chrome !== "undefined" &&
-        chrome.search &&
-        chrome.search.query
-      ) {
-        try {
-          chrome.search.query({ text: val, disposition: "CURRENT_TAB" });
-        } catch (err) {
-          window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
-        }
-      } else {
-        window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
-      }
-    }
-  }
-}
-
-export function selectSuggestion(suggestion) {
-  const inputEl = document.getElementById("searchInput");
-  if (inputEl) {
-    const currentVal = inputEl.value.trim().toLowerCase();
-    const tags = ["?bi", "?b", "?st", "?s", "?g", "?d", "?e", "?k", "?w", "?y"];
-    const matchedTag = tags.find(
-      (t) => currentVal.startsWith(t + " ") || currentVal === t,
-    );
-    inputEl.value = matchedTag
-      ? `${matchedTag} ${suggestion.name}`
-      : suggestion.name;
-  }
-
-  document.getElementById("suggestionsContainer")?.classList.add("hidden");
-
-  if (suggestion.type === "Link") {
-    const safeUrl = sanitizeUrl(suggestion.url);
-    if (safeUrl !== "#") window.location.href = safeUrl;
-  } else {
-    const { query: val, targetEngine } = resolveSearchQueryAndEngine(
-      suggestion.name,
-    );
-    if (!val || !targetEngine) return;
-
-    const state = store.getState();
-    const history = state.searchHistory || [];
-    if (state.settings?.historyEnabled !== false) {
-      const updatedHistory = [
-        val,
-        ...history.filter((item) => item !== val),
-      ].slice(0, 50);
-      store.setState({ searchHistory: updatedHistory });
-    }
-
-    if (val.includes(".") && !val.includes(" ")) {
-      const safeUrl = sanitizeUrl(val);
-      if (safeUrl !== "#") window.location.href = safeUrl;
-    } else {
-      if (
-        typeof chrome !== "undefined" &&
-        chrome.search &&
-        chrome.search.query
-      ) {
-        try {
-          chrome.search.query({ text: val, disposition: "CURRENT_TAB" });
-        } catch (err) {
-          window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
-        }
-      } else {
-        window.location.href = `${targetEngine.url}${encodeURIComponent(val)}`;
-      }
-    }
-  }
-}
+// Search functions are now managed via js/search.js
 
 /**
  * Declarative specification mapping setting keys to DOM element attributes and control types.
@@ -886,15 +684,39 @@ export function initSettingsSearch() {
 
     setTimeout(() => {
       const customSelect = targetEl.closest(".custom-select");
+      const modalContent = document.querySelector(
+        "#settingsModal .modal-content",
+      );
+      const modalHeader = document.querySelector(
+        "#settingsModal .modal-header",
+      );
+      const headerHeight = modalHeader ? modalHeader.offsetHeight : 0;
+
       if (customSelect) {
         customSelect.classList.add("open");
         const dropdown = customSelect.querySelector(".select-dropdown");
         if (dropdown) dropdown.classList.remove("hidden");
         const trigger = customSelect.querySelector(".select-trigger");
         if (trigger) trigger.setAttribute("aria-expanded", "true");
-        customSelect.scrollIntoView({ behavior: "smooth", block: "center" });
-      } else {
-        targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      const scrollToNode = targetEl.classList.contains("select-option")
+        ? customSelect || targetEl
+        : targetEl;
+
+      if (modalContent && scrollToNode) {
+        const contentRect = modalContent.getBoundingClientRect();
+        const nodeRect = scrollToNode.getBoundingClientRect();
+        const targetScrollTop =
+          modalContent.scrollTop +
+          (nodeRect.top - contentRect.top) -
+          headerHeight -
+          16;
+
+        modalContent.scrollTo({
+          top: Math.max(0, targetScrollTop),
+          behavior: "smooth",
+        });
       }
 
       if (targetEl.classList.contains("select-option")) {

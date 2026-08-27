@@ -182,10 +182,9 @@
               </div>
 
               <div class="help-text">
-                Add, edit, organize, or delete dashboard shortcut icons and
-                folders. Use bulk selection to move items between folders, or
-                toggle whether shortcut titles are always visible under each
-                icon.
+                Add, edit, organize, or remove shortcut icons and folders.
+                Toggle title visibility under icons or use multi-select to
+                organize items.
               </div>
 
               <div id="linkListContainer">
@@ -284,7 +283,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                The display name used for the greeting in the top left header.
+                Custom display name shown in the top header greeting. Leave
+                empty for generic greeting.
               </div>
               <input
                 type="text"
@@ -299,12 +299,12 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Changes the color scheme, borders, and general aesthetic of the
-                dashboard.
+                Customizes color schemes, borders, and general visual styling
+                across the dashboard.
                 <br /><br />
                 <span style="opacity: 0.85"
-                  >💡 <b>Tip:</b> Choose "Material You" if you want the colors
-                  to adapt to your background image.</span
+                  >💡 <b>Tip:</b> Choose "Material You" to auto-extract palette
+                  colors directly from custom background media.</span
                 >
               </div>
               <div class="custom-select" id="themeSelect" data-value="dark">
@@ -384,8 +384,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Fine-tune typography styles, time format, and ticking
-                visibility.
+                Customizes clock typography, 12h or 24h display formats, and
+                live seconds visibility.
               </div>
 
               <div
@@ -473,14 +473,12 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Upload your own local image or video file to replace the solid
-                background color.
+                Upload a local image or video file to set a custom dashboard
+                background.
                 <br /><br />
-                <span>
-                  💡 <b>Tip:</b> If the "Material You" theme is selected, it is
-                  highly recommended to use smooth, continuous video loops with
-                  a consistent color palette to preserve UI readability and
-                  layout balance.
+                <span style="opacity: 0.85">
+                  💡 <b>Tip:</b> When using "Material You", high-contrast video
+                  loops maintain optimum UI legibility.
                 </span>
               </div>
               <div class="setting-item setting-item-col">
@@ -551,8 +549,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Adjust shadow depth across floating controls, search bar, icons,
-                and modals.
+                Controls overall shadow depth across search elements, shortcut
+                cards, and modal windows.
               </div>
               <div class="setting-slider-row">
                 <input
@@ -580,8 +578,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Bypasses mobile-specific layout adjustments and restores the
-                desktop search bar.
+                Disables mobile-specific optimizations to enforce standard
+                desktop layout scaling.
               </div>
               <label class="radio-option radio-option-start-sm">
                 <input type="checkbox" id="forceDesktopToggle" /> Force Desktop
@@ -595,8 +593,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Enable or disable the theme-adaptive interactive cursor engine.
-                When turned off, the default OS system cursor will be used.
+                Enables custom reactive cursor animations. Disable to use
+                standard system mouse pointer.
               </div>
               <label class="radio-option radio-option-start-sm">
                 <input type="checkbox" id="customCursorToggle" checked /> Enable
@@ -610,9 +608,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Choose between a single unified search bar or a segmented layout
-                that splits the engine switcher, input field, and submit button
-                into standalone floating elements.
+                Switches between a single unified search container and a
+                segmented floating layout.
               </div>
               <div
                 class="custom-select"
@@ -653,9 +650,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Toggle the visibility of interactive buttons inside the search
-                bar. Disabling the engine switcher switches engine management
-                settings to single-engine default mode.
+                Toggles individual interactive buttons inside the search bar,
+                including engine selector, live suggestions, and submit trigger.
               </div>
               <label class="radio-option radio-option-start-sm">
                 <input
@@ -724,15 +720,12 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Turn on live search autocomplete to see real-time search results
-                as you type. Choose your favorite suggestion provider, save
-                search queries locally to speed up future requests, or set a
-                custom proxy server for routing.
+                Enables live query autocomplete recommendations, provider
+                selection, and custom routing proxy settings.
                 <br /><br />
                 <span style="opacity: 0.85">
-                  ⚠️ <b>Privacy Note:</b> Suggestions are routed through a
-                  secure CORS proxy. Keep this turned off if you prefer strictly
-                  local offline searches.
+                  ⚠️ <b>Privacy Note:</b> Live queries route securely via CORS
+                  proxy. Keep disabled for strictly local searches.
                 </span>
               </div>
 
@@ -803,9 +796,9 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Manage active search engines, add custom search providers with
-                custom shortcut tags (like <b>?g</b> or <b>?bi</b>), and
-                configure your quick switcher list.
+                Configure active search engine list, set default search
+                provider, and manage custom engine shortcuts (like <b>?g</b> or
+                <b>?bi</b>).
                 <a
                   href="https://github.com/jbuilds-g/0FluffStart/blob/main/TAGS.md"
                   target="_blank"
@@ -885,8 +878,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Keeps a private local log of your recent searches on this device
-                for instant access in the dashboard search bar.
+                Saves a local log of recent search queries directly on your
+                device for fast autocomplete access.
               </div>
               <label class="radio-option radio-option-start-sm">
                 <input type="checkbox" id="historyEnabledToggle" /> Enable Local
@@ -920,9 +913,8 @@
                 <button class="help-btn">?</button>
               </div>
               <div class="help-text">
-                Manage your saved dashboard state. Save or restore JSON backup
-                files, clear your saved local search history, or run a factory
-                reset to wipe all custom links and settings.
+                Manage local data persistence. Export/import JSON backups, clear
+                history logs, or execute full factory reset.
               </div>
 
               <div class="action-btn-row">

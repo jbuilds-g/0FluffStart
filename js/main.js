@@ -14,8 +14,6 @@ import {
   closeModal,
   renderEngineDropdown,
   toggleEngineDropdown,
-  handleSearch,
-  selectSuggestion,
   updateClock,
   customConfirm,
   showToast,
@@ -25,6 +23,7 @@ import {
   initCustomSelects,
   renderEngineSelectionList,
 } from "./ui.js";
+import { handleSearch, selectSuggestion } from "./search.js";
 import {
   renderLinks,
   renderLinkManager,
@@ -350,18 +349,7 @@ function bindStaticEvents() {
   document
     .querySelectorAll("#settingsModal details.category-panel")
     .forEach((panel) => {
-      panel.addEventListener("toggle", () => {
-        if (panel.open && !isBulkAnimating) {
-          const modalContent = document.querySelector(
-            "#settingsModal .modal-content",
-          );
-          if (modalContent) {
-            const panelTop = panel.offsetTop - modalContent.offsetTop;
-            modalContent.scrollTo({ top: panelTop, behavior: "smooth" });
-          }
-        }
-        updateScrollToTopBtn();
-      });
+      panel.addEventListener("toggle", updateScrollToTopBtn);
     });
 
   const mobileSearchBtn = document.getElementById("mobileSearchBtn");
