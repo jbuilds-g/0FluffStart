@@ -183,12 +183,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const searchBarContainer = document.querySelector(".search-bar");
+    const searchBackdrop = document.querySelector(".search-backdrop");
+    const targetInput = document.getElementById("searchInput");
+
     if (
       searchBarContainer?.classList.contains("mobile-expanded") &&
       !e.target.closest(".search-bar") &&
-      !e.target.closest("#mobileSearchBtn")
+      !e.target.closest("#mobileDock")
     ) {
-      closeMobileSearch();
+      searchBarContainer.classList.remove("mobile-expanded");
+      if (searchBackdrop) searchBackdrop.classList.remove("active");
+      if (targetInput) targetInput.blur();
     }
   });
 
@@ -280,12 +285,12 @@ function bindStaticEvents() {
 
     const panels = Array.from(
       document.querySelectorAll("#settingsModal details.category-panel"),
-    ).filter((panel) => panel.offsetParent !== null);
+    );
 
-    const nonTopExpanded = panels.slice(1).some((panel) => panel.open);
+    const isAnyPanelOpen = panels.some((panel) => panel.open);
     const isScrolledDown = modalContent.scrollTop > 30;
 
-    btn.classList.toggle("hidden", !(nonTopExpanded && isScrolledDown));
+    btn.classList.toggle("hidden", !(isAnyPanelOpen && isScrolledDown));
   }
 
   async function animateToggleAllCategories() {
@@ -294,7 +299,7 @@ function bindStaticEvents() {
     );
     const panels = Array.from(
       document.querySelectorAll("#settingsModal details.category-panel"),
-    ).filter((panel) => panel.offsetParent !== null);
+    );
 
     if (!panels.length || !modalContent) return;
 
@@ -352,28 +357,40 @@ function bindStaticEvents() {
       panel.addEventListener("toggle", updateScrollToTopBtn);
     });
 
-  const mobileSearchBtn = document.getElementById("mobileSearchBtn");
+  const folderExitBtn = document.getElementById("folderExitBtn");
+  const mobileSearchPill = document.getElementById("mobileSearchPill");
   const searchBarContainer = document.querySelector(".search-bar");
   const searchBackdrop = document.querySelector(".search-backdrop");
 
-  const closeMobileSearch = () => {
-    if (searchBarContainer)
-      searchBarContainer.classList.remove("mobile-expanded");
-    if (searchBackdrop) searchBackdrop.classList.remove("active");
-    if (searchInput) searchInput.blur();
-  };
+  if (folderExitBtn) {
+    const currentFolderId = store.getState().currentFolderId;
+    if (currentFolderId) {
+      folderExitBtn.classList.remove("hidden");
+    } else {
+      folderExitBtn.classList.add("hidden");
+    }
 
-  if (mobileSearchBtn && searchInput && searchBarContainer) {
-    mobileSearchBtn.addEventListener("click", (e) => {
-      e.preventDefault();
+    folderExitBtn.addEventListener("click", () => {
+      if (typeof window.exitFolder === "function") {
+        window.exitFolder();
+      }
+    });
+  }
+
+  if (mobileSearchPill && searchBarContainer && searchBackdrop) {
+    mobileSearchPill.addEventListener("click", () => {
       searchBarContainer.classList.add("mobile-expanded");
-      if (searchBackdrop) searchBackdrop.classList.add("active");
-      searchInput.focus();
+      searchBackdrop.classList.add("active");
+      mobileSearchPill.classList.add("hidden");
+      document.getElementById("searchInput")?.focus();
     });
 
-    if (searchBackdrop) {
-      searchBackdrop.addEventListener("click", closeMobileSearch);
-    }
+    searchBackdrop.addEventListener("click", () => {
+      searchBarContainer.classList.remove("mobile-expanded");
+      searchBackdrop.classList.remove("active");
+      mobileSearchPill.classList.remove("hidden");
+      document.getElementById("searchInput")?.blur();
+    });
   }
 
   const addLinkBtn = document.getElementById("addLinkBtn");

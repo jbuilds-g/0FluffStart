@@ -27,8 +27,20 @@ export function navigateToFolder(folderId) {
     if (folderId) header.classList.remove("hidden");
     else header.classList.add("hidden");
   }
+
+  const folderExitBtn = document.getElementById("folderExitBtn");
+  if (folderExitBtn) {
+    if (folderId) {
+      folderExitBtn.classList.remove("hidden");
+    } else {
+      folderExitBtn.classList.add("hidden");
+    }
+  }
+
   renderLinks();
 }
+
+window.exitFolder = () => navigateToFolder(null);
 
 export function renderLinks() {
   const grid = document.getElementById("linkGrid");

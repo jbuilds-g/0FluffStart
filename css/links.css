@@ -266,14 +266,14 @@ body.material .link-item:hover .link-icon-circle span {
   }
 
   /* Center and scale Back Button for Mobile */
+  /* Hide standard back pill banner on mobile; exit trigger lives inside mobile dock */
   body:not(.force-desktop-mode) .folder-exit-container {
-    position: fixed;
-    bottom: var(--mobile-spacing-y);
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 0;
-    width: auto;
-    z-index: 50;
+    display: none !important;
+  }
+
+  body:not(.force-desktop-mode) #folderExitBtn:not(.hidden) {
+    display: flex !important;
+    pointer-events: auto !important;
   }
 
   body:not(.force-desktop-mode) .back-pill {

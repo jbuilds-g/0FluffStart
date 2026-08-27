@@ -944,18 +944,6 @@
           </div>
         </details>
 
-        <button
-          id="scrollToTopBtn"
-          class="scroll-to-top-btn hidden"
-          title="Scroll to Top"
-        >
-          <span
-            class="inline-icon"
-            data-icon="arrow-up"
-            style="width: 18px; height: 18px"
-          ></span>
-        </button>
-
         <div class="modal-footer">
           <div class="footer-top-row">
             <span class="footer-credit">
@@ -987,20 +975,44 @@
           </div>
         </div>
       </div>
+      <button
+        id="scrollToTopBtn"
+        class="scroll-to-top-btn hidden"
+        title="Scroll to top"
+      >
+        <span
+          class="inline-icon"
+          data-icon="arrow-up"
+          style="width: 24px; height: 24px"
+        ></span>
+      </button>
     </div>
     <div id="customCursorEngine" class="custom-cursor" aria-hidden="true">
       <span class="custom-cursor-icon icon-default-mouse-pointer"></span>
     </div>
     <script type="module" src="js/main.js"></script>
 
-    <div class="mobile-dock floating-search" id="mobileDock">
-      <button class="floating-btn" id="mobileSearchBtn">
+    <div class="mobile-dock" id="mobileDock">
+      <button
+        id="folderExitBtn"
+        class="icon-btn floating-btn hidden"
+        title="Back to Dashboard"
+      >
+        <span
+          class="inline-icon"
+          data-icon="back"
+          style="width: 20px; height: 20px"
+        ></span>
+      </button>
+
+      <div class="mobile-search-pill" id="mobileSearchPill">
         <span
           class="inline-icon"
           data-icon="search"
-          style="width: 22px; height: 22px"
+          style="width: 18px; height: 18px; opacity: 0.7"
         ></span>
-      </button>
+        <span class="mobile-search-placeholder">Search or Type URL...</span>
+      </div>
     </div>
     <!-- TOAST NOTIFICATION PORTAL -->
     <div id="toastContainer" class="toast-container"></div>

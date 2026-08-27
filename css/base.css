@@ -205,6 +205,10 @@ body {
   mask-image: url("../assets/icons/youtube.svg");
   -webkit-mask-image: url("../assets/icons/youtube.svg");
 }
+.icon-back {
+  mask-image: url("../assets/icons/back.svg");
+  -webkit-mask-image: url("../assets/icons/back.svg");
+}
 
 /* --- INLINE SVG ICON ENGINE --- */
 .inline-icon,

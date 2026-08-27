@@ -25,6 +25,10 @@
   pointer-events: none;
 }
 
+#settingsModal {
+  position: fixed;
+}
+
 .modal.active {
   visibility: visible;
   opacity: 1;
@@ -32,6 +36,7 @@
 }
 
 .modal-content {
+  position: relative;
   background: var(--bg);
   padding: 0 var(--space-lg) var(--space-lg) var(--space-lg);
   border-radius: var(--radius);
@@ -360,6 +365,8 @@
 .setting-group {
   margin-top: 18px;
   margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
 }
 
 .setting-group:first-child {
@@ -508,6 +515,7 @@ select:hover {
   border: 1px solid var(--border);
   transition: background 0.2s;
   font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .radio-option:hover {
@@ -1351,13 +1359,12 @@ input[type="url"].bg-url-input {
 
 /* --- SCROLL TO TOP FLOATING BUTTON --- */
 .scroll-to-top-btn {
-  position: sticky;
-  bottom: 20px;
-  align-self: flex-end;
-  margin-bottom: 0;
-  margin-right: var(--space-sm);
-  width: 36px;
-  height: 36px;
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  padding: 4px;
   border-radius: var(--radius);
   background: var(--card);
   border: 1px solid var(--border);
@@ -1367,11 +1374,15 @@ input[type="url"].bg-url-input {
   justify-content: center;
   cursor: pointer;
   box-shadow: var(--shadow-md);
-  z-index: 10;
-  will-change: transform;
+  box-sizing: border-box;
+  z-index: 10000;
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0);
+  will-change: transform, opacity;
   transition:
-    opacity 0.2s ease,
-    transform 0.2s ease,
+    opacity 0.25s ease,
+    transform 0.25s ease,
     border-color 0.2s,
     color 0.2s;
 }
@@ -1383,5 +1394,7 @@ input[type="url"].bg-url-input {
 }
 
 .scroll-to-top-btn.hidden {
-  display: none;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(8px) !important;
 }
