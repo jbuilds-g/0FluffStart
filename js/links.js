@@ -793,6 +793,11 @@ export function openEditor(id = null, parentId = null) {
   if (linkListContainer) linkListContainer.classList.add("hidden");
   if (linkEditorContainer) linkEditorContainer.classList.remove("hidden");
 
+  const modalContent = linkEditorContainer?.closest(".modal-content");
+  if (modalContent) {
+    modalContent.scrollTop = 0;
+  }
+
   const titleEl = document.getElementById("editorTitle");
   const nameInput = document.getElementById("editName");
   const urlInput = document.getElementById("editUrl");
