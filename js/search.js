@@ -145,11 +145,17 @@ export function executeSearch(query, targetEngine) {
     store.setState({ searchHistory: updatedHistory });
   }
 
-  if (query.includes(".") && !query.includes(" ")) {
-    const safeUrl = sanitizeUrl(query);
-    if (safeUrl !== "#") window.location.href = safeUrl;
+  const destinationUrl =
+    query.includes(".") && !query.includes(" ")
+      ? sanitizeUrl(query)
+      : `${targetEngine.url}${encodeURIComponent(query)}`;
+
+  if (destinationUrl === "#") return;
+
+  if (state.settings?.openInNewTab) {
+    window.open(destinationUrl, "_blank", "noopener,noreferrer");
   } else {
-    window.location.href = `${targetEngine.url}${encodeURIComponent(query)}`;
+    window.location.href = destinationUrl;
   }
 }
 
@@ -178,7 +184,14 @@ export function selectSuggestion(suggestion) {
 
   if (suggestion.type === "Link") {
     const safeUrl = sanitizeUrl(suggestion.url);
-    if (safeUrl !== "#") window.location.href = safeUrl;
+    if (safeUrl !== "#") {
+      const state = store.getState();
+      if (state.settings?.openInNewTab) {
+        window.open(safeUrl, "_blank", "noopener,noreferrer");
+      } else {
+        window.location.href = safeUrl;
+      }
+    }
   } else {
     const { query: val, targetEngine } = resolveSearchQueryAndEngine(
       suggestion.name,
