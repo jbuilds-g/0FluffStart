@@ -23,7 +23,9 @@ linkTemplate.innerHTML = `
 export function getFolderDepth(folderId, links) {
   let depth = 0;
   let currId = folderId;
-  while (currId) {
+  const visited = new Set();
+  while (currId && !visited.has(currId)) {
+    visited.add(currId);
     depth++;
     const parent = links.find((l) => l.id === currId);
     currId = parent ? parent.parentId : null;
@@ -97,21 +99,16 @@ export function renderLinks() {
   let migrated = false;
 
   links = links.map((item) => {
-    if (item.parentId && getFolderDepth(item.id, links) > 3) {
-      let targetId = item.parentId;
-      while (targetId && getFolderDepth(targetId, links) >= 3) {
-        const parentNode = links.find((l) => l.id === targetId);
-        targetId = parentNode ? parentNode.parentId : null;
-      }
+    if (item.isFolder && item.parentId && getFolderDepth(item.id, links) > 3) {
       migrated = true;
-      return { ...item, parentId: targetId };
+      return { ...item, parentId: null };
     }
     return item;
   });
 
   if (migrated) {
     store.setState({ links });
-    showToast("Nested folders clamped to 3 levels max.", "info");
+    showToast("Over-nested folder moved to main dashboard.", "info");
   }
 
   const settings = state.settings || {};
@@ -453,18 +450,25 @@ export function renderLinkManager() {
           document.body.appendChild(ghostEl);
         };
 
-        const scrollContainer = document.getElementById("linkManagerContent");
+        const scrollContainer =
+          item.closest(".modal-content") ||
+          document.getElementById("linkManagerContent");
         let lastClientY = startY;
 
         const runAutoScrollLoop = () => {
           if (!isDraggingStarted || !scrollContainer) return;
           const rect = scrollContainer.getBoundingClientRect();
-          const threshold = 50;
-          const speed = 10;
+          const modalHeader = scrollContainer.querySelector(".modal-header");
+          const topOffset = modalHeader ? modalHeader.offsetHeight : 0;
+          const threshold = 60;
+          const speed = 15;
 
-          if (lastClientY < rect.top + threshold) {
+          if (lastClientY < rect.top + topOffset + threshold) {
             scrollContainer.scrollTop -= speed;
-          } else if (lastClientY > rect.bottom - threshold) {
+          } else if (
+            lastClientY > rect.bottom - threshold ||
+            lastClientY > window.innerHeight - threshold
+          ) {
             scrollContainer.scrollTop += speed;
           }
 
@@ -550,6 +554,23 @@ export function renderLinkManager() {
           if (draggedIdx === -1 || targetIdx === -1) return;
 
           const targetLink = currentLinks[targetIdx];
+          const destinationParentId =
+            dropPosition === "inside" && targetLink.isFolder
+              ? targetLink.id
+              : targetLink.parentId || null;
+
+          if (destinationParentId) {
+            const destinationDepth = getFolderDepth(
+              destinationParentId,
+              currentLinks,
+            );
+            const potentialDepth = destinationDepth + (link.isFolder ? 1 : 0);
+            if (potentialDepth > 3) {
+              showToast("Folder depth limit reached (max 3 levels).", "error");
+              return;
+            }
+          }
+
           const [movedItem] = currentLinks.splice(draggedIdx, 1);
 
           if (dropPosition === "inside" && targetLink.isFolder) {
@@ -705,10 +726,21 @@ export function renderLinkManager() {
           actionRow.style.marginLeft = `${(level + 1) * 28}px`;
           actionRow.style.width = `calc(100% - ${(level + 1) * 28}px)`;
 
-          const addNewBtn = document.createElement("button");
-          addNewBtn.className = "add-link-btn";
-          addNewBtn.innerHTML = `+ New Link`;
-          addNewBtn.onclick = () => openEditor(null, link.id);
+          const addNewLinkBtn = document.createElement("button");
+          addNewLinkBtn.className = "add-link-btn";
+          addNewLinkBtn.innerHTML = `+ New Link`;
+          addNewLinkBtn.onclick = () => openEditor(null, link.id);
+
+          const currentFolderDepth = getFolderDepth(link.id, links);
+          const isAtMaxDepth = currentFolderDepth >= 3;
+
+          const addNewFolderBtn = document.createElement("button");
+          addNewFolderBtn.className = `add-link-btn ${isAtMaxDepth ? "btn-disabled" : ""}`;
+          addNewFolderBtn.innerHTML = `+ New Folder`;
+          if (isAtMaxDepth) {
+            addNewFolderBtn.title = "Folder depth limit reached (max 3 levels)";
+          }
+          addNewFolderBtn.onclick = (e) => addFolder(addNewFolderBtn, link.id);
 
           const addExistingBtn = document.createElement("button");
           addExistingBtn.className = "add-link-btn btn-secondary-bg";
@@ -722,7 +754,8 @@ export function renderLinkManager() {
             renderLinkManager();
           };
 
-          actionRow.appendChild(addNewBtn);
+          actionRow.appendChild(addNewLinkBtn);
+          actionRow.appendChild(addNewFolderBtn);
           actionRow.appendChild(addExistingBtn);
           subContainer.appendChild(actionRow);
         }
@@ -896,10 +929,16 @@ export async function deleteLink(id, e) {
 /**
  * Prepares the editor to create a new folder.
  */
-export function addFolder(triggerElement = null) {
+export function addFolder(
+  triggerElement = null,
+  explicitTargetFolderId = null,
+) {
   const state = store.getState();
   const links = state.links || [];
-  const targetFolderId = state.currentFolderId;
+  const targetFolderId =
+    explicitTargetFolderId !== null
+      ? explicitTargetFolderId
+      : state.currentFolderId;
 
   if (targetFolderId && getFolderDepth(targetFolderId, links) >= 3) {
     if (triggerElement && triggerElement instanceof HTMLElement) {

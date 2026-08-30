@@ -907,12 +907,28 @@ input[type="checkbox"].manager-checkbox::after {
 
 .folder-action-row {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   margin-top: 10px;
 }
 
 .folder-action-row .add-link-btn {
   flex: 1;
+  padding: 8px 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.folder-action-row .add-link-btn:disabled,
+.folder-action-row .add-link-btn.btn-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: var(--dim);
+  color: var(--dim);
+}
+
+.folder-action-row .add-link-btn:disabled:hover,
+.folder-action-row .add-link-btn.btn-disabled:hover {
+  background: transparent;
 }
 
 .folder-action-row .btn-secondary-bg {
