@@ -20,8 +20,43 @@ linkTemplate.innerHTML = `
     <div class="link-name"></div>
 `;
 
+export function getFolderDepth(folderId, links) {
+  let depth = 0;
+  let currId = folderId;
+  while (currId) {
+    depth++;
+    const parent = links.find((l) => l.id === currId);
+    currId = parent ? parent.parentId : null;
+  }
+  return depth;
+}
+
 export function navigateToFolder(folderId) {
-  store.setState({ currentFolderId: folderId });
+  const state = store.getState();
+  const links = state.links || [];
+  let currentStack = state.folderStack || [];
+
+  if (folderId === null) {
+    currentStack = [];
+  } else {
+    const existingIndex = currentStack.findIndex(
+      (step) => step.id === folderId,
+    );
+    if (existingIndex !== -1) {
+      currentStack = currentStack.slice(0, existingIndex + 1);
+    } else {
+      const folderNode = links.find((l) => l.id === folderId);
+      const name = folderNode ? folderNode.name : "Folder";
+      currentStack = [...currentStack, { id: folderId, name }];
+    }
+  }
+
+  store.setState({
+    currentFolderId: folderId,
+    folderStack: currentStack,
+    currentPage: 0,
+  });
+
   const header = document.getElementById("activeFolderHeader");
   if (header) {
     if (folderId) header.classList.remove("hidden");
@@ -30,7 +65,7 @@ export function navigateToFolder(folderId) {
 
   const folderExitBtn = document.getElementById("folderExitBtn");
   if (folderExitBtn) {
-    if (folderId) {
+    if (currentStack.length > 0) {
       folderExitBtn.classList.remove("hidden");
     } else {
       folderExitBtn.classList.add("hidden");
@@ -40,6 +75,17 @@ export function navigateToFolder(folderId) {
   renderLinks();
 }
 
+export function navigateUp() {
+  const state = store.getState();
+  const stack = state.folderStack || [];
+  if (stack.length <= 1) {
+    navigateToFolder(null);
+  } else {
+    const parentFolder = stack[stack.length - 2];
+    navigateToFolder(parentFolder.id);
+  }
+}
+
 window.exitFolder = () => navigateToFolder(null);
 
 export function renderLinks() {
@@ -47,7 +93,27 @@ export function renderLinks() {
   if (!grid) return;
 
   const state = store.getState();
-  const links = state.links || [];
+  let links = [...(state.links || [])];
+  let migrated = false;
+
+  links = links.map((item) => {
+    if (item.parentId && getFolderDepth(item.id, links) > 3) {
+      let targetId = item.parentId;
+      while (targetId && getFolderDepth(targetId, links) >= 3) {
+        const parentNode = links.find((l) => l.id === targetId);
+        targetId = parentNode ? parentNode.parentId : null;
+      }
+      migrated = true;
+      return { ...item, parentId: targetId };
+    }
+    return item;
+  });
+
+  if (migrated) {
+    store.setState({ links });
+    showToast("Nested folders clamped to 3 levels max.", "info");
+  }
+
   const settings = state.settings || {};
   const currentFolderId = state.currentFolderId;
 
@@ -56,6 +122,7 @@ export function renderLinks() {
   const visibleLinks = links.filter(
     (l) => (l.parentId || null) === currentFolderId,
   );
+
   const targetIds = new Set(visibleLinks.map((l) => l.id));
   const existingNodesMap = new Map();
 
@@ -113,30 +180,84 @@ export function renderLinks() {
     }
   });
 
-  let exitContainer = grid.querySelector(".folder-exit-container");
+  // Remove any legacy exit containers left inside the scroll grid
+  grid.querySelector(".folder-exit-container")?.remove();
+
+  // Cleanup obsolete body elements & duplicate footer nav containers
+  document.getElementById("sideExitContainer")?.remove();
+  document.querySelectorAll(".side-page-arrow").forEach((el) => el.remove());
+  document
+    .querySelectorAll(".dashboard-footer-nav")
+    .forEach((el) => el.remove());
+
+  let footerNav = document.createElement("div");
+  footerNav.id = "dashboardFooterNav";
+  footerNav.className = "dashboard-footer-nav";
+  document.body.appendChild(footerNav);
+
+  footerNav.innerHTML = "";
+
+  // Render Pinned Floating Exit Controls (Direct Body Child)
   if (currentFolderId !== null) {
-    if (!exitContainer) {
-      exitContainer = document.createElement("div");
-      exitContainer.className = "folder-exit-container";
-      exitContainer.innerHTML = `
-        <div class="back-pill" title="Back to Dashboard">
-          <div class="back-icon-circle">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          </div>
-          <span class="back-text">DASHBOARD</span>
+    const isNested = (state.folderStack || []).length > 1;
+    const exitContainer = document.createElement("div");
+    exitContainer.className = "folder-exit-container";
+    exitContainer.innerHTML = `
+      <div class="back-pill" title="Return to Main Dashboard">
+        <div class="back-icon-circle">
+          <span class="inline-icon" data-icon="back" style="width:16px; height:16px;"></span>
         </div>
-      `;
-      const backBtn = exitContainer.querySelector(".back-pill");
-      backBtn.addEventListener("click", () => navigateToFolder(null));
-      grid.appendChild(exitContainer);
-    } else {
-      grid.appendChild(exitContainer);
+        <span class="back-text">Dashboard</span>
+      </div>
+      ${
+        isNested
+          ? `<button class="back-pill-sub" title="Back to Previous Folder">
+              <span class="inline-icon icon-chevron" data-icon="chevron" style="width:18px; height:18px; transform: rotate(180deg);"></span>
+            </button>`
+          : ""
+      }
+    `;
+
+    const homeBtn = exitContainer.querySelector(".back-pill");
+    homeBtn.addEventListener("click", () => navigateToFolder(null));
+
+    const subBtn = exitContainer.querySelector(".back-pill-sub");
+    if (subBtn) {
+      subBtn.addEventListener("click", () => navigateUp());
     }
-  } else if (exitContainer) {
-    exitContainer.remove();
+
+    footerNav.appendChild(exitContainer);
+    loadInlineIcons(footerNav);
+  }
+
+  if (!grid.dataset.scrollBound) {
+    grid.dataset.scrollBound = "true";
+    grid.addEventListener("wheel", (e) => {
+      const stateNow = store.getState();
+      const allLinks = (stateNow.links || []).filter(
+        (l) => (l.parentId || null) === stateNow.currentFolderId,
+      );
+      const total = Math.ceil(allLinks.length / 12) || 1;
+      if (total <= 1) return;
+
+      if (e.deltaY > 0 || e.deltaX > 0) {
+        const nextPage = Math.min((stateNow.currentPage || 0) + 1, total - 1);
+        if (nextPage !== stateNow.currentPage) {
+          store.setState({ currentPage: nextPage });
+          renderLinks();
+        }
+      } else if (e.deltaY < 0 || e.deltaX < 0) {
+        const prevPage = Math.max((stateNow.currentPage || 0) - 1, 0);
+        if (prevPage !== stateNow.currentPage) {
+          store.setState({ currentPage: prevPage });
+          renderLinks();
+        }
+      }
+    });
   }
 
   loadInlineIcons(grid);
+  loadInlineIcons(footerNav);
 }
 
 export function toggleSelection(id) {
@@ -332,9 +453,32 @@ export function renderLinkManager() {
           document.body.appendChild(ghostEl);
         };
 
+        const scrollContainer = document.getElementById("linkManagerContent");
+        let lastClientY = startY;
+
+        const runAutoScrollLoop = () => {
+          if (!isDraggingStarted || !scrollContainer) return;
+          const rect = scrollContainer.getBoundingClientRect();
+          const threshold = 50;
+          const speed = 10;
+
+          if (lastClientY < rect.top + threshold) {
+            scrollContainer.scrollTop -= speed;
+          } else if (lastClientY > rect.bottom - threshold) {
+            scrollContainer.scrollTop += speed;
+          }
+
+          animFrameId = requestAnimationFrame(runAutoScrollLoop);
+        };
+
         const updateDragVisuals = (pe) => {
           const touchOffsetY = pe.pointerType === "touch" ? 40 : 0;
           const targetY = pe.clientY - touchOffsetY;
+          lastClientY = targetY;
+
+          if (!animFrameId) {
+            animFrameId = requestAnimationFrame(runAutoScrollLoop);
+          }
 
           if (ghostEl) {
             ghostEl.style.left = `${pe.clientX}px`;
@@ -752,7 +896,19 @@ export async function deleteLink(id, e) {
 /**
  * Prepares the editor to create a new folder.
  */
-export function addFolder() {
+export function addFolder(triggerElement = null) {
+  const state = store.getState();
+  const links = state.links || [];
+  const targetFolderId = state.currentFolderId;
+
+  if (targetFolderId && getFolderDepth(targetFolderId, links) >= 3) {
+    if (triggerElement && triggerElement instanceof HTMLElement) {
+      triggerElement.classList.add("limit-shake");
+      setTimeout(() => triggerElement.classList.remove("limit-shake"), 400);
+    }
+    return showToast("Folder depth limit reached (max 3 levels).", "error");
+  }
+
   const linkListContainer = document.getElementById("linkListContainer");
   const linkEditorContainer = document.getElementById("linkEditorContainer");
 
@@ -766,7 +922,7 @@ export function addFolder() {
   store.setState({
     isEditingId: null,
     isCreatingFolder: true,
-    editorTargetFolderId: store.getState().currentFolderId,
+    editorTargetFolderId: targetFolderId,
   });
 
   if (titleEl) titleEl.innerText = "Add New Folder";

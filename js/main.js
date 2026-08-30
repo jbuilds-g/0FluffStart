@@ -114,11 +114,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     const linksChanged = prevState.links !== currentState.links;
     const folderChanged =
       prevState.currentFolderId !== currentState.currentFolderId;
+    const stackChanged = prevState.folderStack !== currentState.folderStack;
     const titlesChanged =
       prevState.settings?.showTitles !== currentState.settings?.showTitles;
 
-    if (linksChanged || folderChanged || titlesChanged) {
+    if (linksChanged || folderChanged || stackChanged || titlesChanged) {
       renderLinks();
+    }
+
+    const folderExitBtn = document.getElementById("folderExitBtn");
+    if (folderExitBtn) {
+      const hasStack = (currentState.folderStack || []).length > 0;
+      folderExitBtn.classList.toggle("hidden", !hasStack);
     }
   });
 
@@ -172,6 +179,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   document.addEventListener("click", (e) => {
+    if (
+      !e.target.closest(".unified-nav-pill") &&
+      !e.target.closest(".nav-pill-dropdown")
+    ) {
+      document.querySelector(".nav-pill-dropdown")?.classList.add("hidden");
+    }
     if (!e.target.closest(".engine-switcher")) {
       document.getElementById("engineDropdown")?.classList.add("hidden");
     }
@@ -471,6 +484,10 @@ function bindStaticEvents() {
   const forceDesktopToggle = document.getElementById("forceDesktopToggle");
   if (forceDesktopToggle)
     forceDesktopToggle.addEventListener("change", () => autoSaveSettings());
+
+  const openNewTabToggle = document.getElementById("openNewTabToggle");
+  if (openNewTabToggle)
+    openNewTabToggle.addEventListener("change", () => autoSaveSettings());
 
   const customCursorToggle = document.getElementById("customCursorToggle");
   if (customCursorToggle) {
@@ -878,6 +895,7 @@ function bindStaticEvents() {
             showQuickSuggest: true,
             showSearchSubmit: true,
             searchBarLayout: "unified",
+            openInNewTab: false,
           },
           searchHistory: [],
           expandedFolderIds: [],
@@ -922,7 +940,14 @@ function bindStaticEvents() {
         navigateToFolder(link.id);
       } else {
         const safeUrl = sanitizeUrl(link.url);
-        if (safeUrl !== "#") window.location.href = safeUrl;
+        if (safeUrl !== "#") {
+          const openInNewTab = store.getState().settings?.openInNewTab;
+          if (openInNewTab) {
+            window.open(safeUrl, "_blank", "noopener,noreferrer");
+          } else {
+            window.location.href = safeUrl;
+          }
+        }
       }
     });
 

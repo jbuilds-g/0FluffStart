@@ -337,12 +337,13 @@
 }
 
 .category-panel summary .chevron {
+  transform: rotate(90deg);
   transition: transform 0.3s ease;
   color: var(--dim);
 }
 
 .category-panel[open] summary .chevron {
-  transform: rotate(180deg);
+  transform: rotate(270deg);
   color: var(--accent);
 }
 
@@ -399,11 +400,9 @@
   border: 1px solid var(--border);
   color: var(--dim);
   border-radius: var(--radius);
-  width: 20px;
-  height: 20px;
-  font-size: 0.7rem;
-  font-weight: bold;
-  font-family: var(--font-main);
+  width: 24px;
+  height: 24px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;

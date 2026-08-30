@@ -171,19 +171,7 @@ Data is stored locally in `localStorage` and `IndexedDB`. Background media image
 <summary><b>View Complete Architecture Tree</b></summary>
 
 <pre>
-├── assets/
-│   └── icons/            # SVG vector icons for UI and search engines
-├── css/                  # Modular design system stylesheets
-│   ├── base.css          # Core resets & typography
-│   ├── core.css          # Main stylesheet entry point (@imports)
-│   ├── cursor.css        # Vector cursor engine styles
-│   ├── layout.css        # Main container, header & responsive grid
-│   ├── links.css         # Quick links & folder management UI
-│   ├── modal.css         # Settings modal & dialog components
-│   ├── search.css        # Search bar & autocomplete dropdown
-│   ├── themes.css        # Built-in theme preset definitions
-│   ├── utilities.css     # Helper classes & responsive overrides
-│   └── variables.css     # Design tokens & CSS custom properties
+perties
 ├── js/                   # Modular ES application architecture
 │   ├── main.js           # App entry point & event initialization
 │   ├── cursor.js         # Theme-adaptive custom vector cursor

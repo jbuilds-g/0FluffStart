@@ -398,6 +398,12 @@ const SETTINGS_MAP = [
     defaultVal: true,
   },
   {
+    key: "openInNewTab",
+    id: "openNewTabToggle",
+    type: "checkbox",
+    defaultVal: false,
+  },
+  {
     key: "shadowIntensity",
     id: "shadowSlider",
     type: "range",

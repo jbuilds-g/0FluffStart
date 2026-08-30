@@ -2,6 +2,139 @@
    DASHBOARD LINK GRID & ICON SYSTEM
    ========================================= */
 
+/* --- DEPTH LIMIT SHAKE ANIMATION --- */
+@keyframes limitShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+.limit-shake {
+  animation: limitShake 0.4s ease-in-out;
+  border-color: var(--delete, #ff4d4d) !important;
+  color: var(--delete, #ff4d4d) !important;
+}
+
+/* --- SCROLLABLE 2-ROW GRID CONTAINER --- */
+.link-grid {
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-content: start;
+  padding: 12px 8px 12px 4px;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+/* Custom Scrollbar for Link Grid */
+.link-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.link-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.link-grid::-webkit-scrollbar-thumb {
+  background: var(--border, rgba(255, 255, 255, 0.15));
+  border-radius: 3px;
+}
+
+.link-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--accent, #8b5cf6);
+}
+
+/* --- INVISIBLE DOCK WRAPPER & FLOATING EXIT PILL --- */
+#dashboardFooterNav,
+.dashboard-footer-nav {
+  position: fixed !important;
+  bottom: 24px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: var(--z-floating, 50) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  pointer-events: none !important;
+}
+
+.folder-exit-container {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: auto;
+  padding: 0;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.folder-exit-container .back-pill {
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.folder-exit-container .back-pill:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.link-grid {
+  margin-bottom: 70px;
+}
+
+.back-pill-sub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.back-pill-sub svg {
+  width: 18px;
+  height: 18px;
+}
+
+.back-pill-sub:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* --- LINK GRID --- */
 .link-grid {
   display: grid;

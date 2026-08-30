@@ -67,7 +67,7 @@
           <span
             class="inline-icon"
             data-icon="search"
-            style="width: 20px; height: 20px"
+            style="width: 24px; height: 24px"
           ></span>
         </button>
 
@@ -78,7 +78,7 @@
       </div>
 
       <div id="linkGrid" class="link-grid"></div>
-    </div>
+      <div id="navPillContainer" class="nav-pill-container hidden"></div>
 
     <div class="floating-settings">
       <button
@@ -89,7 +89,7 @@
         <span
           class="inline-icon"
           data-icon="settings"
-          style="width: 20px; height: 20px"
+          style="width: 18px; height: 18px"
         ></span>
       </button>
     </div>
@@ -105,20 +105,11 @@
                 class="icon-btn"
                 title="Expand / Collapse All"
               >
-                <svg
-                  class="chevron-all"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="m7 15 5 5 5-5" />
-                  <path d="m7 9 5-5 5 5" />
-                </svg>
+                <span
+                  class="inline-icon"
+                  data-icon="expand-collapse"
+                  style="width: 18px; height: 18px"
+                ></span>
               </button>
               <button
                 id="closeSettingsBtn"
@@ -160,25 +151,23 @@
         <details class="category-panel">
           <summary>
             Dashboard Links
-            <svg
-              class="chevron"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
+            <span
+              class="inline-icon chevron"
+              data-icon="chevron"
+              style="width: 16px; height: 16px"
+            ></span>
           </summary>
           <div class="category-content">
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Quick Link Management</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
 
               <div class="help-text">
@@ -262,25 +251,23 @@
         <details class="category-panel">
           <summary>
             Personalization
-            <svg
-              class="chevron"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
+            <span
+              class="inline-icon chevron"
+              data-icon="chevron"
+              style="width: 16px; height: 16px"
+            ></span>
           </summary>
           <div class="category-content">
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Your Name</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Custom display name shown in the top header greeting. Leave
@@ -296,7 +283,13 @@
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Vibe (Theme)</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Customizes color schemes, borders, and general visual styling
@@ -311,18 +304,11 @@
                 <div class="select-trigger">
                   <span class="selected-text">OLED Dark (Default)</span>
                   <span class="select-arrow">
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="m9 18 6-6-6-6" />
-                    </svg>
+                    <span
+                      class="inline-icon"
+                      data-icon="chevron"
+                      style="width: 12px; height: 12px"
+                    ></span>
                   </span>
                 </div>
                 <div class="select-dropdown hidden">
@@ -381,7 +367,13 @@
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Clock Customization</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Customizes clock typography, 12h or 24h display formats, and
@@ -396,18 +388,11 @@
                 <div class="select-trigger">
                   <span class="selected-text">Default</span>
                   <span class="select-arrow">
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="m9 18 6-6-6-6" />
-                    </svg>
+                    <span
+                      class="inline-icon"
+                      data-icon="chevron"
+                      style="width: 12px; height: 12px"
+                    ></span>
                   </span>
                 </div>
                 <div class="select-dropdown hidden">
@@ -470,7 +455,13 @@
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Custom Background</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Upload a local image or video file to set a custom dashboard
@@ -546,7 +537,13 @@
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Shadow Intensity</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Controls overall shadow depth across search elements, shortcut
@@ -572,10 +569,37 @@
               </div>
             </div>
 
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Link Navigation</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Opens quick links and search queries in a new browser tab
+                instead of replacing the current window.
+              </div>
+              <label class="radio-option radio-option-start-sm">
+                <input type="checkbox" id="openNewTabToggle" /> Open Links &
+                Searches in New Tab
+              </label>
+            </div>
+
             <div class="setting-group mobile-only-setting">
               <div class="setting-header">
                 <h3>Force Desktop Mode</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Disables mobile-specific optimizations to enforce standard
@@ -590,7 +614,13 @@
             <div class="setting-group desktop-only-setting">
               <div class="setting-header">
                 <h3>Theme Adaptive Cursor</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Enables custom reactive cursor animations. Disable to use
@@ -605,7 +635,13 @@
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Search Bar Style</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Switches between a single unified search container and a
@@ -619,18 +655,11 @@
                 <div class="select-trigger">
                   <span class="selected-text">Unified Search Bar</span>
                   <span class="select-arrow">
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="m9 18 6-6-6-6" />
-                    </svg>
+                    <span
+                      class="inline-icon"
+                      data-icon="chevron"
+                      style="width: 12px; height: 12px"
+                    ></span>
                   </span>
                 </div>
                 <div class="select-dropdown hidden">
@@ -647,7 +676,13 @@
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Search Bar Controls</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Toggles individual interactive buttons inside the search bar,
@@ -699,25 +734,23 @@
         <details class="category-panel">
           <summary>
             Search Preferences
-            <svg
-              class="chevron"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
+            <span
+              class="inline-icon chevron"
+              data-icon="chevron"
+              style="width: 16px; height: 16px"
+            ></span>
           </summary>
           <div class="category-content">
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Suggestions & Autocomplete</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Enables live query autocomplete recommendations, provider
@@ -762,18 +795,11 @@
                     >Automatic (Smart Match & Fallback)</span
                   >
                   <span class="select-arrow">
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="m9 18 6-6-6-6" />
-                    </svg>
+                    <span
+                      class="inline-icon"
+                      data-icon="chevron"
+                      style="width: 12px; height: 12px"
+                    ></span>
                   </span>
                 </div>
                 <div class="select-dropdown hidden">
@@ -793,7 +819,13 @@
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Search Engines</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Configure active search engine list, set default search
@@ -810,18 +842,11 @@
                 <div class="select-trigger" id="engineCollapsibleTrigger">
                   <span class="selected-text">Manage Search Engines</span>
                   <span class="select-arrow">
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="m9 18 6-6-6-6" />
-                    </svg>
+                    <span
+                      class="inline-icon"
+                      data-icon="chevron"
+                      style="width: 12px; height: 12px"
+                    ></span>
                   </span>
                 </div>
                 <div
@@ -875,7 +900,13 @@
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Search History Control</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Saves a local log of recent search queries directly on your
@@ -892,25 +923,23 @@
         <details class="category-panel">
           <summary>
             Data Management
-            <svg
-              class="chevron"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
+            <span
+              class="inline-icon chevron"
+              data-icon="chevron"
+              style="width: 16px; height: 16px"
+            ></span>
           </summary>
           <div class="category-content">
             <div class="setting-group">
               <div class="setting-header">
                 <h3>Storage & Data Maintenance</h3>
-                <button class="help-btn">?</button>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="inline-icon"
+                    data-icon="help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
               <div class="help-text">
                 Manage local data persistence. Export/import JSON backups, clear

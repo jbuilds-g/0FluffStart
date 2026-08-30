@@ -209,6 +209,20 @@ body {
   mask-image: url("../assets/icons/back.svg");
   -webkit-mask-image: url("../assets/icons/back.svg");
 }
+.icon-collapse {
+  mask: url("../assets/icons/expand-collapse.svg") no-repeat center / contain;
+  -webkit-mask: url("../assets/icons/collapse.svg") no-repeat center / contain;
+}
+.icon-help {
+  mask: url("../assets/icons/help.svg") no-repeat center / contain;
+  -webkit-mask: url("../assets/icons/help.svg") no-repeat center / contain;
+}
+.icon-chevron {
+  display: inline-block;
+  mask: url("../assets/icons/chevron.svg") no-repeat center / contain;
+  -webkit-mask: url("../assets/icons/chevron.svg") no-repeat center / contain;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 /* --- INLINE SVG ICON ENGINE --- */
 .inline-icon,
@@ -259,7 +273,8 @@ body {
 .modal-content,
 .suggestions-container,
 .engine-dropdown,
-.clock-style-block {
+.clock-style-block,
+.folder-exit-container .back-pill {
   box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.15));
 }
 
