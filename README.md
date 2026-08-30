@@ -95,7 +95,8 @@
 
 #### **Chromium (Chrome, Edge, Brave)**
 
-- **Chrome Web Store Submission:** _(Submitted & Pending Review)_
+- **Chrome Web Store:**
+- _(Coming soon)_
 - **Manual Unpacked Loading:**
   - Download `0fluffstart-chrome-(version)zip` from the [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest).
   - Extract the archive to a local directory.
