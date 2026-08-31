@@ -65,7 +65,7 @@
 | **Material You Monet Engine** | Dynamic color extraction algorithm that analyzes uploaded custom background images or video loops to build adaptive UI accent palettes. |
 | **IndexedDB Binary Storage** | Complete offline binary storage (`Blob`/`File`) for custom high-resolution background photos and video loops using IndexedDB. |
 | **Base64 JSON Serialization** | Backup and restore pipeline converting binary background files stored in IndexedDB into portable Base64 strings inside exported `.json` files. |
-| **Fluid Theme Presets** | 10+ built-in aesthetic themes (Light, Dark, OLED Pure Black, Catppuccin, Tokyo Night, Nord, Gruvbox, Rose Pine, etc.) featuring GPU-accelerated hover dynamics. |
+| **Fluid Theme Presets** | 15+ built-in aesthetic themes (OLED Dark, True Black AMOLED, Material You, Cyberpunk, Nord Frost, Dracula, Rose Pine, Sunset Drive, Paper & Ink, etc.) featuring GPU-accelerated hover dynamics. |
 | **Shadow Intensity Control** | Global CSS variable slider (`--shadow-intensity`) providing real-time depth control over shadows on cards, search bars, modals, and quick link icons. |
 | **Vector Custom Cursor** | Theme-adaptive SVG cursor engine featuring custom hover expansion and drag-state feedback. |
 
