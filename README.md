@@ -36,46 +36,51 @@
 
 ---
 
-## 🔥 Key Features
 
+## 🔥 Key Features
 <details>
 <summary><b>⚡ Performance & Architecture</b></summary>
 <br>
 
-- **GPU-Accelerated Rendering:** Global hardware acceleration and optimized CSS compositing layers ensure fluid 60fps interaction dynamics.
-- **Privacy-First Design:** Zero telemetry, tracking scripts, or cloud dependencies. All user data, settings, and history remain strictly on local hardware.
-- **Offline-Ready PWA:** Instant execution and offline functionality powered by Service Worker caching algorithms.
-- **Ultra-Minimalist Engine:** Built with 100% Vanilla HTML5, CSS3, and modern ES modules—zero external dependencies or heavy frameworks.
+| Feature | Description |
+| :--- | :--- |
+| **GPU-Accelerated Rendering** | Global hardware acceleration and optimized CSS compositing layers ensure fluid 60fps interaction dynamics. |
+| **Privacy-First Design** | Zero telemetry, tracking scripts, or cloud dependencies. All user data, settings, and history remain strictly on local hardware. |
+| **Offline-Ready PWA** | Instant execution and offline functionality powered by Service Worker caching algorithms. |
+| **Ultra-Minimalist Engine** | Built with 100% Vanilla HTML5, CSS3, and modern ES modules—zero external dependencies or heavy frameworks. |
 
 </details>
-
 <details>
 <summary><b>🔍 Search Interface & Autocomplete</b></summary>
 <br>
 
-- **Modular Search Engine:** Toggle between a unified search container and a segmented floating layout with individual control visibility flags.
-- **Inline Quick Suggestion Switcher:** Direct inline toggle control for live autocomplete suggestion feeds inside the search bar switcher.
-- **Multi-Engine Routing & Shortcuts:** Instant engine switching via prefix tags (`?g`, `?d`, `?b`) or dropdown selection with private LRU query caching.
+| Feature | Description |
+| :--- | :--- |
+| **Modular Search Engine** | Toggle between a unified search container and a segmented floating layout with individual control visibility flags. |
+| **Inline Quick Suggestion Switcher** | Direct inline toggle control for live autocomplete suggestion feeds inside the search bar switcher. |
+| **Multi-Engine Routing & Shortcuts** | Instant engine switching via prefix tags (`?g`, `?d`, `?b`) or dropdown selection with private LRU query caching. |
 
 </details>
-
 <details>
 <summary><b>🎨 Personalization, Themes & Media</b></summary>
 <br>
 
-- **Material You Extraction Engine:** Dynamic Monet HSL color extraction from custom uploaded background imagery and video loops.
-- **Local Media Storage & Serialization:** Upload high-resolution media directly to IndexedDB with base64 JSON backup and restore capabilities.
-- **Theme Presets & Custom Cursor:** Includes light, dark, and OLED aesthetic presets paired with a theme-adaptive vector cursor engine.
+| Feature | Description |
+| :--- | :--- |
+| **Material You Extraction Engine** | Dynamic Monet HSL color extraction from custom uploaded background imagery and video loops. |
+| **Local Media Storage & Serialization** | Upload high-resolution media directly to IndexedDB with base64 JSON backup and restore capabilities. |
+| **Theme Presets & Custom Cursor** | Includes light, dark, and OLED aesthetic presets paired with a theme-adaptive vector cursor engine. |
 
 </details>
-
 <details>
 <summary><b>📁 Link Management & Organization</b></summary>
 <br>
 
-- **Hierarchical Folder Tree:** Create, edit, and recursively nest shortcut links inside custom folders.
-- **Spatial Drag-and-Drop:** Native pointer-events reordering engine with auto-scrolling container boundaries and circular hierarchy checks.
-- **Batch Selection Toolbar:** Multi-item selection mode to move, reorganize, or delete links simultaneously.
+| Feature | Description |
+| :--- | :--- |
+| **Hierarchical Folder Tree** | Create, edit, and recursively nest shortcut links inside custom folders up to 3 levels deep. |
+| **Spatial Drag-and-Drop** | Native pointer-events reordering engine with auto-scrolling container boundaries and circular hierarchy checks. |
+| **Batch Selection Toolbar** | Multi-item selection mode to move, reorganize, or delete links simultaneously. |
 
 </details>
 
