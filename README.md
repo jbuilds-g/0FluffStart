@@ -80,7 +80,6 @@
 | :--- | :--- |
 | **Hierarchical Folder Tree** | Create, edit, and recursively nest shortcut links inside custom folders up to 3 levels deep. |
 | **Spatial Drag-and-Drop** | Native pointer-events reordering engine with auto-scrolling container boundaries and circular hierarchy checks. |
-| **Batch Selection Toolbar** | Multi-item selection mode to move, reorganize, or delete links simultaneously. |
 
 </details>
 
