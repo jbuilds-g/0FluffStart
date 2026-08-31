@@ -1,0 +1,9 @@
+/*
+  Access-Control-Allow-Origin: *
+  X-Content-Type-Options: nosniff
+  X-Robots-Tag: index, follow, max-image-preview:large
+
+/link-preview.png
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=86400
+  Content-Type: image/png
