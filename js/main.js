@@ -41,6 +41,10 @@ import { CustomCursorEngine } from "./cursor.js";
 document.addEventListener("DOMContentLoaded", async () => {
   const storedVersion = localStorage.getItem("0fluff_app_version");
 
+  if (storedVersion && storedVersion !== APP_VERSION) {
+    showToast(`Updated to v${APP_VERSION}`, "success", 4000);
+  }
+
   if (storedVersion !== APP_VERSION) {
     localStorage.setItem("0fluff_app_version", APP_VERSION);
     if ("caches" in window) {
@@ -85,11 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       if (!refreshing) {
         refreshing = true;
-        showToast(
-          "A new version of 0FluffStart is available. Click here or refresh to update.",
-          "info",
-          8000,
-        );
+        window.location.reload();
       }
     });
   }
