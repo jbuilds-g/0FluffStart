@@ -178,6 +178,79 @@ document.addEventListener("DOMContentLoaded", async () => {
     history.replaceState({}, document.title, window.location.pathname);
   }
 
+  // --- GITHUB PAGES MIGRATION BANNER & 24-HOUR TIMER ---
+  if (window.location.hostname.includes("github.io")) {
+    const DURATION_MS = 24 * 60 * 60 * 1000;
+    let startTime = parseInt(
+      localStorage.getItem("0fluff_migration_start"),
+      10,
+    );
+    if (!startTime || isNaN(startTime)) {
+      startTime = Date.now();
+      localStorage.setItem("0fluff_migration_start", startTime.toString());
+    }
+
+    const banner = document.createElement("div");
+    banner.className = "migration-banner";
+    banner.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #111827;
+      color: #f9fafb;
+      padding: 10px 16px;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-size: 0.875rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      box-sizing: border-box;
+    `;
+
+    banner.innerHTML = `
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span>⚠️ GitHub Pages closing in <strong id="migrationTimer" style="color:#f59e0b;">24h 00m 00s</strong>. Move to Cloudflare Pages!</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <button id="exportMigrationBtn" style="background:#374151; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Export Data</button>
+        <a href="https://0fluffstart.pages.dev" target="_blank" rel="noopener noreferrer" style="background:#2563eb; color:#fff; text-decoration:none; padding:6px 12px; border-radius:4px; font-weight:bold; font-size:0.8rem;">Go to New Site</a>
+        <button id="dismissMigrationBtn" style="background:transparent; color:#9ca3af; border:none; font-size:1.1rem; cursor:pointer; padding:0 4px;">✕</button>
+      </div>
+    `;
+
+    document.body.prepend(banner);
+
+    const timerEl = document.getElementById("migrationTimer");
+    const updateCountdown = () => {
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, DURATION_MS - elapsed);
+
+      const hrs = Math.floor(remaining / (1000 * 60 * 60));
+      const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((remaining % (1000 * 60)) / 1000);
+
+      if (timerEl) {
+        timerEl.textContent = `${hrs}h ${mins.toString().padStart(2, "0")}m ${secs.toString().padStart(2, "0")}s`;
+      }
+    };
+
+    updateCountdown();
+    const intervalId = setInterval(updateCountdown, 1000);
+
+    document
+      .getElementById("exportMigrationBtn")
+      ?.addEventListener("click", backupData);
+    document
+      .getElementById("dismissMigrationBtn")
+      ?.addEventListener("click", () => {
+        clearInterval(intervalId);
+        banner.remove();
+      });
+  }
+
   document.addEventListener("click", (e) => {
     if (
       !e.target.closest(".unified-nav-pill") &&
