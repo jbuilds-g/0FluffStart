@@ -178,17 +178,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     history.replaceState({}, document.title, window.location.pathname);
   }
 
-  // --- GITHUB PAGES MIGRATION BANNER & 24-HOUR TIMER ---
+  // --- GITHUB PAGES MIGRATION BANNER & FIXED UTC TIMER ---
   if (window.location.hostname.includes("github.io")) {
-    const DURATION_MS = 24 * 60 * 60 * 1000;
-    let startTime = parseInt(
-      localStorage.getItem("0fluff_migration_start"),
-      10,
-    );
-    if (!startTime || isNaN(startTime)) {
-      startTime = Date.now();
-      localStorage.setItem("0fluff_migration_start", startTime.toString());
-    }
+    // Hardcoded absolute target timestamp set to 20 hours from deploy (September 1, 2026 15:38:22 UTC)
+    const TARGET_UTC_MS =
+      Date.UTC(2026, 7, 31, 23, 38, 22) + 20 * 60 * 60 * 1000;
 
     const banner = document.createElement("div");
     banner.className = "migration-banner";
@@ -212,7 +206,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     banner.innerHTML = `
       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        <span>⚠️ GitHub Pages closing in <strong id="migrationTimer" style="color:#f59e0b;">24h 00m 00s</strong>. Move to Cloudflare Pages!</span>
+        <span>⚠️ GitHub Pages closing in <strong id="migrationTimer" style="color:#f59e0b;">00h 00m 00s</strong>. Move to Cloudflare Pages!</span>
       </div>
       <div style="display:flex; align-items:center; gap:10px;">
         <button id="exportMigrationBtn" style="background:#374151; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Export Data</button>
@@ -225,8 +219,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const timerEl = document.getElementById("migrationTimer");
     const updateCountdown = () => {
-      const elapsed = Date.now() - startTime;
-      const remaining = Math.max(0, DURATION_MS - elapsed);
+      const remaining = Math.max(0, TARGET_UTC_MS - Date.now());
 
       const hrs = Math.floor(remaining / (1000 * 60 * 60));
       const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
@@ -234,6 +227,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (timerEl) {
         timerEl.textContent = `${hrs}h ${mins.toString().padStart(2, "0")}m ${secs.toString().padStart(2, "0")}s`;
+      }
+
+      if (remaining <= 0) {
+        clearInterval(intervalId);
       }
     };
 
