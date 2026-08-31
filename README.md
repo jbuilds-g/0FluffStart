@@ -36,40 +36,38 @@
 
 ---
 
-
-## 🔥 Key Features
+## 🛠️ Features
 <details>
-<summary><b>⚡ Performance & Architecture</b></summary>
+<summary><b>🔍 Search Engine & Navigation Router</b></summary>
 <br>
 
 | Feature | Description |
 | :--- | :--- |
-| **GPU-Accelerated Rendering** | Global hardware acceleration and optimized CSS compositing layers ensure fluid 60fps interaction dynamics. |
-| **Privacy-First Design** | Zero telemetry, tracking scripts, or cloud dependencies. All user data, settings, and history remain strictly on local hardware. |
-| **Offline-Ready PWA** | Instant execution and offline functionality powered by Service Worker caching algorithms. |
-| **Ultra-Minimalist Engine** | Built with 100% Vanilla HTML5, CSS3, and modern ES modules—zero external dependencies or heavy frameworks. |
+| **Query & URL Auto-Resolution** | Auto-detects plain text queries versus domain syntax/URLs for direct navigation or web searches. |
+| **Instant Tag Routing** | Prefix queries using shortcut tags (`?g`, `?d`, `?b`, `?bi`, `?st`, `?s`, `?e`, `?k`, `?w`, `?y`) to switch target engines on the fly. |
+| **Custom Engine Integration** | Add, edit, or delete custom search engines with personalized query endpoints and shortcut tags. |
+| **Engine Checklist** | Multi-select menu within settings to filter which built-in and custom search engines appear in the search bar dropdown. |
+| **Privacy Autocomplete Proxy** | Route live autocomplete suggestion feeds securely through a custom lightweight CORS proxy with self-hosted endpoint support. |
+| **In-Memory Suggestion Caching** | Private LRU cache storing recent autocomplete responses for zero-latency instant results on repeated queries. |
+| **Quick Suggestion Switcher** | Dedicated inline toggle (`#quickSuggestToggleBtn`) inside the search bar to instantly pause/resume autocomplete network calls. |
+| **Granular Visibility Control** | Independent master/child toggles to hide or show the Engine Switcher, Suggestion Toggle, and Search/Submit Button. |
+| **Dual Search Bar Layouts** | Toggle between a **Unified Search Bar** container and a **Segmented Floating Bar** presentation style. |
+| **New Tab Guard** | Dedicated setting (`openInNewTab`) to force search queries and quick link clicks into a new browser tab (`_blank`) or replace the active window. |
+| **Offline Search History** | Privacy-focused local query logging with history-based autocomplete suggestions and a 1-click purge tool. |
 
 </details>
 <details>
-<summary><b>🔍 Search Interface & Autocomplete</b></summary>
+<summary><b>🎨 Personalization, Themes & Media Engine</b></summary>
 <br>
 
 | Feature | Description |
 | :--- | :--- |
-| **Modular Search Engine** | Toggle between a unified search container and a segmented floating layout with individual control visibility flags. |
-| **Inline Quick Suggestion Switcher** | Direct inline toggle control for live autocomplete suggestion feeds inside the search bar switcher. |
-| **Multi-Engine Routing & Shortcuts** | Instant engine switching via prefix tags (`?g`, `?d`, `?b`) or dropdown selection with private LRU query caching. |
-
-</details>
-<details>
-<summary><b>🎨 Personalization, Themes & Media</b></summary>
-<br>
-
-| Feature | Description |
-| :--- | :--- |
-| **Material You Extraction Engine** | Dynamic Monet HSL color extraction from custom uploaded background imagery and video loops. |
-| **Local Media Storage & Serialization** | Upload high-resolution media directly to IndexedDB with base64 JSON backup and restore capabilities. |
-| **Theme Presets & Custom Cursor** | Includes light, dark, and OLED aesthetic presets paired with a theme-adaptive vector cursor engine. |
+| **Material You Monet Engine** | Dynamic color extraction algorithm that analyzes uploaded custom background images or video loops to build adaptive UI accent palettes. |
+| **IndexedDB Binary Storage** | Complete offline binary storage (`Blob`/`File`) for custom high-resolution background photos and video loops using IndexedDB. |
+| **Base64 JSON Serialization** | Backup and restore pipeline converting binary background files stored in IndexedDB into portable Base64 strings inside exported `.json` files. |
+| **Fluid Theme Presets** | 10+ built-in aesthetic themes (Light, Dark, OLED Pure Black, Catppuccin, Tokyo Night, Nord, Gruvbox, Rose Pine, etc.) featuring GPU-accelerated hover dynamics. |
+| **Shadow Intensity Control** | Global CSS variable slider (`--shadow-intensity`) providing real-time depth control over shadows on cards, search bars, modals, and quick link icons. |
+| **Vector Custom Cursor** | Theme-adaptive SVG cursor engine featuring custom hover expansion and drag-state feedback. |
 
 </details>
 <details>
@@ -78,8 +76,48 @@
 
 | Feature | Description |
 | :--- | :--- |
-| **Hierarchical Folder Tree** | Create, edit, and recursively nest shortcut links inside custom folders up to 3 levels deep. |
-| **Spatial Drag-and-Drop** | Native pointer-events reordering engine with auto-scrolling container boundaries and circular hierarchy checks. |
+| **3-Level Nested Folders** | Create, edit, and recursively nest shortcut links inside custom folders up to 3 levels max (`Dashboard > Folder > Subfolder > Nested Subfolder`). |
+| **Non-Destructive Guarding** | Strict drag-and-drop rejection prevents illegal Level 4+ nesting attempts with zero state corruption or file unlinking. |
+| **In-Folder Item Creation** | Direct `+ New Link`, `+ New Folder`, and `+ Existing` action rows embedded inside expanded folder views. |
+| **Spatial Drag-and-Drop** | Native pointer-events reordering engine with edge boundary auto-scrolling (`requestAnimationFrame`) and sticky-header offset calculations. |
+| **Multi-Select Toolbar** | Batch selection mode to move, reorganize, or delete multiple shortcut links simultaneously. |
+| **Icon Title Visibility** | Toggle shortcut titles to display strictly on hover or remain permanently visible on the dashboard grid. |
+| **Floating Exit Dock** | Decoupled viewport navigation controls (`[ ← Dashboard ]` and `[ ← ]`) anchored with backdrop blur and dynamic shadow inheritance. |
+
+</details>
+<details>
+<summary><b>⌛ Clock, Date & Dynamic Greeting System</b></summary>
+<br>
+
+| Feature | Description |
+| :--- | :--- |
+| **Clock Typographies** | Selectable display typographies including 3D, Ultra-Minimalist, Bold & Chunky, and Monospace styles. |
+| **Contextual Greetings** | Time-aware greeting strings ("Good morning", "Good afternoon", "Good evening") paired with custom user name display. |
+| **Precision Time Controls** | Toggles for 12-Hour vs. 24-Hour formats and optional seconds counter display. |
+
+</details>
+<details>
+<summary><b>⚙️ Command Search & System Utilities</b></summary>
+<br>
+
+| Feature | Description |
+| :--- | :--- |
+| **Command-Style Search** | Embedded search input in the settings header (`#settingsSearchInput`) with live card filtering, snippet highlighting, and target panel auto-expansion (`jumpToSetting`). |
+| **Accordion Management** | Categorized setting sections with master **Expand All** and **Collapse All** controls. |
+| **Data Sync Suite** | Complete offline tools for **Backup (Save)**, **Restore (Load)**, **Clear History**, and **Factory Reset**. |
+| **Deep-Linking Router** | URL parameter parsing (`?q=`, `?engine=`, `#settings`, `?folder=`) allowing direct deep-link triggers with post-execution state cleaning via `history.replaceState()`. |
+
+</details>
+<details>
+<summary><b>📱 Mobile & Responsive PWA Adaptations</b></summary>
+<br>
+
+| Feature | Description |
+| :--- | :--- |
+| **Bottom Mobile Dock** | Interactive search pill inside `#mobileDock` that smoothly expands vertically into a primary focused search bar. |
+| **Touch-Optimized Bounds** | Expanded touch targets and custom responsive spatial tokens (`--mobile-spacing-x`, `--mobile-header-top-offset`, `--mobile-link-grid-item-size`). |
+| **Offline Service Worker** | PWA architecture enabling standalone offline execution, home screen installation, and background asset caching. |
+| **Scroll-to-Top Anchor** | Repositioned fixed floating overlay anchor (`#scrollToTopBtn`) tuned for single-thumb navigation on mobile displays. |
 
 </details>
 
