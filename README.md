@@ -13,7 +13,7 @@
 
 <br><br>
 
-[**🚀 Launch Web Version**](https://jbuilds-g.github.io/0FluffStart/)
+[**🚀 Launch Web Version**](https://https://0fluffstart.pages.dev/)
 
 </div>
 
@@ -153,7 +153,7 @@ The hosted version is a fully compliant **PWA**, meaning it can be installed as 
 
 #### Android (Chrome)
 
-1.  Navigate to the [Live URL](https://jbuilds-g.github.io/0FluffStart/).
+1.  Navigate to the [Live URL](https://https://0fluffstart.pages.dev/).
 2.  Tap the three dots (Menu) and select **Add to Home Screen**.
 3.  The dashboard will appear in your app drawer as a native application.
 
@@ -163,13 +163,13 @@ _alternatively_
 
 1. Open **settings**.
 2. Navigate to **Homepage** and turn it **on**.
-3. Type or paste the **live URL** `jbuilds-g.github.io/0FluffStart/`
+3. Type or paste the **live URL** `https://0fluffstart.pages.dev/`
 
 #### Firefox
 
 1. Open **Settings** in Firefox.
 2. Select **Homepage** -> **Custom URL**.
-3. Type or paste the **Live URL**: `https://jbuilds-g.github.io/0FluffStart/`
+3. Type or paste the **Live URL**: `https://https://0fluffstart.pages.dev/`
 4. Tap **Set**. New tabs and homepage opens will now load the dashboard directly.
 
 ---
@@ -178,17 +178,17 @@ _alternatively_
 
 #### **Chrome (Android)**
 
-- **Option A (PWA App):** Go to the [Live App](https://jbuilds-g.github.io/0FluffStart/), tap the menu (⋮), and select **Add to Home Screen**.
-- **Option B (Homepage):** Go to **Settings** → **Homepage** → turn **On** → paste `https://jbuilds-g.github.io/0FluffStart/`.
+- **Option A (PWA App):** Go to the [Live App](https://https://0fluffstart.pages.dev/), tap the menu (⋮), and select **Add to Home Screen**.
+- **Option B (Homepage):** Go to **Settings** → **Homepage** → turn **On** → paste `https://https://0fluffstart.pages.dev/`.
 
 #### **Firefox**
 
 1. Go to **Settings** → **Homepage** → **Custom URL**.
-2. Paste `https://jbuilds-g.github.io/0FluffStart/` and tap **Set**.
+2. Paste `https://https://0fluffstart.pages.dev/` and tap **Set**.
 
 #### **Safari (iOS)**
 
-1. Open the [Live App](https://jbuilds-g.github.io/0FluffStart/) in Safari.
+1. Open the [Live App](https://https://0fluffstart.pages.dev/) in Safari.
 2. Tap **Share** → **Add to Home Screen**.
 
 > [!IMPORTANT]
