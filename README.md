@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="link-preview.png" width="120" alt="0FluffStart Icon" />
+  <img src="wide-icon.png" width="120" alt="0FluffStart Icon" />
   <h1>0FluffStart</h1>
   <p><i>The high-performance, minimalist productivity engine.</i></p>
 
