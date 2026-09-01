@@ -77,8 +77,55 @@ async function saveToStorage(key, data) {
   }
 }
 
+export const DEFAULT_LINKS = [
+  {
+    id: "lnk_yt",
+    name: "YouTube",
+    url: "https://youtube.com",
+    isFolder: false,
+    parentId: null,
+  },
+  {
+    id: "lnk_gh",
+    name: "GitHub",
+    url: "https://github.com",
+    isFolder: false,
+    parentId: null,
+  },
+  {
+    id: "lnk_rd",
+    name: "Reddit",
+    url: "https://reddit.com",
+    isFolder: false,
+    parentId: null,
+  },
+  {
+    id: "lnk_wk",
+    name: "Wikipedia",
+    url: "https://wikipedia.org",
+    isFolder: false,
+    parentId: null,
+  },
+  { id: "fld_tools", name: "Essential Tools", isFolder: true, parentId: null },
+  {
+    id: "lnk_ia",
+    name: "Internet Archive",
+    url: "https://archive.org",
+    isFolder: false,
+    parentId: "fld_tools",
+  },
+  {
+    id: "lnk_ol",
+    name: "Open Library",
+    url: "https://openlibrary.org",
+    isFolder: false,
+    parentId: "fld_tools",
+  },
+];
+
 async function loadInitialState() {
-  let links = (await loadFromStorage("0fluff_links")) || [];
+  let loadedLinks = await loadFromStorage("0fluff_links");
+  let links = loadedLinks !== null ? loadedLinks : DEFAULT_LINKS;
   let settingsRaw = await loadFromStorage("0fluff_settings");
   let settings = settingsRaw
     ? { ...DEFAULT_SETTINGS, ...settingsRaw }
@@ -87,7 +134,7 @@ async function loadInitialState() {
   let expandedFolderIds =
     (await loadFromStorage("0fluff_expanded_folders")) || [];
 
-  let needsSave = false;
+  let needsSave = loadedLinks === null;
   links = links.map((item) => {
     if (!item.id) {
       needsSave = true;

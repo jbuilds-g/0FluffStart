@@ -1,4 +1,4 @@
-import { store } from "./store.js";
+import { store, DEFAULT_LINKS } from "./store.js";
 import { debounce, sanitizeUrl } from "./utils.js";
 import { backupData, restoreData, clearBgFromDB } from "./storage.js";
 import {
@@ -98,6 +98,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   initCustomSelects();
   bindStaticEvents();
   await loadSettings();
+
+  if (!localStorage.getItem("0fluff_has_opened_engine_dropdown")) {
+    showToast("Welcome to 0FluffStart! Click ⚙️ to customize.", "info", 5000);
+  }
+
   renderLinks();
   renderEngineDropdown();
 
@@ -942,7 +947,7 @@ function bindStaticEvents() {
         }
 
         await store.setState({
-          links: [],
+          links: DEFAULT_LINKS,
           settings: {
             theme: "dark",
             clockStyle: "default",

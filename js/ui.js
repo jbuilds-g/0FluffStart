@@ -498,8 +498,8 @@ export async function updateBackgroundMedia(sourceType, data) {
 
     if (bgImage) {
       bgImage.style.backgroundImage = "";
-      bgImage.classList.add("hidden");
-      bgImage.classList.remove("active");
+      bgImage.classList.remove("hidden");
+      bgImage.classList.add("active");
     }
     if (bgVideo) {
       bgVideo.src = "";
@@ -508,7 +508,7 @@ export async function updateBackgroundMedia(sourceType, data) {
     }
 
     if (bgImageInput) bgImageInput.value = "";
-    if (fileNameEl) fileNameEl.innerText = "No media selected.";
+    if (fileNameEl) fileNameEl.innerText = "Default CSS Vibe Active";
     if (resetBtn) resetBtn.classList.add("hidden");
     if (overlay) overlay.classList.remove("bg-overlay-active");
   }
@@ -1058,8 +1058,8 @@ export async function loadSettings() {
     const bgImage = document.getElementById("bgImage");
     if (bgImage) {
       bgImage.style.backgroundImage = "";
-      bgImage.classList.add("hidden");
-      bgImage.classList.remove("active");
+      bgImage.classList.remove("hidden");
+      bgImage.classList.add("active");
     }
     if (bgVideo) {
       bgVideo.src = "";
@@ -1166,7 +1166,7 @@ export function toggleSettings(options = {}) {
         bgLabel.style.marginTop = "10px";
         if (resetBtn) resetBtn.classList.remove("hidden");
       } else {
-        bgLabel.innerText = "No media selected.";
+        bgLabel.innerText = "Default CSS Vibe Active";
         bgLabel.style.color = "var(--dim)";
         if (resetBtn) resetBtn.classList.add("hidden");
       }
