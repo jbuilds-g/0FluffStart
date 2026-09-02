@@ -175,9 +175,12 @@ export class SuggestionService {
       return [providerMode];
     }
     const activeEngine = settings?.searchEngine || DEFAULT_PROVIDER;
-    const primary = ALL_PROVIDERS.includes(activeEngine)
-      ? activeEngine
-      : DEFAULT_PROVIDER;
+    const primary =
+      activeEngine === "Browser Default"
+        ? "Google"
+        : ALL_PROVIDERS.includes(activeEngine)
+          ? activeEngine
+          : DEFAULT_PROVIDER;
     return [primary, ...ALL_PROVIDERS.filter((p) => p !== primary)];
   }
 

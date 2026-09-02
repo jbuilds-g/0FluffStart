@@ -954,7 +954,7 @@ function bindStaticEvents() {
             clockFormat: "24h",
             showSeconds: true,
             userName: "",
-            searchEngine: "Google",
+            searchEngine: "Browser Default",
             externalSuggest: false,
             cacheSuggestions: true,
             suggestProvider: "auto",

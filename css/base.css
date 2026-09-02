@@ -154,6 +154,10 @@ body {
   mask-image: url("../assets/icons/search.svg");
   -webkit-mask-image: url("../assets/icons/search.svg");
 }
+.icon-browser-globe {
+  mask-image: url("../assets/icons/browser-globe.svg");
+  -webkit-mask-image: url("../assets/icons/browser-globe.svg");
+}
 .icon-suggest {
   mask-image: url("../assets/icons/suggest.svg");
   -webkit-mask-image: url("../assets/icons/suggest.svg");

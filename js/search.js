@@ -10,6 +10,11 @@ const GENERIC_SEARCH_ICON = `<span class="inline-icon" data-icon="search"></span
 
 export const searchEngines = [
   {
+    name: "Browser Default",
+    url: "default",
+    icon: `<span class="inline-icon icon-browser-globe" data-icon="browser-globe"></span>`,
+  },
+  {
     name: "Google",
     url: "https://www.google.com/search?q=",
     icon: `<span class="inline-icon" data-icon="google"></span>`,
@@ -97,6 +102,7 @@ export function resolveSearchQueryAndEngine(inputValue) {
 
   const tagMap = [
     ...customTags,
+    { tag: "?def", name: "Browser Default" },
     { tag: "?bi", name: "Bing" },
     { tag: "?b", name: "Brave" },
     { tag: "?st", name: "Startpage" },
@@ -145,9 +151,30 @@ export function executeSearch(query, targetEngine) {
     store.setState({ searchHistory: updatedHistory });
   }
 
-  const destinationUrl =
-    query.includes(".") && !query.includes(" ")
-      ? sanitizeUrl(query)
+  const isDirectUrl = query.includes(".") && !query.includes(" ");
+
+  if (targetEngine.url === "default" && !isDirectUrl) {
+    try {
+      if (
+        typeof chrome !== "undefined" &&
+        chrome.search &&
+        chrome.search.query
+      ) {
+        const targetDisposition = state.settings?.openInNewTab
+          ? "NEW_TAB"
+          : "CURRENT_TAB";
+        chrome.search.query({ text: query, disposition: targetDisposition });
+        return;
+      }
+    } catch (err) {
+      // Fallback to Google if an error occurs
+    }
+  }
+
+  const destinationUrl = isDirectUrl
+    ? sanitizeUrl(query)
+    : targetEngine.url === "default"
+      ? `https://www.google.com/search?q=${encodeURIComponent(query)}`
       : `${targetEngine.url}${encodeURIComponent(query)}`;
 
   if (destinationUrl === "#") return;
