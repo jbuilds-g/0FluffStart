@@ -1,15 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "0FluffStart",
+  "name": "0FluffStart — Minimalist New Tab & Start Page",
   "version": "6.3.2",
   "description": "Zero-Fluff. All Speed. A privacy-first, minimalist start page.",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": [
-    "storage",
-    "search"
-  ],
+  "permissions": ["storage", "search"],
   "host_permissions": [
     "https://0fluffstart-suggest-proxy.jbuilds.workers.dev/*"
   ],
