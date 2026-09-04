@@ -243,31 +243,47 @@
 .modal-footer {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 25px;
-  padding-top: 15px;
+  gap: 8px;
+  margin-top: 24px;
+  padding-top: 16px;
   border-top: 1px solid var(--border);
   font-size: 0.8rem;
   color: var(--dim);
-  font-weight: 500;
 }
 
-.footer-top-row {
+.footer-row {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
   width: 100%;
 }
 
-.footer-credit {
-  padding-left: 8px;
+.footer-brand {
+  font-weight: 700;
+  color: var(--text, #ffffff);
+  font-size: 0.9rem;
 }
 
-.footer-bottom-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+.footer-version {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.footer-row-secondary {
+  font-size: 0.75rem;
+  color: var(--dim);
+  opacity: 0.85;
+}
+
+.footer-row-secondary a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-row-secondary a:hover {
+  text-decoration: underline;
+  opacity: 1;
 }
 
 .modal-footer a {
