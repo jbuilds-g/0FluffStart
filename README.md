@@ -11,9 +11,7 @@
 ![downloads](https://img.shields.io/github/downloads/jbuilds-g/0FluffStart/total?logo=github&cacheSeconds=3600)
 ![Stars](https://img.shields.io/github/stars/jbuilds-g/0fluffstart)
 
-<br><br>
-
-[**🚀 Launch Web Version**](https://https://0fluffstart.pages.dev/)
+[**🌐 Landing Page**](https://0fluffstart-site.pages.dev/) &nbsp;|&nbsp; [**🚀 Launch Web App**](https://0fluffstart.pages.dev/)
 
 </div>
 
@@ -141,7 +139,7 @@
 - **Chrome Web Store:**
 
  <a href="https://chromewebstore.google.com/detail/lgfflmhehhgomnkonfaljnfilangoebb?utm_source=item-share-cp"><img src="https://github.com/user-attachments/assets/7a829ba4-dcd0-452b-922a-5efacbfda498" alt="Download from Chrome Web Store" height="48" /></a>
- 
+
 - **Manual Unpacked Loading:**
   - Download `0fluffstart-chrome-(version)zip` from the [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest).
   - Extract the archive to a local directory.
