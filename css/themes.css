@@ -167,14 +167,43 @@ body.evergreen-archive {
 }
 
 body.material-you {
-  --bg: #1e1e1e;
-  --card: rgba(40, 40, 40, 0.6);
-  --card-hover: rgba(55, 55, 55, 0.8);
-  --text: #e0e0e0;
-  --accent: #a8c7fa;
-  --dim: #888888;
-  --border: #444444;
-  --radius: 24px;
+  /* 
+   * CRITICAL FIX: Do not hardcode --bg, --card, or --accent here.
+   * We rely on the JS-injected dynamic wallpaper colors and derive surfaces from them.
+   */
+  --radius: 28px;
+
+  /* MD3 Shape Tokens Scale */
+  --md-sys-shape-corner-none: 0px;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 9999px;
+
+  /* Map MD3 Surfaces to the Dynamic Extracted Palette */
+  --md-sys-color-surface-container-lowest: var(--bg);
+  --md-sys-color-surface-container-low: var(--card);
+  --md-sys-color-surface-container: var(--card);
+  --md-sys-color-surface-container-high: var(--card-hover);
+  --md-sys-color-surface-container-highest: color-mix(
+    in srgb,
+    var(--card-hover) 85%,
+    var(--text)
+  );
+
+  /* MD3 Elevation Shadows */
+  --md-sys-elevation-level0-shadow: none;
+  --md-sys-elevation-level1-shadow:
+    0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --md-sys-elevation-level2-shadow:
+    0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --md-sys-elevation-level3-shadow:
+    0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+
+  /* Interactive Alpha - Ties directly to dynamic accent color */
+  --interactive-bg-alpha: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 body.night-glow {
@@ -434,16 +463,14 @@ body.light .link-item:hover .link-icon-circle .inline-icon {
 body.evergreen-archive .link-icon-circle,
 body.nord .link-icon-circle,
 body.sunset .link-icon-circle,
-body.night-glow .link-icon-circle,
-body.material-you .link-icon-circle {
+body.night-glow .link-icon-circle {
   border-radius: 50%;
 }
 
 body.evergreen-archive .link-item:hover .link-icon-circle,
 body.nord .link-item:hover .link-icon-circle,
 body.sunset .link-item:hover .link-icon-circle,
-body.night-glow .link-item:hover .link-icon-circle,
-body.material-you .link-item:hover .link-icon-circle {
+body.night-glow .link-item:hover .link-icon-circle {
   background: var(--text);
   transform: rotate(3deg) scale(1.05);
   border: 2px solid transparent;
@@ -452,8 +479,7 @@ body.material-you .link-item:hover .link-icon-circle {
 body.evergreen-archive .link-item:hover .link-icon-circle span,
 body.nord .link-item:hover .link-icon-circle span,
 body.sunset .link-item:hover .link-icon-circle span,
-body.night-glow .link-item:hover .link-icon-circle span,
-body.material-you .link-item:hover .link-icon-circle span {
+body.night-glow .link-item:hover .link-icon-circle span {
   color: var(--card) !important;
 }
 
@@ -461,12 +487,10 @@ body.evergreen-archive .link-item:hover .link-icon-circle svg,
 body.nord .link-item:hover .link-icon-circle svg,
 body.sunset .link-item:hover .link-icon-circle svg,
 body.night-glow .link-item:hover .link-icon-circle svg,
-body.material-you .link-item:hover .link-icon-circle svg,
 body.evergreen-archive .link-item:hover .link-icon-circle .inline-icon,
 body.nord .link-item:hover .link-icon-circle .inline-icon,
 body.sunset .link-item:hover .link-icon-circle .inline-icon,
-body.night-glow .link-item:hover .link-icon-circle .inline-icon,
-body.material-you .link-item:hover .link-icon-circle .inline-icon {
+body.night-glow .link-item:hover .link-icon-circle .inline-icon {
   stroke: var(--card) !important;
   color: var(--card) !important;
   background: transparent !important;

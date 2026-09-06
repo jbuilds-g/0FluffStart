@@ -35,6 +35,265 @@
   pointer-events: auto;
 }
 
+/* MD3 Modal Scrim & Surface Dialog Overrides */
+body.material-you .modal {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+body.material-you .modal-content {
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px);
+  background-color: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--border);
+  box-shadow: var(--md-sys-elevation-level3-shadow);
+  padding: 0 24px 24px 24px;
+}
+
+/* FIX OVERFLOW BLEED: Header overlaps container padding completely */
+body.material-you .modal-header {
+  background-color: var(--md-sys-color-surface-container-low);
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+body.material-you .category-panel {
+  border-radius: var(--md-sys-shape-corner-large, 16px);
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--border);
+}
+
+body.material-you .setting-group {
+  padding: 14px;
+  border-radius: var(--md-sys-shape-corner-medium, 12px);
+  background-color: var(--md-sys-color-surface-container-high);
+  border: 1px solid var(--border);
+}
+
+/* Unify Settings Inputs, Floating Controls & Buttons */
+body.material-you .modal-header .icon-btn,
+body.material-you .header-actions .icon-btn,
+body.material-you .floating-btn,
+body.material-you .scroll-to-top-btn {
+  border-radius: 9999px;
+  background-color: var(--md-sys-color-surface-container-highest);
+  border: 1px solid var(--border);
+  color: var(--accent);
+}
+
+body.material-you .modal-header .icon-btn:hover,
+body.material-you .header-actions .icon-btn:hover,
+body.material-you .floating-btn:hover,
+body.material-you .scroll-to-top-btn:hover {
+  background-color: var(--interactive-bg-alpha);
+  color: var(--text);
+}
+
+body.material-you .settings-search-input {
+  border-radius: 9999px !important;
+  background-color: var(--md-sys-color-surface-container-high) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+body.material-you .settings-search-input:focus {
+  background-color: var(--md-sys-color-surface-container-highest) !important;
+  border-color: var(--accent) !important;
+}
+
+body.material-you .secondary,
+body.material-you .save-btn,
+body.material-you .add-link-btn,
+body.material-you .danger-btn {
+  border-radius: 9999px;
+  background-color: var(--md-sys-color-surface-container-highest);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+body.material-you .secondary:hover,
+body.material-you .add-link-btn:hover {
+  background-color: var(--interactive-bg-alpha);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+body.material-you .save-btn {
+  background-color: var(--accent);
+  color: var(--bg);
+  border: none;
+}
+
+body.material-you .danger-btn {
+  background-color: transparent;
+  border: 1px solid var(--delete);
+  color: var(--delete);
+}
+
+body.material-you .danger-btn:hover {
+  background-color: color-mix(in srgb, var(--delete) 15%, transparent);
+}
+
+/* MD3 Settings Dropdown Overlay Alignment */
+body.material-you .select-dropdown,
+body.material-you select {
+  background-color: var(--md-sys-color-surface-container-highest) !important;
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--md-sys-elevation-level3-shadow);
+}
+
+body.material-you .select-option:hover,
+body.material-you .select-option.selected {
+  background-color: var(--interactive-bg-alpha) !important;
+  color: var(--accent) !important;
+}
+
+body.material-you select option {
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--text);
+}
+
+/* MD3 Expressive Checkbox Toggle Switch Overrides */
+body.material-you input[type="checkbox"]:not(.manager-checkbox) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 32px !important;
+  border-radius: 16px !important;
+  background-color: var(--md-sys-color-surface-container-highest) !important;
+  border: 2px solid var(--border) !important;
+  position: relative !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  transition:
+    background-color 200ms cubic-bezier(0.2, 0, 0, 1),
+    border-color 200ms cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+/* Base Thumb Geometry & Background */
+body.material-you input[type="checkbox"]:not(.manager-checkbox)::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 2px !important;
+  left: 2px !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  background-color: var(--dim) !important;
+  transition:
+    transform 200ms cubic-bezier(0.2, 0, 0, 1),
+    background-color 200ms cubic-bezier(0.2, 0, 0, 1) !important;
+  z-index: 1 !important;
+}
+
+/* Masked Vector Icon (Off State: X) */
+body.material-you input[type="checkbox"]:not(.manager-checkbox)::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 8px !important;
+  left: 8px !important;
+  width: 12px !important;
+  height: 12px !important;
+  background-color: var(--bg) !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6L6 18M6 6l12 12'/%3E%3C/svg%3E") !important;
+  -webkit-mask-size: contain !important;
+  -webkit-mask-repeat: no-repeat !important;
+  -webkit-mask-position: center !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6L6 18M6 6l12 12'/%3E%3C/svg%3E") !important;
+  mask-size: contain !important;
+  mask-repeat: no-repeat !important;
+  mask-position: center !important;
+  z-index: 2 !important;
+  transition:
+    transform 200ms cubic-bezier(0.2, 0, 0, 1),
+    background-color 200ms cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+body.material-you input[type="checkbox"]:not(.manager-checkbox):checked {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+body.material-you input[type="checkbox"]:not(.manager-checkbox):checked::after {
+  transform: translateX(20px) !important;
+  background-color: var(--bg) !important;
+}
+
+/* Masked Vector Icon (On State: Checkmark) */
+body.material-you
+  input[type="checkbox"]:not(.manager-checkbox):checked::before {
+  transform: translateX(20px) !important;
+  background-color: var(--accent) !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") !important;
+}
+
+/* MD3 Thick Range Sliders */
+body.material-you input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 32px;
+  background: transparent;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+body.material-you input[type="range"]::-webkit-slider-runnable-track {
+  height: 16px;
+  border-radius: 8px;
+  background-color: var(--md-sys-color-surface-container-highest);
+  background-image: radial-gradient(
+    circle at center,
+    var(--border) 2px,
+    transparent 2px
+  );
+  background-size: 20px 100%;
+  background-repeat: repeat-x;
+}
+
+body.material-you input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 6px;
+  height: 32px;
+  border-radius: 3px;
+  background: var(--accent);
+  cursor: pointer;
+  margin-top: -8px;
+  box-shadow: var(--shadow-sm);
+}
+
+body.material-you input[type="range"]::-moz-range-track {
+  height: 16px;
+  border-radius: 8px;
+  background-color: var(--md-sys-color-surface-container-highest);
+  background-image: radial-gradient(
+    circle at center,
+    var(--border) 2px,
+    transparent 2px
+  );
+  background-size: 20px 100%;
+  background-repeat: repeat-x;
+}
+
+body.material-you input[type="range"]::-moz-range-thumb {
+  width: 6px;
+  height: 32px;
+  border-radius: 3px;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
 .modal-content {
   position: relative;
   background: var(--bg);
@@ -541,8 +800,7 @@ select:hover {
   margin: 0;
 }
 
-/* Reusable Theme-Reactive Toggle Switch */
-input[type="checkbox"] {
+body:not(.material-you) input[type="checkbox"]:not(.manager-checkbox) {
   appearance: none;
   -webkit-appearance: none;
   width: 38px;
@@ -559,7 +817,7 @@ input[type="checkbox"] {
     border-color 0.2s ease;
 }
 
-input[type="checkbox"]::after {
+body:not(.material-you) input[type="checkbox"]:not(.manager-checkbox)::after {
   content: "";
   position: absolute;
   top: 2px;
@@ -573,12 +831,13 @@ input[type="checkbox"]::after {
     background 0.2s ease;
 }
 
-input[type="checkbox"]:checked {
+body:not(.material-you) input[type="checkbox"]:not(.manager-checkbox):checked {
   background: var(--card-hover);
   border-color: var(--accent);
 }
 
-input[type="checkbox"]:checked::after {
+body:not(.material-you)
+  input[type="checkbox"]:not(.manager-checkbox):checked::after {
   transform: translateX(18px);
   background: var(--accent);
 }

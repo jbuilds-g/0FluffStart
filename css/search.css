@@ -22,10 +22,51 @@
   transition: border-radius 0.3s ease;
 }
 
-/* Material 3 Override: Full Pill Shape */
-body.material .search-bar {
-  border-radius: 999px; /* Stadium shape */
-  padding-left: 8px; /* Offset for the extreme curve */
+/* Material Design 3 Hero Search Bar Alignment */
+body.material-you .search-bar {
+  border-radius: var(--md-sys-shape-corner-full, 9999px);
+  background-color: var(--md-sys-color-surface-container-high);
+  border: 1px solid var(--border);
+  height: 56px;
+  padding: 0 16px;
+  box-shadow: var(--md-sys-elevation-level2-shadow);
+  transition:
+    background-color 200ms cubic-bezier(0.2, 0, 0, 1),
+    border-color 200ms cubic-bezier(0.2, 0, 0, 1),
+    box-shadow 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+body.material-you .search-bar:focus-within {
+  background-color: var(--md-sys-color-surface-container-highest);
+  border-color: var(--accent);
+  box-shadow: var(--md-sys-elevation-level3-shadow);
+}
+
+/* Force Engine Dropdown to Match M3 Styling */
+body.material-you .engine-dropdown {
+  background-color: var(--md-sys-color-surface-container-highest);
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px);
+  border: 1px solid var(--border);
+  box-shadow: var(--md-sys-elevation-level3-shadow);
+  padding: 8px;
+}
+
+body.material-you .engine-dropdown .engine-option:hover {
+  background-color: var(--interactive-bg-alpha);
+  color: var(--accent);
+}
+
+body.material-you .search-icon {
+  border-radius: 9999px;
+  color: var(--accent);
+  width: 44px;
+  height: 44px;
+  align-self: center;
+}
+
+body.material-you .search-icon:hover {
+  background: var(--interactive-bg-alpha, rgba(168, 199, 250, 0.12));
+  color: var(--accent);
 }
 
 #searchInput {
@@ -310,11 +351,18 @@ body.material .engine-switcher {
   display: none;
 }
 
-/* M3 Override for suggestions alignment with Pill shape */
-body.material .suggestions-container {
-  border-radius: 20px; /* Slightly less than pill */
-  margin: 0 10px; /* Indent slightly */
-  width: calc(100% - 20px);
+/* MD3 Suggestion Dropdown Panel Geometry */
+body.material-you .suggestions-container {
+  border-radius: var(--md-sys-shape-corner-extra-large, 28px);
+  background-color: var(--md-sys-color-surface-container-highest);
+  border: 1px solid var(--border);
+  box-shadow: var(--md-sys-elevation-level3-shadow);
+  margin-top: 6px;
+  padding: 8px 0;
+}
+
+body.material-you .suggestion-item:hover {
+  background-color: var(--interactive-bg-alpha);
 }
 
 .suggestion-item {
