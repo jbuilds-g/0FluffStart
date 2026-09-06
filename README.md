@@ -151,31 +151,6 @@
 
 The hosted version is a fully compliant **PWA**, meaning it can be installed as a standalone app that works even without an internet connection.
 
-#### Android (Chrome)
-
-1.  Navigate to the [Live URL](https://0fluffstart.pages.dev/).
-2.  Tap the three dots (Menu) and select **Add to Home Screen**.
-3.  The dashboard will appear in your app drawer as a native application.
-
-_alternatively_
-
-> It can be set as a custom homepage.
-
-1. Open **settings**.
-2. Navigate to **Homepage** and turn it **on**.
-3. Type or paste the **live URL** `https://0fluffstart.pages.dev/`
-
-#### Firefox
-
-1. Open **Settings** in Firefox.
-2. Select **Homepage** -> **Custom URL**.
-3. Type or paste the **Live URL**: `https://0fluffstart.pages.dev/`
-4. Tap **Set**. New tabs and homepage opens will now load the dashboard directly.
-
----
-
-### Mobile & Web (PWA)
-
 #### **Chrome (Android)**
 
 - **Option A (PWA App):** Go to the [Live App](https://0fluffstart.pages.dev/), tap the menu (⋮), and select **Add to Home Screen**.
