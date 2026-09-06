@@ -3,7 +3,7 @@
   <h1>0FluffStart</h1>
   <p><i>The high-performance, minimalist productivity engine.</i></p>
 
-  <p><b>The Final Minimalist Dashboard for Desktop & Mobile.</b></p>
+  <p><b>A minimalist, high-performance dashboard for desktop and mobile.</b></p>
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
 ![Version](https://img.shields.io/github/v/release/jbuilds-g/0FluffStart?logo=github&label=Release&cacheSeconds=3600)
@@ -19,10 +19,10 @@
 
 ## 📖 Overview
 
-0FluffStart is built on a **Zero-Fluff** philosophy: no trackers, no backend latency, and zero dependencies.
+0FluffStart is built around a **Zero-Fluff** philosophy: no trackers, no backend, and zero runtime dependencies.
 
 - **Desktop:** A fully integrated browser extension (Manifest V3) or standalone start page.
-- **Mobile & Web:** A high-performance **Progressive Web App (PWA)** that works offline and installs natively on mobile devices.
+- **Mobile & Web:** A high-performance **Progressive Web App (PWA)** with offline support and native installation on mobile devices.
 
 ---
 
@@ -42,12 +42,12 @@
 
 | Feature                          | Description                                                                                                                                      |
 | :------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Query & URL Auto-Resolution**  | Auto-detects plain text queries versus domain syntax/URLs for direct navigation or web searches.                                                 |
+| **Query & URL Auto-Resolution**  | Automatically detects plain-text queries, domains, and URLs for direct navigation or web searches.                                               |
 | **Instant Tag Routing**          | Prefix queries using shortcut tags (`?g`, `?d`, `?b`, `?bi`, `?st`, `?s`, `?e`, `?k`, `?w`, `?y`) to switch target engines on the fly.           |
 | **Custom Engine Integration**    | Add, edit, or delete custom search engines with personalized query endpoints and shortcut tags.                                                  |
 | **Engine Checklist**             | Multi-select menu within settings to filter which built-in and custom search engines appear in the search bar dropdown.                          |
 | **Privacy Autocomplete Proxy**   | Route live autocomplete suggestion feeds securely through a custom lightweight CORS proxy with self-hosted endpoint support.                     |
-| **In-Memory Suggestion Caching** | Private LRU cache storing recent autocomplete responses for zero-latency instant results on repeated queries.                                    |
+| **In-Memory Suggestion Caching** | Private LRU cache storing recent autocomplete responses for faster results on repeated queries.                                                  |
 | **Quick Suggestion Switcher**    | Dedicated inline toggle (`#quickSuggestToggleBtn`) inside the search bar to instantly pause/resume autocomplete network calls.                   |
 | **Granular Visibility Control**  | Independent master/child toggles to hide or show the Engine Switcher, Suggestion Toggle, and Search/Submit Button.                               |
 | **Dual Search Bar Layouts**      | Toggle between a **Unified Search Bar** container and a **Segmented Floating Bar** presentation style.                                           |
@@ -59,14 +59,14 @@
 <summary><b>🎨 Personalization, Themes & Media Engine</b></summary>
 <br>
 
-| Feature                       | Description                                                                                                                                                                                      |
-| :---------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Material You Monet Engine** | Dynamic color extraction algorithm that analyzes uploaded custom background images or video loops to build adaptive UI accent palettes.                                                          |
-| **IndexedDB Binary Storage**  | Complete offline binary storage (`Blob`/`File`) for custom high-resolution background photos and video loops using IndexedDB.                                                                    |
-| **Base64 JSON Serialization** | Backup and restore pipeline converting binary background files stored in IndexedDB into portable Base64 strings inside exported `.json` files.                                                   |
-| **Fluid Theme Presets**       | 15+ built-in aesthetic themes (OLED Dark, True Black AMOLED, Material You, Cyberpunk, Nord Frost, Dracula, Rose Pine, Sunset Drive, Paper & Ink, etc.) featuring GPU-accelerated hover dynamics. |
-| **Shadow Intensity Control**  | Global CSS variable slider (`--shadow-intensity`) providing real-time depth control over shadows on cards, search bars, modals, and quick link icons.                                            |
-| **Vector Custom Cursor**      | Theme-adaptive SVG cursor engine featuring custom hover expansion and drag-state feedback.                                                                                                       |
+| Feature                       | Description                                                                                                                                                                                 |
+| :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Material You Monet Engine** | Dynamic color extraction that analyzes custom background images and video loops to build adaptive UI accent palettes.                                                                       |
+| **IndexedDB Binary Storage**  | Offline binary storage (`Blob`/`File`) for custom high-resolution background photos and video loops using IndexedDB.                                                                        |
+| **Base64 JSON Serialization** | Backup and restore pipeline converting binary background files stored in IndexedDB into portable Base64 strings inside exported `.json` files.                                              |
+| **Fluid Theme Presets**       | 15+ built-in aesthetic themes (OLED Dark, True Black AMOLED, Material You, Cyberpunk, Nord Frost, Dracula, Rose Pine, Sunset Drive, Paper & Ink, etc.) with GPU-accelerated hover dynamics. |
+| **Shadow Intensity Control**  | Global CSS variable slider (`--shadow-intensity`) providing real-time depth control over shadows on cards, search bars, modals, and quick link icons.                                       |
+| **Vector Custom Cursor**      | Theme-adaptive SVG cursor engine featuring custom hover expansion and drag-state feedback.                                                                                                  |
 
 </details>
 <details>
@@ -132,7 +132,7 @@
 
 <a href="https://addons.mozilla.org/firefox/addon/0flufstart/"><img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Download from Mozilla Add-ons" height="48" /></a>
 
-2. Alternatively, download the latest`0FluffStart-(version).xpi` from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) and drag/drop it into Firefox (or open `about:addons` → Gear Icon → _Install Add-on From File..._).
+2. Alternatively, download the latest `0FluffStart-(version).xpi` from [Releases](https://github.com/jbuilds-g/0FluffStart/releases/latest) and drag and drop it into Firefox (or open `about:addons` → Gear Icon → _Install Add-on From File..._).
 
 #### **Chromium (Chrome, Edge, Brave)**
 
@@ -147,13 +147,13 @@
   - Enable **Developer Mode** in the top-right corner.
   - Click **Load Unpacked** and select the extracted folder.
 
-### Mobile & Live Web (PWA)
+### Mobile & Web (PWA)
 
 The hosted version is a fully compliant **PWA**, meaning it can be installed as a standalone app that works even without an internet connection.
 
 #### Android (Chrome)
 
-1.  Navigate to the [Live URL](https://https://0fluffstart.pages.dev/).
+1.  Navigate to the [Live URL](https://0fluffstart.pages.dev/).
 2.  Tap the three dots (Menu) and select **Add to Home Screen**.
 3.  The dashboard will appear in your app drawer as a native application.
 
@@ -169,7 +169,7 @@ _alternatively_
 
 1. Open **Settings** in Firefox.
 2. Select **Homepage** -> **Custom URL**.
-3. Type or paste the **Live URL**: `https://https://0fluffstart.pages.dev/`
+3. Type or paste the **Live URL**: `https://0fluffstart.pages.dev/`
 4. Tap **Set**. New tabs and homepage opens will now load the dashboard directly.
 
 ---
@@ -178,17 +178,17 @@ _alternatively_
 
 #### **Chrome (Android)**
 
-- **Option A (PWA App):** Go to the [Live App](https://https://0fluffstart.pages.dev/), tap the menu (⋮), and select **Add to Home Screen**.
-- **Option B (Homepage):** Go to **Settings** → **Homepage** → turn **On** → paste `https://https://0fluffstart.pages.dev/`.
+- **Option A (PWA App):** Go to the [Live App](https://0fluffstart.pages.dev/), tap the menu (⋮), and select **Add to Home Screen**.
+- **Option B (Homepage):** Go to **Settings** → **Homepage** → turn **On** → paste `https://0fluffstart.pages.dev/`.
 
 #### **Firefox**
 
 1. Go to **Settings** → **Homepage** → **Custom URL**.
-2. Paste `https://https://0fluffstart.pages.dev/` and tap **Set**.
+2. Paste `https://0fluffstart.pages.dev/` and tap **Set**.
 
 #### **Safari (iOS)**
 
-1. Open the [Live App](https://https://0fluffstart.pages.dev/) in Safari.
+1. Open the [Live App](https://0fluffstart.pages.dev/) in Safari.
 2. Tap **Share** → **Add to Home Screen**.
 
 > [!IMPORTANT]
@@ -201,11 +201,11 @@ _alternatively_
 
 ## 💾 Data Sync & Management
 
-Data is stored locally in `localStorage` and `IndexedDB`. Background media images and videos are serialized directly into base64 JSON backups.
+Data is stored locally in `localStorage` and `IndexedDB`. Background images and videos are serialized directly into Base64 JSON backups.
 
-1. **Export:** Go to _Settings > Data Management_ → Click **Backup (Save)**.
+1. **Export:** Go to _Settings → Data Management_ → click **Backup (Save)**.
 2. **Transfer:** Send the `.json` file to your target device.
-3. **Import:** Open the app on the new device → _Settings > Data Management_ → Click **Restore (Load)**.
+3. **Import:** Open the app on the new device → _Settings → Data Management_ → click **Restore (Load)**.
 
 ---
 
@@ -215,7 +215,7 @@ Data is stored locally in `localStorage` and `IndexedDB`. Background media image
 <summary><b>View Complete Architecture Tree</b></summary>
 
 <pre>
-perties
+0FluffStart/
 ├── js/                   # Modular ES application architecture
 │   ├── main.js           # App entry point & event initialization
 │   ├── cursor.js         # Theme-adaptive custom vector cursor
@@ -238,11 +238,11 @@ perties
 
 </details>
 
-## License
+## 📄 License
 
 Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0-only). See [LICENSE](LICENSE) for details.
 
 ---
 
 > [!NOTE]
-> The core logic and application code were generated by **Gemini AI** under my supervision and instruction.
+> The core logic and application code were generated with **Gemini AI** under my supervision and direction.
