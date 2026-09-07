@@ -148,8 +148,8 @@
     display: flex !important;
   }
 
-  body:not(.force-desktop-mode) #folderExitBtn .inline-icon,
-  body:not(.force-desktop-mode) #settingsToggleBtn .inline-icon {
+  body:not(.force-desktop-mode) #folderExitBtn .icon-mask,
+  body:not(.force-desktop-mode) #settingsToggleBtn .icon-mask {
     width: 20px !important;
     height: 20px !important;
   }

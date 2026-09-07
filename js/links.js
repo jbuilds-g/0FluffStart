@@ -1,12 +1,12 @@
 import { store } from "./store.js";
 import { generateId, sanitizeUrl } from "./utils.js";
-import { customConfirm, showToast, loadInlineIcons } from "./ui.js";
+import { customConfirm, showToast } from "./ui.js";
 
 const folderTemplate = document.createElement("div");
 folderTemplate.className = "link-item is-folder";
 folderTemplate.innerHTML = `
     <div class="link-icon-circle">
-        <span class="inline-icon" data-icon="folder" style="width:26px; height:26px;"></span>
+        <span class="icon-mask icon-folder" style="width:26px; height:26px;"></span>
     </div>
     <div class="link-name"></div>
 `;
@@ -202,14 +202,14 @@ export function renderLinks() {
     exitContainer.innerHTML = `
       <div class="back-pill" title="Return to Main Dashboard">
         <div class="back-icon-circle">
-          <span class="inline-icon" data-icon="back" style="width:16px; height:16px;"></span>
+          <span class="icon-mask icon-back" style="width:16px; height:16px;"></span>
         </div>
         <span class="back-text">Dashboard</span>
       </div>
       ${
         isNested
           ? `<button class="back-pill-sub" title="Back to Previous Folder">
-              <span class="inline-icon icon-chevron" data-icon="chevron" style="width:18px; height:18px; transform: rotate(180deg);"></span>
+              <span class="icon-mask icon-chevron" style="width:18px; height:18px; transform: rotate(180deg);"></span>
             </button>`
           : ""
       }
@@ -224,7 +224,6 @@ export function renderLinks() {
     }
 
     footerNav.appendChild(exitContainer);
-    loadInlineIcons(footerNav);
   }
 
   if (!grid.dataset.scrollBound) {
@@ -252,9 +251,6 @@ export function renderLinks() {
       }
     });
   }
-
-  loadInlineIcons(grid);
-  loadInlineIcons(footerNav);
 }
 
 export function toggleSelection(id) {
@@ -778,7 +774,6 @@ export function renderLinkManager() {
 
   linkManagerContent.innerHTML = "";
   linkManagerContent.appendChild(newFragment);
-  loadInlineIcons(linkManagerContent);
 }
 
 /**

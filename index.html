@@ -67,8 +67,7 @@
           <button class="engine-btn" id="engineDropdownBtn">
             <span id="currentEngineIcon">G</span>
             <span
-              class="inline-icon chevron"
-              data-icon="chevron"
+              class="chevron icon-mask icon-chevron"
               style="width: 12px; height: 12px"
             ></span>
           </button>
@@ -78,8 +77,7 @@
             title="Toggle Live Suggestions"
           >
             <span
-              class="inline-icon"
-              data-icon="suggest"
+              class="icon-mask icon-suggest"
               style="width: 19px; height: 19px"
             ></span>
           </button>
@@ -94,8 +92,7 @@
 
         <button class="search-icon" id="searchSubmitBtn">
           <span
-            class="inline-icon"
-            data-icon="search"
+            class="icon-mask icon-search"
             style="width: 24px; height: 24px"
           ></span>
         </button>
@@ -116,8 +113,7 @@
         title="Settings"
       >
         <span
-          class="inline-icon"
-          data-icon="settings"
+          class="icon-mask icon-settings"
           style="width: 18px; height: 18px"
         ></span>
       </button>
@@ -135,8 +131,7 @@
                 title="Expand / Collapse All"
               >
                 <span
-                  class="inline-icon"
-                  data-icon="expand-collapse"
+                  class="icon-mask icon-expand-collapse"
                   style="width: 18px; height: 18px"
                 ></span>
               </button>
@@ -146,8 +141,7 @@
                 title="Close Settings"
               >
                 <span
-                  class="inline-icon"
-                  data-icon="close"
+                  class="icon-mask icon-close"
                   style="width: 20px; height: 20px"
                 ></span>
               </button>
@@ -166,8 +160,7 @@
               title="Clear search"
             >
               <span
-                class="inline-icon"
-                data-icon="close"
+                class="icon-mask icon-close"
                 style="width: 14px; height: 14px"
               ></span>
             </button>
@@ -181,8 +174,7 @@
           <summary>
             Dashboard Links
             <span
-              class="inline-icon chevron"
-              data-icon="chevron"
+              class="chevron icon-mask icon-chevron"
               style="width: 16px; height: 16px"
             ></span>
           </summary>
@@ -192,8 +184,7 @@
                 <h3>Quick Link Management</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -285,8 +276,7 @@
           <summary>
             Personalization
             <span
-              class="inline-icon chevron"
-              data-icon="chevron"
+              class="chevron icon-mask icon-chevron"
               style="width: 16px; height: 16px"
             ></span>
           </summary>
@@ -296,8 +286,7 @@
                 <h3>Your Name</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -318,8 +307,7 @@
                 <h3>Vibe (Theme)</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -338,8 +326,7 @@
                   <span class="selected-text">OLED Dark (Default)</span>
                   <span class="select-arrow">
                     <span
-                      class="inline-icon"
-                      data-icon="chevron"
+                      class="icon-mask icon-chevron"
                       style="width: 12px; height: 12px"
                     ></span>
                   </span>
@@ -402,8 +389,7 @@
                 <h3>Clock Customization</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -422,8 +408,7 @@
                   <span class="selected-text">Default</span>
                   <span class="select-arrow">
                     <span
-                      class="inline-icon"
-                      data-icon="chevron"
+                      class="icon-mask icon-chevron"
                       style="width: 12px; height: 12px"
                     ></span>
                   </span>
@@ -490,8 +475,7 @@
                 <h3>Custom Background</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -517,28 +501,7 @@
                     for="bgImageInput"
                     class="radio-option bg-option-label"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <rect
-                        x="3"
-                        y="3"
-                        width="18"
-                        height="18"
-                        rx="2"
-                        ry="2"
-                      ></rect>
-                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                      <polyline points="21 15 16 10 5 21"></polyline>
-                    </svg>
+                    <span class="icon-mask icon-image" style="width: 16px; height: 16px"></span>
                     Choose Media
                   </label>
                   <button
@@ -546,21 +509,7 @@
                     class="radio-option reset-bg-btn"
                     title="Reset Background"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M3 6h18"></path>
-                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                    </svg>
+                    <span class="icon-mask icon-delete" style="width: 18px; height: 18px"></span>
                   </button>
                 </div>
                 <p id="bgFileName" class="bg-file-name">No media selected.</p>
@@ -572,8 +521,7 @@
                 <h3>Shadow Intensity</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -607,8 +555,7 @@
                 <h3>Link Navigation</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -628,8 +575,7 @@
                 <h3>Force Desktop Mode</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -649,8 +595,7 @@
                 <h3>Theme Adaptive Cursor</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -670,8 +615,7 @@
                 <h3>Search Bar Style</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -689,8 +633,7 @@
                   <span class="selected-text">Unified Search Bar</span>
                   <span class="select-arrow">
                     <span
-                      class="inline-icon"
-                      data-icon="chevron"
+                      class="icon-mask icon-chevron"
                       style="width: 12px; height: 12px"
                     ></span>
                   </span>
@@ -711,8 +654,7 @@
                 <h3>Search Bar Controls</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -768,8 +710,7 @@
           <summary>
             Search Preferences
             <span
-              class="inline-icon chevron"
-              data-icon="chevron"
+              class="chevron icon-mask icon-chevron"
               style="width: 16px; height: 16px"
             ></span>
           </summary>
@@ -779,8 +720,7 @@
                 <h3>Suggestions & Autocomplete</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -829,8 +769,7 @@
                   >
                   <span class="select-arrow">
                     <span
-                      class="inline-icon"
-                      data-icon="chevron"
+                      class="icon-mask icon-chevron"
                       style="width: 12px; height: 12px"
                     ></span>
                   </span>
@@ -854,8 +793,7 @@
                 <h3>Search Engines</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -876,8 +814,7 @@
                   <span class="selected-text">Manage Search Engines</span>
                   <span class="select-arrow">
                     <span
-                      class="inline-icon"
-                      data-icon="chevron"
+                      class="icon-mask icon-chevron"
                       style="width: 12px; height: 12px"
                     ></span>
                   </span>
@@ -935,8 +872,7 @@
                 <h3>Search History Control</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -957,8 +893,7 @@
           <summary>
             Data Management
             <span
-              class="inline-icon chevron"
-              data-icon="chevron"
+              class="chevron icon-mask icon-chevron"
               style="width: 16px; height: 16px"
             ></span>
           </summary>
@@ -968,8 +903,7 @@
                 <h3>Storage & Data Maintenance</h3>
                 <button class="help-btn" title="Toggle help text">
                   <span
-                    class="inline-icon"
-                    data-icon="help"
+                    class="icon-mask icon-help"
                     style="width: 14px; height: 14px"
                   ></span>
                 </button>
@@ -1056,8 +990,7 @@
         title="Scroll to top"
       >
         <span
-          class="inline-icon"
-          data-icon="arrow-up"
+          class="icon-mask icon-arrow-up"
           style="width: 24px; height: 24px"
         ></span>
       </button>
@@ -1074,16 +1007,14 @@
         title="Back to Dashboard"
       >
         <span
-          class="inline-icon"
-          data-icon="back"
+          class="icon-mask icon-back"
           style="width: 20px; height: 20px"
         ></span>
       </button>
 
       <div class="mobile-search-pill" id="mobileSearchPill">
         <span
-          class="inline-icon"
-          data-icon="search"
+          class="icon-mask icon-search"
           style="width: 18px; height: 18px; opacity: 0.7"
         ></span>
         <span class="mobile-search-placeholder">Search or Type URL...</span>

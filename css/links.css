@@ -213,12 +213,8 @@ body.material-you .link-item:hover .link-icon-circle {
   box-shadow: var(--md-sys-elevation-level3-shadow);
 }
 
-body.material-you .link-item:hover .link-icon-circle span,
-body.material-you .link-item:hover .link-icon-circle svg,
-body.material-you .link-item:hover .link-icon-circle .inline-icon {
+body.material-you .link-item:hover .link-icon-circle span {
   color: var(--bg) !important;
-  stroke: var(--bg) !important;
-  fill: var(--bg) !important;
 }
 
 .link-icon-circle img {

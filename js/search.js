@@ -6,63 +6,63 @@
 import { store } from "./store.js";
 import { sanitizeUrl } from "./utils.js";
 
-const GENERIC_SEARCH_ICON = `<span class="inline-icon" data-icon="search"></span>`;
+const GENERIC_SEARCH_ICON = `<span class="icon-mask icon-search"></span>`;
 
 export const searchEngines = [
   {
     name: "Browser Default",
     url: "default",
-    icon: `<span class="inline-icon icon-browser-globe" data-icon="browser-globe"></span>`,
+    icon: `<span class="icon-mask icon-browser-globe"></span>`,
   },
   {
     name: "Google",
     url: "https://www.google.com/search?q=",
-    icon: `<span class="inline-icon" data-icon="google"></span>`,
+    icon: `<span class="icon-mask icon-google"></span>`,
   },
   {
     name: "DuckDuckGo",
     url: "https://duckduckgo.com/?q=",
-    icon: `<span class="inline-icon" data-icon="duckduckgo"></span>`,
+    icon: `<span class="icon-mask icon-duckduckgo"></span>`,
   },
   {
     name: "Bing",
     url: "https://www.bing.com/search?q=",
-    icon: `<span class="inline-icon" data-icon="bing"></span>`,
+    icon: `<span class="icon-mask icon-bing"></span>`,
   },
   {
     name: "Brave",
     url: "https://search.brave.com/search?q=",
-    icon: `<span class="inline-icon" data-icon="brave"></span>`,
+    icon: `<span class="icon-mask icon-brave"></span>`,
   },
   {
     name: "Startpage",
     url: "https://www.startpage.com/sp/search?query=",
-    icon: `<span class="inline-icon" data-icon="startpage"></span>`,
+    icon: `<span class="icon-mask icon-startpage"></span>`,
   },
   {
     name: "Ecosia",
     url: "https://www.ecosia.org/search?q=",
-    icon: `<span class="inline-icon" data-icon="ecosia"></span>`,
+    icon: `<span class="icon-mask icon-ecosia"></span>`,
   },
   {
     name: "Kagi",
     url: "https://kagi.com/search?q=",
-    icon: `<span class="inline-icon" data-icon="kagi"></span>`,
+    icon: `<span class="icon-mask icon-kagi"></span>`,
   },
   {
     name: "SearXNG",
     url: "https://searx.be/search?q=",
-    icon: `<span class="inline-icon" data-icon="searxng"></span>`,
+    icon: `<span class="icon-mask icon-searxng"></span>`,
   },
   {
     name: "Wikipedia",
     url: "https://en.wikipedia.org/wiki/Special:Search?search=",
-    icon: `<span class="inline-icon" data-icon="wikipedia"></span>`,
+    icon: `<span class="icon-mask icon-wikipedia"></span>`,
   },
   {
     name: "YouTube",
     url: "https://www.youtube.com/results?search_query=",
-    icon: `<span class="inline-icon" data-icon="youtube"></span>`,
+    icon: `<span class="icon-mask icon-youtube"></span>`,
   },
 ];
 

@@ -116,7 +116,7 @@ body {
   display: inline-block;
   width: 18px;
   height: 18px;
-  background-color: var(--text, currentColor);
+  background-color: currentColor;
   forced-color-adjust: none;
   mask-repeat: no-repeat;
   mask-position: center;
@@ -218,58 +218,30 @@ body {
   mask-image: url("../assets/icons/back.svg");
   -webkit-mask-image: url("../assets/icons/back.svg");
 }
-.icon-collapse {
-  mask: url("../assets/icons/expand-collapse.svg") no-repeat center / contain;
-  -webkit-mask: url("../assets/icons/collapse.svg") no-repeat center / contain;
+.icon-expand-collapse {
+  mask-image: url("../assets/icons/expand-collapse.svg");
+  -webkit-mask-image: url("../assets/icons/expand-collapse.svg");
 }
 .icon-help {
-  mask: url("../assets/icons/help.svg") no-repeat center / contain;
-  -webkit-mask: url("../assets/icons/help.svg") no-repeat center / contain;
+  mask-image: url("../assets/icons/help.svg");
+  -webkit-mask-image: url("../assets/icons/help.svg");
 }
+.icon-check {
+  mask-image: url("../assets/icons/check.svg");
+  -webkit-mask-image: url("../assets/icons/check.svg");
+}
+.icon-image {
+  mask-image: url("../assets/icons/image.svg");
+  -webkit-mask-image: url("../assets/icons/image.svg");
+}
+.icon-chevron-down {
+  mask-image: url("../assets/icons/chevron-down.svg");
+  -webkit-mask-image: url("../assets/icons/chevron-down.svg");
+}
+
 .icon-chevron {
   display: inline-block;
-  mask: url("../assets/icons/chevron.svg") no-repeat center / contain;
-  -webkit-mask: url("../assets/icons/chevron.svg") no-repeat center / contain;
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* --- INLINE SVG ICON ENGINE --- */
-.inline-icon,
-.inline-icon *,
-.link-icon-circle .inline-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  color: inherit;
-  flex-shrink: 0;
-  overflow: hidden;
-  background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-}
-
-.inline-icon svg {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100%;
-  max-height: 100%;
-  color: inherit;
-  display: block;
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-.inline-icon svg,
-.inline-icon svg * {
-  fill: currentColor !important;
-}
-
-.inline-icon svg[fill="none"],
-.inline-icon svg[fill="none"] * {
-  fill: none !important;
-  stroke: currentColor !important;
 }
 
 :root {

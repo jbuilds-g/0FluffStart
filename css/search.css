@@ -232,9 +232,7 @@ body.material .engine-switcher {
 }
 
 /* --- SEARCH ENGINE SVG SIZING --- */
-.engine-switcher #currentEngineIcon svg,
 .engine-switcher #currentEngineIcon .icon-mask,
-#engineDropdown .engine-option svg,
 #engineDropdown .engine-option .icon-mask {
   width: 18px;
   height: 18px;

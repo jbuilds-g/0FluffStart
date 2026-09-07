@@ -15,31 +15,7 @@ import {
 
 const materialYouEngine = new MaterialYouEngine();
 
-const svgCache = new Map();
-
-export async function loadInlineIcons(root = document) {
-  const nodes = root.querySelectorAll("[data-icon]");
-  for (const node of nodes) {
-    const name = node.dataset.icon;
-    if (!name) continue;
-    if (!svgCache.has(name)) {
-      try {
-        const res = await fetch(`./assets/icons/${name}.svg`);
-        if (res.ok) {
-          const text = await res.text();
-          svgCache.set(name, text);
-        }
-      } catch (e) {
-        console.warn(`Failed to fetch icon: ${name}`, e);
-      }
-    }
-    if (svgCache.has(name) && node.isConnected) {
-      node.innerHTML = svgCache.get(name);
-    }
-  }
-}
-
-const GENERIC_SEARCH_ICON = `<span class="inline-icon" data-icon="search"></span>`;
+const GENERIC_SEARCH_ICON = `<span class="icon-mask icon-search"></span>`;
 
 export {
   searchEngines,
@@ -299,9 +275,6 @@ export function renderEngineDropdown() {
     });
     dropdown.appendChild(div);
   });
-
-  if (switcher) loadInlineIcons(switcher);
-  loadInlineIcons(dropdown);
 }
 
 export function toggleEngineDropdown() {
@@ -1081,7 +1054,6 @@ export async function loadSettings() {
   materialYouEngine.triggerMaterialYou(settings, getBgFromDB);
   updateSuggestSettingsVisibility();
   initSettingsSearch();
-  loadInlineIcons();
 
   if (window.customCursorInstance) {
     window.customCursorInstance.toggleEnabled(
@@ -1394,6 +1366,4 @@ export function renderEngineSelectionList() {
     item.appendChild(actions);
     container.appendChild(item);
   });
-
-  loadInlineIcons(container);
 }
