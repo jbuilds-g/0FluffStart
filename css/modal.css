@@ -87,7 +87,7 @@ body.material-you .modal-header .icon-btn:hover,
 body.material-you .header-actions .icon-btn:hover,
 body.material-you .floating-btn:hover,
 body.material-you .scroll-to-top-btn:hover {
-  background-color: var(--interactive-bg-alpha);
+  background-color: var(--card-hover);
   color: var(--text);
 }
 
@@ -115,7 +115,7 @@ body.material-you .danger-btn {
 
 body.material-you .secondary:hover,
 body.material-you .add-link-btn:hover {
-  background-color: var(--interactive-bg-alpha);
+  background-color: var(--card-hover);
   border-color: var(--accent);
   color: var(--accent);
 }

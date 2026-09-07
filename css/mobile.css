@@ -75,6 +75,7 @@
     right: 16px !important;
     width: calc(100% - 32px) !important;
     height: 50px !important;
+    box-sizing: border-box !important;
     z-index: 100 !important;
     margin: 0 !important;
   }

@@ -65,7 +65,7 @@ body.material-you .search-icon {
 }
 
 body.material-you .search-icon:hover {
-  background: var(--interactive-bg-alpha, rgba(168, 199, 250, 0.12));
+  background: var(--card-hover);
   color: var(--accent);
 }
 
@@ -362,7 +362,7 @@ body.material-you .suggestions-container {
 }
 
 body.material-you .suggestion-item:hover {
-  background-color: var(--interactive-bg-alpha);
+  background-color: var(--card-hover);
 }
 
 .suggestion-item {
