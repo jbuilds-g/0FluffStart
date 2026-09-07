@@ -162,6 +162,7 @@ body.material-you input[type="checkbox"]:not(.manager-checkbox) {
   -webkit-appearance: none !important;
   width: 52px !important;
   min-width: 52px !important;
+  flex-shrink: 0 !important;
   height: 32px !important;
   border-radius: 16px !important;
   background-color: var(--md-sys-color-surface-container-highest) !important;
@@ -786,10 +787,12 @@ select:hover {
   border-radius: var(--radius);
   cursor: pointer;
   flex: 1;
+  min-width: 0;
   border: 1px solid var(--border);
   transition: background 0.2s;
   font-size: 0.9rem;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .radio-option:hover {
