@@ -191,24 +191,36 @@ Data is stored locally in `localStorage` and `IndexedDB`. Background images and 
 
 <pre>
 0FluffStart/
-├── js/                   # Modular ES application architecture
-│   ├── main.js           # App entry point & event initialization
-│   ├── cursor.js         # Theme-adaptive custom vector cursor
-│   ├── links.js          # Link management & drag-and-drop tree engine
-│   ├── material-you-engine.js # Dynamic Monet HSL color extractor
-│   ├── storage.js        # IndexedDB & base64 backup/restore handlers
-│   ├── store.js          # Centralized reactive state engine
-│   ├── suggestions.js    # Live search & history log controllers
-│   ├── ui.js             # UI render state & settings management
-│   ├── utils.js          # Shared sanitizers, debouncers & helpers
-│   └── version.js        # Application version metadata
-├── index.html            # Core HTML5 application entry point
-├── manifest.json         # Manifest V3 extension configuration (Chromium)
-├── manifest.firefox.json # Gecko extension manifest configuration
-├── pwa-manifest.json     # PWA web application manifest
-├── PRIVACY.md            # Privacy policy documentation
-├── TAGS.md               # Search engine shortcut tag reference
-└── sw.js                 # Service Worker (Offline PWA engine)
+├── css/                         # Modular CSS architecture
+│   ├── base.css                # Base styles and global element defaults
+│   ├── core.css                # Core application component styles
+│   ├── cursor.css              # Custom cursor styling and states
+│   ├── layout.css              # Dashboard and responsive layout styles
+│   ├── links.css               # Quick link and folder styling
+│   ├── mobile.css              # Mobile-specific responsive styles
+│   ├── modal.css               # Modal and dialog styles
+│   ├── search.css              # Search bar and suggestion styles
+│   ├── themes.css              # Theme and visual customization styles
+│   ├── utilities.css           # Reusable utility classes
+│   └── variables.css            # Global CSS custom properties and tokens
+├── js/                          # Modular ES application architecture
+│   ├── main.js                 # App entry point & event initialization
+│   ├── cursor.js               # Theme-adaptive custom vector cursor
+│   ├── links.js                # Link management & drag-and-drop tree engine
+│   ├── material-you-engine.js  # Dynamic Monet HSL color extractor
+│   ├── storage.js              # IndexedDB & Base64 backup/restore handlers
+│   ├── store.js                # Centralized reactive state engine
+│   ├── suggestions.js          # Live search & history log controllers
+│   ├── ui.js                   # UI render state & settings management
+│   ├── utils.js                # Shared sanitizers, debouncers & helpers
+│   └── version.js              # Application version metadata
+├── index.html                   # Core HTML5 application entry point
+├── manifest.json                # Manifest V3 extension configuration (Chromium)
+├── manifest.firefox.json        # Gecko extension manifest configuration
+├── pwa-manifest.json            # PWA web application manifest
+├── PRIVACY.md                   # Privacy policy documentation
+├── TAGS.md                      # Search engine shortcut tag reference
+└── sw.js                        # Service Worker (Offline PWA engine)
 </pre>
 
 </details>
