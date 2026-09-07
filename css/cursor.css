@@ -22,6 +22,23 @@
   html[data-custom-cursor="active"] * {
     cursor: none !important;
   }
+
+  /* Keep native control cursors hidden while the custom cursor is active. */
+  html[data-custom-cursor="active"]
+    body.material-you
+    input[type="checkbox"]:not(.manager-checkbox) {
+    cursor: none !important;
+  }
+
+  html[data-custom-cursor="active"]
+    body
+    input[type="range"]::-webkit-slider-thumb {
+    cursor: none !important;
+  }
+
+  html[data-custom-cursor="active"] body input[type="range"]::-moz-range-thumb {
+    cursor: none !important;
+  }
 }
 
 .custom-cursor.is-visible {
