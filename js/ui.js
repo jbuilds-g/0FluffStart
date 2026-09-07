@@ -538,35 +538,41 @@ export async function clearBackground() {
  * @param {Object|null} [updates=null]
  */
 export async function autoSaveSettings(updates = null) {
-  const currentSettings = store.getState().settings || {};
-  const newSettings = { ...currentSettings };
+  const settingsUpdates = {};
 
   if (updates && typeof updates === "object") {
-    Object.assign(newSettings, updates);
+    Object.assign(settingsUpdates, updates);
   } else {
     SETTINGS_MAP.forEach((item) => {
       if (item.type === "custom-select") {
         const val = getCustomSelectValue(item.id);
-        if (val) newSettings[item.key] = val;
+        if (val) settingsUpdates[item.key] = val;
       } else if (item.type === "input-text") {
         const el = document.getElementById(item.id);
-        if (el) newSettings[item.key] = el.value.trim();
+        if (el) settingsUpdates[item.key] = el.value.trim();
       } else if (item.type === "checkbox") {
         const el = document.getElementById(item.id);
-        if (el) newSettings[item.key] = !!el.checked;
+        if (el) settingsUpdates[item.key] = !!el.checked;
       } else if (item.type === "range") {
         const el = document.getElementById(item.id);
-        if (el) newSettings[item.key] = parseInt(el.value, 10);
+        if (el) settingsUpdates[item.key] = parseInt(el.value, 10);
       } else if (item.type === "radio-group") {
         const radios = document.getElementsByName(item.name);
-        for (let r of radios) {
-          if (r.checked) newSettings[item.key] = r.value;
+        for (const r of radios) {
+          if (r.checked) settingsUpdates[item.key] = r.value;
         }
       }
     });
   }
 
-  await store.setState({ settings: newSettings });
+  store.setState((prevState) => ({
+    settings: {
+      ...prevState.settings,
+      ...settingsUpdates,
+    },
+  }));
+
+  const newSettings = store.getState().settings;
 
   document.body.className = newSettings.theme || "dark";
   document.body.classList.toggle(

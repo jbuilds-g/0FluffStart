@@ -578,18 +578,32 @@ function bindStaticEvents() {
   const shadowInputNumber = document.getElementById("shadowInputNumber");
 
   if (shadowSlider && shadowInputNumber) {
-    shadowSlider.addEventListener("input", () => {
-      shadowInputNumber.value = shadowSlider.value;
+    const persistShadowSettings = debounce(() => {
       autoSaveSettings();
+    }, 300);
+
+    const applyShadowValue = (value) => {
+      const val = Math.max(0, Math.min(200, Number(value)));
+
+      document.documentElement.style.setProperty("--shadow-factor", val / 100);
+      document.documentElement.classList.toggle("no-shadows", val === 0);
+
+      shadowSlider.value = val;
+      shadowInputNumber.value = val;
+
+      persistShadowSettings();
+    };
+
+    shadowSlider.addEventListener("input", () => {
+      applyShadowValue(shadowSlider.value);
     });
 
     const syncNumberToSlider = () => {
       let val = parseInt(shadowInputNumber.value, 10);
+
       if (isNaN(val)) val = 100;
-      val = Math.max(0, Math.min(200, val));
-      shadowInputNumber.value = val;
-      shadowSlider.value = val;
-      autoSaveSettings();
+
+      applyShadowValue(val);
     };
 
     shadowInputNumber.addEventListener("change", syncNumberToSlider);

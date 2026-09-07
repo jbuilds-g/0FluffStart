@@ -1,14 +1,34 @@
-const CACHE_NAME = "0fluffstart-cache-v1.4.9";
+const CACHE_NAME = "0fluffstart-cache-v1.5.0";
 
 const CORE_APP_SHELL = [
   "./",
   "./index.html",
   "./pwa-manifest.json",
+  "./icon.png",
+
   "./css/core.css",
+  "./css/base.css",
+  "./css/cursor.css",
+  "./css/layout.css",
+  "./css/links.css",
+  "./css/mobile.css",
   "./css/modal.css",
   "./css/search.css",
+  "./css/themes.css",
+  "./css/utilities.css",
+  "./css/variables.css",
+
   "./js/main.js",
-  "./icon.png",
+  "./js/store.js",
+  "./js/ui.js",
+  "./js/search.js",
+  "./js/suggestions.js",
+  "./js/links.js",
+  "./js/storage.js",
+  "./js/cursor.js",
+  "./js/material-you-engine.js",
+  "./js/utils.js",
+  "./js/version.js",
 ];
 
 // Listen for immediate update activation messages from active clients

@@ -5,6 +5,8 @@
  * keyboard navigation, and local search history operations.
  */
 
+import { getSearchShortcutTags } from "./search.js";
+
 /**
  * @typedef {Object} SuggestionItem
  * @property {string} name - Display phrase / query text.
@@ -30,18 +32,6 @@ const MAX_CACHE_SIZE = 100;
 const MAX_HISTORY_ITEMS = 20;
 const DEFAULT_PROVIDER = "DuckDuckGo";
 const ALL_PROVIDERS = Object.freeze(["DuckDuckGo", "Google", "Bing", "Brave"]);
-const ENGINE_TAGS = Object.freeze([
-  "?bi",
-  "?b",
-  "?st",
-  "?s",
-  "?g",
-  "?d",
-  "?e",
-  "?k",
-  "?w",
-  "?y",
-]);
 
 const DEFAULT_WORKER_PROXY_URL =
   "https://0fluffstart-suggest-proxy.jbuilds.workers.dev";
@@ -355,8 +345,15 @@ export function handleSuggestions(e, deps) {
   let cleanVal = inputVal.trim();
   const lowerVal = cleanVal.toLowerCase();
 
-  for (const tag of ENGINE_TAGS) {
-    if (lowerVal.startsWith(tag + " ") || lowerVal === tag) {
+  const shortcutTags = getSearchShortcutTags(settings);
+
+  for (const { tag } of shortcutTags) {
+    const normalizedTag = tag.toLowerCase();
+
+    if (
+      lowerVal.startsWith(normalizedTag + " ") ||
+      lowerVal === normalizedTag
+    ) {
       cleanVal = cleanVal.slice(tag.length).trim();
       break;
     }

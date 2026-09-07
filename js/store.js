@@ -211,6 +211,28 @@ let state = {
 let isInitialized = false;
 const listeners = new Set();
 
+/**
+ * Serializes persistence operations per storage key so older writes
+ * can never complete after newer writes for the same key.
+ */
+const persistenceQueues = new Map();
+
+function queuePersistence(key, data) {
+  const previous = persistenceQueues.get(key) || Promise.resolve();
+
+  const next = previous.catch(() => {}).then(() => saveToStorage(key, data));
+
+  persistenceQueues.set(key, next);
+
+  next.finally(() => {
+    if (persistenceQueues.get(key) === next) {
+      persistenceQueues.delete(key);
+    }
+  });
+
+  return next;
+}
+
 export const store = {
   /**
    * Initializes store state from storage sources asynchronously.
@@ -233,24 +255,27 @@ export const store = {
    * Updates store state asynchronously and notifies listeners with previous and next states.
    * @param {Partial<StoreState>|((prevState: StoreState) => Partial<StoreState>)} update
    */
-  async setState(update) {
+  setState(update) {
     const prevState = state;
     const nextState = typeof update === "function" ? update(prevState) : update;
+
     state = { ...prevState, ...nextState };
 
-    const savePromises = [];
-    if ("links" in nextState)
-      savePromises.push(saveToStorage("0fluff_links", state.links));
-    if ("settings" in nextState)
-      savePromises.push(saveToStorage("0fluff_settings", state.settings));
-    if ("searchHistory" in nextState)
-      savePromises.push(saveToStorage("0fluff_history", state.searchHistory));
-    if ("expandedFolderIds" in nextState)
-      savePromises.push(
-        saveToStorage("0fluff_expanded_folders", state.expandedFolderIds),
-      );
+    if ("links" in nextState) {
+      queuePersistence("0fluff_links", state.links);
+    }
 
-    await Promise.all(savePromises);
+    if ("settings" in nextState) {
+      queuePersistence("0fluff_settings", state.settings);
+    }
+
+    if ("searchHistory" in nextState) {
+      queuePersistence("0fluff_history", state.searchHistory);
+    }
+
+    if ("expandedFolderIds" in nextState) {
+      queuePersistence("0fluff_expanded_folders", state.expandedFolderIds);
+    }
 
     listeners.forEach((listener) => listener(prevState, state));
   },

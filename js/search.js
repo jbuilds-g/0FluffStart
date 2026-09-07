@@ -87,6 +87,31 @@ export function getAvailableEngines() {
   return combined.length > 0 ? combined : [searchEngines[0]];
 }
 
+const BUILTIN_SEARCH_TAGS = [
+  { tag: "?def", name: "Browser Default" },
+  { tag: "?bi", name: "Bing" },
+  { tag: "?b", name: "Brave" },
+  { tag: "?st", name: "Startpage" },
+  { tag: "?s", name: "SearXNG" },
+  { tag: "?g", name: "Google" },
+  { tag: "?d", name: "DuckDuckGo" },
+  { tag: "?e", name: "Ecosia" },
+  { tag: "?k", name: "Kagi" },
+  { tag: "?w", name: "Wikipedia" },
+  { tag: "?y", name: "YouTube" },
+];
+
+export function getSearchShortcutTags(settings = store.getState().settings) {
+  const customEngines = settings?.customEngines || [];
+
+  const customTags = customEngines.map((engine) => ({
+    tag: engine.tag || `?${engine.name.charAt(0).toLowerCase()}`,
+    name: engine.name,
+  }));
+
+  return [...customTags, ...BUILTIN_SEARCH_TAGS];
+}
+
 export function resolveSearchQueryAndEngine(inputValue) {
   let val = (inputValue || "").trim();
   if (!val) return { query: "", targetEngine: null };
@@ -94,26 +119,7 @@ export function resolveSearchQueryAndEngine(inputValue) {
   const state = store.getState();
   const available = getAvailableEngines();
 
-  const customEngines = state.settings?.customEngines || [];
-  const customTags = customEngines.map((c) => ({
-    tag: c.tag || `?${c.name.charAt(0).toLowerCase()}`,
-    name: c.name,
-  }));
-
-  const tagMap = [
-    ...customTags,
-    { tag: "?def", name: "Browser Default" },
-    { tag: "?bi", name: "Bing" },
-    { tag: "?b", name: "Brave" },
-    { tag: "?st", name: "Startpage" },
-    { tag: "?s", name: "SearXNG" },
-    { tag: "?g", name: "Google" },
-    { tag: "?d", name: "DuckDuckGo" },
-    { tag: "?e", name: "Ecosia" },
-    { tag: "?k", name: "Kagi" },
-    { tag: "?w", name: "Wikipedia" },
-    { tag: "?y", name: "YouTube" },
-  ];
+  const tagMap = getSearchShortcutTags(state.settings);
 
   let targetEngine = null;
   for (const item of tagMap) {
@@ -196,12 +202,20 @@ export function handleSearch(e) {
 
 export function selectSuggestion(suggestion) {
   const inputEl = document.getElementById("searchInput");
+
   if (inputEl) {
-    const currentVal = inputEl.value.trim().toLowerCase();
-    const tags = ["?bi", "?b", "?st", "?s", "?g", "?d", "?e", "?k", "?w", "?y"];
-    const matchedTag = tags.find(
-      (t) => currentVal.startsWith(t + " ") || currentVal === t,
-    );
+    const currentVal = inputEl.value.trim();
+    const lowerCurrentVal = currentVal.toLowerCase();
+
+    const matchedTag = getSearchShortcutTags().find(({ tag }) => {
+      const normalizedTag = tag.toLowerCase();
+
+      return (
+        lowerCurrentVal.startsWith(normalizedTag + " ") ||
+        lowerCurrentVal === normalizedTag
+      );
+    })?.tag;
+
     inputEl.value = matchedTag
       ? `${matchedTag} ${suggestion.name}`
       : suggestion.name;

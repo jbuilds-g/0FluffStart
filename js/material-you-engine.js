@@ -9,6 +9,8 @@
  *                     └─> Apply HSL variables & palette object to DOM & Storage
  */
 
+import { store } from "./store.js";
+
 /** Default Hue angle (blue-slate) applied when no media is active. */
 const DEFAULT_HUE = 210;
 
@@ -81,6 +83,14 @@ export class MaterialYouEngine {
      * @private
      */
     this._colorSeekedHandler = null;
+
+    /**
+     * Monotonically increasing extraction generation.
+     * Only the latest generation may apply a palette.
+     * @type {number}
+     * @private
+     */
+    this._extractionGeneration = 0;
   }
 
   /**
@@ -176,7 +186,9 @@ export class MaterialYouEngine {
    * @private
    * @param {number} hue - Dominant hue angle in degrees (0-360).
    */
-  _applyTheme(hue) {
+  _applyTheme(hue, generation = this._extractionGeneration) {
+    if (generation !== this._extractionGeneration) return;
+
     const target = document.body;
 
     // Construct harmonious HSL palette based on extracted hue angle
@@ -204,26 +216,14 @@ export class MaterialYouEngine {
       "--accent": accent,
     };
 
-    // Cache current palette to storage for fast load restoration
-    try {
-      let settings = {};
-      const raw = localStorage.getItem("0fluff_settings");
-      if (raw) {
-        try {
-          settings = JSON.parse(raw);
-        } catch (parseError) {
-          console.warn("Failed to parse settings JSON:", parseError);
-        }
-      }
-      settings.materialYouPalette = palette;
-      const serialized = JSON.stringify(settings);
-      localStorage.setItem("0fluff_settings", serialized);
-      if (typeof chrome !== "undefined" && chrome?.storage?.local) {
-        chrome.storage.local.set({ "0fluff_settings": serialized });
-      }
-    } catch (e) {
-      console.warn("Failed to persist Material You palette:", e);
-    }
+    // Persist through the centralized store so Material You cannot
+    // overwrite unrelated settings with a stale storage snapshot.
+    store.setState((prevState) => ({
+      settings: {
+        ...prevState.settings,
+        materialYouPalette: palette,
+      },
+    }));
   }
 
   /**
@@ -249,7 +249,9 @@ export class MaterialYouEngine {
    * @private
    * @param {string} url - Target image URL string or Object URL.
    */
-  _extractImageColor(url) {
+  _extractImageColor(url, generation = this._extractionGeneration) {
+    if (generation !== this._extractionGeneration) return;
+
     const img = new Image();
     img.crossOrigin = "Anonymous";
 
@@ -260,9 +262,11 @@ export class MaterialYouEngine {
 
     const handleImageLoad = () => {
       cleanup();
+      if (generation !== this._extractionGeneration) return;
+
       const { r, g, b } = this._getAverageColor(img);
       const hue = this._rgbToHue(r, g, b);
-      this._applyTheme(hue);
+      this._applyTheme(hue, generation);
     };
 
     const handleImageError = (err) => {
@@ -318,7 +322,9 @@ export class MaterialYouEngine {
    * @private
    * @param {string} url - Video source URL or Object URL.
    */
-  _extractVideoColor(url) {
+  _extractVideoColor(url, generation = this._extractionGeneration) {
+    if (generation !== this._extractionGeneration) return;
+
     this._cleanupVideoListeners();
 
     if (this._extractionTimer) {
@@ -336,6 +342,8 @@ export class MaterialYouEngine {
 
     // Seek to midpoint frame once media metadata loads
     this._colorLoadedHandler = () => {
+      if (generation !== this._extractionGeneration) return;
+
       if (this._sharedColorVideo) {
         this._sharedColorVideo.currentTime = Math.min(
           1,
@@ -346,8 +354,12 @@ export class MaterialYouEngine {
 
     // Extract frame pixels when seeking finishes
     this._colorSeekedHandler = () => {
+      if (generation !== this._extractionGeneration) return;
+
       if (this._extractionTimer) clearTimeout(this._extractionTimer);
+
       this._extractionTimer = setTimeout(() => {
+        if (generation !== this._extractionGeneration) return;
         if (!this._offscreenCanvasCtx || !this._sharedColorVideo) return;
         this._offscreenCanvasCtx.drawImage(this._sharedColorVideo, 0, 0, 1, 1);
         const [r, g, b] = this._offscreenCanvasCtx.getImageData(
@@ -356,7 +368,7 @@ export class MaterialYouEngine {
           1,
           1,
         ).data;
-        this._applyTheme(this._rgbToHue(r, g, b));
+        this._applyTheme(this._rgbToHue(r, g, b), generation);
       }, VIDEO_SEEK_DEBOUNCE_MS);
     };
 
@@ -377,7 +389,7 @@ export class MaterialYouEngine {
           1,
           1,
         ).data;
-        this._applyTheme(this._rgbToHue(r, g, b));
+        this._applyTheme(this._rgbToHue(r, g, b), generation);
       }
     }
   }
@@ -389,7 +401,17 @@ export class MaterialYouEngine {
    * @param {Function} [getBgFromDB] - Async getter callback to retrieve background media from IndexedDB.
    */
   async triggerMaterialYou(settings, getBgFromDB) {
+    const generation = ++this._extractionGeneration;
+
+    this._cleanupVideoListeners();
+
+    if (this._extractionTimer) {
+      clearTimeout(this._extractionTimer);
+      this._extractionTimer = null;
+    }
+
     if (settings?.theme !== "material-you") {
+      this.revokeActiveObjectUrl();
       this._clearThemeProperties();
       return;
     }
@@ -398,6 +420,8 @@ export class MaterialYouEngine {
       try {
         const bgData =
           typeof getBgFromDB === "function" ? await getBgFromDB() : null;
+
+        if (generation !== this._extractionGeneration) return;
 
         if (bgData) {
           let url = this._activeBgObjectUrl;
@@ -416,18 +440,22 @@ export class MaterialYouEngine {
             (typeof bgData === "string" &&
               bgData.match(/\.(mp4|webm|ogg)($|\?)/i));
 
+          if (generation !== this._extractionGeneration) return;
+
           if (isVideo) {
-            this._extractVideoColor(url);
+            this._extractVideoColor(url, generation);
           } else {
-            this._extractImageColor(url);
+            this._extractImageColor(url, generation);
           }
         }
       } catch (e) {
         console.error("Material You engine failed:", e);
       }
     } else {
+      if (generation !== this._extractionGeneration) return;
+
       this.revokeActiveObjectUrl();
-      this._applyTheme(DEFAULT_HUE);
+      this._applyTheme(DEFAULT_HUE, generation);
     }
   }
 }
