@@ -46,7 +46,7 @@
   opacity: 1;
 }
 
-/* Base CSS cursor shape. */
+/* Base cursor icon container. */
 .custom-cursor-icon {
   position: absolute;
   top: -12px;
@@ -59,68 +59,80 @@
     background-color 0.2s ease;
 }
 
-/* Default Mouse Pointer */
+/* 1. Modern Mouse Pointer Arrow */
 .icon-default-mouse-pointer {
-  width: 0;
-  height: 0;
-  top: -10px;
-  left: -8px;
-  background: transparent;
-  border-top: 18px solid var(--text, currentColor);
-  border-right: 12px solid transparent;
-  transform-origin: 4px 4px;
+  display: inline-block;
+  position: relative;
+  width: 15px;
+  height: 20px;
+  box-sizing: border-box;
+  background-color: var(--text, currentColor);
+  clip-path: polygon(
+    0% 0%,
+    0% 88%,
+    27% 66%,
+    53% 100%,
+    73% 90%,
+    47% 58%,
+    86% 58%
+  );
 }
 
-/* Interactive Hover Target */
+/* 2. Minimal Circular Interaction/Target Cursor */
 .icon-interactive-hover-ring-target {
-  width: 14px;
-  height: 14px;
-  top: -7px;
-  left: -7px;
-  border: 2px solid var(--text, currentColor);
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  border: 1.5px solid var(--text, currentColor);
   border-radius: 50%;
   background: transparent;
 }
 
-.icon-interactive-hover-ring-target::before,
+.icon-interactive-hover-ring-target::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3.5px;
+  height: 3.5px;
+  transform: translate(-50%, -50%);
+  background-color: var(--text, currentColor);
+  border-radius: 50%;
+}
+
 .icon-interactive-hover-ring-target::after {
   content: "";
   position: absolute;
-  background: var(--text, currentColor);
+  inset: -2.5px;
+  background:
+    linear-gradient(var(--text, currentColor), var(--text, currentColor)) center top / 1.5px 2px no-repeat,
+    linear-gradient(var(--text, currentColor), var(--text, currentColor)) center bottom / 1.5px 2px no-repeat,
+    linear-gradient(var(--text, currentColor), var(--text, currentColor)) left center / 2px 1.5px no-repeat,
+    linear-gradient(var(--text, currentColor), var(--text, currentColor)) right center / 2px 1.5px no-repeat;
 }
 
-.icon-interactive-hover-ring-target::before {
-  width: 2px;
-  height: 24px;
-  top: -7px;
-  left: 4px;
-}
-
-.icon-interactive-hover-ring-target::after {
-  width: 24px;
-  height: 2px;
-  top: 4px;
-  left: -7px;
-}
-
-/* Text I-Beam Cursor */
+/* 3. Text Selection I-Beam */
 .icon-text-i-beam-cursor {
-  width: 2px;
+  display: inline-block;
+  position: relative;
+  width: 10px;
   height: 18px;
-  top: -9px;
-  left: -1px;
-  border-radius: 1px;
+  box-sizing: border-box;
+  background: linear-gradient(var(--text, currentColor), var(--text, currentColor)) center / 1.5px 100% no-repeat;
 }
 
 .icon-text-i-beam-cursor::before,
 .icon-text-i-beam-cursor::after {
   content: "";
   position: absolute;
-  width: 10px;
-  height: 2px;
-  left: -4px;
-  background: var(--text, currentColor);
-  border-radius: 1px;
+  left: 50%;
+  width: 8px;
+  height: 1.5px;
+  transform: translateX(-50%);
+  background-color: var(--text, currentColor);
+  border-radius: 0.75px;
 }
 
 .icon-text-i-beam-cursor::before {
@@ -131,73 +143,80 @@
   bottom: 0;
 }
 
-/* Multidirectional Drag Handle */
+/* 4. Four-Direction Move/Drag Handle */
 .icon-multidirectional-drag-handle {
-  width: 4px;
-  height: 4px;
-  top: -2px;
-  left: -2px;
-  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  background-color: var(--text, currentColor);
+  clip-path: polygon(
+    50% 0%,
+    70% 25%,
+    56% 25%,
+    56% 44%,
+    75% 44%,
+    75% 30%,
+    100% 50%,
+    75% 70%,
+    75% 56%,
+    56% 56%,
+    56% 75%,
+    70% 75%,
+    50% 100%,
+    30% 75%,
+    44% 75%,
+    44% 56%,
+    25% 56%,
+    25% 70%,
+    0% 50%,
+    25% 30%,
+    25% 44%,
+    44% 44%,
+    44% 25%,
+    30% 25%
+  );
 }
 
-.icon-multidirectional-drag-handle::before,
-.icon-multidirectional-drag-handle::after {
-  content: "";
-  position: absolute;
-  background: var(--text, currentColor);
-}
-
-.icon-multidirectional-drag-handle::before {
-  width: 24px;
-  height: 2px;
-  top: 1px;
-  left: -10px;
-  box-shadow: -2px 0 0 var(--text, currentColor), 22px 0 0 var(--text, currentColor);
-}
-
-.icon-multidirectional-drag-handle::after {
-  width: 2px;
-  height: 24px;
-  top: -10px;
-  left: 1px;
-  box-shadow: 0 -2px 0 var(--text, currentColor), 0 22px 0 var(--text, currentColor);
-}
-
-/* Active Drag Grip Hand */
+/* 5. Compact Drag Grip / Grab Hand */
 .icon-drag-grip-cursor {
-  width: 15px;
-  height: 17px;
-  top: -7px;
-  left: -5px;
-  background: transparent;
-  border: 2px solid var(--text, currentColor);
-  border-top: 0;
-  border-radius: 2px 2px 8px 8px;
+  display: inline-block;
+  position: relative;
+  width: 11px;
+  height: 8px;
+  margin: 10px 1px 2px 6px;
+  box-sizing: border-box;
+  background-color: var(--text, currentColor);
+  border-radius: 1px 2px 5px 4px;
 }
 
 .icon-drag-grip-cursor::before {
   content: "";
   position: absolute;
+  left: 0;
+  bottom: 7px;
   width: 2px;
-  height: 10px;
-  top: -7px;
-  left: 2px;
-  background: var(--text, currentColor);
-  border-radius: 2px;
+  height: 9px;
+  background-color: var(--text, currentColor);
+  border-radius: 1px 1px 0 0;
   box-shadow:
-    4px -1px 0 var(--text, currentColor),
-    8px 1px 0 var(--text, currentColor);
+    3px -2px 0 0 var(--text, currentColor),
+    6px -0.5px 0 0 var(--text, currentColor),
+    9px 1.5px 0 0 var(--text, currentColor);
 }
 
 .icon-drag-grip-cursor::after {
   content: "";
   position: absolute;
-  width: 2px;
-  height: 8px;
-  top: -2px;
-  right: -4px;
-  background: var(--text, currentColor);
-  border-radius: 2px;
+  left: -2px;
+  bottom: 2px;
+  width: 2.2px;
+  height: 6.5px;
+  background-color: var(--text, currentColor);
+  border-radius: 1.2px;
+  transform-origin: bottom right;
+  transform: rotate(-35deg);
 }
 
 /* Transform Modifications */
