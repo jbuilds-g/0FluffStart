@@ -59,35 +59,32 @@
     background-color 0.2s ease;
 }
 
-/* 1. Modern Mouse Pointer Arrow */
+/* 1. Provided modern mouse pointer snippet */
 .icon-default-mouse-pointer {
   display: inline-block;
   position: relative;
-  width: 15px;
-  height: 20px;
   box-sizing: border-box;
+  width: 1.5rem;
+  height: 1.5rem;
   background-color: var(--text, currentColor);
-  clip-path: polygon(
-    0% 0%,
-    0% 88%,
-    27% 66%,
-    53% 100%,
-    73% 90%,
-    47% 58%,
-    86% 58%
-  );
+  vertical-align: middle;
+  clip-path: path('M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z M13 13l6 6');
+  transition: transform 0.2s ease;
 }
 
-/* 2. Minimal Circular Interaction/Target Cursor */
+.icon-default-mouse-pointer:hover {
+  transform: scale(1.05);
+}
+
+/* 2. Provided target cursor snippet */
 .icon-interactive-hover-ring-target {
   display: inline-block;
   position: relative;
-  width: 20px;
-  height: 20px;
   box-sizing: border-box;
-  border: 1.5px solid var(--text, currentColor);
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--text, currentColor);
   border-radius: 50%;
-  background: transparent;
 }
 
 .icon-interactive-hover-ring-target::before {
@@ -95,91 +92,79 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 3.5px;
-  height: 3.5px;
-  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
   background-color: var(--text, currentColor);
   border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .icon-interactive-hover-ring-target::after {
   content: "";
   position: absolute;
-  inset: -2.5px;
-  background:
-    linear-gradient(var(--text, currentColor), var(--text, currentColor)) center top / 1.5px 2px no-repeat,
-    linear-gradient(var(--text, currentColor), var(--text, currentColor)) center bottom / 1.5px 2px no-repeat,
-    linear-gradient(var(--text, currentColor), var(--text, currentColor)) left center / 2px 1.5px no-repeat,
-    linear-gradient(var(--text, currentColor), var(--text, currentColor)) right center / 2px 1.5px no-repeat;
-}
-
-/* 3. Text Selection I-Beam */
-.icon-text-i-beam-cursor {
-  display: inline-block;
-  position: relative;
-  width: 10px;
-  height: 18px;
-  box-sizing: border-box;
-  background: linear-gradient(var(--text, currentColor), var(--text, currentColor)) center / 1.5px 100% no-repeat;
-}
-
-.icon-text-i-beam-cursor::before,
-.icon-text-i-beam-cursor::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  width: 8px;
-  height: 1.5px;
-  transform: translateX(-50%);
-  background-color: var(--text, currentColor);
-  border-radius: 0.75px;
-}
-
-.icon-text-i-beam-cursor::before {
-  top: 0;
-}
-
-.icon-text-i-beam-cursor::after {
-  bottom: 0;
-}
-
-/* 4. Four-Direction Move/Drag Handle */
-.icon-multidirectional-drag-handle {
-  display: inline-block;
-  position: relative;
-  width: 20px;
-  height: 20px;
-  box-sizing: border-box;
+  inset: 2px;
   background-color: var(--text, currentColor);
   clip-path: polygon(
-    50% 0%,
-    70% 25%,
-    56% 25%,
-    56% 44%,
-    75% 44%,
-    75% 30%,
-    100% 50%,
-    75% 70%,
-    75% 56%,
-    56% 56%,
-    56% 75%,
-    70% 75%,
-    50% 100%,
-    30% 75%,
-    44% 75%,
-    44% 56%,
-    25% 56%,
-    25% 70%,
-    0% 50%,
-    25% 30%,
-    25% 44%,
-    44% 44%,
-    44% 25%,
-    30% 25%
+    50% 0%, 55% 0%, 55% 45%, 100% 45%, 100% 55%, 55% 55%,
+    55% 100%, 45% 100%, 45% 55%, 0% 55%, 0% 45%, 45% 45%, 45% 0%
   );
 }
 
-/* 5. SVG Drag Grip / Grab Hand */
+/* 3. Provided I-beam snippet */
+.icon-text-i-beam-cursor {
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.icon-text-i-beam-cursor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background-color: var(--text, currentColor);
+  transform: translateX(-50%);
+}
+
+.icon-text-i-beam-cursor::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 8px;
+  height: 2px;
+  background-color: var(--text, currentColor);
+  box-shadow: 0 calc(1.5rem - 2px) 0 var(--text, currentColor);
+  transform: translateX(-50%);
+}
+
+/* 4. Provided move cursor snippet */
+.icon-multidirectional-drag-handle {
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.icon-multidirectional-drag-handle::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background-color: var(--text, currentColor);
+  clip-path: polygon(
+    50% 0%, 62% 14%, 56% 14%, 56% 44%, 86% 44%, 86% 38%, 100% 50%,
+    86% 62%, 86% 56%, 56% 56%, 56% 86%, 62% 86%, 50% 100%, 38% 86%,
+    44% 86%, 44% 56%, 14% 56%, 14% 62%, 0% 50%, 14% 38%, 14% 44%,
+    44% 44%, 44% 14%, 38% 14%
+  );
+}
+
+/* 5. Original SVG drag grip / grab hand */
 .icon-drag-grip-cursor {
   -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17%2011v-3.5c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v7.5%22%2F%3E%3Cpath%20d%3D%22M12%207.5v-2c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v9.5%22%2F%3E%3Cpath%20d%3D%22M7%208v-1c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v6c0%204.42%203.58%208%208%208h5c2.21%200%204-1.79%204-4v-3c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5%22%2F%3E%3C%2Fsvg%3E");
   mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17%2011v-3.5c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v7.5%22%2F%3E%3Cpath%20d%3D%22M12%207.5v-2c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v9.5%22%2F%3E%3Cpath%20d%3D%22M7%208v-1c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v6c0%204.42%203.58%208%208%208h5c2.21%200%204-1.79%204-4v-3c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5%22%2F%3E%3C%2Fsvg%3E");
