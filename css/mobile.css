@@ -215,6 +215,13 @@
   }
 }
 
+/* --- MOBILE SETTINGS TOGGLE PLACEMENT --- */
+@media (max-width: 850px) and (pointer: coarse) {
+  .radio-option:has(input[type="checkbox"]:not(.manager-checkbox)) {
+    justify-content: space-between;
+  }
+}
+
 body.force-desktop-mode .mobile-dock {
   display: none !important;
 }
