@@ -179,44 +179,16 @@
   );
 }
 
-/* 5. Compact Drag Grip / Grab Hand */
+/* 5. SVG Drag Grip / Grab Hand */
 .icon-drag-grip-cursor {
-  display: inline-block;
-  position: relative;
-  width: 11px;
-  height: 8px;
-  margin: 10px 1px 2px 6px;
-  box-sizing: border-box;
-  background-color: var(--text, currentColor);
-  border-radius: 1px 2px 5px 4px;
-}
-
-.icon-drag-grip-cursor::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 7px;
-  width: 2px;
-  height: 9px;
-  background-color: var(--text, currentColor);
-  border-radius: 1px 1px 0 0;
-  box-shadow:
-    3px -2px 0 0 var(--text, currentColor),
-    6px -0.5px 0 0 var(--text, currentColor),
-    9px 1.5px 0 0 var(--text, currentColor);
-}
-
-.icon-drag-grip-cursor::after {
-  content: "";
-  position: absolute;
-  left: -2px;
-  bottom: 2px;
-  width: 2.2px;
-  height: 6.5px;
-  background-color: var(--text, currentColor);
-  border-radius: 1.2px;
-  transform-origin: bottom right;
-  transform: rotate(-35deg);
+  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17%2011v-3.5c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v7.5%22%2F%3E%3Cpath%20d%3D%22M12%207.5v-2c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v9.5%22%2F%3E%3Cpath%20d%3D%22M7%208v-1c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v6c0%204.42%203.58%208%208%208h5c2.21%200%204-1.79%204-4v-3c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17%2011v-3.5c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v7.5%22%2F%3E%3Cpath%20d%3D%22M12%207.5v-2c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v9.5%22%2F%3E%3Cpath%20d%3D%22M7%208v-1c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v6c0%204.42%203.58%208%208%208h5c2.21%200%204-1.79%204-4v-3c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5%22%2F%3E%3C%2Fsvg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
 }
 
 /* Transform Modifications */
