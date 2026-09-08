@@ -18,6 +18,11 @@ body.modal-open {
 
 /* Mobile responsive dock & device visibility rules managed in mobile.css */
 
+/* --- TOGGLE ALIGNMENT --- */
+.radio-option input[type="checkbox"]:not(.manager-checkbox) {
+  margin-left: auto !important;
+}
+
 /* --- TOAST NOTIFICATION ENGINE --- */
 .toast-container {
   position: fixed !important;
