@@ -22,6 +22,7 @@ body.modal-open {
 }
 
 .radio-option:has(input[type="checkbox"]):not(:has(.manager-checkbox)) input[type="checkbox"] {
+  order: 2 !important;
   margin-left: auto !important;
 }
 
@@ -29,6 +30,7 @@ body.modal-open {
 body.material-you
   .radio-option:has(input[type="checkbox"]):not(:has(.manager-checkbox))
   input[type="checkbox"] {
+  order: 2 !important;
   margin-left: auto !important;
 }
 
