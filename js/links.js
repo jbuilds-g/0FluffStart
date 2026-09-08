@@ -301,11 +301,11 @@ export function renderLinkManager() {
     return;
   }
 
-  const editIconSVG = `<span class="inline-icon" data-icon="edit"></span>`;
-  const deleteIconSVG = `<span class="inline-icon" data-icon="delete"></span>`;
-  const moveOutIconSVG = `<span class="inline-icon" data-icon="close" style="color:var(--delete);"></span>`;
-  const folderSvg = `<span class="inline-icon manager-item-icon" data-icon="folder" style="width:14px; height:14px;"></span>`;
-  const linkSvg = `<span class="inline-icon manager-item-icon link-type" data-icon="link" style="width:14px; height:14px;"></span>`;
+  const editIconSVG = `<span class="icon-mask icon-edit"></span>`;
+  const deleteIconSVG = `<span class="icon-mask icon-delete"></span>`;
+  const moveOutIconSVG = `<span class="icon-mask icon-close" style="color:var(--delete);"></span>`;
+  const folderSvg = `<span class="icon-mask icon-folder manager-item-icon" style="width:14px; height:14px;"></span>`;
+  const linkSvg = `<span class="icon-mask icon-link manager-item-icon link-type" style="width:14px; height:14px;"></span>`;
 
   /**
    * Creates a manager item DOM node.
@@ -331,7 +331,7 @@ export function renderLinkManager() {
     if (link.isFolder) {
       const toggleSpan = document.createElement("span");
       toggleSpan.className = "folder-toggle";
-      toggleSpan.innerHTML = `<span class="inline-icon" data-icon="chevron" style="width:12px; height:12px;"></span>`;
+      toggleSpan.innerHTML = `<span class="icon-mask icon-chevron" style="width:12px; height:12px;"></span>`;
       nameSpan.appendChild(toggleSpan);
       item.classList.add("is-folder-item");
     }
