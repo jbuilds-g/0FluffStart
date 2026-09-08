@@ -18,8 +18,18 @@ body.modal-open {
 
 /* --- TOGGLE ALIGNMENT --- */
 .radio-option:has(input[type="checkbox"]):not(:has(.manager-checkbox)) {
-  flex-direction: row-reverse !important;
-  justify-content: flex-start !important;
+  flex-direction: row !important;
+}
+
+.radio-option:has(input[type="checkbox"]):not(:has(.manager-checkbox)) input[type="checkbox"] {
+  margin-left: auto !important;
+}
+
+/* Material You defines the switch margin itself, so explicitly preserve the same spacing rule. */
+body.material-you
+  .radio-option:has(input[type="checkbox"]):not(:has(.manager-checkbox))
+  input[type="checkbox"] {
+  margin-left: auto !important;
 }
 
 /* --- TOAST NOTIFICATION ENGINE --- */
@@ -34,8 +44,8 @@ body.modal-open {
   align-items: center !important;
   gap: var(--space-sm) !important;
   pointer-events: none !important;
-  width: 90% !important;
-  max-width: 400px !important;
+  width: 90%;
+  max-width: 400px;
 }
 
 /* Offsets the container to center precisely when the 400px desktop drawer is open */
