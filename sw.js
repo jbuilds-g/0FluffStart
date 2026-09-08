@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluffstart-cache-v1.5.4";
+const CACHE_NAME = "0fluffstart-cache-v1.5.5";
 
 const CORE_APP_SHELL = [
   "./",
@@ -56,7 +56,6 @@ self.addEventListener("activate", (event) => {
       .then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cache) => {
-            // If the cache name doesn't match our current version, delete it
             if (cache !== CACHE_NAME) {
               console.log("Service Worker: Purging old cache ->", cache);
               return caches.delete(cache);
