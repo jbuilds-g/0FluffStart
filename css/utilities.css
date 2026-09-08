@@ -16,11 +16,10 @@ body.modal-open {
   display: none !important;
 }
 
-/* Mobile responsive dock & device visibility rules managed in mobile.css */
-
 /* --- TOGGLE ALIGNMENT --- */
 .radio-option input[type="checkbox"]:not(.manager-checkbox) {
   margin-left: auto !important;
+  order: 2 !important;
 }
 
 /* --- TOAST NOTIFICATION ENGINE --- */
