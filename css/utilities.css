@@ -18,20 +18,14 @@ body.modal-open {
 
 /* --- TOGGLE ALIGNMENT --- */
 .radio-option:has(input[type="checkbox"]):not(:has(.manager-checkbox)) {
-  flex-direction: row !important;
+  flex-direction: row-reverse !important;
+  justify-content: space-between !important;
 }
 
+/* Material You controls their own switch geometry and spacing. */
 .radio-option:has(input[type="checkbox"]):not(:has(.manager-checkbox)) input[type="checkbox"] {
-  order: 2 !important;
-  margin-left: auto !important;
-}
-
-/* Material You defines the switch margin itself, so explicitly preserve the same spacing rule. */
-body.material-you
-  .radio-option:has(input[type="checkbox"]):not(:has(.manager-checkbox))
-  input[type="checkbox"] {
-  order: 2 !important;
-  margin-left: auto !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
 }
 
 /* --- TOAST NOTIFICATION ENGINE --- */
