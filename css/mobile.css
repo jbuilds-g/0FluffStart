@@ -205,13 +205,15 @@
 
   /* --- MODAL SCROLL-TO-TOP BUTTON MOBILE TARGET --- */
   .scroll-to-top-btn {
-    position: absolute !important;
-    bottom: 24px !important;
+    position: fixed !important;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
     right: 24px !important;
     width: 44px !important;
     height: 44px !important;
     min-width: 44px !important;
     min-height: 44px !important;
+    z-index: calc(var(--z-modal) + 1) !important;
+    pointer-events: auto !important;
   }
 }
 
