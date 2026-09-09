@@ -76,7 +76,7 @@ body.material-you .setting-group {
 body.material-you .modal-header .icon-btn,
 body.material-you .header-actions .icon-btn,
 body.material-you .floating-btn,
-body.material-you .scroll-to-top-btn {
+body.material-you .settings-modal-scroll-anchor {
   border-radius: 9999px;
   background-color: var(--md-sys-color-surface-container-highest);
   border: 1px solid var(--border);
@@ -86,7 +86,7 @@ body.material-you .scroll-to-top-btn {
 body.material-you .modal-header .icon-btn:hover,
 body.material-you .header-actions .icon-btn:hover,
 body.material-you .floating-btn:hover,
-body.material-you .scroll-to-top-btn:hover {
+body.material-you .settings-modal-scroll-anchor:hover {
   background-color: var(--card-hover);
   color: var(--text);
 }
@@ -1651,7 +1651,7 @@ input[type="url"].bg-url-input {
 }
 
 /* --- SCROLL TO TOP FLOATING BUTTON --- */
-.scroll-to-top-btn {
+.settings-modal-scroll-anchor {
   position: absolute;
   bottom: 24px;
   right: 24px;
@@ -1680,13 +1680,13 @@ input[type="url"].bg-url-input {
     color 0.2s;
 }
 
-.scroll-to-top-btn:hover {
+.settings-modal-scroll-anchor:hover {
   border-color: var(--accent);
   color: var(--accent);
   transform: translateY(-2px);
 }
 
-.scroll-to-top-btn.hidden {
+.settings-modal-scroll-anchor.hidden {
   opacity: 0 !important;
   pointer-events: none !important;
   transform: translateY(8px) !important;

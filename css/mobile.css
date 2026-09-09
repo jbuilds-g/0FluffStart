@@ -204,7 +204,7 @@
   }
 
   /* --- MODAL SCROLL-TO-TOP BUTTON MOBILE TARGET --- */
-  .scroll-to-top-btn {
+  .settings-modal-scroll-anchor {
     position: absolute !important;
     bottom: 24px !important;
     right: 24px !important;
@@ -213,15 +213,15 @@
     min-width: 44px !important;
     min-height: 44px !important;
   }
-}
 
-/* --- MOBILE SETTINGS TOGGLE PLACEMENT --- */
-@media (max-width: 850px) and (pointer: coarse) {
-  .radio-option:has(input[type="checkbox"]:not(.manager-checkbox)) {
-    justify-content: space-between;
+  /* --- MOBILE SETTINGS TOGGLE PLACEMENT --- */
+  @media (max-width: 850px) and (pointer: coarse) {
+    .radio-option:has(input[type="checkbox"]:not(.manager-checkbox)) {
+      justify-content: space-between;
+    }
   }
-}
 
-body.force-desktop-mode .mobile-dock {
-  display: none !important;
+  body.force-desktop-mode .mobile-dock {
+    display: none !important;
+  }
 }
