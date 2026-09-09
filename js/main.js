@@ -365,7 +365,7 @@ function bindStaticEvents() {
   let isBulkAnimating = false;
 
   function updateScrollToTopBtn() {
-    const btn = document.getElementById("scrollToTopBtn");
+    const btn = document.getElementById("settingsModalScrollAnchor");
     const modalContent = document.querySelector(
       "#settingsModal .modal-content",
     );
@@ -432,9 +432,11 @@ function bindStaticEvents() {
     modalContent.addEventListener("scroll", updateScrollToTopBtn);
   }
 
-  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
-  if (scrollToTopBtn) {
-    scrollToTopBtn.addEventListener("click", () => {
+  const settingsModalScrollAnchor = document.getElementById(
+    "settingsModalScrollAnchor",
+  );
+  if (settingsModalScrollAnchor) {
+    settingsModalScrollAnchor.addEventListener("click", () => {
       modalContent?.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
