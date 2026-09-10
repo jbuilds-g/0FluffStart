@@ -8,8 +8,11 @@
 
 .category-panel summary {
   min-height: 42px;
-  padding: 9px 14px;
+  height: 42px;
+  max-height: 42px;
+  padding: 0 14px;
   font-size: 0.98rem;
+  box-sizing: border-box;
 }
 
 .category-content {
@@ -172,6 +175,39 @@ select {
   margin-bottom: 0;
 }
 
+/* Keep the settings footer visible while the modal content scrolls. */
+.modal-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  margin-top: 12px;
+  padding-top: 12px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+body.material-you .modal-footer {
+  background: var(--md-sys-color-surface-container-low);
+}
+
+/* Closed categories are navigation rows, not cards. */
+.category-panel:not([open]) {
+  border-radius: 12px;
+}
+
+.category-panel:not([open]) summary {
+  border-radius: inherit;
+}
+
+/* Give the dialog a little more usable viewport on smaller screens. */
+@media (max-width: 768px) {
+  .modal-content {
+    width: calc(100% - 16px);
+    max-width: none;
+    max-height: calc(100dvh - 16px);
+  }
+}
+
 @media (min-width: 769px) {
   .modal-content {
     width: min(92%, 510px);
@@ -187,5 +223,10 @@ select {
   .save-btn,
   .add-link-btn {
     padding-inline: 12px;
+  }
+
+  .modal-footer {
+    margin-top: 10px;
+    padding-top: 10px;
   }
 }
