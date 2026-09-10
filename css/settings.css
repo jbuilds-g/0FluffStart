@@ -175,7 +175,7 @@ select {
   margin-bottom: 0;
 }
 
-/* Settings dialog: only the settings body scrolls. */
+/* Settings dialog: fixed shell, scrolling body, normal-flow footer. */
 .settings-dialog {
   position: relative;
   display: flex;
@@ -184,6 +184,7 @@ select {
   max-width: 510px;
   max-height: 85vh;
   max-height: 85dvh;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -209,6 +210,13 @@ body.material-you .settings-dialog {
   box-shadow: var(--md-sys-elevation-level3-shadow);
 }
 
+.settings-dialog .modal-header {
+  position: relative;
+  top: auto;
+  flex: 0 0 auto;
+  z-index: 1;
+}
+
 .settings-dialog .modal-content {
   position: relative;
   width: 100%;
@@ -218,7 +226,9 @@ body.material-you .settings-dialog {
   flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-bottom: var(--space-lg);
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  padding: 0 24px 24px;
   scrollbar-width: none;
   box-sizing: border-box;
   border: 0;
@@ -231,19 +241,13 @@ body.material-you .settings-dialog {
   display: none;
 }
 
-.modal-header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-}
-
-.modal-footer {
+.settings-dialog .modal-footer {
   position: relative;
   left: auto;
   right: auto;
   bottom: auto;
-  z-index: 25;
   flex: 0 0 auto;
+  z-index: 1;
   margin: 0;
   padding: 10px 24px 12px;
   background: var(--bg);
@@ -251,7 +255,18 @@ body.material-you .settings-dialog {
   box-sizing: border-box;
 }
 
-body.material-you .modal-footer {
+.settings-dialog .modal-header {
+  background: var(--bg);
+}
+
+body.material-you .settings-dialog .modal-header {
+  background: var(--md-sys-color-surface-container-low);
+  margin: 0;
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+body.material-you .settings-dialog .modal-footer {
   background: var(--md-sys-color-surface-container-low);
 }
 
@@ -278,7 +293,15 @@ body.material-you .modal-footer {
     max-height: calc(100dvh - 16px);
   }
 
-  .modal-footer {
+  .settings-dialog .modal-content {
+    padding: 0 16px 18px;
+  }
+
+  body.material-you .settings-dialog .modal-header {
+    padding: 18px 16px 14px;
+  }
+
+  .settings-dialog .modal-footer {
     padding: 9px 16px 11px;
   }
 
@@ -299,7 +322,15 @@ body.material-you .modal-footer {
     padding-inline: 12px;
   }
 
-  .modal-footer {
+  .settings-dialog .modal-footer {
+    padding-inline: 12px;
+  }
+
+  .settings-dialog .modal-content {
+    padding-inline: 12px;
+  }
+
+  body.material-you .settings-dialog .modal-header {
     padding-inline: 12px;
   }
 }
