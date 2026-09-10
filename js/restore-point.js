@@ -52,7 +52,9 @@ async function setBackground(background) {
   const db = await openRestoreDB();
   return new Promise((resolve, reject) => {
     const objectStore = db.transaction(STORE_NAME, "readwrite").objectStore(STORE_NAME);
-    const request = background ? objectStore.put(background, "backgroundImage") : objectStore.delete("backgroundImage");
+    const request = background
+      ? objectStore.put(background, "backgroundImage")
+      : objectStore.delete("backgroundImage");
     request.onsuccess = () => resolve();
     request.onerror = () => reject(request.error);
   });
@@ -60,7 +62,8 @@ async function setBackground(background) {
 
 async function captureCurrent() {
   const state = store.getState();
-  const background = state.settings?.backgroundImage === "indexeddb" ? await getBackground() : null;
+  const background =
+    state.settings?.backgroundImage === "indexeddb" ? await getBackground() : null;
   return {
     links: structuredClone(state.links || []),
     settings: structuredClone(state.settings || {}),
@@ -120,34 +123,41 @@ function showConfirm() {
           <button type="button" class="save-btn" data-confirm>Restore Previous</button>
         </div>
       </div>`;
-    const finish = (value) => { modal.remove(); resolve(value); };
+    const finish = (value) => {
+      modal.remove();
+      resolve(value);
+    };
     modal.querySelector("[data-cancel]").addEventListener("click", () => finish(false));
     modal.querySelector("[data-confirm]").addEventListener("click", () => finish(true));
-    modal.addEventListener("click", (event) => { if (event.target === modal) finish(false); });
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) finish(false);
+    });
     document.body.appendChild(modal);
     modal.querySelector("[data-cancel]").focus();
   });
 }
 
-async function updateButton(button) {
+async function updateButton(button, status) {
   const point = await readPoint();
   button.disabled = !point;
-  button.title = point ? `Saved ${new Date(point.createdAt).toLocaleString()}` : "No restore point available yet";
+
+  if (point) {
+    const savedAt = new Date(point.createdAt).toLocaleString();
+    button.title = `Saved ${savedAt}`;
+    if (status) status.textContent = `Revert to your last restore point. Saved ${savedAt}.`;
+  } else {
+    button.title = "No restore point available yet";
+    if (status) status.textContent = "No previous restore point available yet.";
+  }
 }
 
 async function init() {
-  const restoreButton = document.getElementById("restoreDataBtn");
-  if (!restoreButton) return;
-  const section = restoreButton.closest(".setting-group");
-  if (!section || document.getElementById("restorePreviousBtn")) return;
+  const button = document.getElementById("restorePreviousBtn");
+  const status = document.getElementById("restorePointStatus");
+  if (!button) return;
 
-  const row = document.createElement("div");
-  row.className = "action-btn-row restore-point-row";
-  row.innerHTML = `<button id="restorePreviousBtn" class="secondary" type="button">Restore Previous</button>`;
-  section.appendChild(row);
+  await updateButton(button, status);
 
-  const button = row.querySelector("#restorePreviousBtn");
-  await updateButton(button);
   button.addEventListener("click", async () => {
     if (!(await showConfirm())) return;
     try {
