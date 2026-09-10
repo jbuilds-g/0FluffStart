@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluffstart-cache-v1.6.10";
+const CACHE_NAME = "0fluffstart-cache-v1.6.11";
 
 const CORE_APP_SHELL = [
   "./",
@@ -78,43 +78,8 @@ self.addEventListener("fetch", (event) => {
 
   if (isCoreAsset) {
     event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
-          if (
-            networkResponse &&
-            networkResponse.status === 200 &&
-            networkResponse.type === "basic"
-          ) {
-            const responseToCache = networkResponse.clone();
-            caches
-              .open(CACHE_NAME)
-              .then((cache) => cache.put(event.request, responseToCache));
-          }
-          return networkResponse;
-        })
-        .catch(() => caches.match(event.request)),
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        const fetchPromise = fetch(event.request)
-          .then((networkResponse) => {
-            if (
-              networkResponse &&
-              networkResponse.status === 200 &&
-              (networkResponse.type === "basic" ||
-                networkResponse.type === "cors")
-            ) {
-              const responseToCache = networkResponse.clone();
-              caches
-                .open(CACHE_NAME)
-                .then((cache) => cache.put(event.request, responseToCache));
-            }
-            return networkResponse;
-          })
-          .catch(() => cachedResponse);
-
-        return cachedResponse || fetchPromise;
+      caches.match(event.request).then((cached) => {
+        return cached || fetch(event.request);
       }),
     );
   }
