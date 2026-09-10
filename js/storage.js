@@ -72,6 +72,121 @@ export async function clearBgFromDB() {
   });
 }
 
+function removeParentheticalUiText() {
+  const replacements = new Map([
+    ["Backup (Save)", "Backup"],
+    ["Restore (Load)", "Restore"],
+    ["Vibe (Theme)", "Vibe"],
+    ["OLED Dark (Default)", "OLED Dark"],
+    ["True Black (AMOLED)", "True Black"],
+    ["Automatic (Smart Match & Fallback)", "Automatic"],
+    ["Name (e.g. YouTube)", "Name, e.g. YouTube"],
+    ["URL (e.g. youtube.com)", "URL, e.g. youtube.com"],
+    ["Custom Proxy (e.g., https://my-proxy.com/?)", "Custom Proxy, e.g. https://my-proxy.com/?"],
+    ["Title (e.g. Phind)", "Title, e.g. Phind"],
+    ["Tag (e.g. ?pd)", "Tag, e.g. ?pd"],
+    ["Search URL (e.g. https://phind.com/search?q=)", "Search URL, e.g. https://phind.com/search?q="],
+  ]);
+
+  const walk = (node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const replacement = replacements.get(node.nodeValue.trim());
+      if (replacement) node.nodeValue = node.nodeValue.replace(node.nodeValue.trim(), replacement);
+      return;
+    }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    if (node.tagName === "SCRIPT" || node.tagName === "STYLE") return;
+
+    for (const child of node.childNodes) walk(child);
+    for (const attr of ["placeholder", "title"]) {
+      const value = node.getAttribute(attr);
+      if (value && replacements.has(value)) node.setAttribute(attr, replacements.get(value));
+    }
+  };
+
+  walk(document.body);
+}
+
+function showRestoreChoice(data) {
+  ensureRestoreChoiceStyles();
+
+  return new Promise((resolve) => {
+    document.getElementById("restoreChoiceModal")?.remove();
+
+    const links = Array.isArray(data?.links) ? data.links : [];
+    const folders = links.filter((item) => item?.isFolder).length;
+    const quickLinks = links.length - folders;
+    const settingsCount = data?.settings && typeof data.settings === "object"
+      ? Object.keys(data.settings).length
+      : 0;
+    const historyCount = Array.isArray(data?.history) ? data.history.length : 0;
+
+    const modal = document.createElement("div");
+    modal.className = "modal active";
+    modal.id = "restoreChoiceModal";
+    modal.innerHTML = `
+      <div class="modal-content custom-dialog-content restore-choice-content">
+        <h3 class="custom-dialog-title">Restore Backup</h3>
+        <p class="custom-dialog-message">Choose how to apply this backup.</p>
+        <div class="restore-choice-summary">
+          <span>• ${quickLinks} quick links</span>
+          <span>• ${folders} folders</span>
+          <span>• ${settingsCount} settings</span>
+          <span>• ${historyCount} history entries</span>
+        </div>
+        <div class="restore-choice-actions">
+          <button type="button" class="secondary restore-choice-btn-overwrite">Overwrite</button>
+          <button type="button" class="save-btn restore-choice-btn-merge">Merge</button>
+        </div>
+        <button type="button" class="secondary restore-choice-cancel">Cancel</button>
+      </div>
+    `;
+
+    const finish = (choice) => {
+      modal.remove();
+      resolve(choice);
+    };
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) finish("cancel");
+    });
+    modal.querySelector(".restore-choice-btn-overwrite")
+      ?.addEventListener("click", () => finish("overwrite"));
+    modal.querySelector(".restore-choice-btn-merge")
+      ?.addEventListener("click", () => finish("merge"));
+    modal.querySelector(".restore-choice-cancel")
+      ?.addEventListener("click", () => finish("cancel"));
+
+    document.body.appendChild(modal);
+    modal.querySelector(".restore-choice-btn-merge")?.focus();
+  });
+}
+
+function ensureRestoreChoiceStyles() {
+  if (document.getElementById("restoreChoiceStyles")) return;
+
+  const style = document.createElement("style");
+  style.id = "restoreChoiceStyles";
+  style.textContent = `
+    .restore-choice-content { width: min(520px, 92vw); }
+    .restore-choice-summary { display: grid; gap: 8px; margin: 0 0 20px; color: var(--text); font-size: .95rem; }
+    .restore-choice-summary span { display: block; }
+    .restore-choice-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .restore-choice-actions button, .restore-choice-cancel { margin: 0; }
+    .restore-choice-btn-overwrite { background: var(--delete); color: var(--text); }
+    .restore-choice-btn-merge { background: var(--accent); color: var(--bg); }
+    .restore-choice-cancel { width: 100%; margin-top: 10px; }
+  `;
+  document.head.appendChild(style);
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", removeParentheticalUiText, { once: true });
+} else {
+  removeParentheticalUiText();
+}
+
 export async function backupData() {
   const { links, settings, searchHistory } = store.getState();
   let bgMediaData = null;
@@ -115,61 +230,122 @@ export async function backupData() {
   URL.revokeObjectURL(url);
 }
 
-export function restoreData(e, customConfirmFn, showToastFn) {
+function normalizeImportedData(data) {
+  return {
+    links: Array.isArray(data?.links) ? data.links : [],
+    settings:
+      data?.settings && typeof data.settings === "object" && !Array.isArray(data.settings)
+        ? data.settings
+        : {},
+    history: Array.isArray(data?.history) ? data.history : [],
+    bgMediaData: data?.bgMediaData || null,
+  };
+}
+
+function mergeLinks(currentLinks, importedLinks) {
+  const merged = Array.isArray(currentLinks) ? [...currentLinks] : [];
+  const existingIds = new Set(merged.map((item) => item?.id).filter(Boolean));
+
+  for (const item of importedLinks) {
+    if (!item || typeof item !== "object") continue;
+    if (item.id && existingIds.has(item.id)) continue;
+    merged.push(item);
+    if (item.id) existingIds.add(item.id);
+  }
+
+  return merged;
+}
+
+function mergeSettings(currentSettings, importedSettings, hasImportedBackground) {
+  const imported = { ...importedSettings };
+
+  if (!hasImportedBackground && imported.backgroundImage === "indexeddb") {
+    delete imported.backgroundImage;
+  }
+
+  return { ...(currentSettings || {}), ...imported };
+}
+
+async function restoreBackground(bgMediaData, overwrite) {
+  if (bgMediaData?.base64) {
+    const binary = atob(bgMediaData.base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+
+    await saveBgToDB(
+      new File(
+        [bytes],
+        bgMediaData.name || "background",
+        { type: bgMediaData.type || "application/octet-stream" },
+      ),
+    );
+    return;
+  }
+
+  if (overwrite) {
+    await clearBgFromDB();
+  }
+}
+
+export function restoreData(e, chooseRestoreModeFn, showToastFn) {
   const file = e.target?.files?.[0];
   if (!file) return;
+
   const reader = new FileReader();
   reader.onload = async (event) => {
     try {
-      const data = JSON.parse(event.target.result);
-      const confirm =
-        typeof customConfirmFn === "function"
-          ? customConfirmFn
-          : (msg, title) => Promise.resolve(window.confirm(`${title}\n${msg}`));
+      const data = normalizeImportedData(JSON.parse(event.target.result));
       const toast =
         typeof showToastFn === "function" ? showToastFn : (msg) => alert(msg);
 
-      const confirmed = await confirm(
-        "Restoring from backup will overwrite all current links and settings.",
-        "Restore Backup?",
-      );
-      if (confirmed) {
-        if (data.bgMediaData) {
-          try {
-            let bgBlob = data.bgMediaData;
-            if (data.bgMediaData.base64) {
-              const binary = atob(data.bgMediaData.base64);
-              const bytes = new Uint8Array(binary.length);
-              for (let i = 0; i < binary.length; i++) {
-                bytes[i] = binary.charCodeAt(i);
-              }
-              bgBlob = new File(
-                [bytes],
-                data.bgMediaData.name || "background",
-                {
-                  type: data.bgMediaData.type,
-                },
-              );
-            }
-            await saveBgToDB(bgBlob);
-          } catch (e) {
-            console.warn("Failed restoring background payload to DB:", e);
-          }
+      const mode = await showRestoreChoice(data);
+      if (mode !== "overwrite" && mode !== "merge") return;
+
+      const current = store.getState();
+      const hasImportedBackground = Boolean(data.bgMediaData?.base64);
+
+      if (mode === "overwrite") {
+        const settings = { ...data.settings };
+        if (settings.backgroundImage === "indexeddb" && !hasImportedBackground) {
+          settings.backgroundImage = null;
         }
 
-        await store.setState({
-          links: data.links || [],
-          settings: data.settings || {},
-          searchHistory: data.history || [],
+        await restoreBackground(data.bgMediaData, true);
+        store.setState({
+          links: data.links,
+          settings,
+          searchHistory: data.history,
         });
-
-        toast("Backup restored successfully", "success");
-        setTimeout(() => window.location.reload(), 500);
+      } else {
+        await restoreBackground(data.bgMediaData, false);
+        store.setState({
+          links: mergeLinks(current.links, data.links),
+          settings: mergeSettings(
+            current.settings,
+            data.settings,
+            hasImportedBackground,
+          ),
+          searchHistory: [
+            ...new Set([...(current.searchHistory || []), ...data.history]),
+          ],
+        });
       }
+
+      toast(
+        mode === "overwrite"
+          ? "Backup restored successfully"
+          : "Backup merged successfully",
+        "success",
+      );
+      setTimeout(() => window.location.reload(), 500);
     } catch (err) {
       const toast =
         typeof showToastFn === "function" ? showToastFn : (msg) => alert(msg);
       toast("Restore failed: " + err.message, "error");
+    } finally {
+      if (e.target) e.target.value = "";
     }
   };
   reader.readAsText(file);
