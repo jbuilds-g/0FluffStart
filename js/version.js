@@ -1,5 +1,3 @@
-import "./settings-layout.js";
-
 /**
  * Single source of truth for the application version.
  * Updated automatically via scripts/bump.js
