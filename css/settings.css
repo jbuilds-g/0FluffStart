@@ -175,19 +175,48 @@ select {
   margin-bottom: 0;
 }
 
-/* Keep the settings footer visible while the modal content scrolls. */
-.modal-footer {
+/* Settings viewport: header and footer stay fixed while modal content scrolls. */
+.modal-content {
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 88px;
+  scrollbar-width: none;
+  box-sizing: border-box;
+}
+
+.modal-content::-webkit-scrollbar {
+  display: none;
+}
+
+.modal-header {
   position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.modal-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
   bottom: 0;
-  z-index: 20;
-  margin-top: 12px;
-  padding-top: 12px;
+  z-index: 25;
+  margin: 0;
+  padding: 10px 24px 12px;
   background: var(--bg);
   border-top: 1px solid var(--border);
+  box-sizing: border-box;
 }
 
 body.material-you .modal-footer {
   background: var(--md-sys-color-surface-container-low);
+}
+
+/* Keep the scroll-to-top control above the fixed footer. */
+.settings-modal-scroll-anchor {
+  bottom: 92px !important;
+  right: 24px !important;
+  z-index: 35 !important;
 }
 
 /* Closed categories are navigation rows, not cards. */
@@ -205,6 +234,16 @@ body.material-you .modal-footer {
     width: calc(100% - 16px);
     max-width: none;
     max-height: calc(100dvh - 16px);
+    padding-bottom: 96px;
+  }
+
+  .modal-footer {
+    padding: 9px 16px 11px;
+  }
+
+  .settings-modal-scroll-anchor {
+    bottom: 96px !important;
+    right: 16px !important;
   }
 }
 
@@ -226,7 +265,6 @@ body.material-you .modal-footer {
   }
 
   .modal-footer {
-    margin-top: 10px;
-    padding-top: 10px;
+    padding-inline: 12px;
   }
 }
