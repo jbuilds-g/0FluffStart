@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluffstart-cache-v1.6.11";
+const CACHE_NAME = "0fluffstart-cache-v1.6.4";
 
 const CORE_APP_SHELL = [
   "./",
@@ -14,7 +14,6 @@ const CORE_APP_SHELL = [
   "./css/mobile.css",
   "./css/modal.css",
   "./css/search.css",
-  "./css/settings.css",
   "./css/themes.css",
   "./css/utilities.css",
   "./css/variables.css",
@@ -26,20 +25,20 @@ const CORE_APP_SHELL = [
   "./js/suggestions.js",
   "./js/links.js",
   "./js/storage.js",
-  "./js/restore-point.js",
   "./js/cursor.js",
   "./js/material-you-engine.js",
   "./js/utils.js",
   "./js/version.js",
-  "./js/settings-layout.js",
 ];
 
+// Listen for immediate update activation messages from active clients
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
 
+// 1. INSTALL: Cache minimal App Shell, then skip waiting
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
@@ -49,6 +48,7 @@ self.addEventListener("install", (event) => {
   );
 });
 
+// 2. ACTIVATE: Nuke the old caches and immediately take control
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
@@ -67,6 +67,7 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+// 3. FETCH: Network-First for App Shell, Stale-While-Revalidate + Dynamic Cache for All Other Assets
 self.addEventListener("fetch", (event) => {
   if (!event.request.url.startsWith("http")) return;
 
@@ -77,9 +78,46 @@ self.addEventListener("fetch", (event) => {
   });
 
   if (isCoreAsset) {
+    // Network-First Strategy for App Shell
     event.respondWith(
-      caches.match(event.request).then((cached) => {
-        return cached || fetch(event.request);
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (
+            networkResponse &&
+            networkResponse.status === 200 &&
+            networkResponse.type === "basic"
+          ) {
+            const responseToCache = networkResponse.clone();
+            caches
+              .open(CACHE_NAME)
+              .then((cache) => cache.put(event.request, responseToCache));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request)),
+    );
+  } else {
+    // Stale-While-Revalidate Strategy for Dynamic JS Modules, CSS, and SVG Assets
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        const fetchPromise = fetch(event.request)
+          .then((networkResponse) => {
+            if (
+              networkResponse &&
+              networkResponse.status === 200 &&
+              (networkResponse.type === "basic" ||
+                networkResponse.type === "cors")
+            ) {
+              const responseToCache = networkResponse.clone();
+              caches
+                .open(CACHE_NAME)
+                .then((cache) => cache.put(event.request, responseToCache));
+            }
+            return networkResponse;
+          })
+          .catch(() => cachedResponse);
+
+        return cachedResponse || fetchPromise;
       }),
     );
   }
