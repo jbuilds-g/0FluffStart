@@ -180,10 +180,9 @@ select {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 90%;
-  max-width: 510px;
-  max-height: 85vh;
-  max-height: 85dvh;
+  width: min(92vw, 900px);
+  max-width: 900px;
+  max-height: calc(100dvh - 32px);
   min-height: 0;
   overflow: hidden;
   border: 1px solid var(--border);
