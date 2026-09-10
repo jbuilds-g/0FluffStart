@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluffstart-cache-v1.6.5";
+const CACHE_NAME = "0fluffstart-cache-v1.6.6";
 
 const CORE_APP_SHELL = [
   "./",
@@ -33,14 +33,12 @@ const CORE_APP_SHELL = [
   "./js/version.js",
 ];
 
-// Listen for immediate update activation messages from active clients
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
 
-// 1. INSTALL: Cache minimal App Shell, then skip waiting
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
@@ -50,7 +48,6 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// 2. ACTIVATE: Nuke the old caches and immediately take control
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
@@ -69,7 +66,6 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// 3. FETCH: Network-First for App Shell, Stale-While-Revalidate + Dynamic Cache for All Other Assets
 self.addEventListener("fetch", (event) => {
   if (!event.request.url.startsWith("http")) return;
 
@@ -80,7 +76,6 @@ self.addEventListener("fetch", (event) => {
   });
 
   if (isCoreAsset) {
-    // Network-First Strategy for App Shell
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {
@@ -99,7 +94,6 @@ self.addEventListener("fetch", (event) => {
         .catch(() => caches.match(event.request)),
     );
   } else {
-    // Stale-While-Revalidate Strategy for Dynamic JS Modules, CSS, and SVG Assets
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
         const fetchPromise = fetch(event.request)
