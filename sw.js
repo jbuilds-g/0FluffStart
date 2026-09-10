@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluffstart-cache-v1.6.4";
+const CACHE_NAME = "0fluffstart-cache-v1.6.5";
 
 const CORE_APP_SHELL = [
   "./",
@@ -14,6 +14,7 @@ const CORE_APP_SHELL = [
   "./css/mobile.css",
   "./css/modal.css",
   "./css/search.css",
+  "./css/settings.css",
   "./css/themes.css",
   "./css/utilities.css",
   "./css/variables.css",
@@ -25,6 +26,7 @@ const CORE_APP_SHELL = [
   "./js/suggestions.js",
   "./js/links.js",
   "./js/storage.js",
+  "./js/restore-point.js",
   "./js/cursor.js",
   "./js/material-you-engine.js",
   "./js/utils.js",
