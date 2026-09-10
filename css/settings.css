@@ -2,35 +2,180 @@
    SETTINGS VISUAL SYSTEM REFINEMENT
    ========================================= */
 
-.category-panel { margin-bottom: 8px; }
-.category-panel summary { min-height: 42px; height: 42px; max-height: 42px; padding: 0 14px; font-size: 0.98rem; box-sizing: border-box; }
-.category-content { padding: 0 14px 14px; }
-.setting-group { margin-top: 18px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
-.setting-group:first-child { margin-top: 4px; }
-.setting-group:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-body.material-you .setting-group { padding: 0 0 18px; background: transparent; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; }
-body.material-you .setting-group:last-child { padding-bottom: 0; border-bottom: none; }
-.setting-header { margin-bottom: 8px; gap: 10px; }
-.setting-group h3 { font-size: 0.94rem; color: var(--text); text-transform: none; letter-spacing: 0.1px; font-weight: 650; line-height: 1.3; }
-.help-btn { width: 28px; min-width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; }
-.help-text { background: transparent; border-left: 2px solid var(--accent); padding: 0 0 0 10px; margin-bottom: 12px; font-size: 0.8rem; line-height: 1.45; border-radius: 0; }
-input[type="text"], input[type="url"], .settings-search-input, .select-trigger, select { min-height: 42px; }
-.secondary, .save-btn, .add-link-btn { min-height: 42px; padding: 9px 15px; font-size: 0.96rem; line-height: 1.2; box-sizing: border-box; }
-.save-btn { margin-top: 0; }
-.action-btn-row { gap: 10px; margin-bottom: 10px; }
-.action-btn-row .secondary, .action-btn-row .add-link-btn { flex: 1; }
-.radio-option-start, .radio-option-start-sm, .radio-option-no-margin { width: 100%; min-height: 44px; padding: 8px 0; background: transparent; border: 0; border-radius: 0; justify-content: flex-start; gap: 10px; box-sizing: border-box; }
-.radio-option-start input[type="checkbox"], .radio-option-start-sm input[type="checkbox"], .radio-option-no-margin input[type="checkbox"] { order: 0; margin-left: auto; }
-.radio-option-start:hover, .radio-option-start-sm:hover, .radio-option-no-margin:hover { background: transparent; }
-.radio-row { gap: 10px; }
-.radio-row .radio-option { min-height: 42px; box-sizing: border-box; }
-.select-trigger { min-height: 42px; padding: 9px 13px; font-size: 0.94rem; }
-.restore-point-action { margin: 4px 0 22px; }
-.restore-point-action .secondary { width: 100%; }
-.restore-point-status { margin: 7px 2px 0; color: var(--dim); font-size: 0.76rem; line-height: 1.35; }
-.data-danger-actions { margin-top: 4px; margin-bottom: 0; }
+.category-panel {
+  margin-bottom: 8px;
+}
 
-/* Desktop settings panel: slim right-side surface filling the viewport. */
+.category-panel summary {
+  min-height: 42px;
+  height: 42px;
+  max-height: 42px;
+  padding: 0 14px;
+  font-size: 0.98rem;
+  box-sizing: border-box;
+}
+
+.category-content {
+  padding: 0 14px 14px;
+}
+
+.setting-group {
+  margin-top: 18px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.setting-group:first-child {
+  margin-top: 4px;
+}
+
+.setting-group:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+body.material-you .setting-group {
+  padding: 0 0 18px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+}
+
+body.material-you .setting-group:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.setting-header {
+  margin-bottom: 8px;
+  gap: 10px;
+}
+
+.setting-group h3 {
+  font-size: 0.94rem;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: 0.1px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.help-btn {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.help-text {
+  background: transparent;
+  border-left: 2px solid var(--accent);
+  padding: 0 0 0 10px;
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  border-radius: 0;
+}
+
+input[type="text"],
+input[type="url"],
+.settings-search-input,
+.select-trigger,
+select {
+  min-height: 42px;
+}
+
+.secondary,
+.save-btn,
+.add-link-btn {
+  min-height: 42px;
+  padding: 9px 15px;
+  font-size: 0.96rem;
+  line-height: 1.2;
+  box-sizing: border-box;
+}
+
+.save-btn {
+  margin-top: 0;
+}
+
+.action-btn-row {
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.action-btn-row .secondary,
+.action-btn-row .add-link-btn {
+  flex: 1;
+}
+
+.radio-option-start,
+.radio-option-start-sm,
+.radio-option-no-margin {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  justify-content: flex-start;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.radio-option-start input[type="checkbox"],
+.radio-option-start-sm input[type="checkbox"],
+.radio-option-no-margin input[type="checkbox"] {
+  order: 0;
+  margin-left: auto;
+}
+
+.radio-option-start:hover,
+.radio-option-start-sm:hover,
+.radio-option-no-margin:hover {
+  background: transparent;
+}
+
+.radio-row {
+  gap: 10px;
+}
+
+.radio-row .radio-option {
+  min-height: 42px;
+  box-sizing: border-box;
+}
+
+.select-trigger {
+  min-height: 42px;
+  padding: 9px 13px;
+  font-size: 0.94rem;
+}
+
+.restore-point-action {
+  margin: 4px 0 22px;
+}
+
+.restore-point-action .secondary {
+  width: 100%;
+}
+
+.restore-point-status {
+  margin: 7px 2px 0;
+  color: var(--dim);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.data-danger-actions {
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+/* Settings dialog: full-height shell, centered body content, normal-flow footer. */
 .settings-dialog {
   position: relative;
   display: flex;
@@ -51,10 +196,15 @@ input[type="text"], input[type="url"], .settings-search-input, .select-trigger, 
   box-sizing: border-box;
   transform: scale(0.95);
   opacity: 0;
-  transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+  transition:
+    transform 0.2s ease-out,
+    opacity 0.2s ease-out;
 }
 
-.modal.active .settings-dialog { transform: scale(1); opacity: 1; }
+.modal.active .settings-dialog {
+  transform: scale(1);
+  opacity: 1;
+}
 
 body.material-you .settings-dialog {
   border-radius: var(--md-sys-shape-corner-extra-large, 28px) 0 0 var(--md-sys-shape-corner-extra-large, 28px);
@@ -63,30 +213,144 @@ body.material-you .settings-dialog {
   box-shadow: var(--md-sys-elevation-level3-shadow);
 }
 
-.settings-dialog .modal-header { position: relative; top: auto; flex: 0 0 auto; z-index: 1; }
-.settings-dialog .modal-content { position: relative; width: 100%; max-width: none; max-height: none; min-height: 0; flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; touch-action: pan-y; padding: 0 24px 24px; scrollbar-width: none; box-sizing: border-box; border: 0; border-radius: 0; box-shadow: none; background: transparent; }
-.settings-dialog .modal-content::-webkit-scrollbar { display: none; }
-.settings-dialog .modal-footer { position: relative; left: auto; right: auto; bottom: auto; flex: 0 0 auto; z-index: 1; margin: 0; padding: 10px 24px 12px; background: var(--bg); border-top: 1px solid var(--border); box-sizing: border-box; }
-.settings-dialog .modal-header { background: var(--bg); }
-body.material-you .settings-dialog .modal-header { background: var(--md-sys-color-surface-container-low); margin: 0; padding: 24px 24px 16px; border-bottom: 1px solid var(--border); }
-body.material-you .settings-dialog .modal-footer { background: var(--md-sys-color-surface-container-low); }
-.settings-dialog .settings-modal-scroll-anchor { bottom: 76px !important; right: 24px !important; z-index: 35 !important; }
-.category-panel:not([open]) { border-radius: 12px; }
-.category-panel:not([open]) summary { border-radius: inherit; }
+.settings-dialog .modal-header {
+  position: relative;
+  top: auto;
+  flex: 0 0 auto;
+  z-index: 1;
+}
+
+.settings-dialog .modal-content {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  padding: 0 24px 24px;
+  scrollbar-width: none;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  justify-content: safe center;
+}
+
+.settings-dialog .modal-content::-webkit-scrollbar {
+  display: none;
+}
+
+.settings-dialog .modal-footer {
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  flex: 0 0 auto;
+  z-index: 1;
+  margin: 0;
+  padding: 10px 24px 12px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  box-sizing: border-box;
+}
+
+.settings-dialog .modal-header {
+  background: var(--bg);
+}
+
+body.material-you .settings-dialog .modal-header {
+  background: var(--md-sys-color-surface-container-low);
+  margin: 0;
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+body.material-you .settings-dialog .modal-content {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+body.material-you .settings-dialog .modal-footer {
+  background: var(--md-sys-color-surface-container-low);
+}
+
+/* The scroll-to-top control is anchored to the dialog, not the scrolling body. */
+.settings-dialog .settings-modal-scroll-anchor {
+  bottom: 76px !important;
+  right: 24px !important;
+  z-index: 35 !important;
+}
+
+/* Closed categories are navigation rows, not cards. */
+.category-panel:not([open]) {
+  border-radius: 12px;
+}
+
+.category-panel:not([open]) summary {
+  border-radius: inherit;
+}
 
 @media (max-width: 768px) {
-  .settings-dialog { align-self: center; margin-left: 0; margin-right: 0; width: calc(100% - 16px); max-width: none; height: calc(100dvh - 16px); max-height: calc(100dvh - 16px); border-radius: var(--radius); }
-  body.material-you .settings-dialog { border-radius: var(--md-sys-shape-corner-extra-large, 28px); }
-  .settings-dialog .modal-content { padding: 0 16px 18px; }
-  body.material-you .settings-dialog .modal-header { padding: 18px 16px 14px; }
-  .settings-dialog .modal-footer { padding: 9px 16px 11px; }
-  .settings-dialog .settings-modal-scroll-anchor { bottom: 78px !important; right: 16px !important; }
+  .settings-dialog {
+    align-self: center;
+    margin-left: 0;
+    margin-right: 0;
+    width: calc(100% - 16px);
+    max-width: none;
+    height: calc(100dvh - 16px);
+    max-height: calc(100dvh - 16px);
+    border-radius: var(--radius);
+  }
+
+  body.material-you .settings-dialog {
+    border-radius: var(--md-sys-shape-corner-extra-large, 28px);
+  }
+
+  .settings-dialog .modal-content {
+    padding: 0 16px 18px;
+  }
+
+  body.material-you .settings-dialog .modal-header {
+    padding: 18px 16px 14px;
+  }
+
+  .settings-dialog .modal-footer {
+    padding: 9px 16px 11px;
+  }
+
+  .settings-dialog .settings-modal-scroll-anchor {
+    bottom: 78px !important;
+    right: 16px !important;
+  }
 }
 
 @media (max-width: 480px) {
-  .action-btn-row { gap: 8px; }
-  .secondary, .save-btn, .add-link-btn { padding-inline: 12px; }
-  .settings-dialog .modal-footer { padding-inline: 12px; }
-  .settings-dialog .modal-content { padding-inline: 12px; }
-  body.material-you .settings-dialog .modal-header { padding-inline: 12px; }
+  .action-btn-row {
+    gap: 8px;
+  }
+
+  .secondary,
+  .save-btn,
+  .add-link-btn {
+    padding-inline: 12px;
+  }
+
+  .settings-dialog .modal-footer {
+    padding-inline: 12px;
+  }
+
+  .settings-dialog .modal-content {
+    padding-inline: 12px;
+  }
+
+  body.material-you .settings-dialog .modal-header {
+    padding-inline: 12px;
+  }
 }
