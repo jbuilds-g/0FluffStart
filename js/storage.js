@@ -259,7 +259,7 @@ function mergeLinks(currentLinks, importedLinks) {
 function mergeSettings(currentSettings, importedSettings, hasImportedBackground) {
   const imported = { ...importedSettings };
 
-  if (!hasImportedBackground && imported.backgroundImage === "indexeddb") {
+  if (!hasImportedBackground) {
     delete imported.backgroundImage;
   }
 
