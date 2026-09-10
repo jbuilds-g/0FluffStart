@@ -3,28 +3,28 @@
    ========================================= */
 
 .category-panel {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .category-panel summary {
-  min-height: 48px;
-  padding: 12px 16px;
-  font-size: 1.02rem;
+  min-height: 42px;
+  padding: 9px 14px;
+  font-size: 0.98rem;
 }
 
 .category-content {
-  padding: 0 16px 18px;
+  padding: 0 14px 14px;
 }
 
 .setting-group {
-  margin-top: 24px;
-  margin-bottom: 28px;
-  padding-bottom: 24px;
+  margin-top: 18px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
   border-bottom: 1px solid var(--border);
 }
 
 .setting-group:first-child {
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .setting-group:last-child {
@@ -34,7 +34,7 @@
 }
 
 body.material-you .setting-group {
-  padding: 0 0 24px;
+  padding: 0 0 18px;
   background: transparent;
   border: 0;
   border-bottom: 1px solid var(--border);
@@ -48,11 +48,11 @@ body.material-you .setting-group:last-child {
 
 .setting-header {
   margin-bottom: 8px;
-  gap: 12px;
+  gap: 10px;
 }
 
 .setting-group h3 {
-  font-size: 0.96rem;
+  font-size: 0.94rem;
   color: var(--text);
   text-transform: none;
   letter-spacing: 0.1px;
@@ -72,9 +72,9 @@ body.material-you .setting-group:last-child {
   background: transparent;
   border-left: 2px solid var(--accent);
   padding: 0 0 0 10px;
-  margin-bottom: 14px;
-  font-size: 0.82rem;
-  line-height: 1.5;
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  line-height: 1.45;
   border-radius: 0;
 }
 
@@ -83,15 +83,15 @@ input[type="url"],
 .settings-search-input,
 .select-trigger,
 select {
-  min-height: 44px;
+  min-height: 42px;
 }
 
 .secondary,
 .save-btn,
 .add-link-btn {
-  min-height: 44px;
-  padding: 10px 16px;
-  font-size: 0.94rem;
+  min-height: 42px;
+  padding: 9px 15px;
+  font-size: 0.96rem;
   line-height: 1.2;
   box-sizing: border-box;
 }
@@ -101,8 +101,8 @@ select {
 }
 
 .action-btn-row {
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .action-btn-row .secondary,
@@ -115,7 +115,7 @@ select {
 .radio-option-no-margin {
   width: 100%;
   min-height: 44px;
-  padding: 10px 0;
+  padding: 8px 0;
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -127,7 +127,7 @@ select {
 .radio-option-start input[type="checkbox"],
 .radio-option-start-sm input[type="checkbox"],
 .radio-option-no-margin input[type="checkbox"] {
-  order: 2;
+  order: 0;
   margin-left: auto;
 }
 
@@ -142,34 +142,29 @@ select {
 }
 
 .radio-row .radio-option {
-  min-height: 44px;
+  min-height: 42px;
   box-sizing: border-box;
 }
 
 .select-trigger {
-  min-height: 44px;
-  padding: 10px 14px;
+  min-height: 42px;
+  padding: 9px 13px;
   font-size: 0.94rem;
 }
 
 .restore-point-action {
-  margin: 4px 0 26px;
+  margin: 4px 0 22px;
 }
 
 .restore-point-action .secondary {
   width: 100%;
 }
 
-.restore-point-action .secondary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .restore-point-status {
-  margin: 8px 2px 0;
+  margin: 7px 2px 0;
   color: var(--dim);
-  font-size: 0.78rem;
-  line-height: 1.4;
+  font-size: 0.76rem;
+  line-height: 1.35;
 }
 
 .data-danger-actions {
@@ -177,9 +172,15 @@ select {
   margin-bottom: 0;
 }
 
+@media (min-width: 769px) {
+  .modal-content {
+    width: min(92%, 510px);
+  }
+}
+
 @media (max-width: 480px) {
   .action-btn-row {
-    gap: 10px;
+    gap: 8px;
   }
 
   .secondary,
