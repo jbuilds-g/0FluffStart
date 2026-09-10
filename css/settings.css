@@ -180,8 +180,9 @@ select {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: min(92vw, 900px);
-  max-width: 900px;
+  width: min(90vw, 800px);
+  max-width: 800px;
+  height: min(85vh, calc(100dvh - 32px));
   max-height: calc(100dvh - 32px);
   min-height: 0;
   overflow: hidden;
@@ -289,6 +290,7 @@ body.material-you .settings-dialog .modal-footer {
   .settings-dialog {
     width: calc(100% - 16px);
     max-width: none;
+    height: calc(100dvh - 16px);
     max-height: calc(100dvh - 16px);
   }
 
