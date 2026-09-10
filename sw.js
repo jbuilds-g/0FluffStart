@@ -14,7 +14,6 @@ const CORE_APP_SHELL = [
   "./css/mobile.css",
   "./css/modal.css",
   "./css/search.css",
-  "./css/settings.css",
   "./css/themes.css",
   "./css/utilities.css",
   "./css/variables.css",
