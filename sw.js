@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluffstart-cache-v1.6.8";
+const CACHE_NAME = "0fluffstart-cache-v1.6.9";
 
 const CORE_APP_SHELL = [
   "./",
@@ -31,6 +31,7 @@ const CORE_APP_SHELL = [
   "./js/material-you-engine.js",
   "./js/utils.js",
   "./js/version.js",
+  "./js/settings-layout.js",
 ];
 
 self.addEventListener("message", (event) => {
