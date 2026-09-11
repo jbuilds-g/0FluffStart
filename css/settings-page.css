@@ -39,6 +39,30 @@
   opacity: 1;
 }
 
+.settings-page .settings-category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.settings-page .settings-category-grid .category-panel {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+@media (min-width: 701px) and (max-width: 1050px) {
+  .settings-page .modal-content {
+    width: min(960px, calc(100% - 32px));
+    margin: 16px auto;
+    height: calc(100dvh - 32px);
+  }
+
+  .settings-page .settings-category-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 700px) {
   .settings-page {
     overflow: hidden;
@@ -51,5 +75,10 @@
     border-radius: 0;
     border-left: 0;
     border-right: 0;
+  }
+
+  .settings-page .settings-category-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 }
