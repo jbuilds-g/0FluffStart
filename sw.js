@@ -1,8 +1,9 @@
-const CACHE_NAME = "0fluffstart-cache-v1.7.0";
+const CACHE_NAME = "0fluffstart-cache-v1.7.1";
 
 const CORE_APP_SHELL = [
   "./",
   "./index.html",
+  "./settings.html",
   "./pwa-manifest.json",
   "./icon.png",
 
@@ -14,11 +15,13 @@ const CORE_APP_SHELL = [
   "./css/mobile.css",
   "./css/modal.css",
   "./css/search.css",
+  "./css/settings-page.css",
   "./css/themes.css",
   "./css/utilities.css",
   "./css/variables.css",
 
   "./js/main.js",
+  "./js/settings-page.js",
   "./js/store.js",
   "./js/ui.js",
   "./js/search.js",
