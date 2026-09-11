@@ -39,16 +39,11 @@ async function loadSettingsSurface() {
   root.appendChild(sourceModal);
   sourceModal.classList.add("active");
   createCategoryGrid(sourceModal);
-
-  await import("./main.js");
-  document.dispatchEvent(new Event("DOMContentLoaded"));
-
-  document.getElementById("closeSettingsBtn")?.addEventListener("click", () => {
-    window.location.href = "./index.html";
-  });
 }
 
-loadSettingsSurface().catch((error) => {
-  console.error("Settings page initialization failed:", error);
-  if (root) root.textContent = "Unable to load Settings.";
+await loadSettingsSurface();
+await import("./main.js");
+
+document.getElementById("closeSettingsBtn")?.addEventListener("click", () => {
+  window.location.href = "./index.html";
 });
