@@ -1,9 +1,12 @@
 const root = document.getElementById("settingsPageRoot");
 
 function createCategoryGrid(sourceModal) {
-  const footer = sourceModal.querySelector(".modal-footer");
+  const content = sourceModal.querySelector(".modal-content");
+  if (!content) return;
+
+  const footer = content.querySelector(":scope > .modal-footer");
   const panels = Array.from(
-    sourceModal.querySelectorAll(":scope > details.category-panel"),
+    content.querySelectorAll(":scope > details.category-panel"),
   );
 
   if (!panels.length) return;
@@ -14,9 +17,9 @@ function createCategoryGrid(sourceModal) {
   panels.forEach((panel) => grid.appendChild(panel));
 
   if (footer) {
-    sourceModal.insertBefore(grid, footer);
+    content.insertBefore(grid, footer);
   } else {
-    sourceModal.appendChild(grid);
+    content.appendChild(grid);
   }
 }
 
