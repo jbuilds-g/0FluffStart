@@ -1,0 +1,55 @@
+/* Standalone settings page. Uses the existing settings surface and tokens. */
+.settings-page {
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+.settings-page #settingsPageRoot {
+  position: relative;
+  z-index: var(--z-modal, 1000);
+  width: 100%;
+  min-height: 100dvh;
+}
+
+.settings-page .modal {
+  position: static;
+  width: 100%;
+  min-height: 100dvh;
+  height: auto;
+  background: transparent;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  overflow: visible;
+  transition: none;
+}
+
+.settings-page .modal-content {
+  width: min(1200px, calc(100% - 48px));
+  max-width: none;
+  height: calc(100dvh - 48px);
+  max-height: none;
+  margin: 24px auto;
+  transform: none;
+  opacity: 1;
+}
+
+.settings-page .modal.active .modal-content {
+  transform: none;
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .settings-page {
+    overflow: hidden;
+  }
+
+  .settings-page .modal-content {
+    width: 100%;
+    height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+}
