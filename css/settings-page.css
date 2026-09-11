@@ -1,17 +1,12 @@
 /* Standalone settings page using the existing settings surface. */
-.settings-page {
-  min-height: 100dvh;
-  overflow: hidden;
-}
-
-.settings-page #settingsPageRoot {
+#settingsPageRoot {
   position: relative;
   z-index: var(--z-modal, 1000);
   width: 100%;
   min-height: 100dvh;
 }
 
-.settings-page .modal {
+#settingsPageRoot .modal {
   position: static;
   width: 100%;
   min-height: 100dvh;
@@ -26,7 +21,7 @@
   transition: none;
 }
 
-.settings-page .modal-content {
+#settingsPageRoot .modal-content {
   width: min(1200px, calc(100% - 48px));
   max-width: none;
   height: calc(100dvh - 48px);
@@ -36,45 +31,41 @@
   opacity: 1;
 }
 
-.settings-page .modal.active .modal-content {
+#settingsPageRoot .modal.active .modal-content {
   transform: none;
   opacity: 1;
 }
 
-.settings-page .settings-category-grid {
+#settingsPageRoot .settings-category-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   align-items: start;
 }
 
-.settings-page .settings-category-grid .category-panel {
+#settingsPageRoot .settings-category-grid .category-panel {
   margin-bottom: 0;
   min-width: 0;
 }
 
 @media (min-width: 701px) and (max-width: 1050px) {
-  .settings-page .modal-content {
+  #settingsPageRoot .modal-content {
     width: min(960px, calc(100% - 32px));
     margin: 16px auto;
     height: calc(100dvh - 32px);
   }
 
-  .settings-page .settings-category-grid {
+  #settingsPageRoot .settings-category-grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 700px) {
-  .settings-page {
-    overflow: hidden;
-  }
-
-  .settings-page .modal {
+  #settingsPageRoot .modal {
     align-items: stretch;
   }
 
-  .settings-page .modal-content {
+  #settingsPageRoot .modal-content {
     width: 100%;
     height: 100dvh;
     margin: 0;
@@ -83,7 +74,7 @@
     border-right: 0;
   }
 
-  .settings-page .settings-category-grid {
+  #settingsPageRoot .settings-category-grid {
     grid-template-columns: 1fr;
     gap: 10px;
   }
