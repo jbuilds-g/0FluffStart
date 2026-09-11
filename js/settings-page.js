@@ -1,5 +1,25 @@
 const root = document.getElementById("settingsPageRoot");
 
+function createCategoryGrid(sourceModal) {
+  const footer = sourceModal.querySelector(".modal-footer");
+  const panels = Array.from(
+    sourceModal.querySelectorAll(":scope > details.category-panel"),
+  );
+
+  if (!panels.length) return;
+
+  const grid = document.createElement("div");
+  grid.className = "settings-category-grid";
+
+  panels.forEach((panel) => grid.appendChild(panel));
+
+  if (footer) {
+    sourceModal.insertBefore(grid, footer);
+  } else {
+    sourceModal.appendChild(grid);
+  }
+}
+
 async function loadSettingsSurface() {
   if (!root) return;
 
@@ -18,6 +38,7 @@ async function loadSettingsSurface() {
 
   root.appendChild(sourceModal);
   sourceModal.classList.add("active");
+  createCategoryGrid(sourceModal);
 
   await import("./main.js");
   document.dispatchEvent(new Event("DOMContentLoaded"));
