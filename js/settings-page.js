@@ -1,6 +1,25 @@
 import "./main.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("clockDisplay")?.remove();
+  document.getElementById("greetingDisplay")?.remove();
+
+  const footer = document.querySelector(".settings-page-footer");
+  if (footer) {
+    footer.innerHTML = `
+      <div class="footer-row footer-row-primary">
+        <span class="footer-brand">0FluffStart</span>
+        <a href="https://github.com/jbuilds-g/0FluffStart" target="_blank" rel="noopener noreferrer" class="footer-version" title="View Source on GitHub">View Source</a>
+        <a href="https://jbuilds-g.github.io/0fluffstart-privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      </div>
+      <div class="footer-row footer-row-secondary">
+        <span class="footer-copy">© 2026 • Open source under AGPL-3.0</span>
+        <a href="https://github.com/jbuilds-g/0FluffStart/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">AGPL-3.0 License</a>
+        <span data-version>v6.4.0</span>
+      </div>
+    `;
+  }
+
   const nav = document.querySelector(".settings-section-nav");
   const sections = Array.from(document.querySelectorAll(".settings-section"));
 
@@ -11,7 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
     navLinks.forEach((link) => {
       const active = link.getAttribute("href") === `#${id}`;
       link.classList.toggle("active", active);
-      link.setAttribute("aria-current", active ? "location" : "false");
+      if (active) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
     });
   };
 
