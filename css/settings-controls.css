@@ -128,3 +128,103 @@
 @media (max-width: 900px) {
   .settings-page-shell { box-shadow: none; }
 }
+
+/* The standalone settings page is its own solid workspace. Never expose the dashboard wallpaper here. */
+html.settings-page,
+html.settings-page body {
+  background: var(--bg) !important;
+}
+
+html.settings-page body > .bg-image,
+html.settings-page body > .bg-video,
+html.settings-page body > #bgOverlay {
+  display: none !important;
+}
+
+/* Tighten the vertical rhythm. The settings page should not contain artificial dead zones. */
+.settings-page-shell .settings-page-header { margin-bottom: 30px; }
+.settings-page-shell .settings-section { padding-bottom: 30px; margin-bottom: 30px; }
+.settings-page-shell .settings-section-heading { margin-bottom: 24px; }
+.settings-page-shell .settings-subsection { margin-top: 30px; }
+.settings-page-shell .setting-row { padding: 14px 0; }
+.settings-page-shell .setting-row-stack { gap: 10px; }
+.settings-page-shell .settings-page-footer { margin-top: 30px; }
+.settings-page-shell .settings-section:last-child { padding-bottom: 0; margin-bottom: 0; }
+
+/* Every checkbox toggle uses the same right-aligned control treatment. */
+.settings-page-shell label.radio-option:has(input[type="checkbox"]) {
+  width: 100%;
+  justify-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  box-sizing: border-box;
+}
+
+.settings-page-shell .settings-subgroup label.radio-option:has(input[type="checkbox"]) {
+  width: 100%;
+}
+
+/* Action buttons should size to their content instead of inheriting full-width modal styling. */
+.settings-page-shell .action-btn-row,
+.settings-page-shell .editor-btn-row {
+  align-items: center;
+}
+
+.settings-page-shell .action-btn-row > button,
+.settings-page-shell .editor-btn-row > button {
+  width: auto !important;
+  flex: 0 0 auto;
+  min-width: 140px;
+}
+
+.settings-page-shell .restore-point-action {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.settings-page-shell .restore-point-action > button {
+  width: auto !important;
+  flex: 0 0 auto;
+  min-width: 180px;
+}
+
+.settings-page-shell .restore-point-status {
+  margin: 0;
+}
+
+/* The clock picker is intentionally always visible. The shared select initializer adds .hidden,
+   but this component is a persistent horizontal picker rather than a popover. */
+#clockStyleSelect.clock-style-picker .select-dropdown,
+#clockStyleSelect.clock-style-picker .select-dropdown.hidden {
+  position: static;
+  display: flex !important;
+  flex-direction: row;
+  width: 100%;
+  max-width: 100%;
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  visibility: visible;
+  opacity: 1;
+  padding: 3px 2px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#clockStyleSelect.clock-style-picker .select-option {
+  flex: 0 0 132px;
+}
+
+@media (max-width: 900px) {
+  .settings-page-shell .action-btn-row > button,
+  .settings-page-shell .editor-btn-row > button,
+  .settings-page-shell .restore-point-action > button {
+    min-width: 0;
+  }
+}
