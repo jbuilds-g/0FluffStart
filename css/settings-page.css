@@ -17,8 +17,10 @@ body > .bg-video {
   inset: 0;
 }
 
-/* Settings should remain readable over custom media without altering the media itself. */
-.bg-overlay.bg-overlay-active { opacity: 0.55; }
+/* Darken custom media without changing the stored image/video. */
+.bg-overlay.bg-overlay-active {
+  opacity: 0.68;
+}
 
 .settings-page-shell {
   position: relative;
@@ -129,23 +131,37 @@ body > .bg-video {
   text-transform: uppercase;
 }
 
-/* Solid settings surfaces provide structure without turning individual rows into cards. */
-.settings-group {
-  min-width: 0;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--card) 92%, var(--bg));
-  border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
-  border-radius: var(--radius);
-  box-shadow: 0 calc(4px * var(--shadow-factor, 1)) calc(12px * var(--shadow-factor, 1)) var(--shadow-color);
+/* Keep the settings layout flat. Only existing solid controls receive elevation. */
+.settings-page-shell .custom-select,
+.settings-page-shell input[type="text"],
+.settings-page-shell input[type="url"],
+.settings-page-shell input[type="number"],
+.settings-page-shell .radio-option,
+.settings-page-shell button:not(.help-btn),
+.settings-page-shell .link-editor-box,
+.settings-page-shell .engine-item,
+.settings-page-shell .link-item {
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.15));
 }
 
-.settings-group .setting-row {
+.settings-page-shell .settings-subgroup,
+.settings-page-shell .settings-group,
+.settings-page-shell .setting-row {
+  box-shadow: none;
+}
+
+.settings-group {
   min-width: 0;
-  padding: 20px 22px;
+  border-top: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+}
+
+.setting-row {
+  min-width: 0;
+  padding: 20px 0;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
 }
 
-.settings-group .setting-row:last-child { border-bottom: 0; }
+.setting-row:last-child { border-bottom: 0; }
 
 .setting-row-control,
 .setting-row-input {
@@ -315,6 +331,6 @@ body > .bg-video {
 
   .settings-section-heading { margin-bottom: 24px; }
   .settings-subsection { margin-top: 32px; }
-  .settings-group .setting-row { padding: 18px 16px; }
+  .setting-row { padding: 18px 0; }
   .setting-slider-row { grid-template-columns: minmax(0, 1fr) 68px; }
 }
