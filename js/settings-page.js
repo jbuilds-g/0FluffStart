@@ -2,6 +2,11 @@ import "./main.js";
 import { store } from "./store.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const controlStyles = document.createElement("link");
+  controlStyles.rel = "stylesheet";
+  controlStyles.href = "css/settings-controls.css?v=1";
+  document.head.appendChild(controlStyles);
+
   document.documentElement.classList.add("settings-page");
 
   const footer = document.querySelector(".settings-page-footer");
@@ -21,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const nav = document.querySelector(".settings-section-nav");
   const sections = Array.from(document.querySelectorAll(".settings-section"));
-
   if (!nav || !sections.length) return;
 
   const navLinks = Array.from(nav.querySelectorAll("a[href^='#']"));
@@ -48,9 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const observer = new IntersectionObserver(
     (entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
       if (visible) setActiveSection(visible.target.id);
     },
     { rootMargin: "-96px 0px -55% 0px", threshold: [0.05, 0.2, 0.5] },
@@ -68,14 +70,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const colors = palette
       ? [palette["--bg"], palette["--card"], palette["--card-hover"], palette["--accent"]].filter(Boolean)
       : [];
-    option.style.setProperty(
-      "--theme-preview",
-      colors.length && settings.backgroundImage === "indexeddb"
-        ? `linear-gradient(135deg, ${colors.join(", ")})`
-        : defaultMaterialPreview,
-    );
+    const preview = colors.length && settings.backgroundImage === "indexeddb"
+      ? `linear-gradient(135deg, ${colors.join(", ")})`
+      : defaultMaterialPreview;
 
-    select.style.setProperty("--theme-preview", option.style.getPropertyValue("--theme-preview"));
+    option.style.setProperty("--theme-preview", preview);
+    select.style.setProperty("--theme-preview", preview);
   };
 
   const clockPicker = document.getElementById("clockStyleSelect");
@@ -94,15 +94,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const labelEl = document.createElement("span");
       labelEl.className = "settings-clock-label";
       labelEl.textContent = label;
-
       option.replaceChildren(preview, labelEl);
+
       option.setAttribute("role", "radio");
       option.setAttribute("tabindex", "0");
-
       option.addEventListener("click", () => {
         options.forEach((item) => item.setAttribute("aria-checked", item === option ? "true" : "false"));
       });
-
       option.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
