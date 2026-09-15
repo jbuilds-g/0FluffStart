@@ -4,9 +4,6 @@ import { store } from "./store.js";
 document.addEventListener("DOMContentLoaded", () => {
   document.documentElement.classList.add("settings-page");
 
-  document.getElementById("clockDisplay")?.remove();
-  document.getElementById("greetingDisplay")?.remove();
-
   const footer = document.querySelector(".settings-page-footer");
   if (footer) {
     footer.innerHTML = `
@@ -15,15 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
         <a href="https://github.com/jbuilds-g/0FluffStart" target="_blank" rel="noopener noreferrer" class="footer-version" title="View Source on GitHub" data-version>v6.4.0</a>
       </div>
       <div class="footer-row footer-row-secondary">
-        <span class="footer-copy">
-          © 2026 •
-          <a href="https://github.com/jbuilds-g/0FluffStart/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">AGPL-3.0</a>
-        </span>
+        <span class="footer-copy">© 2026 • <a href="https://github.com/jbuilds-g/0FluffStart/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">AGPL-3.0</a></span>
         <a href="https://jbuilds-g.github.io/0fluffstart-privacy-policy/" target="_blank" rel="noopener noreferrer" class="footer-link">Privacy Policy</a>
-        <span class="footer-credit">
-          Made with ♥️ •
-          <a href="https://github.com/jbuilds-g" target="_blank" rel="noopener noreferrer">jbuilds-g</a>
-        </span>
+        <span class="footer-credit">Made with ♥️ • <a href="https://github.com/jbuilds-g" target="_blank" rel="noopener noreferrer">jbuilds-g</a></span>
       </div>
     `;
   }
@@ -45,11 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateFromHash = () => {
     const id = window.location.hash.slice(1);
-    if (id && sections.some((section) => section.id === id)) {
-      setActiveSection(id);
-    } else {
-      setActiveSection(sections[0].id);
-    }
+    setActiveSection(id && sections.some((section) => section.id === id) ? id : sections[0].id);
   };
 
   navLinks.forEach((link) => {
@@ -68,54 +55,52 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     { rootMargin: "-96px 0px -55% 0px", threshold: [0.05, 0.2, 0.5] },
   );
-
   sections.forEach((section) => observer.observe(section));
 
-  const materialYouDefaultPreview =
-    "linear-gradient(135deg, #ff6b6b 0 25%, #ffd166 25% 50%, #06d6a0 50% 75%, #118ab2 75%)";
+  const defaultMaterialPreview = "linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)";
 
   const updateThemePreview = (settings = store.getState().settings || {}) => {
-    const option = document.querySelector(
-      '#themeSelect .select-option[data-value="material-you"]',
-    );
-    if (!option) return;
+    const select = document.getElementById("themeSelect");
+    const option = select?.querySelector('.select-option[data-value="material-you"]');
+    if (!select || !option) return;
 
     const palette = settings.materialYouPalette;
-    const hasCustomBackground = settings.backgroundImage === "indexeddb";
+    const colors = palette
+      ? [palette["--bg"], palette["--card"], palette["--card-hover"], palette["--accent"]].filter(Boolean)
+      : [];
+    option.style.setProperty(
+      "--theme-preview",
+      colors.length && settings.backgroundImage === "indexeddb"
+        ? `linear-gradient(135deg, ${colors.join(", ")})`
+        : defaultMaterialPreview,
+    );
 
-    if (hasCustomBackground && palette) {
-      const colors = [
-        palette["--bg"],
-        palette["--card"],
-        palette["--card-hover"],
-        palette["--accent"],
-      ].filter(Boolean);
-      option.style.setProperty(
-        "--theme-preview",
-        `linear-gradient(135deg, ${colors.join(", ")})`,
-      );
-    } else {
-      option.style.setProperty("--theme-preview", materialYouDefaultPreview);
-    }
+    select.style.setProperty("--theme-preview", option.style.getPropertyValue("--theme-preview"));
   };
 
   const clockPicker = document.getElementById("clockStyleSelect");
   if (clockPicker) {
     clockPicker.classList.add("clock-style-picker");
-
     const options = Array.from(clockPicker.querySelectorAll(".select-option"));
+
     options.forEach((option) => {
+      const value = option.dataset.value || "default";
+      const label = option.textContent.trim();
+      const preview = document.createElement("span");
+      preview.className = `clock clock-style-${value} settings-clock-preview`;
+      preview.setAttribute("aria-hidden", "true");
+      preview.textContent = "12:34";
+
+      const labelEl = document.createElement("span");
+      labelEl.className = "settings-clock-label";
+      labelEl.textContent = label;
+
+      option.replaceChildren(preview, labelEl);
       option.setAttribute("role", "radio");
       option.setAttribute("tabindex", "0");
-      option.setAttribute(
-        "aria-checked",
-        option.classList.contains("selected") ? "true" : "false",
-      );
 
       option.addEventListener("click", () => {
-        options.forEach((item) =>
-          item.setAttribute("aria-checked", item === option ? "true" : "false"),
-        );
+        options.forEach((item) => item.setAttribute("aria-checked", item === option ? "true" : "false"));
       });
 
       option.addEventListener("keydown", (event) => {
@@ -124,49 +109,30 @@ document.addEventListener("DOMContentLoaded", () => {
           option.click();
           return;
         }
-
         if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-
         event.preventDefault();
-        const currentIndex = options.indexOf(option);
-        const nextIndex =
-          event.key === "ArrowRight"
-            ? Math.min(options.length - 1, currentIndex + 1)
-            : Math.max(0, currentIndex - 1);
-        options[nextIndex]?.focus();
-        options[nextIndex]?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
-        });
+        const index = options.indexOf(option);
+        const next = event.key === "ArrowRight" ? Math.min(options.length - 1, index + 1) : Math.max(0, index - 1);
+        options[next]?.focus();
+        options[next]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
       });
     });
 
     const syncClockSelection = () => {
       const value = clockPicker.dataset.value;
-      options.forEach((option) =>
-        option.setAttribute(
-          "aria-checked",
-          option.dataset.value === value ? "true" : "false",
-        ),
-      );
+      options.forEach((option) => option.setAttribute("aria-checked", option.dataset.value === value ? "true" : "false"));
     };
-
     clockPicker.addEventListener("change", syncClockSelection);
     syncClockSelection();
   }
 
   store.subscribe((prevState, currentState) => {
-    if (prevState.settings !== currentState.settings) {
-      updateThemePreview(currentState.settings || {});
-    }
+    if (prevState.settings !== currentState.settings) updateThemePreview(currentState.settings || {});
   });
 
   updateThemePreview();
   window.setTimeout(updateThemePreview, 0);
 
-  // Full Settings uses the same backdrop concept as the old modal, without
-  // changing the stored background media or adding a second overlay system.
   const overlay = document.getElementById("bgOverlay");
   if (overlay) overlay.classList.add("bg-overlay-active");
 
