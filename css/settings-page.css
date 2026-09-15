@@ -17,6 +17,11 @@ body > .bg-video {
   inset: 0;
 }
 
+/* Settings should remain readable over custom media without altering the media itself. */
+.bg-overlay.bg-overlay-active {
+  opacity: 0.55;
+}
+
 .settings-page-shell {
   position: relative;
   z-index: var(--z-modal, 1000);
@@ -98,9 +103,7 @@ body > .bg-video {
   border-bottom: 1px solid var(--border);
 }
 
-.settings-section:last-child {
-  margin-bottom: 0;
-}
+.settings-section:last-child { margin-bottom: 0; }
 
 .settings-section-heading { margin-bottom: 30px; }
 
@@ -117,13 +120,8 @@ body > .bg-video {
   line-height: 1.5;
 }
 
-.settings-subsection {
-  margin-top: 38px;
-}
-
-.settings-subsection:first-of-type {
-  margin-top: 0;
-}
+.settings-subsection { margin-top: 38px; }
+.settings-subsection:first-of-type { margin-top: 0; }
 
 .settings-subsection > h3 {
   margin: 0 0 10px;
@@ -134,18 +132,23 @@ body > .bg-video {
   text-transform: uppercase;
 }
 
+/* Solid settings surfaces provide structure without turning individual rows into cards. */
 .settings-group {
   min-width: 0;
-  border-top: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--card) 92%, var(--bg));
+  border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--shadow-color) calc(100% * min(var(--shadow-factor, 1), 1)), transparent);
 }
 
-.setting-row {
+.settings-group .setting-row {
   min-width: 0;
-  padding: 20px 0;
+  padding: 20px 22px;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
 }
 
-.setting-row:last-child { border-bottom: 0; }
+.settings-group .setting-row:last-child { border-bottom: 0; }
 
 .setting-row-control,
 .setting-row-input {
@@ -184,11 +187,7 @@ body > .bg-video {
 }
 
 .setting-row > input[type="text"],
-.setting-row > input[type="url"] {
-  width: 100%;
-  min-width: 0;
-}
-
+.setting-row > input[type="url"] { width: 100%; min-width: 0; }
 .setting-row .custom-select { width: 100%; }
 
 .setting-slider-row {
@@ -198,9 +197,7 @@ body > .bg-video {
   gap: 12px;
 }
 
-.setting-row .radio-option {
-  justify-self: end;
-}
+.setting-row .radio-option { justify-self: end; }
 
 .settings-subgroup {
   display: grid;
@@ -234,13 +231,9 @@ body > .bg-video {
 }
 
 .engine-selection-list:empty,
-.link-manager-list:empty {
-  min-height: 0;
-}
+.link-manager-list:empty { min-height: 0; }
 
-.link-editor-box {
-  margin-top: 2px;
-}
+.link-editor-box { margin-top: 2px; }
 
 .settings-page-footer {
   display: grid;
@@ -272,9 +265,7 @@ body > .bg-video {
     padding-top: 34px;
   }
 
-  .settings-workspace {
-    display: block;
-  }
+  .settings-workspace { display: block; }
 
   .settings-section-nav {
     position: sticky;
@@ -304,9 +295,7 @@ body > .bg-video {
 
   .settings-section-nav a:hover,
   .settings-section-nav a:focus-visible,
-  .settings-section-nav a.active {
-    border-color: var(--accent);
-  }
+  .settings-section-nav a.active { border-color: var(--accent); }
 
   .setting-row-control,
   .setting-row-input {
@@ -314,9 +303,7 @@ body > .bg-video {
     gap: 14px;
   }
 
-  .setting-row .radio-option {
-    justify-self: start;
-  }
+  .setting-row .radio-option { justify-self: start; }
 }
 
 @media (max-width: 520px) {
@@ -332,6 +319,6 @@ body > .bg-video {
 
   .settings-section-heading { margin-bottom: 24px; }
   .settings-subsection { margin-top: 32px; }
-  .setting-row { padding: 18px 0; }
+  .settings-group .setting-row { padding: 18px 16px; }
   .setting-slider-row { grid-template-columns: minmax(0, 1fr) 68px; }
 }
