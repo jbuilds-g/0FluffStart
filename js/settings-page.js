@@ -1,16 +1,24 @@
 import "./main.js";
 import { store } from "./store.js";
+import { renderLinkManager } from "./links.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const pageStyles = document.querySelector('link[href^="css/settings-page.css"]');
-  if (pageStyles) pageStyles.href = "css/settings-page.css?v=8";
+  if (pageStyles) pageStyles.href = "css/settings-page.css?v=9";
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
-  controlStyles.href = "css/settings-controls.css?v=2";
+  controlStyles.href = "css/settings-controls.css?v=3";
   document.head.appendChild(controlStyles);
 
   document.documentElement.classList.add("settings-page");
+
+  const isMobileDevice =
+    navigator.userAgentData?.mobile === true ||
+    /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+  document.documentElement.classList.toggle("settings-mobile-context", isMobileDevice);
+  document.documentElement.classList.toggle("settings-desktop-context", !isMobileDevice);
 
   const footer = document.querySelector(".settings-page-footer");
   if (footer) {
@@ -66,20 +74,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateThemePreview = (settings = store.getState().settings || {}) => {
     const select = document.getElementById("themeSelect");
-    const option = select?.querySelector('.select-option[data-value="material-you"]');
-    if (!select || !option) return;
+    const trigger = select?.querySelector(".select-trigger");
+    const materialOption = select?.querySelector('.select-option[data-value="material-you"]');
+    if (!select || !trigger || !materialOption) return;
 
     const palette = settings.materialYouPalette;
     const colors = palette
       ? [palette["--bg"], palette["--card"], palette["--card-hover"], palette["--accent"]].filter(Boolean)
       : [];
-    const preview = colors.length && settings.backgroundImage === "indexeddb"
+    const materialPreview = colors.length && settings.backgroundImage === "indexeddb"
       ? `linear-gradient(135deg, ${colors.join(", ")})`
       : defaultMaterialPreview;
 
-    option.style.setProperty("--theme-preview", preview);
-    select.style.setProperty("--theme-preview", preview);
+    materialOption.style.setProperty("--theme-preview", materialPreview);
+
+    const selectedValue = select.dataset.value || "dark";
+    const selectedOption = select.querySelector(`.select-option[data-value="${CSS.escape(selectedValue)}"]`);
+    const selectedPreview = selectedOption?.style.getPropertyValue("--theme-preview").trim();
+
+    if (selectedPreview) {
+      trigger.style.setProperty("--theme-preview", selectedPreview);
+    } else {
+      trigger.style.removeProperty("--theme-preview");
+    }
   };
+
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect?.addEventListener("change", () => updateThemePreview());
 
   const clockPicker = document.getElementById("clockStyleSelect");
   if (clockPicker) {
@@ -135,8 +156,19 @@ document.addEventListener("DOMContentLoaded", () => {
     syncClockSelection();
   }
 
+  // Initialize the shared link manager after its store is ready. main.js calls the same init safely.
+  await store.init();
+  renderLinkManager();
+
   store.subscribe((prevState, currentState) => {
     if (prevState.settings !== currentState.settings) updateThemePreview(currentState.settings || {});
+    if (prevState.links !== currentState.links ||
+        prevState.isSelectionMode !== currentState.isSelectionMode ||
+        prevState.selectedLinkIds !== currentState.selectedLinkIds ||
+        prevState.activeFolderId !== currentState.activeFolderId ||
+        prevState.expandedFolderIds !== currentState.expandedFolderIds) {
+      renderLinkManager();
+    }
   });
 
   updateThemePreview();
