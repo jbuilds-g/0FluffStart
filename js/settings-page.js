@@ -4,7 +4,7 @@ import { renderLinkManager } from "./links.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const pageStyles = document.querySelector('link[href^="css/settings-page.css"]');
-  if (pageStyles) pageStyles.href = "css/settings-page.css?v=9";
+  if (pageStyles) pageStyles.href = "css/settings-page.css?v=10";
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
@@ -90,13 +90,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const selectedValue = select.dataset.value || "dark";
     const selectedOption = select.querySelector(`.select-option[data-value="${CSS.escape(selectedValue)}"]`);
-    const selectedPreview = selectedOption?.style.getPropertyValue("--theme-preview").trim();
+    const selectedPreview = selectedOption
+      ? getComputedStyle(selectedOption).getPropertyValue("--theme-preview").trim()
+      : "";
 
-    if (selectedPreview) {
-      trigger.style.setProperty("--theme-preview", selectedPreview);
-    } else {
-      trigger.style.removeProperty("--theme-preview");
-    }
+    if (selectedPreview) trigger.style.setProperty("--theme-preview", selectedPreview);
+    else trigger.style.removeProperty("--theme-preview");
   };
 
   const themeSelect = document.getElementById("themeSelect");
