@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings — 0FluffStart</title>
     <link rel="stylesheet" href="css/core.css" />
-    <link rel="stylesheet" href="css/settings-page.css?v=5" />
+    <link rel="stylesheet" href="css/settings-page.css?v=6" />
   </head>
   <body class="dark">
     <div id="bgOverlay" class="bg-overlay"></div>
@@ -153,26 +153,15 @@
               <h3>Search History</h3>
               <div class="settings-group">
                 <div class="setting-row setting-row-control">
-                  <div class="setting-copy"><div class="setting-header"><h3>Local Search History</h3><button class="help-btn" type="button" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button></div><div class="help-text">Saves recent search queries locally on your device for autocomplete access.</div></div>
-                  <label class="radio-option"><input type="checkbox" id="historyEnabledToggle" /> Enable Local Search History</label>
+                  <div class="setting-copy"><div class="setting-header"><h3>Search History</h3><button class="help-btn" type="button" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button></div><div class="help-text">Stores search history locally so recent queries can appear in suggestions.</div></div>
+                  <label class="radio-option"><input type="checkbox" id="historyEnabledToggle" checked /> Enable Search History</label>
                 </div>
               </div>
             </div>
           </section>
 
-          <section class="settings-section" id="links-dashboard" data-settings-section="Links & Dashboard">
-            <div class="settings-section-heading"><h2>Links &amp; Dashboard</h2><p>Configure link behavior and manage the shortcuts shown on the dashboard.</p></div>
-
-            <div class="settings-subsection">
-              <h3>Link Navigation</h3>
-              <div class="settings-group">
-                <div class="setting-row setting-row-control">
-                  <div class="setting-copy"><div class="setting-header"><h3>Open in New Tab</h3><button class="help-btn" type="button" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button></div><div class="help-text">Opens quick links and search queries in a new browser tab instead of replacing the current window.</div></div>
-                  <label class="radio-option"><input type="checkbox" id="openNewTabToggle" /> Open Links &amp; Searches in New Tab</label>
-                </div>
-              </div>
-            </div>
-
+          <section class="settings-section" id="links-dashboard" data-settings-section="Links &amp; Dashboard">
+            <div class="settings-section-heading"><h2>Links &amp; Dashboard</h2><p>Manage quick links, folders, and dashboard link behavior.</p></div>
             <div class="settings-subsection">
               <h3>Dashboard Links</h3>
               <div class="settings-group">
@@ -214,6 +203,6 @@
     <div id="toastContainer" class="toast-container"></div>
     <div class="modal" id="customDialogModal"><div class="modal-content custom-dialog-content"><h3 id="customDialogTitle" class="custom-dialog-title">Are you sure?</h3><p id="customDialogMessage" class="custom-dialog-message"></p><div class="action-btn-row"><button id="customDialogCancelBtn" class="secondary" type="button">Cancel</button><button id="customDialogConfirmBtn" class="save-btn" type="button">Confirm</button></div></div></div>
 
-    <script type="module" src="js/settings-page.js?v=5"></script>
+    <script type="module" src="js/settings-page.js?v=6"></script>
   </body>
 </html>
