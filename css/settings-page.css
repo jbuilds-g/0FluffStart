@@ -18,9 +18,7 @@ body > .bg-video {
 }
 
 /* Settings should remain readable over custom media without altering the media itself. */
-.bg-overlay.bg-overlay-active {
-  opacity: 0.55;
-}
+.bg-overlay.bg-overlay-active { opacity: 0.55; }
 
 .settings-page-shell {
   position: relative;
@@ -104,7 +102,6 @@ body > .bg-video {
 }
 
 .settings-section:last-child { margin-bottom: 0; }
-
 .settings-section-heading { margin-bottom: 30px; }
 
 .settings-section-heading h2 {
@@ -139,7 +136,7 @@ body > .bg-video {
   background: color-mix(in srgb, var(--card) 92%, var(--bg));
   border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
   border-radius: var(--radius);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--shadow-color) calc(100% * min(var(--shadow-factor, 1), 1)), transparent);
+  box-shadow: 0 calc(4px * var(--shadow-factor, 1)) calc(12px * var(--shadow-factor, 1)) var(--shadow-color);
 }
 
 .settings-group .setting-row {
@@ -232,7 +229,6 @@ body > .bg-video {
 
 .engine-selection-list:empty,
 .link-manager-list:empty { min-height: 0; }
-
 .link-editor-box { margin-top: 2px; }
 
 .settings-page-footer {
