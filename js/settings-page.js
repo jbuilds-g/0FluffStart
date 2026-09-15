@@ -2,6 +2,9 @@ import "./main.js";
 import { store } from "./store.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const pageStyles = document.querySelector('link[href^="css/settings-page.css"]');
+  if (pageStyles) pageStyles.href = "css/settings-page.css?v=7";
+
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
   controlStyles.href = "css/settings-controls.css?v=1";
