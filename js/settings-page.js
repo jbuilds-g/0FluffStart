@@ -3,11 +3,11 @@ import { store } from "./store.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const pageStyles = document.querySelector('link[href^="css/settings-page.css"]');
-  if (pageStyles) pageStyles.href = "css/settings-page.css?v=7";
+  if (pageStyles) pageStyles.href = "css/settings-page.css?v=8";
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
-  controlStyles.href = "css/settings-controls.css?v=1";
+  controlStyles.href = "css/settings-controls.css?v=2";
   document.head.appendChild(controlStyles);
 
   document.documentElement.classList.add("settings-page");
@@ -84,6 +84,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const clockPicker = document.getElementById("clockStyleSelect");
   if (clockPicker) {
     clockPicker.classList.add("clock-style-picker");
+    clockPicker.setAttribute("role", "radiogroup");
+    clockPicker.setAttribute("aria-label", "Clock style");
+
+    const dropdown = clockPicker.querySelector(".select-dropdown");
+    dropdown?.classList.remove("hidden");
+
     const options = Array.from(clockPicker.querySelectorAll(".select-option"));
 
     options.forEach((option) => {
@@ -101,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       option.setAttribute("role", "radio");
       option.setAttribute("tabindex", "0");
+      option.setAttribute("aria-label", label);
       option.addEventListener("click", () => {
         options.forEach((item) => item.setAttribute("aria-checked", item === option ? "true" : "false"));
       });
@@ -123,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const value = clockPicker.dataset.value;
       options.forEach((option) => option.setAttribute("aria-checked", option.dataset.value === value ? "true" : "false"));
     };
+
     clockPicker.addEventListener("change", syncClockSelection);
     syncClockSelection();
   }
@@ -134,8 +142,9 @@ document.addEventListener("DOMContentLoaded", () => {
   updateThemePreview();
   window.setTimeout(updateThemePreview, 0);
 
+  // Settings is intentionally a solid configuration workspace. The dashboard wallpaper stays on the dashboard.
   const overlay = document.getElementById("bgOverlay");
-  if (overlay) overlay.classList.add("bg-overlay-active");
+  overlay?.classList.remove("bg-overlay-active");
 
   updateFromHash();
   window.addEventListener("hashchange", updateFromHash);
