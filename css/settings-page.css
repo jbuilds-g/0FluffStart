@@ -17,14 +17,11 @@ body > .bg-video {
   inset: 0;
 }
 
-/* Darken custom media without changing the stored image/video. */
-.bg-overlay.bg-overlay-active {
-  opacity: 0.68;
-}
+/* Settings uses the same backdrop/scrim concept as the former modal. */
+.settings-page-shell { position: relative; z-index: var(--z-modal, 1000); }
+.settings-page .bg-overlay.bg-overlay-active { opacity: 1; pointer-events: none; }
 
 .settings-page-shell {
-  position: relative;
-  z-index: var(--z-modal, 1000);
   width: min(1120px, calc(100% - 48px));
   margin: 0 auto;
   padding: 48px 0 64px;
@@ -131,25 +128,6 @@ body > .bg-video {
   text-transform: uppercase;
 }
 
-/* Keep the settings layout flat. Only existing solid controls receive elevation. */
-.settings-page-shell .custom-select,
-.settings-page-shell input[type="text"],
-.settings-page-shell input[type="url"],
-.settings-page-shell input[type="number"],
-.settings-page-shell .radio-option,
-.settings-page-shell button:not(.help-btn),
-.settings-page-shell .link-editor-box,
-.settings-page-shell .engine-item,
-.settings-page-shell .link-item {
-  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.15));
-}
-
-.settings-page-shell .settings-subgroup,
-.settings-page-shell .settings-group,
-.settings-page-shell .setting-row {
-  box-shadow: none;
-}
-
 .settings-group {
   min-width: 0;
   border-top: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
@@ -191,26 +169,80 @@ body > .bg-video {
   font-weight: 650;
 }
 
-.help-text {
+/* Full Settings help is always visible. The legacy help toggle remains harmless. */
+.settings-page-shell .help-text {
+  display: block;
   max-width: 650px;
   margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--dim);
   font-size: 0.8rem;
   line-height: 1.5;
 }
 
+.settings-page-shell .help-text.show { animation: none; }
+.settings-page-shell .help-btn { opacity: 0.65; }
+.settings-page-shell .help-btn:hover { opacity: 1; }
+
 .setting-row > input[type="text"],
-.setting-row > input[type="url"] { width: 100%; min-width: 0; }
-.setting-row .custom-select { width: 100%; }
+.setting-row > input[type="url"] {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.settings-page-shell input[type="text"],
+.settings-page-shell input[type="url"],
+.settings-page-shell input[type="number"] {
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,.15));
+}
+
+.settings-page-shell input[type="text"]:focus,
+.settings-page-shell input[type="url"]:focus,
+.settings-page-shell input[type="number"]:focus {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent), var(--shadow-md, 0 4px 12px rgba(0,0,0,.15));
+}
 
 .setting-slider-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 76px;
+  grid-template-columns: minmax(0, 1fr) 68px;
   align-items: center;
   gap: 12px;
 }
 
+.settings-page-shell input[type="range"] { width: 100%; }
+
+.settings-page-shell .slider-number-input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Compact toggle treatment. */
+.settings-page-shell .radio-option {
+  flex: 0 0 auto;
+  width: fit-content;
+  min-height: 36px;
+  padding: 7px 11px;
+  gap: 8px;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--card-hover) 78%, transparent);
+}
+
+.settings-page-shell .radio-option:hover {
+  background: var(--card-hover);
+  border-color: var(--accent);
+}
+
 .setting-row .radio-option { justify-self: end; }
+
+.settings-page-shell input[type="checkbox"]:not(.manager-checkbox) {
+  margin: 0;
+}
 
 .settings-subgroup {
   display: grid;
@@ -227,6 +259,13 @@ body > .bg-video {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.settings-page-shell .action-btn-row > button,
+.settings-page-shell .editor-btn-row > button {
+  width: auto;
+  min-width: 110px;
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,.15));
 }
 
 .engine-management,
@@ -246,6 +285,141 @@ body > .bg-video {
 .engine-selection-list:empty,
 .link-manager-list:empty { min-height: 0; }
 .link-editor-box { margin-top: 2px; }
+
+/* Theme selector: retain the existing accessible custom-select behavior, but add previews. */
+#themeSelect .select-option {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+}
+
+#themeSelect .select-option::before {
+  content: "";
+  width: 30px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, var(--text) 20%, transparent);
+  background: var(--theme-preview, var(--card-hover));
+  box-sizing: border-box;
+}
+
+#themeSelect .select-option[data-value="dark"] { --theme-preview: linear-gradient(135deg,#050505,#18181c,#00aaff); }
+#themeSelect .select-option[data-value="amoled"] { --theme-preview: linear-gradient(135deg,#000,#090909,#fff); }
+#themeSelect .select-option[data-value="light"] { --theme-preview: linear-gradient(135deg,#f2f2f7,#fff,#007aff); }
+#themeSelect .select-option[data-value="cyberpunk"] { --theme-preview: linear-gradient(135deg,#050505,#00ff41 48%,#f0e600); }
+#themeSelect .select-option[data-value="sunset"] { --theme-preview: linear-gradient(135deg,#2d1b2e,#ef476f,#ffd166); }
+#themeSelect .select-option[data-value="forest"] { --theme-preview: linear-gradient(135deg,#1a2f1a,#2d4c2d,#c3e6c3); }
+#themeSelect .select-option[data-value="paper"] { --theme-preview: linear-gradient(135deg,#f9f7f2,#fff,#222); }
+#themeSelect .select-option[data-value="luminous"] { --theme-preview: linear-gradient(135deg,#0f172a,#1e293b,#38bdf8); }
+#themeSelect .select-option[data-value="nord"] { --theme-preview: linear-gradient(135deg,#2e3440,#3b4252,#88c0d0); }
+#themeSelect .select-option[data-value="dracula"] { --theme-preview: linear-gradient(135deg,#282a36,#44475a,#bd93f9); }
+#themeSelect .select-option[data-value="retro"] { --theme-preview: linear-gradient(135deg,#0d0202,#1a0505,#ffb000); }
+#themeSelect .select-option[data-value="rose"] { --theme-preview: linear-gradient(135deg,#191724,#1f1d2e,#ebbcba); }
+#themeSelect .select-option[data-value="night-glow"] { --theme-preview: linear-gradient(135deg,#000,#0a0a0a,#fff); }
+#themeSelect .select-option[data-value="heatwave"] { --theme-preview: linear-gradient(135deg,#1f0a00,#2d0f02,#ff4500); }
+#themeSelect .select-option[data-value="slate"] { --theme-preview: linear-gradient(135deg,#1a1a1a,#252525,#ffd700); }
+#themeSelect .select-option[data-value="toxic-tide"] { --theme-preview: linear-gradient(135deg,#041614,#09201d,#2fbfa2); }
+#themeSelect .select-option[data-value="evergreen-archive"] { --theme-preview: linear-gradient(135deg,#1a2416,#253321,#d9c588); }
+
+#themeSelect .select-option[data-value="material-you"] { --theme-preview: linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%); }
+
+/* Clock selector becomes a compact, horizontally scrolling visual picker. */
+#clockStyleSelect.clock-style-picker {
+  width: 100%;
+  overflow: hidden;
+}
+
+#clockStyleSelect.clock-style-picker .select-trigger { display: none; }
+
+#clockStyleSelect.clock-style-picker .select-dropdown {
+  position: static;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 8px;
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 3px 2px 9px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  scrollbar-width: thin;
+}
+
+#clockStyleSelect.clock-style-picker .select-dropdown.hidden { display: flex; }
+
+#clockStyleSelect.clock-style-picker .select-option {
+  flex: 0 0 118px;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.78rem;
+  text-align: center;
+  white-space: normal;
+  box-sizing: border-box;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,.12));
+}
+
+#clockStyleSelect.clock-style-picker .select-option::first-line { font-size: 1rem; }
+
+#clockStyleSelect.clock-style-picker .select-option:hover,
+#clockStyleSelect.clock-style-picker .select-option[aria-checked="true"] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 9%, var(--card));
+  color: var(--accent);
+}
+
+#clockStyleSelect.clock-style-picker .select-option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Make the actual style visible in every picker card. */
+#clockStyleSelect.clock-style-picker .select-option::before {
+  content: "12:34";
+  display: block;
+  position: absolute;
+  font-size: 1.05rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+#clockStyleSelect.clock-style-picker .select-option {
+  position: relative;
+  padding-top: 34px;
+}
+
+#clockStyleSelect.clock-style-picker .select-option::before { color: var(--text); }
+#clockStyleSelect.clock-style-picker .select-option[data-value="default"]::before { font-weight: 300; }
+#clockStyleSelect.clock-style-picker .select-option[data-value="bold"]::before { font-weight: 900; letter-spacing: -1px; }
+#clockStyleSelect.clock-style-picker .select-option[data-value="mono"]::before { font-family: "Courier New", monospace; letter-spacing: 1px; }
+#clockStyleSelect.clock-style-picker .select-option[data-value="lcd"]::before { font-family: "Courier New", monospace; color: var(--accent); text-shadow: 0 0 4px var(--accent); }
+#clockStyleSelect.clock-style-picker .select-option[data-value="neon"]::before { color: #fff; text-shadow: 0 0 4px #fff,0 0 10px var(--accent),0 0 18px var(--accent); }
+#clockStyleSelect.clock-style-picker .select-option[data-value="minimal"]::before { font-weight: 100; opacity: .7; }
+#clockStyleSelect.clock-style-picker .select-option[data-value="block"]::before { background: var(--card-hover); padding: 4px 9px; border: 1px solid var(--border); border-radius: 6px; }
+#clockStyleSelect.clock-style-picker .select-option[data-value="outline"]::before { color: transparent; -webkit-text-stroke: 1px var(--accent); font-weight: 700; }
+#clockStyleSelect.clock-style-picker .select-option[data-value="gradient"]::before { background: linear-gradient(135deg,var(--accent),var(--text)); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 800; }
+#clockStyleSelect.clock-style-picker .select-option[data-value="glitch"]::before { font-family: "Courier New",monospace; font-weight: 800; text-shadow: 1px 1px 0 var(--dim),-1px -1px 0 var(--accent); }
+#clockStyleSelect.clock-style-picker .select-option[data-value="glass"]::before { background: linear-gradient(180deg,var(--text),var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: .5px var(--accent); font-weight: 700; }
+#clockStyleSelect.clock-style-picker .select-option[data-value="threed"]::before { color: var(--accent); font-weight: 900; text-shadow: 1px 1px 0 var(--dim),2px 2px 0 var(--dim),3px 3px 0 var(--dim); }
+
+.settings-page-shell .radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.settings-page-shell .radio-row .radio-option { flex: 0 0 auto; }
 
 .settings-page-footer {
   display: grid;
@@ -333,4 +507,5 @@ body > .bg-video {
   .settings-subsection { margin-top: 32px; }
   .setting-row { padding: 18px 0; }
   .setting-slider-row { grid-template-columns: minmax(0, 1fr) 68px; }
+  #clockStyleSelect.clock-style-picker .select-option { flex-basis: 108px; }
 }
