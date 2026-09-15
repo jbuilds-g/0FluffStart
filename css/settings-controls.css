@@ -1,0 +1,108 @@
+/* Final control layer for the standalone settings workspace. */
+
+#themeSelect .select-trigger::before { content:""; width:30px; height:20px; flex:0 0 30px; margin-right:9px; border:1px solid var(--border); border-radius:6px; background:var(--theme-preview,var(--card-hover)); }
+#themeSelect .select-trigger { justify-content:flex-start; }
+#themeSelect .select-trigger .selected-text { flex:1; }
+#themeSelect .select-trigger .select-arrow { flex:0 0 auto; }
+
+#clockStyleSelect.clock-style-picker .select-option { flex-direction:column; align-items:center; justify-content:space-between; gap:5px; padding:11px 8px 9px; }
+#clockStyleSelect.clock-style-picker .select-option::before { content:none; }
+#clockStyleSelect.clock-style-picker .settings-clock-preview { display:block; width:auto; margin:0; color:var(--text); font-size:1.1rem; line-height:1; white-space:nowrap; transition:color .16s ease,opacity .16s ease,filter .16s ease; }
+#clockStyleSelect.clock-style-picker .settings-clock-preview.clock-style-block { display:inline-block; width:auto; padding:4px 8px; background:var(--card-hover); border:1px solid var(--border); border-radius:6px; }
+#clockStyleSelect.clock-style-picker .settings-clock-label { display:block; max-width:100%; overflow:hidden; color:inherit; font-size:.68rem; line-height:1.15; text-overflow:ellipsis; white-space:nowrap; }
+#clockStyleSelect.clock-style-picker .select-option[aria-checked="true"] .settings-clock-preview,
+#clockStyleSelect.clock-style-picker .select-option.selected .settings-clock-preview { color:var(--accent); }
+#themeSelect .select-option[data-value="material-you"]::before,
+#themeSelect .select-trigger[data-material-you-preview="default"]::before { background:var(--theme-preview,linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)); }
+
+.settings-page-shell .radio-row .radio-option,
+.settings-page-shell button:not(.help-btn),
+.settings-page-shell .select-trigger,
+.settings-page-shell input[type="text"],
+.settings-page-shell input[type="url"],
+.settings-page-shell input[type="number"],
+.settings-page-shell .engine-item,
+.settings-page-shell .link-item,
+.settings-page-shell .link-editor-box { background-color:var(--card); border-color:var(--border); color:var(--text); }
+.settings-page-shell .radio-row .radio-option:hover,
+.settings-page-shell button:not(.help-btn):hover,
+.settings-page-shell .engine-item:hover,
+.settings-page-shell .link-item:hover { background-color:var(--card-hover); border-color:var(--accent); }
+.settings-page-shell .save-btn { background-color:var(--accent); border-color:var(--accent); color:var(--bg); }
+.settings-page-shell .save-btn:hover { background-color:var(--accent); border-color:var(--accent); color:var(--bg); }
+.settings-page-shell input[type="range"]::-webkit-slider-thumb { background:var(--accent); }
+.settings-page-shell input[type="range"]::-moz-range-thumb { background:var(--accent); }
+.settings-page-shell input[type="range"]::-webkit-slider-runnable-track,
+.settings-page-shell input[type="range"]::-moz-range-track { background:var(--card-hover); }
+
+/* The standalone settings page is one solid viewport, not a bordered modal. */
+html.settings-page, html.settings-page body { background:var(--bg) !important; }
+html.settings-page body > .bg-image, html.settings-page body > .bg-video, html.settings-page body > #bgOverlay { display:none !important; }
+html.settings-page body { padding:0; }
+html.settings-page .settings-page-shell { width:100%; min-height:100dvh; margin:0; border:0; border-radius:0; box-shadow:none; }
+
+/* Tighten the vertical rhythm. */
+.settings-page-shell .settings-page-header { margin-bottom:30px; }
+.settings-page-shell .settings-section { padding-bottom:30px; margin-bottom:30px; }
+.settings-page-shell .settings-section-heading { margin-bottom:24px; }
+.settings-page-shell .settings-subsection { margin-top:30px; }
+.settings-page-shell .setting-row { padding:14px 0; }
+.settings-page-shell .setting-row-stack { gap:10px; }
+.settings-page-shell .settings-page-footer { margin-top:30px; }
+.settings-page-shell .settings-section:last-child { padding-bottom:0; margin-bottom:0; }
+
+/* All checkbox controls occupy the right side of their setting row. */
+.settings-page-shell label.radio-option:has(input[type="checkbox"]) { width:100%; justify-self:stretch; display:flex; align-items:center; justify-content:space-between; gap:18px; box-sizing:border-box; }
+.settings-page-shell .settings-subgroup label.radio-option:has(input[type="checkbox"]) { width:100%; }
+
+/* Action buttons size to their content. */
+.settings-page-shell .action-btn-row, .settings-page-shell .editor-btn-row { align-items:center; }
+.settings-page-shell .action-btn-row > button, .settings-page-shell .editor-btn-row > button { width:auto !important; flex:0 0 auto; min-width:140px; }
+.settings-page-shell .restore-point-action { display:flex; align-items:center; flex-wrap:wrap; gap:14px; }
+.settings-page-shell .restore-point-action > button { width:auto !important; flex:0 0 auto; min-width:180px; }
+.settings-page-shell .restore-point-status { margin:0; }
+
+/* Every link/folder/search-engine editor uses the same vertical spacing model. */
+html.settings-page .settings-page-shell .link-editor-box {
+  display:grid;
+  gap:10px;
+  margin-top:8px;
+}
+html.settings-page .settings-page-shell .link-editor-box input[type="text"],
+html.settings-page .settings-page-shell .link-editor-box input[type="url"] {
+  display:block;
+  width:100%;
+  margin:0;
+}
+html.settings-page .settings-page-shell .link-editor-box .editor-btn-row {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:0;
+}
+html.settings-page .settings-page-shell .link-editor-box .editor-btn-row button {
+  width:auto !important;
+  min-width:104px;
+  flex:0 0 auto;
+}
+
+/* The persistent clock picker remains horizontal and scrollable. */
+#clockStyleSelect.clock-style-picker .select-dropdown,
+#clockStyleSelect.clock-style-picker .select-dropdown.hidden {
+  position:static; display:flex !important; flex-direction:row; width:100%; max-width:100%; max-height:none; overflow-x:auto; overflow-y:hidden; visibility:visible; opacity:1; padding:3px 2px 10px; background:transparent; border:0; border-radius:0; box-shadow:none;
+}
+#clockStyleSelect.clock-style-picker .select-option { flex:0 0 132px; }
+
+/* Only actual mobile contexts should expose mobile-only settings. */
+html.settings-page.settings-desktop-context .mobile-only-setting { display:none !important; }
+
+@media (max-width:900px) {
+  .settings-page-shell { box-shadow:none; }
+  .settings-page-shell .action-btn-row > button,
+  .settings-page-shell .editor-btn-row > button,
+  .settings-page-shell .restore-point-action > button { min-width:0; }
+  html.settings-page.settings-desktop-context .setting-row-control,
+  html.settings-page.settings-desktop-context .setting-row-input { grid-template-columns:minmax(0,1fr) auto; gap:18px; }
+  html.settings-page.settings-desktop-context .setting-copy { min-width:0; }
+}
