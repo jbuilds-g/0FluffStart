@@ -37,7 +37,10 @@
     <meta name="theme-color" content="#000000" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
 
     <link rel="stylesheet" href="css/core.css" />
   </head>
@@ -45,7 +48,14 @@
     <div class="search-backdrop"></div>
     <div id="bgOverlay" class="bg-overlay"></div>
     <div id="bgImage" class="bg-image hidden"></div>
-    <video id="bgVideo" class="bg-video hidden" loop muted autoplay playsinline></video>
+    <video
+      id="bgVideo"
+      class="bg-video hidden"
+      loop
+      muted
+      autoplay
+      playsinline
+    ></video>
     <div class="container">
       <header>
         <div id="clockDisplay" class="clock">00:00:00</div>
@@ -56,408 +66,934 @@
         <div class="engine-switcher" id="engineSwitcher">
           <button class="engine-btn" id="engineDropdownBtn">
             <span id="currentEngineIcon">G</span>
-            <span class="chevron icon-mask icon-chevron" style="width: 12px; height: 12px"></span>
+            <span
+              class="chevron icon-mask icon-chevron"
+              style="width: 12px; height: 12px"
+            ></span>
           </button>
-          <button class="quick-suggest-btn" id="quickSuggestToggleBtn" title="Toggle Live Suggestions">
-            <span class="icon-mask icon-suggest" style="width: 19px; height: 19px"></span>
+          <button
+            class="quick-suggest-btn"
+            id="quickSuggestToggleBtn"
+            title="Toggle Live Suggestions"
+          >
+            <span
+              class="icon-mask icon-suggest"
+              style="width: 19px; height: 19px"
+            ></span>
           </button>
           <div id="engineDropdown" class="engine-dropdown hidden"></div>
         </div>
 
-        <input type="text" id="searchInput" placeholder="Search or Type URL..." />
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search or Type URL..."
+        />
 
         <button class="search-icon" id="searchSubmitBtn">
-          <span class="icon-mask icon-search" style="width: 24px; height: 24px"></span>
+          <span
+            class="icon-mask icon-search"
+            style="width: 24px; height: 24px"
+          ></span>
         </button>
 
-        <div id="suggestionsContainer" class="suggestions-container hidden"></div>
+        <div
+          id="suggestionsContainer"
+          class="suggestions-container hidden"
+        ></div>
       </div>
 
       <div id="linkGrid" class="link-grid"></div>
       <div id="navPillContainer" class="nav-pill-container hidden"></div>
 
-      <div class="floating-settings">
-        <button id="settingsToggleBtn" class="icon-btn floating-btn" title="Settings">
-          <span class="icon-mask icon-settings" style="width: 18px; height: 18px"></span>
-        </button>
-      </div>
+    <div class="floating-settings">
+      <button
+        id="settingsToggleBtn"
+        class="icon-btn floating-btn"
+        title="Settings"
+      >
+        <span
+          class="icon-mask icon-settings"
+          style="width: 18px; height: 18px"
+        ></span>
+      </button>
+    </div>
 
-      <div class="modal" id="settingsModal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="modal-header-top">
-              <h2>Settings</h2>
-              <div class="header-actions">
-                <button id="toggleAllCategoriesBtn" class="icon-btn" title="Expand / Collapse All">
-                  <span class="icon-mask icon-expand-collapse" style="width: 18px; height: 18px"></span>
-                </button>
-                <button id="closeSettingsBtn" class="icon-btn" title="Close Settings">
-                  <span class="icon-mask icon-close" style="width: 20px; height: 20px"></span>
-                </button>
-              </div>
-            </div>
-            <div class="settings-search-wrapper">
-              <input type="text" id="settingsSearchInput" class="settings-search-input" placeholder="Search settings..." />
-              <button id="settingsSearchClearBtn" class="settings-search-clear hidden" title="Clear search">
-                <span class="icon-mask icon-close" style="width: 14px; height: 14px"></span>
+    <div class="modal" id="settingsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-header-top">
+            <h2>Settings</h2>
+            <div class="header-actions">
+              <button
+                id="toggleAllCategoriesBtn"
+                class="icon-btn"
+                title="Expand / Collapse All"
+              >
+                <span
+                  class="icon-mask icon-expand-collapse"
+                  style="width: 18px; height: 18px"
+                ></span>
+              </button>
+              <button
+                id="closeSettingsBtn"
+                class="icon-btn"
+                title="Close Settings"
+              >
+                <span
+                  class="icon-mask icon-close"
+                  style="width: 20px; height: 20px"
+                ></span>
               </button>
             </div>
           </div>
-          <div id="settingsSearchResults" class="settings-search-results hidden"></div>
+          <div class="settings-search-wrapper">
+            <input
+              type="text"
+              id="settingsSearchInput"
+              class="settings-search-input"
+              placeholder="Search settings..."
+            />
+            <button
+              id="settingsSearchClearBtn"
+              class="settings-search-clear hidden"
+              title="Clear search"
+            >
+              <span
+                class="icon-mask icon-close"
+                style="width: 14px; height: 14px"
+              ></span>
+            </button>
+          </div>
+        </div>
+        <div
+          id="settingsSearchResults"
+          class="settings-search-results hidden"
+        ></div>
+        <details class="category-panel">
+          <summary>
+            Dashboard Links
+            <span
+              class="chevron icon-mask icon-chevron"
+              style="width: 16px; height: 16px"
+            ></span>
+          </summary>
+          <div class="category-content">
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Quick Link Management</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
 
-          <details class="category-panel">
-            <summary>
-              Dashboard Links
-              <span class="chevron icon-mask icon-chevron" style="width: 16px; height: 16px"></span>
-            </summary>
-            <div class="category-content">
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Quick Link Management</h3>
-                  <button class="help-btn" title="Toggle help text">
-                    <span class="icon-mask icon-help" style="width: 14px; height: 14px"></span>
+              <div class="help-text">
+                Add, edit, organize, or remove shortcut icons and folders.
+                Toggle title visibility under icons or use multi-select to
+                organize items.
+                <br /><br />
+                <span style="opacity: 0.85">
+                  💡 <b>Tip:</b> Folders can be nested inside other folders up to a maximum limit of <b>3 levels deep</b>.
+                </span>
+              </div>
+
+              <div id="linkListContainer">
+                <div id="standardActionBtns" class="action-btn-row">
+                  <button id="addLinkBtn" class="add-link-btn">
+                    + Add Link
+                  </button>
+                  <button
+                    id="addFolderBtn"
+                    class="add-link-btn btn-secondary-bg"
+                  >
+                    + Add Folder
                   </button>
                 </div>
-                <div class="help-text">
-                  Add, edit, organize, or remove shortcut icons and folders.
-                  Toggle title visibility under icons or use multi-select to
-                  organize items.
-                  <br /><br />
-                  <span style="opacity: 0.85">
-                    💡 <b>Tip:</b> Folders can be nested inside other folders up to a maximum limit of <b>3 levels deep</b>.
+
+                <div id="selectionToolbar" class="selection-toolbar hidden">
+                  <span id="selectionCount" class="selection-count"
+                    >0 Selected</span
+                  >
+                  <div class="selection-actions">
+                    <button
+                      id="cancelSelectionBtn"
+                      class="secondary selection-btn-cancel"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      id="confirmSelectionBtn"
+                      class="save-btn selection-btn-confirm"
+                    >
+                      Move Here
+                    </button>
+                  </div>
+                </div>
+
+                <div id="linkManagerContent" class="link-manager-list"></div>
+              </div>
+
+              <div id="linkEditorContainer" class="link-editor-box hidden">
+                <h4 id="editorTitle" class="editor-title">Add New Link</h4>
+
+                <input
+                  type="text"
+                  id="editName"
+                  maxlength="50"
+                  placeholder="Name (e.g. YouTube)"
+                />
+                <input
+                  type="url"
+                  id="editUrl"
+                  placeholder="URL (e.g. youtube.com)"
+                />
+
+                <div class="editor-btn-row">
+                  <button id="saveLinkBtn" class="save-btn">Save</button>
+                  <button
+                    id="cancelEditBtn"
+                    class="secondary editor-btn-cancel"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              <div class="desktop-only-setting" style="margin-top: 14px">
+                <label class="radio-option radio-option-no-margin">
+                  <input type="checkbox" id="showTitlesToggle" /> Show Quick
+                  Link Titles
+                </label>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="category-panel">
+          <summary>
+            Personalization
+            <span
+              class="chevron icon-mask icon-chevron"
+              style="width: 16px; height: 16px"
+            ></span>
+          </summary>
+          <div class="category-content">
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Your Name</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Custom display name shown in the top header greeting. Leave
+                empty for generic greeting.
+              </div>
+              <input
+                type="text"
+                id="userNameInput"
+                placeholder="Name for greeting..."
+              />
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Vibe (Theme)</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Customizes color schemes, borders, and general visual styling
+                across the dashboard.
+                <br /><br />
+                <span style="opacity: 0.85"
+                  >💡 <b>Tip:</b> Choose "Material You" to auto-extract palette
+                  colors directly from custom background media.</span
+                >
+              </div>
+              <div class="custom-select" id="themeSelect" data-value="dark">
+                <div class="select-trigger">
+                  <span class="selected-text">OLED Dark (Default)</span>
+                  <span class="select-arrow">
+                    <span
+                      class="icon-mask icon-chevron"
+                      style="width: 12px; height: 12px"
+                    ></span>
                   </span>
                 </div>
-                <div id="linkListContainer">
-                  <div id="standardActionBtns" class="action-btn-row">
-                    <button id="addLinkBtn" class="add-link-btn">+ Add Link</button>
-                    <button id="addFolderBtn" class="add-link-btn btn-secondary-bg">+ Add Folder</button>
+                <div class="select-dropdown hidden">
+                  <div class="select-option" data-value="dark">
+                    OLED Dark (Default)
                   </div>
-                  <div id="selectionToolbar" class="selection-toolbar hidden">
-                    <span id="selectionCount" class="selection-count">0 Selected</span>
-                    <div class="selection-actions">
-                      <button id="cancelSelectionBtn" class="secondary selection-btn-cancel">Cancel</button>
-                      <button id="confirmSelectionBtn" class="save-btn selection-btn-confirm">Move Here</button>
-                    </div>
+                  <div class="select-option" data-value="amoled">
+                    True Black (AMOLED)
                   </div>
-                  <div id="linkManagerContent" class="link-manager-list"></div>
-                </div>
-                <div id="linkEditorContainer" class="link-editor-box hidden">
-                  <h4 id="editorTitle" class="editor-title">Add New Link</h4>
-                  <input type="text" id="editName" maxlength="50" placeholder="Name, e.g. YouTube" />
-                  <input type="url" id="editUrl" placeholder="URL, e.g. youtube.com" />
-                  <div class="editor-btn-row">
-                    <button id="saveLinkBtn" class="save-btn">Save</button>
-                    <button id="cancelEditBtn" class="secondary editor-btn-cancel">Cancel</button>
+                  <div class="select-option" data-value="light">
+                    Clean Light
                   </div>
-                </div>
-                <div class="desktop-only-setting" style="margin-top: 14px">
-                  <label class="radio-option radio-option-no-margin">
-                    <input type="checkbox" id="showTitlesToggle" /> Show Quick Link Titles
-                  </label>
+                  <div class="select-option" data-value="material-you">
+                    Material You
+                  </div>
+                  <div class="select-option" data-value="cyberpunk">
+                    Cyberpunk
+                  </div>
+                  <div class="select-option" data-value="sunset">
+                    Sunset Drive
+                  </div>
+                  <div class="select-option" data-value="forest">
+                    Forest Hike
+                  </div>
+                  <div class="select-option" data-value="paper">
+                    Paper & Ink
+                  </div>
+                  <div class="select-option" data-value="luminous">
+                    Luminous
+                  </div>
+                  <div class="select-option" data-value="nord">Nord Frost</div>
+                  <div class="select-option" data-value="dracula">Dracula</div>
+                  <div class="select-option" data-value="retro">
+                    Retro Amber
+                  </div>
+                  <div class="select-option" data-value="rose">Rose Pine</div>
+                  <div class="select-option" data-value="night-glow">
+                    Night Glow
+                  </div>
+                  <div class="select-option" data-value="heatwave">
+                    Heatwave
+                  </div>
+                  <div class="select-option" data-value="slate">
+                    Slate Industrial
+                  </div>
+                  <div class="select-option" data-value="toxic-tide">
+                    Toxic Tide
+                  </div>
+                  <div class="select-option" data-value="evergreen-archive">
+                    Evergreen Archive
+                  </div>
                 </div>
               </div>
             </div>
-          </details>
 
-          <details class="category-panel">
-            <summary>
-              Personalization
-              <span class="chevron icon-mask icon-chevron" style="width: 16px; height: 16px"></span>
-            </summary>
-            <div class="category-content">
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Your Name</h3>
-                  <button class="help-btn" title="Toggle help text">
-                    <span class="icon-mask icon-help" style="width: 14px; height: 14px"></span>
-                  </button>
-                </div>
-                <div class="help-text">Custom display name shown in the top header greeting. Leave empty for generic greeting.</div>
-                <input type="text" id="userNameInput" placeholder="Name for greeting..." />
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Clock Customization</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Customizes clock typography, 12h or 24h display formats, and
+                live seconds visibility.
               </div>
 
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Vibe</h3>
-                  <button class="help-btn" title="Toggle help text">
-                    <span class="icon-mask icon-help" style="width: 14px; height: 14px"></span>
-                  </button>
+              <div
+                class="custom-select clock-style-select"
+                id="clockStyleSelect"
+                data-value="default"
+              >
+                <div class="select-trigger">
+                  <span class="selected-text">Default</span>
+                  <span class="select-arrow">
+                    <span
+                      class="icon-mask icon-chevron"
+                      style="width: 12px; height: 12px"
+                    ></span>
+                  </span>
                 </div>
-                <div class="help-text">
-                  Customizes color schemes, borders, and general visual styling across the dashboard.
-                  <br /><br />
-                  <span style="opacity: 0.85">💡 <b>Tip:</b> Choose "Material You" to auto-extract palette colors directly from custom background media.</span>
-                </div>
-                <div class="custom-select" id="themeSelect" data-value="dark">
-                  <div class="select-trigger">
-                    <span class="selected-text">OLED Dark</span>
-                    <span class="select-arrow"><span class="icon-mask icon-chevron" style="width: 12px; height: 12px"></span></span>
+                <div class="select-dropdown hidden">
+                  <div class="select-option" data-value="default">Default</div>
+                  <div class="select-option" data-value="bold">
+                    Bold & Chunky
                   </div>
-                  <div class="select-dropdown hidden">
-                    <div class="select-option" data-value="dark">OLED Dark</div>
-                    <div class="select-option" data-value="amoled">True Black</div>
-                    <div class="select-option" data-value="light">Clean Light</div>
-                    <div class="select-option" data-value="material-you">Material You</div>
-                    <div class="select-option" data-value="cyberpunk">Cyberpunk</div>
-                    <div class="select-option" data-value="sunset">Sunset Drive</div>
-                    <div class="select-option" data-value="forest">Forest Hike</div>
-                    <div class="select-option" data-value="paper">Paper & Ink</div>
-                    <div class="select-option" data-value="luminous">Luminous</div>
-                    <div class="select-option" data-value="nord">Nord Frost</div>
-                    <div class="select-option" data-value="dracula">Dracula</div>
-                    <div class="select-option" data-value="retro">Retro Amber</div>
-                    <div class="select-option" data-value="rose">Rose Pine</div>
-                    <div class="select-option" data-value="night-glow">Night Glow</div>
-                    <div class="select-option" data-value="heatwave">Heatwave</div>
-                    <div class="select-option" data-value="slate">Slate Industrial</div>
-                    <div class="select-option" data-value="toxic-tide">Toxic Tide</div>
-                    <div class="select-option" data-value="evergreen-archive">Evergreen Archive</div>
+                  <div class="select-option" data-value="mono">Monospace</div>
+                  <div class="select-option" data-value="lcd">LCD Digital</div>
+                  <div class="select-option" data-value="neon">Neon Glow</div>
+                  <div class="select-option" data-value="minimal">
+                    Ultra Minimal
+                  </div>
+                  <div class="select-option" data-value="block">Card Block</div>
+                  <div class="select-option" data-value="outline">
+                    Outline Stroke
+                  </div>
+                  <div class="select-option" data-value="gradient">
+                    Gradient Flow
+                  </div>
+                  <div class="select-option" data-value="glitch">
+                    Cyber Glitch
+                  </div>
+                  <div class="select-option" data-value="glass">
+                    Glassmorphism
+                  </div>
+                  <div class="select-option" data-value="threed">
+                    3D Extruded
                   </div>
                 </div>
               </div>
 
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Clock Customization</h3>
-                  <button class="help-btn" title="Toggle help text">
-                    <span class="icon-mask icon-help" style="width: 14px; height: 14px"></span>
-                  </button>
-                </div>
-                <div class="help-text">Customizes clock typography, 12h or 24h display formats, and live seconds visibility.</div>
-                <div class="custom-select clock-style-select" id="clockStyleSelect" data-value="default">
-                  <div class="select-trigger">
-                    <span class="selected-text">Default</span>
-                    <span class="select-arrow"><span class="icon-mask icon-chevron" style="width: 12px; height: 12px"></span></span>
-                  </div>
-                  <div class="select-dropdown hidden">
-                    <div class="select-option" data-value="default">Default</div>
-                    <div class="select-option" data-value="bold">Bold & Chunky</div>
-                    <div class="select-option" data-value="mono">Monospace</div>
-                    <div class="select-option" data-value="lcd">LCD Digital</div>
-                    <div class="select-option" data-value="neon">Neon Glow</div>
-                    <div class="select-option" data-value="minimal">Ultra Minimal</div>
-                    <div class="select-option" data-value="block">Card Block</div>
-                    <div class="select-option" data-value="outline">Outline Stroke</div>
-                    <div class="select-option" data-value="gradient">Gradient Flow</div>
-                    <div class="select-option" data-value="glitch">Cyber Glitch</div>
-                    <div class="select-option" data-value="glass">Glassmorphism</div>
-                    <div class="select-option" data-value="threed">3D Extruded</div>
-                  </div>
-                </div>
-                <div class="radio-row radio-row-mb">
-                  <label class="radio-option"><input type="radio" name="clockFormat" value="12h" class="clock-radio" /> 12-Hour</label>
-                  <label class="radio-option"><input type="radio" name="clockFormat" value="24h" class="clock-radio" /> 24-Hour</label>
-                </div>
-                <label class="radio-option radio-option-start">
-                  <input type="checkbox" id="showSecondsToggle" checked /> Display Live Seconds
+              <div class="radio-row radio-row-mb">
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="clockFormat"
+                    value="12h"
+                    class="clock-radio"
+                  />
+                  12-Hour
+                </label>
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="clockFormat"
+                    value="24h"
+                    class="clock-radio"
+                  />
+                  24-Hour
                 </label>
               </div>
 
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Custom Background</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
+              <label class="radio-option radio-option-start">
+                <input type="checkbox" id="showSecondsToggle" checked /> Display
+                Live Seconds
+              </label>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Custom Background</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Upload a local image or video file to set a custom dashboard
+                background.
+                <br /><br />
+                <span style="opacity: 0.85">
+                  💡 <b>Tip:</b> When using "Material You", high-contrast video
+                  loops maintain optimum UI legibility.
+                </span>
+              </div>
+              <div class="setting-item setting-item-col">
+                <div class="radio-row bg-radio-row">
+                  <input
+                    type="file"
+                    id="bgImageInput"
+                    accept="image/*,video/*"
+                    class="hidden-input"
+                  />
+                  <label
+                    for="bgImageInput"
+                    class="radio-option bg-option-label"
+                  >
+                    <span class="icon-mask icon-image" style="width: 16px; height: 16px"></span>
+                    Choose Media
+                  </label>
+                  <button
+                    id="resetBgBtn"
+                    class="radio-option reset-bg-btn"
+                    title="Reset Background"
+                  >
+                    <span class="icon-mask icon-delete" style="width: 18px; height: 18px"></span>
+                  </button>
                 </div>
-                <div class="help-text">
-                  Upload a local image or video file to set a custom dashboard background.
-                  <br /><br />
-                  <span style="opacity: 0.85">💡 <b>Tip:</b> When using "Material You", high-contrast video loops maintain optimum UI legibility.</span>
+                <p id="bgFileName" class="bg-file-name">No media selected.</p>
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Shadow Intensity</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Controls overall shadow depth across search elements, shortcut
+                cards, and modal windows.
+              </div>
+              <div class="setting-slider-row">
+                <input
+                  type="range"
+                  id="shadowSlider"
+                  min="0"
+                  max="200"
+                  value="100"
+                  class="theme-slider"
+                />
+                <input
+                  type="number"
+                  id="shadowInputNumber"
+                  min="0"
+                  max="200"
+                  value="100"
+                  class="slider-number-input"
+                />
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Link Navigation</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Opens quick links and search queries in a new browser tab
+                instead of replacing the current window.
+              </div>
+              <label class="radio-option radio-option-start-sm">
+                <input type="checkbox" id="openNewTabToggle" /> Open Links &
+                Searches in New Tab
+              </label>
+            </div>
+
+            <div class="setting-group mobile-only-setting">
+              <div class="setting-header">
+                <h3>Force Desktop Mode</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Disables mobile-specific optimizations to enforce standard
+                desktop layout scaling.
+              </div>
+              <label class="radio-option radio-option-start-sm">
+                <input type="checkbox" id="forceDesktopToggle" /> Force Desktop
+                Layout
+              </label>
+            </div>
+
+            <div class="setting-group desktop-only-setting">
+              <div class="setting-header">
+                <h3>Theme Adaptive Cursor</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Enables custom reactive cursor animations. Disable to use
+                standard system mouse pointer.
+              </div>
+              <label class="radio-option radio-option-start-sm">
+                <input type="checkbox" id="customCursorToggle" checked /> Enable
+                Theme Adaptive Cursor
+              </label>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Search Bar Style</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Switches between a single unified search container and a
+                segmented floating layout.
+              </div>
+              <div
+                class="custom-select"
+                id="searchBarLayoutSelect"
+                data-value="unified"
+              >
+                <div class="select-trigger">
+                  <span class="selected-text">Unified Search Bar</span>
+                  <span class="select-arrow">
+                    <span
+                      class="icon-mask icon-chevron"
+                      style="width: 12px; height: 12px"
+                    ></span>
+                  </span>
                 </div>
-                <div class="setting-item setting-item-col">
-                  <div class="radio-row bg-radio-row">
-                    <input type="file" id="bgImageInput" accept="image/*,video/*" class="hidden-input" />
-                    <label for="bgImageInput" class="radio-option bg-option-label"><span class="icon-mask icon-image" style="width: 16px; height: 16px"></span> Choose Media</label>
-                    <button id="resetBgBtn" class="radio-option reset-bg-btn" title="Reset Background"><span class="icon-mask icon-delete" style="width: 18px; height: 18px"></span></button>
+                <div class="select-dropdown hidden">
+                  <div class="select-option selected" data-value="unified">
+                    Unified Search Bar
                   </div>
-                  <p id="bgFileName" class="bg-file-name">No media selected.</p>
-                </div>
-              </div>
-
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Shadow Intensity</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
-                </div>
-                <div class="help-text">Controls overall shadow depth across search elements, shortcut cards, and modal windows.</div>
-                <div class="setting-slider-row">
-                  <input type="range" id="shadowSlider" min="0" max="200" value="100" class="theme-slider" />
-                  <input type="number" id="shadowInputNumber" min="0" max="200" value="100" class="slider-number-input" />
-                </div>
-              </div>
-
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Link Navigation</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
-                </div>
-                <div class="help-text">Opens quick links and search queries in a new browser tab instead of replacing the current window.</div>
-                <label class="radio-option radio-option-start-sm"><input type="checkbox" id="openNewTabToggle" /> Open Links & Searches in New Tab</label>
-              </div>
-
-              <div class="setting-group mobile-only-setting">
-                <div class="setting-header">
-                  <h3>Force Desktop Mode</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
-                </div>
-                <div class="help-text">Disables mobile-specific optimizations to enforce standard desktop layout scaling.</div>
-                <label class="radio-option radio-option-start-sm"><input type="checkbox" id="forceDesktopToggle" /> Force Desktop Layout</label>
-              </div>
-
-              <div class="setting-group desktop-only-setting">
-                <div class="setting-header">
-                  <h3>Custom Cursor</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
-                </div>
-                <div class="help-text">Enables custom reactive cursor animations. Disable to use standard system mouse pointer.</div>
-                <label class="radio-option radio-option-start-sm"><input type="checkbox" id="customCursorToggle" checked /> Enable Theme Adaptive Cursor</label>
-              </div>
-
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Search Bar Style</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
-                </div>
-                <div class="help-text">Switches between a single unified search container and a segmented floating layout.</div>
-                <div class="custom-select" id="searchBarLayoutSelect" data-value="unified">
-                  <div class="select-trigger"><span class="selected-text">Unified Search Bar</span><span class="select-arrow"><span class="icon-mask icon-chevron" style="width: 12px; height: 12px"></span></span></div>
-                  <div class="select-dropdown hidden">
-                    <div class="select-option selected" data-value="unified">Unified Search Bar</div>
-                    <div class="select-option" data-value="segmented">Segmented Floating Layout</div>
+                  <div class="select-option" data-value="segmented">
+                    Segmented Floating Layout
                   </div>
-                </div>
-              </div>
-
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Search Bar Controls</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
-                </div>
-                <div class="help-text">Toggles individual interactive buttons inside the search bar, including engine selector, live suggestions, and submit trigger.</div>
-                <label class="radio-option radio-option-start-sm"><input type="checkbox" id="showAllSearchControlsToggle" checked /> Enable Search Bar Controls</label>
-                <div id="individualSearchControlsGroup" style="margin-top: 10px; padding-left: 12px; border-left: 2px solid var(--border);">
-                  <label class="radio-option radio-option-start-sm"><input type="checkbox" id="showEngineDropdownToggle" checked /> Show Engine Switcher</label>
-                  <label class="radio-option radio-option-start-sm" style="margin-top: 10px"><input type="checkbox" id="showQuickSuggestToggle" checked /> Show Quick Suggest Toggle</label>
-                  <label class="radio-option radio-option-start-sm" style="margin-top: 10px"><input type="checkbox" id="showSearchSubmitToggle" checked /> Show Search Submit Button</label>
                 </div>
               </div>
             </div>
-          </details>
 
-          <details class="category-panel">
-            <summary>
-              Search Preferences
-              <span class="chevron icon-mask icon-chevron" style="width: 16px; height: 16px"></span>
-            </summary>
-            <div class="category-content">
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Suggestions & Autocomplete</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
-                </div>
-                <div class="help-text">
-                  Enables live query autocomplete recommendations, provider selection, and custom routing proxy settings.
-                  <br /><br />
-                  <span style="opacity: 0.85">⚠️ <b>Privacy Note:</b> Live queries route securely via CORS proxy. Keep disabled for strictly local searches.</span>
-                </div>
-                <label class="radio-option radio-option-start-sm"><input type="checkbox" id="externalSuggestToggle" /> Enable Live Suggestions</label>
-                <div id="customProxyContainer" style="margin-top: 12px"><input type="url" id="customProxyInput" placeholder="Custom Proxy, e.g., https://my-proxy.com/?" class="custom-proxy-input" /></div>
-                <label class="radio-option radio-option-start-sm" style="margin-top: 12px"><input type="checkbox" id="cacheSuggestToggle" checked /> Cache Search Suggestions</label>
-                <div class="custom-select" id="suggestProviderSelect" data-value="auto" style="margin-top: 12px">
-                  <div class="select-trigger"><span class="selected-text">Automatic</span><span class="select-arrow"><span class="icon-mask icon-chevron" style="width: 12px; height: 12px"></span></span></div>
-                  <div class="select-dropdown hidden">
-                    <div class="select-option selected" data-value="auto">Automatic</div>
-                    <div class="select-option" data-value="DuckDuckGo">DuckDuckGo</div>
-                    <div class="select-option" data-value="Google">Google</div>
-                    <div class="select-option" data-value="Bing">Bing</div>
-                    <div class="select-option" data-value="Brave">Brave</div>
-                  </div>
-                </div>
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Search Bar Controls</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Toggles individual interactive buttons inside the search bar,
+                including engine selector, live suggestions, and submit trigger.
+              </div>
+              <label class="radio-option radio-option-start-sm">
+                <input
+                  type="checkbox"
+                  id="showAllSearchControlsToggle"
+                  checked
+                />
+                Enable Search Bar Controls
+              </label>
+              <div
+                id="individualSearchControlsGroup"
+                style="
+                  margin-top: 10px;
+                  padding-left: 12px;
+                  border-left: 2px solid var(--border);
+                "
+              >
+                <label class="radio-option radio-option-start-sm">
+                  <input
+                    type="checkbox"
+                    id="showEngineDropdownToggle"
+                    checked
+                  />
+                  Show Engine Switcher
+                </label>
+                <label
+                  class="radio-option radio-option-start-sm"
+                  style="margin-top: 10px"
+                >
+                  <input type="checkbox" id="showQuickSuggestToggle" checked />
+                  Show Quick Suggest Toggle
+                </label>
+                <label
+                  class="radio-option radio-option-start-sm"
+                  style="margin-top: 10px"
+                >
+                  <input type="checkbox" id="showSearchSubmitToggle" checked />
+                  Show Search Submit Button
+                </label>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="category-panel">
+          <summary>
+            Search Preferences
+            <span
+              class="chevron icon-mask icon-chevron"
+              style="width: 16px; height: 16px"
+            ></span>
+          </summary>
+          <div class="category-content">
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Suggestions & Autocomplete</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Enables live query autocomplete recommendations, provider
+                selection, and custom routing proxy settings.
+                <br /><br />
+                <span style="opacity: 0.85">
+                  ⚠️ <b>Privacy Note:</b> Live queries route securely via CORS
+                  proxy. Keep disabled for strictly local searches.
+                </span>
               </div>
 
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Search Engines</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
+              <label class="radio-option radio-option-start-sm">
+                <input type="checkbox" id="externalSuggestToggle" /> Enable Live
+                Suggestions
+              </label>
+
+              <div id="customProxyContainer" style="margin-top: 12px">
+                <input
+                  type="url"
+                  id="customProxyInput"
+                  placeholder="Custom Proxy (e.g., https://my-proxy.com/?)"
+                  class="custom-proxy-input"
+                />
+              </div>
+
+              <label
+                class="radio-option radio-option-start-sm"
+                style="margin-top: 12px"
+              >
+                <input type="checkbox" id="cacheSuggestToggle" checked /> Cache
+                Search Suggestions
+              </label>
+
+              <div
+                class="custom-select"
+                id="suggestProviderSelect"
+                data-value="auto"
+                style="margin-top: 12px"
+              >
+                <div class="select-trigger">
+                  <span class="selected-text"
+                    >Automatic (Smart Match & Fallback)</span
+                  >
+                  <span class="select-arrow">
+                    <span
+                      class="icon-mask icon-chevron"
+                      style="width: 12px; height: 12px"
+                    ></span>
+                  </span>
                 </div>
-                <div class="help-text">
-                  Configure active search engine list, set default search provider, and manage custom engine shortcuts (like <b>?g</b> or <b>?bi</b>).
-                  <a href="https://github.com/jbuilds-g/0FluffStart/blob/main/TAGS.md" target="_blank" rel="noopener noreferrer">Learn more about shortcut tags</a>.
+                <div class="select-dropdown hidden">
+                  <div class="select-option selected" data-value="auto">
+                    Automatic (Smart Match & Fallback)
+                  </div>
+                  <div class="select-option" data-value="DuckDuckGo">
+                    DuckDuckGo
+                  </div>
+                  <div class="select-option" data-value="Google">Google</div>
+                  <div class="select-option" data-value="Bing">Bing</div>
+                  <div class="select-option" data-value="Brave">Brave</div>
                 </div>
-                <div class="sub-collapsible" id="engineCollapsible">
-                  <div class="select-trigger" id="engineCollapsibleTrigger"><span class="selected-text">Manage Search Engines</span><span class="select-arrow"><span class="icon-mask icon-chevron" style="width: 12px; height: 12px"></span></span></div>
-                  <div class="sub-collapsible-content hidden" id="engineSectionContent">
-                    <div id="engineSelectionList" class="engine-selection-list"></div>
-                    <button id="showAddEngineBtn" class="add-link-btn">+ Add Search Engine</button>
-                    <div id="customEngineEditor" class="link-editor-box hidden">
-                      <h4 class="editor-title">Add Custom Engine</h4>
-                      <input type="text" id="customEngineName" placeholder="Title, e.g. Phind" />
-                      <input type="text" id="customEngineTag" placeholder="Tag, e.g. ?pd" />
-                      <input type="url" id="customEngineUrl" placeholder="Search URL, e.g. https://phind.com/search?q=" />
-                      <div class="editor-btn-row">
-                        <button id="addCustomEngineBtn" class="save-btn">Save</button>
-                        <button id="cancelCustomEngineBtn" class="secondary editor-btn-cancel">Cancel</button>
-                      </div>
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Search Engines</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Configure active search engine list, set default search
+                provider, and manage custom engine shortcuts (like <b>?g</b> or
+                <b>?bi</b>).
+                <a
+                  href="https://github.com/jbuilds-g/0FluffStart/blob/main/TAGS.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Learn more about shortcut tags</a
+                >.
+              </div>
+              <div class="sub-collapsible" id="engineCollapsible">
+                <div class="select-trigger" id="engineCollapsibleTrigger">
+                  <span class="selected-text">Manage Search Engines</span>
+                  <span class="select-arrow">
+                    <span
+                      class="icon-mask icon-chevron"
+                      style="width: 12px; height: 12px"
+                    ></span>
+                  </span>
+                </div>
+                <div
+                  class="sub-collapsible-content hidden"
+                  id="engineSectionContent"
+                >
+                  <div
+                    id="engineSelectionList"
+                    class="engine-selection-list"
+                  ></div>
+
+                  <button id="showAddEngineBtn" class="add-link-btn">
+                    + Add Search Engine
+                  </button>
+
+                  <div id="customEngineEditor" class="link-editor-box hidden">
+                    <h4 class="editor-title">Add Custom Engine</h4>
+
+                    <input
+                      type="text"
+                      id="customEngineName"
+                      placeholder="Title (e.g. Phind)"
+                    />
+                    <input
+                      type="text"
+                      id="customEngineTag"
+                      placeholder="Tag (e.g. ?pd)"
+                    />
+                    <input
+                      type="url"
+                      id="customEngineUrl"
+                      placeholder="Search URL (e.g. https://phind.com/search?q=)"
+                    />
+
+                    <div class="editor-btn-row">
+                      <button id="addCustomEngineBtn" class="save-btn">
+                        Save
+                      </button>
+                      <button
+                        id="cancelCustomEngineBtn"
+                        class="secondary editor-btn-cancel"
+                      >
+                        Cancel
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Search History</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
-                </div>
-                <div class="help-text">Saves a local log of recent search queries directly on your device for fast autocomplete access.</div>
-                <label class="radio-option radio-option-start-sm"><input type="checkbox" id="historyEnabledToggle" /> Enable Local Search History</label>
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Search History Control</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
               </div>
-            </div>
-          </details>
-
-          <details class="category-panel">
-            <summary>
-              Data Management
-              <span class="chevron icon-mask icon-chevron" style="width: 16px; height: 16px"></span>
-            </summary>
-            <div class="category-content">
-              <div class="setting-group">
-                <div class="setting-header">
-                  <h3>Backup & Restore</h3>
-                  <button class="help-btn" title="Toggle help text"><span class="icon-mask icon-help" style="width: 14px; height: 14px"></span></button>
-                </div>
-                <div class="help-text">Manage your local data. Create or restore backups, revert to your previous restore point, clear search history, or perform a full factory reset.</div>
-                <div class="action-btn-row">
-                  <button id="backupDataBtn" class="secondary">Backup</button>
-                  <button id="restoreDataBtn" class="secondary">Restore</button>
-                </div>
-                <div class="restore-point-action">
-                  <button id="restorePreviousBtn" class="secondary" type="button" disabled>Restore Previous</button>
-                  <p id="restorePointStatus" class="restore-point-status">No previous restore point available yet.</p>
-                </div>
-                <input type="file" id="restoreInput" accept=".json" class="hidden-input" />
-                <div class="action-btn-row data-danger-actions">
-                  <button id="clearHistoryBtn" class="secondary danger-btn">Clear History</button>
-                  <button id="resetSettingsBtn" class="secondary danger-btn">Factory Reset</button>
-                </div>
+              <div class="help-text">
+                Saves a local log of recent search queries directly on your
+                device for fast autocomplete access.
               </div>
-            </div>
-          </details>
-
-          <div class="modal-footer">
-            <div class="footer-row footer-row-primary">
-              <span class="footer-brand">0FluffStart</span>
-              <a href="https://github.com/jbuilds-g/0FluffStart" target="_blank" rel="noopener noreferrer" class="footer-version" title="View Source on GitHub" data-version>v6.4.0</a>
-            </div>
-            <div class="footer-row footer-row-secondary">
-              <span class="footer-copy">© 2026 • <a href="https://github.com/jbuilds-g/0FluffStart/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">AGPL-3.0</a></span>
-              <a href="https://jbuilds-g.github.io/0fluffstart-privacy-policy/" target="_blank" rel="noopener noreferrer" class="footer-link">Privacy Policy</a>
-              <span class="footer-credit">Made with ♥️ • <a href="https://github.com/jbuilds-g" target="_blank" rel="noopener noreferrer">jbuilds-g</a></span>
+              <label class="radio-option radio-option-start-sm">
+                <input type="checkbox" id="historyEnabledToggle" /> Enable Local
+                Search History
+              </label>
             </div>
           </div>
+        </details>
+
+        <details class="category-panel">
+          <summary>
+            Data Management
+            <span
+              class="chevron icon-mask icon-chevron"
+              style="width: 16px; height: 16px"
+            ></span>
+          </summary>
+          <div class="category-content">
+            <div class="setting-group">
+              <div class="setting-header">
+                <h3>Storage & Data Maintenance</h3>
+                <button class="help-btn" title="Toggle help text">
+                  <span
+                    class="icon-mask icon-help"
+                    style="width: 14px; height: 14px"
+                  ></span>
+                </button>
+              </div>
+              <div class="help-text">
+                Manage local data persistence. Export/import JSON backups, clear
+                history logs, or execute full factory reset.
+              </div>
+
+              <div class="action-btn-row">
+                <button id="backupDataBtn" class="secondary">
+                  Backup (Save)
+                </button>
+                <button id="restoreDataBtn" class="secondary">
+                  Restore (Load)
+                </button>
+              </div>
+              <input
+                type="file"
+                id="restoreInput"
+                accept=".json"
+                class="hidden-input"
+              />
+
+              <div class="action-btn-row" style="margin-top: 12px">
+                <button id="clearHistoryBtn" class="secondary danger-btn">
+                  Clear Search History
+                </button>
+                <button id="resetSettingsBtn" class="secondary danger-btn">
+                  Factory Reset
+                </button>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <div class="modal-footer">
+          <div class="footer-row footer-row-primary">
+            <span class="footer-brand">0FluffStart</span>
+            <a
+              href="https://github.com/jbuilds-g/0FluffStart"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-version"
+              title="View Source on GitHub"
+              data-version
+              >v6.4.0</a
+            >
+          </div>
+          <div class="footer-row footer-row-secondary">
+            <span class="footer-copy">
+              © 2026 •
+              <a
+                href="https://github.com/jbuilds-g/0FluffStart/blob/main/LICENSE"
+                target="_blank"
+                rel="noopener noreferrer"
+                >AGPL-3.0</a
+              >
+            </span>
+            <a
+              href="https://jbuilds-g.github.io/0fluffstart-privacy-policy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link"
+              >Privacy Policy</a
+            >
+            <span class="footer-credit">
+              Made with ♥️ •
+              <a
+                href="https://github.com/jbuilds-g"
+                target="_blank"
+                rel="noopener noreferrer"
+                >jbuilds-g</a
+              >
+            </span>
+          </div>
         </div>
-        <button id="settingsModalScrollAnchor" class="settings-modal-scroll-anchor hidden" title="Scroll to top">
-          <span class="icon-mask icon-arrow-up" style="width: 24px; height: 24px"></span>
-        </button>
+          </div>
+        </div>
       </div>
+      <button
+        id="settingsModalScrollAnchor"
+        class="settings-modal-scroll-anchor hidden"
+        title="Scroll to top"
+      >
+        <span
+          class="icon-mask icon-arrow-up"
+          style="width: 24px; height: 24px"
+        ></span>
+      </button>
     </div>
     <div id="customCursorEngine" class="custom-cursor" aria-hidden="true">
       <span class="custom-cursor-icon icon-default-mouse-pointer"></span>
@@ -465,12 +1001,50 @@
     <script type="module" src="js/main.js"></script>
 
     <div class="mobile-dock" id="mobileDock">
-      <button id="folderExitBtn" class="icon-btn floating-btn hidden" title="Back to Dashboard">
-        <span class="icon-mask icon-back" style="width: 18px; height: 18px"></span>
+      <button
+        id="folderExitBtn"
+        class="icon-btn floating-btn hidden"
+        title="Back to Dashboard"
+      >
+        <span
+          class="icon-mask icon-back"
+          style="width: 20px; height: 20px"
+        ></span>
       </button>
-      <button id="mobileSearchPill" class="mobile-search-pill" title="Open Search">
-        <span class="icon-mask icon-search" style="width: 18px; height: 18px"></span>
-      </button>
+
+      <div class="mobile-search-pill" id="mobileSearchPill">
+        <span
+          class="icon-mask icon-search"
+          style="width: 18px; height: 18px; opacity: 0.7"
+        ></span>
+        <span class="mobile-search-placeholder">Search or Type URL...</span>
+      </div>
+    </div>
+    <!-- TOAST NOTIFICATION PORTAL -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- CUSTOM DIALOG ENGINE MODAL -->
+    <div class="modal" id="customDialogModal">
+      <div class="modal-content custom-dialog-content">
+        <h3 id="customDialogTitle" class="custom-dialog-title">
+          Are you sure?
+        </h3>
+        <p id="customDialogMessage" class="custom-dialog-message"></p>
+        <div class="custom-dialog-actions">
+          <button
+            id="customDialogCancelBtn"
+            class="secondary custom-dialog-btn-cancel"
+          >
+            Cancel
+          </button>
+          <button
+            id="customDialogConfirmBtn"
+            class="save-btn custom-dialog-btn-confirm"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
     </div>
   </body>
 </html>
