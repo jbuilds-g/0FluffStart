@@ -1,6 +1,7 @@
 import "./main.js";
 import { store } from "./store.js";
 import { renderLinkManager } from "./links.js";
+import { initSettingsPageSearch } from "./settings-search.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const pageStyles = document.querySelector('link[href^="css/settings-page.css"]');
@@ -155,7 +156,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     syncClockSelection();
   }
 
-  // Initialize the shared link manager after its store is ready. main.js calls the same init safely.
   await store.init();
   renderLinkManager();
 
@@ -172,8 +172,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   updateThemePreview();
   window.setTimeout(updateThemePreview, 0);
+  initSettingsPageSearch();
 
-  // Settings is intentionally a solid configuration workspace. The dashboard wallpaper stays on the dashboard.
   const overlay = document.getElementById("bgOverlay");
   overlay?.classList.remove("bg-overlay-active");
 
