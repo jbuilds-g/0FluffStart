@@ -17,6 +17,7 @@ function injectStyles() {
     .settings-search-clear:hover { color:var(--text); background:var(--card-hover) !important; }
     .settings-search-clear .icon-mask { width:14px; height:14px; }
     .settings-search-results { display:grid; gap:5px; max-height:390px; overflow:auto; margin-top:7px; padding:6px; background:var(--card); border:1px solid var(--border); border-radius:min(var(--radius),12px); box-shadow:var(--shadow-lg); }
+    .settings-search-results[hidden] { display:none; }
     .settings-search-result { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px 12px; width:100%; padding:9px 10px; border:1px solid transparent; border-radius:8px; background:transparent; color:var(--text); text-align:left; cursor:pointer; font:inherit; }
     .settings-search-result:hover, .settings-search-result:focus-visible { background:var(--card-hover); border-color:var(--border); outline:none; }
     .settings-search-result strong { font-size:.82rem; font-weight:650; }
