@@ -5,7 +5,7 @@ import { initSettingsPageSearch } from "./settings-search.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const pageStyles = document.querySelector('link[href^="css/settings-page.css"]');
-  if (pageStyles) pageStyles.href = "css/settings-page.css?v=10";
+  if (pageStyles) pageStyles.href = "css/settings-page.css?v=6";
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
@@ -35,6 +35,55 @@ document.addEventListener("DOMContentLoaded", async () => {
       </div>
     `;
   }
+
+  const scrollAnchor = document.createElement("button");
+  scrollAnchor.type = "button";
+  scrollAnchor.id = "settingsModalScrollAnchor";
+  scrollAnchor.className = "settings-modal-scroll-anchor hidden";
+  scrollAnchor.setAttribute("aria-label", "Return upward");
+  scrollAnchor.innerHTML = '<span class="icon-mask icon-arrow-up" aria-hidden="true"></span>';
+  document.body.appendChild(scrollAnchor);
+
+  const scrollAnchorStyle = document.createElement("style");
+  scrollAnchorStyle.textContent = `
+    html.settings-page .settings-modal-scroll-anchor {
+      position:fixed !important;
+      right:24px !important;
+      bottom:96px !important;
+      z-index:100 !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      width:40px !important;
+      height:40px !important;
+      min-width:40px !important;
+      min-height:40px !important;
+      padding:0 !important;
+      cursor:pointer !important;
+      opacity:1 !important;
+      pointer-events:auto !important;
+      visibility:visible !important;
+    }
+    html.settings-page .settings-modal-scroll-anchor.hidden {
+      display:none !important;
+    }
+    @media (max-width:900px) {
+      html.settings-page.settings-mobile-context .settings-modal-scroll-anchor {
+        right:16px !important;
+        bottom:calc(118px + env(safe-area-inset-bottom)) !important;
+      }
+    }
+  `;
+  document.head.appendChild(scrollAnchorStyle);
+
+  const updateSettingsScrollAnchor = () => {
+    scrollAnchor.classList.toggle("hidden", window.scrollY <= 360);
+  };
+  window.addEventListener("scroll", updateSettingsScrollAnchor, { passive: true });
+  scrollAnchor.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  updateSettingsScrollAnchor();
 
   const nav = document.querySelector(".settings-section-nav");
   const sections = Array.from(document.querySelectorAll(".settings-section"));
