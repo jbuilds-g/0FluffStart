@@ -25,7 +25,7 @@ function injectStyles() {
     .settings-search-result span { color:var(--dim); font-size:.68rem; align-self:center; }
     .settings-search-result small { grid-column:1 / -1; overflow:hidden; color:var(--dim); font-size:.7rem; line-height:1.35; text-overflow:ellipsis; white-space:nowrap; }
     .settings-search-empty { padding:12px 10px; color:var(--dim); font-size:.78rem; }
-    .settings-search-mobile, .settings-search-mobile-trigger, .settings-back-to-top { display:none; }
+    .settings-search-mobile, .settings-search-mobile-trigger, .settings-modal-scroll-anchor { display:none; }
     .setting-search-highlight { animation:settings-search-highlight .9s ease; }
     @keyframes settings-search-highlight { 0%,100% { box-shadow:0 0 0 0 transparent; } 20%,70% { box-shadow:0 0 0 2px var(--accent); border-radius:min(var(--radius),10px); } }
 
@@ -41,13 +41,13 @@ function injectStyles() {
       html.settings-page.settings-mobile-context .settings-search-mobile { position:fixed; left:12px; right:12px; top:calc(12px + env(safe-area-inset-top)); z-index:100; display:none; width:auto; }
       html.settings-page.settings-mobile-context .settings-search-mobile.active { display:block; }
       html.settings-page.settings-mobile-context .settings-search-mobile .settings-search-results { max-height:min(52vh,420px); }
-      html.settings-page.settings-mobile-context .settings-back-to-top { position:fixed; right:16px; bottom:calc(124px + env(safe-area-inset-bottom)); z-index:100; display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; padding:0; border:1px solid var(--border); border-radius:50%; background:var(--card); color:var(--text); box-shadow:var(--shadow-lg); cursor:pointer; opacity:0; pointer-events:none; transform:translateY(6px); transition:opacity .16s ease,transform .16s ease; }
-      html.settings-page.settings-mobile-context .settings-back-to-top.visible { opacity:1; pointer-events:auto; transform:none; }
+      html.settings-page.settings-mobile-context .settings-modal-scroll-anchor { position:fixed; right:16px; bottom:calc(124px + env(safe-area-inset-bottom)); z-index:100; display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; min-width:40px; min-height:40px; padding:0; border:1px solid var(--border); border-radius:50%; background:var(--card); color:var(--text); box-shadow:var(--shadow-lg); cursor:pointer; opacity:0; pointer-events:none; transform:translateY(6px); transition:opacity .16s ease,transform .16s ease; }
+      html.settings-page.settings-mobile-context .settings-modal-scroll-anchor.visible { opacity:1; pointer-events:auto; transform:none; }
     }
 
     @media (min-width:901px) {
-      html.settings-page.settings-desktop-context .settings-back-to-top { position:fixed; right:24px; bottom:24px; z-index:40; display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; padding:0; border:1px solid var(--border); border-radius:50%; background:var(--card); color:var(--text); box-shadow:var(--shadow-lg); cursor:pointer; opacity:0; pointer-events:none; transform:translateY(6px); transition:opacity .16s ease,transform .16s ease; }
-      html.settings-page.settings-desktop-context .settings-back-to-top.visible { opacity:1; pointer-events:auto; transform:none; }
+      html.settings-page.settings-desktop-context .settings-modal-scroll-anchor { position:fixed; right:24px; bottom:24px; z-index:40; display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; min-width:40px; min-height:40px; padding:0; border:1px solid var(--border); border-radius:50%; background:var(--card); color:var(--text); box-shadow:var(--shadow-lg); cursor:pointer; opacity:0; pointer-events:none; transform:translateY(6px); transition:opacity .16s ease,transform .16s ease; }
+      html.settings-page.settings-desktop-context .settings-modal-scroll-anchor.visible { opacity:1; pointer-events:auto; transform:none; }
     }
   `;
   document.head.appendChild(style);
@@ -108,7 +108,7 @@ export function initSettingsPageSearch() {
 
   const backToTop = document.createElement('button');
   backToTop.type = 'button';
-  backToTop.className = 'settings-back-to-top';
+  backToTop.className = 'settings-modal-scroll-anchor';
   backToTop.innerHTML = '<span class="icon-mask icon-arrow-up" aria-hidden="true"></span>';
   backToTop.setAttribute('aria-label', 'Back to top');
   backToTop.title = 'Scroll to top';
