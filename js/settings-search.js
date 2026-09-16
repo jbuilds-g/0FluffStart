@@ -10,13 +10,13 @@ function injectStyles() {
     .settings-search-desktop { margin-top:18px; }
     .settings-search-input-wrap { position:relative; display:flex; align-items:center; gap:10px; height:42px; min-height:42px; padding:0 12px; box-sizing:border-box; background:var(--card); border:1px solid var(--border); border-radius:min(var(--radius),12px); box-shadow:var(--shadow-sm); }
     .settings-search-input-wrap > .icon-mask { width:17px; height:17px; flex:0 0 17px; opacity:.72; }
-    .settings-search input { width:100%; min-width:0; height:100%; box-sizing:border-box; border:0; outline:0; padding:0; margin:0; background:transparent; color:var(--text); font:inherit; font-size:.86rem; line-height:1.2; }
+    .settings-search input { display:block; width:100%; min-width:0; height:100%; box-sizing:border-box; border:0; outline:0; padding:0; margin:0; background:transparent; color:var(--text); font:inherit; font-size:.86rem; line-height:1.2; }
     .settings-search input::placeholder { color:var(--dim); opacity:1; }
     .settings-search-input-wrap:focus-within { border-color:var(--accent); box-shadow:0 0 0 2px var(--interactive-bg-alpha),var(--shadow-sm); }
-    .settings-search .settings-search-clear { position:static !important; top:auto !important; right:auto !important; transform:none !important; display:inline-flex !important; align-items:center; justify-content:center; width:28px !important; height:28px !important; min-height:28px !important; flex:0 0 28px; margin:0; padding:0 !important; border:0 !important; background:transparent !important; color:var(--dim); box-shadow:none !important; cursor:pointer; }
-    .settings-search .settings-search-clear[hidden] { display:none !important; }
-    .settings-search .settings-search-clear:hover { color:var(--text); background:var(--card-hover) !important; }
-    .settings-search .settings-search-clear .icon-mask { width:14px; height:14px; }
+    .settings-search .settings-page-search-clear { position:static !important; top:auto !important; right:auto !important; transform:none !important; display:none !important; align-items:center; justify-content:center; width:28px !important; height:28px !important; min-height:28px !important; flex:0 0 28px; margin:0; padding:0 !important; border:0 !important; background:transparent !important; color:var(--dim); box-shadow:none !important; cursor:pointer; }
+    .settings-search .settings-page-search-clear.is-visible { display:inline-flex !important; }
+    .settings-search .settings-page-search-clear:hover { color:var(--text); background:var(--card-hover) !important; }
+    .settings-search .settings-page-search-clear .icon-mask { width:14px; height:14px; }
     .settings-search-results { display:grid; gap:5px; max-height:390px; overflow:auto; margin-top:7px; padding:6px; background:var(--card); border:1px solid var(--border); border-radius:min(var(--radius),12px); box-shadow:var(--shadow-lg); }
     .settings-search-results[hidden] { display:none; }
     .settings-search-result { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px 12px; width:100%; padding:9px 10px; border:1px solid transparent; border-radius:8px; background:transparent; color:var(--text); text-align:left; cursor:pointer; font:inherit; }
@@ -81,7 +81,7 @@ export function initSettingsPageSearch() {
       <div class="settings-search-input-wrap">
         ${SEARCH_ICON}
         <input type="text" autocomplete="off" spellcheck="false" placeholder="Search settings..." aria-label="Search settings" />
-        <button type="button" class="settings-search-clear" aria-label="Clear settings search" hidden>${CLOSE_ICON}</button>
+        <button type="button" class="settings-page-search-clear" aria-label="Clear settings search">${CLOSE_ICON}</button>
       </div>
       <div class="settings-search-results" role="listbox" aria-label="Settings search results" hidden></div>
     `;
@@ -117,9 +117,9 @@ export function initSettingsPageSearch() {
 
   const renderResults = (wrapper, query) => {
     const results = wrapper.querySelector('.settings-search-results');
-    const clear = wrapper.querySelector('.settings-search-clear');
+    const clear = wrapper.querySelector('.settings-page-search-clear');
     const normalized = query.trim().toLowerCase();
-    clear.hidden = !normalized;
+    clear.classList.toggle('is-visible', Boolean(normalized));
     results.replaceChildren();
 
     if (!normalized) {
@@ -193,12 +193,12 @@ export function initSettingsPageSearch() {
   };
 
   inputs.forEach((input) => input.addEventListener('input', () => syncQuery(input)));
-  desktop.querySelector('.settings-search-clear').addEventListener('click', () => {
+  desktop.querySelector('.settings-page-search-clear').addEventListener('click', () => {
     desktop.querySelector('input').value = '';
     syncQuery(desktop.querySelector('input'));
     desktop.querySelector('input').focus();
   });
-  mobile.querySelector('.settings-search-clear').addEventListener('click', () => {
+  mobile.querySelector('.settings-page-search-clear').addEventListener('click', () => {
     mobile.querySelector('input').value = '';
     syncQuery(mobile.querySelector('input'));
     mobile.querySelector('input').focus();
