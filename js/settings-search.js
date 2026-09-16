@@ -110,8 +110,7 @@ export function initSettingsPageSearch() {
   backToTop.type = 'button';
   backToTop.className = 'settings-modal-scroll-anchor';
   backToTop.innerHTML = '<span class="icon-mask icon-arrow-up" aria-hidden="true"></span>';
-  backToTop.setAttribute('aria-label', 'Back to top');
-  backToTop.title = 'Scroll to top';
+  backToTop.setAttribute('aria-label', 'Return upward');
   document.body.appendChild(backToTop);
 
   const inputs = [desktop.querySelector('input'), mobile.querySelector('input')];
