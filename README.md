@@ -8,7 +8,7 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
 ![Version](https://img.shields.io/github/v/release/jbuilds-g/0FluffStart?logo=github&label=Release&cacheSeconds=3600)
 ![Platform: Web | Extension](https://img.shields.io/badge/Platform-Web%20%7C%20Extension-brightgreen)
-![downloads](https://img.shields.io/github/downloads/jbuilds-g/0FluffStart/total?logo=github&cacheSeconds=3600)
+![downloads](https://img.shields.io/github/downloads/jbuilds-g/0FluffStart/total?logo=github&label=Downloads&cacheSeconds=3600)
 ![Stars](https://img.shields.io/github/stars/jbuilds-g/0fluffstart)
 
 [**🌐 Landing Page**](https://0fluffstart-site.pages.dev/) &nbsp;|&nbsp; [**🚀 Launch Web App**](https://0fluffstart.pages.dev/)
@@ -30,7 +30,7 @@
 
 A new standalone Settings page is currently under active development. Anyone can test the latest experimental version and provide feedback:
 
-[**⚙️ Open Experimental Settings**](https://0fluffstart-site.pages.dev/settings.html)
+[**⚙️ Open Experimental Settings**](https://0fluffstart.pages.dev/settings.html)
 
 > [!NOTE]
 > The experimental Settings page is still being refined. Some controls and visual components may change before the next stable release. Feedback on layout, behavior, and usability is welcome.
@@ -205,15 +205,15 @@ Data is stored locally in `localStorage` and `IndexedDB`. Background images and 
 ├── css/                         # Modular CSS architecture
 │   ├── base.css                # Base styles and global element defaults
 │   ├── core.css                # Core application component styles
-│   ├── cursor.css              # Custom cursor styling and states
-│   ├── layout.css              # Dashboard and responsive layout styles
-│   ├── links.css               # Quick link and folder styling
-│   ├── mobile.css              # Mobile-specific responsive styles
-│   ├── modal.css               # Modal and dialog styles
-│   ├── search.css              # Search bar and suggestion styles
-│   ├── themes.css              # Theme and visual customization styles
-│   ├── utilities.css           # Reusable utility classes
-│   └── variables.css            # Global CSS custom properties and tokens
+│   ├── cursor.css               # Custom cursor styling and states
+│   ├── layout.css               # Dashboard and responsive layout styles
+│   ├── links.css                # Quick link and folder styling
+│   ├── mobile.css               # Mobile-specific responsive styles
+│   ├── modal.css                # Modal and dialog styles
+│   ├── search.css               # Search bar and suggestion styles
+│   ├── themes.css               # Theme and visual customization styles
+│   ├── utilities.css            # Reusable utility classes
+│   └── variables.css             # Global CSS custom properties and tokens
 ├── js/                          # Modular ES application architecture
 │   ├── main.js                 # App entry point & event initialization
 │   ├── cursor.js               # Theme-adaptive custom vector cursor
