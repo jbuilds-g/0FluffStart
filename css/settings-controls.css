@@ -240,123 +240,26 @@ html.settings-page.settings-desktop-context .mobile-only-setting { display:none 
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::after { content:"↵"; }
 
 /* Search Bar Style: a compact, faithful rendering of the dashboard search bar. */
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview {
-  display:flex;
-  align-items:stretch;
-  justify-content:stretch;
-  gap:0;
-  width:100%;
-  height:30px;
-  flex:0 0 30px;
-  padding:0;
-  overflow:hidden;
-  background:var(--card-hover);
-  border:1px solid var(--border);
-  border-radius:7px;
-  box-sizing:border-box;
-}
-
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview span {
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex:0 0 auto;
-  height:100%;
-  margin:0;
-  padding:0;
-  border-radius:0;
-  background:transparent;
-  opacity:1;
-}
-
-/* Unified mirrors .search-bar: engine area, input area, submit button. */
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified {
-  border-radius:7px;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(1) {
-  width:24px;
-  border-right:1px solid var(--border);
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(1)::before {
-  content:"G";
-  color:var(--text);
-  font-size:9px;
-  font-weight:700;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(2) {
-  flex:1 1 auto;
-  width:auto;
-  min-width:0;
-  justify-content:flex-start;
-  padding-left:6px;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(2)::before {
-  content:"Search or Type URL...";
-  color:var(--dim);
-  font-size:6px;
-  white-space:nowrap;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(3) {
-  width:24px;
-  border-left:1px solid var(--border);
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(3)::before {
-  content:"⌕";
-  color:var(--accent);
-  font-size:11px;
-  line-height:1;
-}
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview { display:flex; align-items:stretch; justify-content:stretch; gap:0; width:100%; height:30px; flex:0 0 30px; padding:0; overflow:hidden; background:var(--card-hover); border:1px solid var(--border); border-radius:7px; box-sizing:border-box; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview span { position:relative; display:flex; align-items:center; justify-content:center; flex:0 0 auto; height:100%; margin:0; padding:0; border-radius:0; background:transparent; opacity:1; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified { border-radius:7px; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(1) { width:24px; border-right:1px solid var(--border); }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(1)::before { content:"G"; color:var(--text); font-size:9px; font-weight:700; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(2) { display:flex !important; flex:1 1 auto; width:auto; min-width:0; justify-content:flex-start; padding-left:6px; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(2)::before { content:"Search or Type URL..."; color:var(--dim); font-size:6px; white-space:nowrap; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(3) { display:flex !important; width:24px; border-left:1px solid var(--border); }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(3)::before { content:"⌕"; color:var(--accent); font-size:11px; line-height:1; }
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified::before,
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified::after { content:none; }
 
 /* Segmented mirrors .search-bar.segmented: three independent floating pieces. */
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented {
-  display:flex;
-  align-items:stretch;
-  gap:3px;
-  background:transparent;
-  border:0;
-  border-radius:0;
-  overflow:visible;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span {
-  height:30px;
-  background:var(--card-hover);
-  border:1px solid var(--border);
-  border-radius:7px;
-  box-sizing:border-box;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(1) {
-  width:27px;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(1)::before {
-  content:"G";
-  color:var(--text);
-  font-size:9px;
-  font-weight:700;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(2) {
-  flex:1 1 auto;
-  width:auto;
-  min-width:0;
-  justify-content:flex-start;
-  padding-left:6px;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(2)::before {
-  content:"Search or Type URL...";
-  color:var(--dim);
-  font-size:6px;
-  white-space:nowrap;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(3) {
-  width:27px;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(3)::before {
-  content:"⌕";
-  color:var(--accent);
-  font-size:11px;
-  line-height:1;
-}
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented { display:flex; align-items:stretch; gap:3px; background:transparent; border:0; border-radius:0; overflow:visible; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span { display:flex; height:30px; background:var(--card-hover); border:1px solid var(--border); border-radius:7px; box-sizing:border-box; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(1) { width:27px; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(1)::before { content:"G"; color:var(--text); font-size:9px; font-weight:700; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(2) { display:flex; flex:1 1 auto; width:auto; min-width:0; justify-content:flex-start; padding-left:6px; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(2)::before { content:"Search or Type URL..."; color:var(--dim); font-size:6px; white-space:nowrap; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(3) { width:27px; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(3)::before { content:"⌕"; color:var(--accent); font-size:11px; line-height:1; }
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::before,
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::after { content:none; }
