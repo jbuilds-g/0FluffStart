@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
-  controlStyles.href = "css/settings-controls.css?v=4";
+  controlStyles.href = "css/settings-controls.css?v=5";
   document.head.appendChild(controlStyles);
 
   document.documentElement.classList.add("settings-page");
@@ -162,25 +162,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     "evergreen-archive": ["#1a2416", "#253321", "#d9c588"],
   };
 
-  const setupVisualPicker = (selectId, previewBuilder, labelClass = "settings-picker-label") => {
+  const setupVisualPicker = (selectId, previewBuilder) => {
     const picker = document.getElementById(selectId);
     if (!picker) return;
 
-    picker.classList.add("settings-visual-picker");
+    picker.classList.add("clock-style-picker");
+    picker.setAttribute("role", "radiogroup");
+    picker.setAttribute("aria-label", picker.dataset.label || "Settings option");
     picker.querySelector(".select-trigger")?.setAttribute("aria-hidden", "true");
+
     const dropdown = picker.querySelector(".select-dropdown");
     dropdown?.classList.remove("hidden");
 
     const options = Array.from(picker.querySelectorAll(".select-option"));
     options.forEach((option) => {
       const label = option.textContent.trim();
-      if (!option.querySelector(".settings-picker-preview")) {
-        const preview = previewBuilder(option, label);
-        const labelEl = document.createElement("span");
-        labelEl.className = labelClass;
-        labelEl.textContent = label;
-        option.replaceChildren(preview, labelEl);
-      }
+      const preview = previewBuilder(option, label);
+      const labelEl = document.createElement("span");
+      labelEl.className = "settings-clock-label";
+      labelEl.textContent = label;
+      option.replaceChildren(preview, labelEl);
       option.setAttribute("role", "radio");
       option.setAttribute("tabindex", "0");
       option.setAttribute("aria-label", label);
@@ -210,31 +211,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     syncSelection();
   };
 
-  setupVisualPicker("themeSelect", (option) => {
+  const createThemePreview = (option) => {
     const value = option.dataset.value || "dark";
     const colors = themePreviewColors[value] || themePreviewColors.dark;
     const preview = document.createElement("span");
-    preview.className = "settings-picker-preview settings-theme-preview";
+    preview.className = "settings-clock-preview settings-theme-preview";
     preview.setAttribute("aria-hidden", "true");
     preview.style.background = `linear-gradient(135deg, ${colors[0]} 0 42%, ${colors[1]} 42% 72%, ${colors[2]} 72% 100%)`;
     if (value === "material-you") preview.style.background = defaultMaterialPreview;
     return preview;
-  });
+  };
+
+  setupVisualPicker("themeSelect", createThemePreview);
 
   setupVisualPicker("searchBarLayoutSelect", (option) => {
     const preview = document.createElement("span");
-    preview.className = `settings-picker-preview settings-searchbar-preview settings-searchbar-preview-${option.dataset.value}`;
+    preview.className = `settings-clock-preview settings-searchbar-preview settings-searchbar-preview-${option.dataset.value}`;
     preview.setAttribute("aria-hidden", "true");
     preview.innerHTML = '<span></span><span></span><span></span>';
     return preview;
   });
 
   const providerPicker = document.getElementById("suggestProviderSelect");
-  if (providerPicker && !providerPicker.previousElementSibling?.classList.contains("settings-picker-label-block")) {
-    const providerLabel = document.createElement("div");
-    providerLabel.className = "settings-picker-label-block";
-    providerLabel.textContent = "Suggestion Provider";
-    providerPicker.parentNode.insertBefore(providerLabel, providerPicker);
+  if (providerPicker) {
+    providerPicker.dataset.label = "Suggestion Provider";
+    if (!providerPicker.previousElementSibling?.classList.contains("settings-picker-label-block")) {
+      const providerLabel = document.createElement("div");
+      providerLabel.className = "settings-picker-label-block";
+      providerLabel.textContent = "Suggestion Provider";
+      providerPicker.parentNode.insertBefore(providerLabel, providerPicker);
+    }
   }
 
   setupVisualPicker("suggestProviderSelect", (option) => {
@@ -242,7 +248,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const name = value === "auto" ? "Browser Default" : value;
     const engine = searchEngines.find((item) => item.name === name);
     const preview = document.createElement("span");
-    preview.className = "settings-picker-preview settings-provider-preview";
+    preview.className = "settings-clock-preview settings-provider-preview";
     preview.setAttribute("aria-hidden", "true");
     preview.innerHTML = engine?.icon || '<span class="icon-mask icon-search"></span>';
     return preview;
