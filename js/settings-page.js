@@ -2,6 +2,7 @@ import "./main.js";
 import { store } from "./store.js";
 import { renderLinkManager } from "./links.js";
 import { initSettingsPageSearch } from "./settings-search.js";
+import { searchEngines } from "./search.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const pageStyles = document.querySelector('link[href^="css/settings-page.css"]');
@@ -9,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
-  controlStyles.href = "css/settings-controls.css?v=3";
+  controlStyles.href = "css/settings-controls.css?v=4";
   document.head.appendChild(controlStyles);
 
   document.documentElement.classList.add("settings-page");
@@ -124,9 +125,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const updateThemePreview = (settings = store.getState().settings || {}) => {
     const select = document.getElementById("themeSelect");
-    const trigger = select?.querySelector(".select-trigger");
     const materialOption = select?.querySelector('.select-option[data-value="material-you"]');
-    if (!select || !trigger || !materialOption) return;
+    if (!select || !materialOption) return;
 
     const palette = settings.materialYouPalette;
     const colors = palette
@@ -137,16 +137,116 @@ document.addEventListener("DOMContentLoaded", async () => {
       : defaultMaterialPreview;
 
     materialOption.style.setProperty("--theme-preview", materialPreview);
-
-    const selectedValue = select.dataset.value || "dark";
-    const selectedOption = select.querySelector(`.select-option[data-value="${CSS.escape(selectedValue)}"]`);
-    const selectedPreview = selectedOption
-      ? getComputedStyle(selectedOption).getPropertyValue("--theme-preview").trim()
-      : "";
-
-    if (selectedPreview) trigger.style.setProperty("--theme-preview", selectedPreview);
-    else trigger.style.removeProperty("--theme-preview");
+    const materialPreviewEl = materialOption.querySelector(".settings-theme-preview");
+    if (materialPreviewEl) materialPreviewEl.style.background = materialPreview;
   };
+
+  const themePreviewColors = {
+    dark: ["#000000", "#141418", "#00aaff"],
+    amoled: ["#000000", "#000000", "#ffffff"],
+    light: ["#f2f2f7", "#ffffff", "#007aff"],
+    "material-you": ["#ff6b6b", "#06d6a0", "#118ab2"],
+    cyberpunk: ["#050505", "#121212", "#f0e600"],
+    sunset: ["#2d1b2e", "#442646", "#ef476f"],
+    forest: ["#1a2f1a", "#2d4c2d", "#c3e6c3"],
+    paper: ["#f9f7f2", "#ffffff", "#222222"],
+    luminous: ["#0f172a", "#1e293b", "#38bdf8"],
+    nord: ["#2e3440", "#3b4252", "#88c0d0"],
+    dracula: ["#282a36", "#44475a", "#bd93f9"],
+    retro: ["#0d0202", "#1a0505", "#ffb000"],
+    rose: ["#191724", "#1f1d2e", "#ebbcba"],
+    "night-glow": ["#000000", "#0a0a0a", "#ffffff"],
+    heatwave: ["#1f0a00", "#2d0f02", "#ff4500"],
+    slate: ["#1a1a1a", "#252525", "#ffd700"],
+    "toxic-tide": ["#041614", "#09201d", "#2fbfa2"],
+    "evergreen-archive": ["#1a2416", "#253321", "#d9c588"],
+  };
+
+  const setupVisualPicker = (selectId, previewBuilder, labelClass = "settings-picker-label") => {
+    const picker = document.getElementById(selectId);
+    if (!picker) return;
+
+    picker.classList.add("settings-visual-picker");
+    picker.querySelector(".select-trigger")?.setAttribute("aria-hidden", "true");
+    const dropdown = picker.querySelector(".select-dropdown");
+    dropdown?.classList.remove("hidden");
+
+    const options = Array.from(picker.querySelectorAll(".select-option"));
+    options.forEach((option) => {
+      const label = option.textContent.trim();
+      if (!option.querySelector(".settings-picker-preview")) {
+        const preview = previewBuilder(option, label);
+        const labelEl = document.createElement("span");
+        labelEl.className = labelClass;
+        labelEl.textContent = label;
+        option.replaceChildren(preview, labelEl);
+      }
+      option.setAttribute("role", "radio");
+      option.setAttribute("tabindex", "0");
+      option.setAttribute("aria-label", label);
+      option.addEventListener("click", () => {
+        options.forEach((item) => item.setAttribute("aria-checked", item === option ? "true" : "false"));
+      });
+      option.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          option.click();
+          return;
+        }
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+        event.preventDefault();
+        const index = options.indexOf(option);
+        const next = event.key === "ArrowRight" ? Math.min(options.length - 1, index + 1) : Math.max(0, index - 1);
+        options[next]?.focus();
+        options[next]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      });
+    });
+
+    const syncSelection = () => {
+      const value = picker.dataset.value;
+      options.forEach((option) => option.setAttribute("aria-checked", option.dataset.value === value ? "true" : "false"));
+    };
+    picker.addEventListener("change", syncSelection);
+    syncSelection();
+  };
+
+  setupVisualPicker("themeSelect", (option) => {
+    const value = option.dataset.value || "dark";
+    const colors = themePreviewColors[value] || themePreviewColors.dark;
+    const preview = document.createElement("span");
+    preview.className = "settings-picker-preview settings-theme-preview";
+    preview.setAttribute("aria-hidden", "true");
+    preview.style.background = `linear-gradient(135deg, ${colors[0]} 0 42%, ${colors[1]} 42% 72%, ${colors[2]} 72% 100%)`;
+    if (value === "material-you") preview.style.background = defaultMaterialPreview;
+    return preview;
+  });
+
+  setupVisualPicker("searchBarLayoutSelect", (option) => {
+    const preview = document.createElement("span");
+    preview.className = `settings-picker-preview settings-searchbar-preview settings-searchbar-preview-${option.dataset.value}`;
+    preview.setAttribute("aria-hidden", "true");
+    preview.innerHTML = '<span></span><span></span><span></span>';
+    return preview;
+  });
+
+  const providerPicker = document.getElementById("suggestProviderSelect");
+  if (providerPicker && !providerPicker.previousElementSibling?.classList.contains("settings-picker-label-block")) {
+    const providerLabel = document.createElement("div");
+    providerLabel.className = "settings-picker-label-block";
+    providerLabel.textContent = "Suggestion Provider";
+    providerPicker.parentNode.insertBefore(providerLabel, providerPicker);
+  }
+
+  setupVisualPicker("suggestProviderSelect", (option) => {
+    const value = option.dataset.value;
+    const name = value === "auto" ? "Browser Default" : value;
+    const engine = searchEngines.find((item) => item.name === name);
+    const preview = document.createElement("span");
+    preview.className = "settings-picker-preview settings-provider-preview";
+    preview.setAttribute("aria-hidden", "true");
+    preview.innerHTML = engine?.icon || '<span class="icon-mask icon-search"></span>';
+    return preview;
+  });
 
   const themeSelect = document.getElementById("themeSelect");
   themeSelect?.addEventListener("change", () => updateThemePreview());
