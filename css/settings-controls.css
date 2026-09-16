@@ -5,6 +5,7 @@
 #themeSelect .select-trigger .selected-text { flex:1; }
 #themeSelect .select-trigger .select-arrow { flex:0 0 auto; }
 
+/* Clock Style is the canonical visual-picker presentation. */
 #clockStyleSelect.clock-style-picker .select-option { flex-direction:column; align-items:center; justify-content:space-between; gap:5px; padding:11px 8px 9px; }
 #clockStyleSelect.clock-style-picker .select-option::before { content:none; }
 #clockStyleSelect.clock-style-picker .settings-clock-preview { display:block; width:auto; margin:0; color:var(--text); font-size:1.1rem; line-height:1; white-space:nowrap; transition:color .16s ease,opacity .16s ease,filter .16s ease; }
@@ -14,6 +15,39 @@
 #clockStyleSelect.clock-style-picker .select-option.selected .settings-clock-preview { color:var(--accent); }
 #themeSelect .select-option[data-value="material-you"]::before,
 #themeSelect .select-trigger[data-material-you-preview="default"]::before { background:var(--theme-preview,linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)); }
+
+/* Visual settings use the exact same geometry and scrolling as Clock Style. */
+.settings-page-shell .clock-style-picker,
+.settings-page-shell .clock-style-picker .select-dropdown {
+  width:100%; min-width:0; max-width:100%; overflow:hidden;
+}
+.settings-page-shell .clock-style-picker .select-trigger { display:none; }
+.settings-page-shell .clock-style-picker .select-dropdown,
+.settings-page-shell .clock-style-picker .select-dropdown.hidden {
+  position:static; display:flex !important; flex-direction:row; align-items:stretch; gap:8px; width:100%; max-height:none; overflow-x:auto; overflow-y:hidden; visibility:visible; opacity:1; padding:3px 2px 10px; background:transparent; border:0; border-radius:0; box-shadow:none; scrollbar-width:thin;
+}
+.settings-page-shell .clock-style-picker .select-option {
+  position:relative; flex:0 0 132px; height:76px; min-height:76px; padding:0 8px 9px; display:flex; align-items:flex-end; justify-content:center; background:var(--card); color:var(--dim); border:1px solid var(--border); border-radius:min(var(--radius),11px); font-size:.7rem; box-sizing:border-box; box-shadow:var(--shadow-sm); cursor:pointer;
+}
+.settings-page-shell .clock-style-picker .select-option::before { content:none; }
+.settings-page-shell .clock-style-picker .select-option:hover,
+.settings-page-shell .clock-style-picker .select-option[aria-checked="true"],
+.settings-page-shell .clock-style-picker .select-option.selected { border-color:var(--accent); background:var(--card-hover); color:var(--accent); }
+.settings-page-shell .clock-style-picker .select-option:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.settings-page-shell .clock-style-picker .settings-clock-preview { display:block; width:auto; margin:0; color:var(--text); line-height:1; overflow:hidden; }
+.settings-page-shell .clock-style-picker .settings-clock-label { display:block; max-width:100%; overflow:hidden; color:inherit; font-size:.7rem; line-height:1.15; text-align:center; text-overflow:ellipsis; white-space:nowrap; }
+
+.settings-page-shell .clock-style-picker .settings-theme-preview { width:100%; height:24px; flex:0 0 24px; border:1px solid rgba(255,255,255,.12); border-radius:6px; }
+.settings-page-shell .clock-style-picker .settings-searchbar-preview { position:relative; width:100%; height:28px; flex:0 0 28px; gap:3px; padding:7px 6px; background:var(--card-hover); border:1px solid var(--border); border-radius:6px; box-sizing:border-box; }
+.settings-page-shell .clock-style-picker .settings-searchbar-preview span { display:block; height:5px; border-radius:999px; background:var(--accent); opacity:.9; }
+.settings-page-shell .clock-style-picker .settings-searchbar-preview-unified span:first-child { width:88%; }
+.settings-page-shell .clock-style-picker .settings-searchbar-preview-unified span:nth-child(2),
+.settings-page-shell .clock-style-picker .settings-searchbar-preview-unified span:nth-child(3) { display:none; }
+.settings-page-shell .clock-style-picker .settings-searchbar-preview-segmented { flex-direction:row; }
+.settings-page-shell .clock-style-picker .settings-searchbar-preview-segmented span { flex:1; min-width:0; }
+.settings-page-shell .clock-style-picker .settings-provider-preview { width:58px; height:58px; min-width:58px; min-height:58px; font-size:1.1rem; }
+.settings-page-shell .clock-style-picker .settings-provider-preview .icon-mask { width:36px; height:36px; }
+.settings-page-shell .settings-picker-label-block { margin:2px 0 -2px; color:var(--text); font-size:.82rem; font-weight:600; }
 
 .settings-page-shell .radio-row .radio-option,
 .settings-page-shell button:not(.help-btn),
@@ -106,3 +140,126 @@ html.settings-page.settings-desktop-context .mobile-only-setting { display:none 
   html.settings-page.settings-desktop-context .setting-row-input { grid-template-columns:minmax(0,1fr) auto; gap:18px; }
   html.settings-page.settings-desktop-context .setting-copy { min-width:0; }
 }
+
+/* Visual pickers with explanatory copy use the same stacked setting pattern. */
+.settings-page-shell .setting-row:has(> #themeSelect),
+.settings-page-shell .setting-row:has(> #searchBarLayoutSelect) {
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:10px;
+}
+
+/* Theme names need their full label instead of the generic one-line truncation. */
+.settings-page-shell #themeSelect .settings-clock-label {
+  overflow:visible;
+  text-overflow:clip;
+  white-space:normal;
+  line-height:1.15;
+  min-height:2.3em;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* One cohesive theme preview, with no leftover custom-select swatch. */
+.settings-page-shell #themeSelect .select-option::before,
+.settings-page-shell #themeSelect .select-option::after { content:none !important; }
+.settings-page-shell #themeSelect .settings-theme-preview {
+  width:100%;
+  height:30px;
+  flex:0 0 30px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:6px;
+}
+
+/* The search-style cards show a miniature of the real search-bar structure. */
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview {
+  display:flex;
+  align-items:center;
+  width:100%;
+  height:30px;
+  flex:0 0 30px;
+  gap:0;
+  padding:0;
+  background:var(--card-hover);
+  border:1px solid var(--border);
+  border-radius:7px;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview::before {
+  content:"⌕";
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:17px;
+  flex:0 0 17px;
+  color:var(--accent);
+  font-size:13px;
+  line-height:1;
+}
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview::after {
+  content:"⌕";
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:17px;
+  flex:0 0 17px;
+  color:var(--accent);
+  font-size:13px;
+  line-height:1;
+}
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview span {
+  height:6px;
+  flex:1;
+  min-width:0;
+  margin:0;
+  border-radius:999px;
+  background:var(--dim);
+  opacity:.65;
+}
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(2),
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(3) { display:none; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified::after { content:"↵"; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented {
+  gap:3px;
+  background:transparent;
+  border:0;
+  overflow:visible;
+}
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span {
+  height:30px;
+  background:var(--card-hover);
+  border:1px solid var(--border);
+  box-sizing:border-box;
+}
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::before,
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::after { background:var(--card-hover); border:1px solid var(--border); border-radius:7px; box-sizing:border-box; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::before { content:"⌕"; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::after { content:"↵"; }
+
+/* Search Bar Style: a compact, faithful rendering of the dashboard search bar. */
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview { display:flex; align-items:stretch; justify-content:stretch; gap:0; width:100%; height:30px; flex:0 0 30px; padding:0; overflow:hidden; background:var(--card-hover); border:1px solid var(--border); border-radius:7px; box-sizing:border-box; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview span { position:relative; display:flex; align-items:center; justify-content:center; flex:0 0 auto; height:100%; margin:0; padding:0; border-radius:0; background:transparent; opacity:1; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified { border-radius:7px; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(1) { width:24px; border-right:1px solid var(--border); }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(1)::before { content:"G"; color:var(--text); font-size:9px; font-weight:700; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(2) { display:flex !important; flex:1 1 auto; width:auto; min-width:0; justify-content:flex-start; padding-left:6px; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(2)::before { content:"Search or Type URL..."; color:var(--dim); font-size:6px; white-space:nowrap; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(3) { display:flex !important; width:24px; border-left:1px solid var(--border); }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(3)::before { content:"⌕"; color:var(--accent); font-size:11px; line-height:1; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified::before,
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified::after { content:none; }
+
+/* Segmented mirrors .search-bar.segmented: three independent floating pieces. */
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented { display:flex; align-items:stretch; gap:3px; background:transparent; border:0; border-radius:0; overflow:visible; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span { display:flex; height:30px; background:var(--card-hover); border:1px solid var(--border); border-radius:7px; box-sizing:border-box; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(1) { width:27px; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(1)::before { content:"G"; color:var(--text); font-size:9px; font-weight:700; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(2) { display:flex; flex:1 1 auto; width:auto; min-width:0; justify-content:flex-start; padding-left:6px; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(2)::before { content:"Search or Type URL..."; color:var(--dim); font-size:6px; white-space:nowrap; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(3) { width:27px; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span:nth-child(3)::before { content:"⌕"; color:var(--accent); font-size:11px; line-height:1; }
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::before,
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::after { content:none; }
