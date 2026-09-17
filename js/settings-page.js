@@ -5,7 +5,9 @@ import { initSettingsPageSearch } from "./settings-search.js";
 import { searchEngines } from "./search.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const pageStyles = document.querySelector('link[href^="css/settings-page.css"]');
+  const pageStyles = document.querySelector(
+    'link[href^="css/settings-page.css"]',
+  );
   if (pageStyles) pageStyles.href = "css/settings-page.css?v=6";
 
   const controlStyles = document.createElement("link");
@@ -17,10 +19,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const isMobileDevice =
     navigator.userAgentData?.mobile === true ||
-    /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent,
+    ) ||
     (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
-  document.documentElement.classList.toggle("settings-mobile-context", isMobileDevice);
-  document.documentElement.classList.toggle("settings-desktop-context", !isMobileDevice);
+  document.documentElement.classList.toggle(
+    "settings-mobile-context",
+    isMobileDevice,
+  );
+  document.documentElement.classList.toggle(
+    "settings-desktop-context",
+    !isMobileDevice,
+  );
 
   const footer = document.querySelector(".settings-page-footer");
   if (footer) {
@@ -42,7 +52,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   scrollAnchor.id = "settingsModalScrollAnchor";
   scrollAnchor.className = "settings-modal-scroll-anchor hidden";
   scrollAnchor.setAttribute("aria-label", "Return upward");
-  scrollAnchor.innerHTML = '<span class="icon-mask icon-arrow-up" aria-hidden="true"></span>';
+  scrollAnchor.innerHTML =
+    '<span class="icon-mask icon-arrow-up" aria-hidden="true"></span>';
   document.body.appendChild(scrollAnchor);
 
   const scrollAnchorStyle = document.createElement("style");
@@ -80,7 +91,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const updateSettingsScrollAnchor = () => {
     scrollAnchor.classList.toggle("hidden", window.scrollY <= 360);
   };
-  window.addEventListener("scroll", updateSettingsScrollAnchor, { passive: true });
+  window.addEventListener("scroll", updateSettingsScrollAnchor, {
+    passive: true,
+  });
   scrollAnchor.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
@@ -102,7 +115,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const updateFromHash = () => {
     const id = window.location.hash.slice(1);
-    setActiveSection(id && sections.some((section) => section.id === id) ? id : sections[0].id);
+    setActiveSection(
+      id && sections.some((section) => section.id === id) ? id : sections[0].id,
+    );
   };
 
   navLinks.forEach((link) => {
@@ -114,30 +129,43 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const observer = new IntersectionObserver(
     (entries) => {
-      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
       if (visible) setActiveSection(visible.target.id);
     },
     { rootMargin: "-96px 0px -55% 0px", threshold: [0.05, 0.2, 0.5] },
   );
   sections.forEach((section) => observer.observe(section));
 
-  const defaultMaterialPreview = "linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)";
+  const defaultMaterialPreview =
+    "linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)";
 
   const updateThemePreview = (settings = store.getState().settings || {}) => {
     const select = document.getElementById("themeSelect");
-    const materialOption = select?.querySelector('.select-option[data-value="material-you"]');
+    const materialOption = select?.querySelector(
+      '.select-option[data-value="material-you"]',
+    );
     if (!select || !materialOption) return;
 
     const palette = settings.materialYouPalette;
     const colors = palette
-      ? [palette["--bg"], palette["--card"], palette["--card-hover"], palette["--accent"]].filter(Boolean)
+      ? [
+          palette["--bg"],
+          palette["--card"],
+          palette["--card-hover"],
+          palette["--accent"],
+        ].filter(Boolean)
       : [];
-    const materialPreview = colors.length && settings.backgroundImage === "indexeddb"
-      ? `linear-gradient(135deg, ${colors.join(", ")})`
-      : defaultMaterialPreview;
+    const materialPreview =
+      colors.length && settings.backgroundImage === "indexeddb"
+        ? `linear-gradient(135deg, ${colors.join(", ")})`
+        : defaultMaterialPreview;
 
     materialOption.style.setProperty("--theme-preview", materialPreview);
-    const materialPreviewEl = materialOption.querySelector(".settings-theme-preview");
+    const materialPreviewEl = materialOption.querySelector(
+      ".settings-theme-preview",
+    );
     if (materialPreviewEl) materialPreviewEl.style.background = materialPreview;
   };
 
@@ -168,8 +196,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     picker.classList.add("clock-style-picker");
     picker.setAttribute("role", "radiogroup");
-    picker.setAttribute("aria-label", picker.dataset.label || "Settings option");
-    picker.querySelector(".select-trigger")?.setAttribute("aria-hidden", "true");
+    picker.setAttribute(
+      "aria-label",
+      picker.dataset.label || "Settings option",
+    );
+    picker
+      .querySelector(".select-trigger")
+      ?.setAttribute("aria-hidden", "true");
 
     const dropdown = picker.querySelector(".select-dropdown");
     dropdown?.classList.remove("hidden");
@@ -186,7 +219,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       option.setAttribute("tabindex", "0");
       option.setAttribute("aria-label", label);
       option.addEventListener("click", () => {
-        options.forEach((item) => item.setAttribute("aria-checked", item === option ? "true" : "false"));
+        options.forEach((item) =>
+          item.setAttribute("aria-checked", item === option ? "true" : "false"),
+        );
       });
       option.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -197,15 +232,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
         event.preventDefault();
         const index = options.indexOf(option);
-        const next = event.key === "ArrowRight" ? Math.min(options.length - 1, index + 1) : Math.max(0, index - 1);
+        const next =
+          event.key === "ArrowRight"
+            ? Math.min(options.length - 1, index + 1)
+            : Math.max(0, index - 1);
         options[next]?.focus();
-        options[next]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        options[next]?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
       });
     });
 
     const syncSelection = () => {
       const value = picker.dataset.value;
-      options.forEach((option) => option.setAttribute("aria-checked", option.dataset.value === value ? "true" : "false"));
+      options.forEach((option) =>
+        option.setAttribute(
+          "aria-checked",
+          option.dataset.value === value ? "true" : "false",
+        ),
+      );
     };
     picker.addEventListener("change", syncSelection);
     syncSelection();
@@ -218,7 +265,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     preview.className = "settings-clock-preview settings-theme-preview";
     preview.setAttribute("aria-hidden", "true");
     preview.style.background = `linear-gradient(135deg, ${colors[0]} 0 42%, ${colors[1]} 42% 72%, ${colors[2]} 72% 100%)`;
-    if (value === "material-you") preview.style.background = defaultMaterialPreview;
+    if (value === "material-you")
+      preview.style.background = defaultMaterialPreview;
     return preview;
   };
 
@@ -240,7 +288,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const providerPicker = document.getElementById("suggestProviderSelect");
   if (providerPicker) {
     providerPicker.dataset.label = "Suggestion Provider";
-    if (!providerPicker.previousElementSibling?.classList.contains("settings-picker-label-block")) {
+    if (
+      !providerPicker.previousElementSibling?.classList.contains(
+        "settings-picker-label-block",
+      )
+    ) {
       const providerLabel = document.createElement("div");
       providerLabel.className = "settings-picker-label-block";
       providerLabel.textContent = "Suggestion Provider";
@@ -255,7 +307,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const preview = document.createElement("span");
     preview.className = "settings-clock-preview settings-provider-preview";
     preview.setAttribute("aria-hidden", "true");
-    preview.innerHTML = engine?.icon || '<span class="icon-mask icon-search"></span>';
+    preview.innerHTML =
+      engine?.icon || '<span class="icon-mask icon-search"></span>';
     return preview;
   });
 
@@ -283,7 +336,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     return `${showSeconds ? `${hours}:${minutes}:${seconds}` : `${hours}:${minutes}`}${suffix}`;
   };
 
-  const updateClockStylePreviews = (settings = store.getState().settings || {}) => {
+  const updateClockStylePreviews = (
+    settings = store.getState().settings || {},
+  ) => {
     if (!clockPreviewOptions.length) return;
     const time = formatPreviewTime(new Date(), settings);
     clockPreviewOptions.forEach(({ preview }) => {
@@ -316,7 +371,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       option.setAttribute("tabindex", "0");
       option.setAttribute("aria-label", label);
       option.addEventListener("click", () => {
-        options.forEach((item) => item.setAttribute("aria-checked", item === option ? "true" : "false"));
+        options.forEach((item) =>
+          item.setAttribute("aria-checked", item === option ? "true" : "false"),
+        );
       });
       option.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -327,9 +384,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
         event.preventDefault();
         const index = options.indexOf(option);
-        const next = event.key === "ArrowRight" ? Math.min(options.length - 1, index + 1) : Math.max(0, index - 1);
+        const next =
+          event.key === "ArrowRight"
+            ? Math.min(options.length - 1, index + 1)
+            : Math.max(0, index - 1);
         options[next]?.focus();
-        options[next]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        options[next]?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
       });
 
       return { preview };
@@ -337,7 +401,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const syncClockSelection = () => {
       const value = clockPicker.dataset.value;
-      options.forEach((option) => option.setAttribute("aria-checked", option.dataset.value === value ? "true" : "false"));
+      options.forEach((option) =>
+        option.setAttribute(
+          "aria-checked",
+          option.dataset.value === value ? "true" : "false",
+        ),
+      );
     };
 
     clockPicker.addEventListener("change", syncClockSelection);
@@ -352,11 +421,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       updateThemePreview(currentState.settings || {});
       updateClockStylePreviews(currentState.settings || {});
     }
-    if (prevState.links !== currentState.links ||
-        prevState.isSelectionMode !== currentState.isSelectionMode ||
-        prevState.selectedLinkIds !== currentState.selectedLinkIds ||
-        prevState.activeFolderId !== currentState.activeFolderId ||
-        prevState.expandedFolderIds !== currentState.expandedFolderIds) {
+    if (
+      prevState.links !== currentState.links ||
+      prevState.isSelectionMode !== currentState.isSelectionMode ||
+      prevState.selectedLinkIds !== currentState.selectedLinkIds ||
+      prevState.activeFolderId !== currentState.activeFolderId ||
+      prevState.expandedFolderIds !== currentState.expandedFolderIds
+    ) {
       renderLinkManager();
     }
   });

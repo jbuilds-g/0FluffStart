@@ -732,7 +732,8 @@ function bindStaticEvents() {
   if (clockFormatToggle) {
     clockFormatToggle.addEventListener("change", () => {
       const label = document.getElementById("clockFormatValue");
-      if (label) label.textContent = clockFormatToggle.checked ? "12-Hour" : "24-Hour";
+      if (label)
+        label.textContent = clockFormatToggle.checked ? "12-Hour" : "24-Hour";
       autoSaveSettings();
     });
   }
