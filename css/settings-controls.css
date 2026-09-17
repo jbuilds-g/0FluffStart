@@ -342,3 +342,42 @@ html.settings-page.settings-desktop-context .mobile-only-setting { display:none 
     width:25px;
   }
 }
+
+/* Compact binary controls: avoid stretching simple settings into full-width cards. */
+.settings-page-shell .clock-format-toggle {
+  width:auto;
+  min-width:170px;
+  max-width:220px;
+  flex:0 0 auto;
+  justify-content:space-between;
+  gap:14px;
+  margin:0;
+  padding:8px 10px;
+  box-sizing:border-box;
+  white-space:nowrap;
+}
+
+.settings-page-shell .clock-format-toggle input[type="checkbox"] {
+  flex:0 0 auto;
+}
+
+.settings-page-shell .bg-radio-row {
+  width:auto;
+  height:36px;
+}
+
+.settings-page-shell .bg-radio-row .bg-option-label {
+  flex:0 0 auto;
+  width:auto;
+  min-width:150px;
+}
+
+.settings-page-shell .bg-radio-row .reset-bg-btn {
+  flex:0 0 36px;
+  width:36px;
+  min-width:36px;
+  max-width:36px;
+  height:36px;
+  padding:0;
+  justify-content:center;
+}
