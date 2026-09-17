@@ -728,9 +728,14 @@ function bindStaticEvents() {
   if (historyEnabledToggle)
     historyEnabledToggle.addEventListener("change", () => autoSaveSettings());
 
-  document.querySelectorAll(".clock-radio").forEach((radio) => {
-    radio.addEventListener("change", () => autoSaveSettings());
-  });
+  const clockFormatToggle = document.getElementById("clockFormatToggle");
+  if (clockFormatToggle) {
+    clockFormatToggle.addEventListener("change", () => {
+      const label = document.getElementById("clockFormatValue");
+      if (label) label.textContent = clockFormatToggle.checked ? "12-Hour" : "24-Hour";
+      autoSaveSettings();
+    });
+  }
 
   const showSecondsToggle = document.getElementById("showSecondsToggle");
   if (showSecondsToggle) {
