@@ -173,71 +173,156 @@ html.settings-page.settings-desktop-context .mobile-only-setting { display:none 
   border-radius:6px;
 }
 
-/* The search-style cards show a miniature of the real search-bar structure. */
+/* Search Bar Style uses fixed-size visual mockups. */
+.settings-page-shell #searchBarLayoutSelect .select-dropdown {
+  min-width:0;
+}
+
+.settings-page-shell #searchBarLayoutSelect .select-option {
+  width:132px;
+  min-width:132px;
+  max-width:132px;
+  flex:0 0 132px;
+  min-height:76px;
+  max-height:76px;
+  overflow:hidden;
+}
+
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview {
   display:flex;
   align-items:center;
+  justify-content:center;
   width:100%;
   height:30px;
   flex:0 0 30px;
-  gap:0;
+  min-width:0;
   padding:0;
-  background:var(--card-hover);
-  border:1px solid var(--border);
-  border-radius:7px;
+  margin:0;
   box-sizing:border-box;
   overflow:hidden;
+  background:transparent;
+  border:0;
 }
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview::before {
-  content:"⌕";
+
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview > span {
+  position:relative;
   display:flex;
   align-items:center;
   justify-content:center;
-  width:17px;
-  flex:0 0 17px;
-  color:var(--accent);
-  font-size:13px;
-  line-height:1;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview::after {
-  content:"⌕";
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:17px;
-  flex:0 0 17px;
-  color:var(--accent);
-  font-size:13px;
-  line-height:1;
-}
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview span {
-  height:6px;
-  flex:1;
+  flex:0 0 auto;
   min-width:0;
+  height:30px;
   margin:0;
+  padding:0;
+  box-sizing:border-box;
+  color:var(--text);
+  background:var(--card-hover);
+  border:1px solid var(--border);
+}
+
+.settings-page-shell #searchBarLayoutSelect .searchbar-mock-engine {
+  width:27px;
+  border-radius:7px 0 0 7px;
+  font-size:9px;
+  font-weight:700;
+}
+
+.settings-page-shell #searchBarLayoutSelect .searchbar-mock-input {
+  flex:1 1 auto;
+  width:auto;
+  padding:0 7px;
+  justify-content:flex-start;
+  gap:3px;
+  border-left:0;
+  border-right:0;
+}
+
+.settings-page-shell #searchBarLayoutSelect .searchbar-mock-input i {
+  display:block;
+  width:14px;
+  height:3px;
   border-radius:999px;
   background:var(--dim);
   opacity:.65;
 }
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(2),
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified span:nth-child(3) { display:none; }
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified::after { content:"↵"; }
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented {
-  gap:3px;
+
+.settings-page-shell #searchBarLayoutSelect .searchbar-mock-input i:nth-child(2) { width:22px; }
+.settings-page-shell #searchBarLayoutSelect .searchbar-mock-input i:nth-child(3) { width:11px; }
+
+.settings-page-shell #searchBarLayoutSelect .searchbar-mock-submit {
+  width:27px;
+  border-radius:0 7px 7px 0;
+}
+
+.settings-page-shell #searchBarLayoutSelect .searchbar-mock-submit .icon-mask {
+  width:11px;
+  height:11px;
+  color:var(--accent);
+}
+
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified {
+  border:1px solid var(--border);
+  border-radius:7px;
+  background:var(--card-hover);
+}
+
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified > span {
   background:transparent;
   border:0;
-  overflow:visible;
 }
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented span {
-  height:30px;
-  background:var(--card-hover);
-  border:1px solid var(--border);
-  box-sizing:border-box;
+
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified .searchbar-mock-engine {
+  border-right:1px solid var(--border);
 }
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::before,
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::after { background:var(--card-hover); border:1px solid var(--border); border-radius:7px; box-sizing:border-box; }
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::before { content:"⌕"; }
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented::after { content:"↵"; }
+
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified .searchbar-mock-submit {
+  border-left:1px solid var(--border);
+}
+
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented {
+  gap:4px;
+}
+
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented > span {
+  border-radius:7px;
+}
+
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented .searchbar-mock-input {
+  border-left:1px solid var(--border);
+  border-right:1px solid var(--border);
+}
+
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented .searchbar-mock-engine,
+.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented .searchbar-mock-submit {
+  width:27px;
+}
+
+@media (max-width:900px) {
+  .settings-page-shell #searchBarLayoutSelect .select-option {
+    width:116px;
+    min-width:116px;
+    max-width:116px;
+    flex-basis:116px;
+    min-height:72px;
+    max-height:72px;
+  }
+
+  .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview {
+    height:28px;
+    flex-basis:28px;
+  }
+
+  .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview > span {
+    height:28px;
+  }
+
+  .settings-page-shell #searchBarLayoutSelect .searchbar-mock-engine,
+  .settings-page-shell #searchBarLayoutSelect .searchbar-mock-submit,
+  .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented .searchbar-mock-engine,
+  .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented .searchbar-mock-submit {
+    width:25px;
+  }
+}
 
 /* Search Bar Style: a compact, faithful rendering of the dashboard search bar. */
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview { display:flex; align-items:stretch; justify-content:stretch; gap:0; width:100%; height:30px; flex:0 0 30px; padding:0; overflow:hidden; background:var(--card-hover); border:1px solid var(--border); border-radius:7px; box-sizing:border-box; }
