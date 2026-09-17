@@ -13,7 +13,8 @@ function openRestoreDB() {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
     request.onupgradeneeded = () => {
       const db = request.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME);
+      if (!db.objectStoreNames.contains(STORE_NAME))
+        db.createObjectStore(STORE_NAME);
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
@@ -24,7 +25,10 @@ function openRestoreDB() {
 async function readPoint() {
   const db = await openRestoreDB();
   return new Promise((resolve, reject) => {
-    const request = db.transaction(STORE_NAME, "readonly").objectStore(STORE_NAME).get(KEY);
+    const request = db
+      .transaction(STORE_NAME, "readonly")
+      .objectStore(STORE_NAME)
+      .get(KEY);
     request.onsuccess = () => resolve(request.result || null);
     request.onerror = () => reject(request.error);
   });
@@ -33,7 +37,10 @@ async function readPoint() {
 async function writePoint(point) {
   const db = await openRestoreDB();
   return new Promise((resolve, reject) => {
-    const request = db.transaction(STORE_NAME, "readwrite").objectStore(STORE_NAME).put(point, KEY);
+    const request = db
+      .transaction(STORE_NAME, "readwrite")
+      .objectStore(STORE_NAME)
+      .put(point, KEY);
     request.onsuccess = () => resolve();
     request.onerror = () => reject(request.error);
   });
@@ -42,7 +49,10 @@ async function writePoint(point) {
 async function getBackground() {
   const db = await openRestoreDB();
   return new Promise((resolve, reject) => {
-    const request = db.transaction(STORE_NAME, "readonly").objectStore(STORE_NAME).get("backgroundImage");
+    const request = db
+      .transaction(STORE_NAME, "readonly")
+      .objectStore(STORE_NAME)
+      .get("backgroundImage");
     request.onsuccess = () => resolve(request.result || null);
     request.onerror = () => reject(request.error);
   });
@@ -51,8 +61,12 @@ async function getBackground() {
 async function setBackground(background) {
   const db = await openRestoreDB();
   return new Promise((resolve, reject) => {
-    const objectStore = db.transaction(STORE_NAME, "readwrite").objectStore(STORE_NAME);
-    const request = background ? objectStore.put(background, "backgroundImage") : objectStore.delete("backgroundImage");
+    const objectStore = db
+      .transaction(STORE_NAME, "readwrite")
+      .objectStore(STORE_NAME);
+    const request = background
+      ? objectStore.put(background, "backgroundImage")
+      : objectStore.delete("backgroundImage");
     request.onsuccess = () => resolve();
     request.onerror = () => reject(request.error);
   });
@@ -60,7 +74,10 @@ async function setBackground(background) {
 
 async function captureCurrent() {
   const state = store.getState();
-  const background = state.settings?.backgroundImage === "indexeddb" ? await getBackground() : null;
+  const background =
+    state.settings?.backgroundImage === "indexeddb"
+      ? await getBackground()
+      : null;
   return {
     links: structuredClone(state.links || []),
     settings: structuredClone(state.settings || {}),
@@ -83,7 +100,8 @@ export async function restorePrevious() {
     await setBackground(point.background);
   } else {
     await setBackground(null);
-    if (settings.backgroundImage === "indexeddb") settings.backgroundImage = null;
+    if (settings.backgroundImage === "indexeddb")
+      settings.backgroundImage = null;
   }
   await store.setState({
     links: structuredClone(point.links || []),
@@ -105,7 +123,8 @@ async function updateButton(button, status) {
   if (point) {
     const savedAt = new Date(point.createdAt).toLocaleString();
     button.title = `Saved ${savedAt}`;
-    if (status) status.textContent = `Revert to your last restore point. Saved ${savedAt}.`;
+    if (status)
+      status.textContent = `Revert to your last restore point. Saved ${savedAt}.`;
   } else {
     button.title = "No restore point available yet";
     if (status) status.textContent = "No previous restore point available yet.";
@@ -125,10 +144,19 @@ function showConfirm() {
           <button type="button" class="save-btn" data-confirm>Restore Previous</button>
         </div>
       </div>`;
-    const finish = (value) => { modal.remove(); resolve(value); };
-    modal.querySelector("[data-cancel]").addEventListener("click", () => finish(false));
-    modal.querySelector("[data-confirm]").addEventListener("click", () => finish(true));
-    modal.addEventListener("click", (event) => { if (event.target === modal) finish(false); });
+    const finish = (value) => {
+      modal.remove();
+      resolve(value);
+    };
+    modal
+      .querySelector("[data-cancel]")
+      .addEventListener("click", () => finish(false));
+    modal
+      .querySelector("[data-confirm]")
+      .addEventListener("click", () => finish(true));
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) finish(false);
+    });
     document.body.appendChild(modal);
     modal.querySelector("[data-cancel]").focus();
   });
@@ -141,18 +169,25 @@ async function init() {
 
   if (resetButton) {
     let resetInProgress = false;
-    resetButton.addEventListener("click", async (event) => {
-      if (resetInProgress) return;
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      try {
-        await saveRestorePoint();
-        resetInProgress = true;
-        resetButton.click();
-      } catch (error) {
-        console.error("Failed saving restore point before factory reset:", error);
-      }
-    }, true);
+    resetButton.addEventListener(
+      "click",
+      async (event) => {
+        if (resetInProgress) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        try {
+          await saveRestorePoint();
+          resetInProgress = true;
+          resetButton.click();
+        } catch (error) {
+          console.error(
+            "Failed saving restore point before factory reset:",
+            error,
+          );
+        }
+      },
+      true,
+    );
   }
 
   if (!button) return;

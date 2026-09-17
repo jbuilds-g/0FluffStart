@@ -23,7 +23,8 @@ body.modal-open {
 }
 
 /* Material You controls their own switch geometry and spacing. */
-.radio-option:has(input[type="checkbox"]):not(:has(.manager-checkbox)) input[type="checkbox"] {
+.radio-option:has(input[type="checkbox"]):not(:has(.manager-checkbox))
+  input[type="checkbox"] {
   margin: 0 !important;
   flex-shrink: 0 !important;
 }

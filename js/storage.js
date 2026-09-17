@@ -11,15 +11,23 @@ export function openDB() {
     const req = indexedDB.open(DB_CONFIG.name, DB_CONFIG.version);
     req.onupgradeneeded = (e) => {
       const db = e.target.result;
-      if (!db.objectStoreNames.contains(DB_CONFIG.store)) db.createObjectStore(DB_CONFIG.store);
+      if (!db.objectStoreNames.contains(DB_CONFIG.store))
+        db.createObjectStore(DB_CONFIG.store);
     };
     req.onsuccess = (e) => {
       const db = e.target.result;
-      db.onclose = () => { cachedDBPromise = null; };
-      db.onerror = () => { cachedDBPromise = null; };
+      db.onclose = () => {
+        cachedDBPromise = null;
+      };
+      db.onerror = () => {
+        cachedDBPromise = null;
+      };
       resolve(db);
     };
-    req.onerror = (e) => { cachedDBPromise = null; reject(e.target.error); };
+    req.onerror = (e) => {
+      cachedDBPromise = null;
+      reject(e.target.error);
+    };
   });
   return cachedDBPromise;
 }
@@ -39,8 +47,14 @@ export async function getBgFromDB() {
   if (cachedBgData) return cachedBgData;
   const db = await openDB();
   return new Promise((resolve, reject) => {
-    const req = db.transaction(DB_CONFIG.store, "readonly").objectStore(DB_CONFIG.store).get("backgroundImage");
-    req.onsuccess = () => { cachedBgData = req.result; resolve(req.result); };
+    const req = db
+      .transaction(DB_CONFIG.store, "readonly")
+      .objectStore(DB_CONFIG.store)
+      .get("backgroundImage");
+    req.onsuccess = () => {
+      cachedBgData = req.result;
+      resolve(req.result);
+    };
     req.onerror = () => reject(req.error);
   });
 }
@@ -66,13 +80,27 @@ export async function backupData() {
         const buffer = await rawBg.arrayBuffer();
         const bytes = new Uint8Array(buffer);
         let binary = "";
-        for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
-        bgMediaData = { type: rawBg.type, name: rawBg.name || "background", base64: btoa(binary) };
+        for (let i = 0; i < bytes.byteLength; i++)
+          binary += String.fromCharCode(bytes[i]);
+        bgMediaData = {
+          type: rawBg.type,
+          name: rawBg.name || "background",
+          base64: btoa(binary),
+        };
       }
-    } catch (e) { console.warn("Failed exporting background media from DB:", e); }
+    } catch (e) {
+      console.warn("Failed exporting background media from DB:", e);
+    }
   }
-  const data = { links: links || [], settings: settings || {}, history: searchHistory || [], bgMediaData };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const data = {
+    links: links || [],
+    settings: settings || {},
+    history: searchHistory || [],
+    bgMediaData,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: "application/json",
+  });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -84,7 +112,12 @@ export async function backupData() {
 function normalizeImportedData(data) {
   return {
     links: Array.isArray(data?.links) ? data.links : [],
-    settings: data?.settings && typeof data.settings === "object" && !Array.isArray(data.settings) ? data.settings : {},
+    settings:
+      data?.settings &&
+      typeof data.settings === "object" &&
+      !Array.isArray(data.settings)
+        ? data.settings
+        : {},
     history: Array.isArray(data?.history) ? data.history : [],
     bgMediaData: data?.bgMediaData || null,
   };
@@ -102,9 +135,14 @@ function mergeLinks(currentLinks, importedLinks) {
   return merged;
 }
 
-function mergeSettings(currentSettings, importedSettings, hasImportedBackground) {
+function mergeSettings(
+  currentSettings,
+  importedSettings,
+  hasImportedBackground,
+) {
   const imported = { ...importedSettings };
-  if (!hasImportedBackground && imported.backgroundImage === "indexeddb") delete imported.backgroundImage;
+  if (!hasImportedBackground && imported.backgroundImage === "indexeddb")
+    delete imported.backgroundImage;
   return { ...(currentSettings || {}), ...imported };
 }
 
@@ -113,7 +151,11 @@ async function restoreBackground(bgMediaData, overwrite) {
     const binary = atob(bgMediaData.base64);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    await saveBgToDB(new File([bytes], bgMediaData.name || "background", { type: bgMediaData.type || "application/octet-stream" }));
+    await saveBgToDB(
+      new File([bytes], bgMediaData.name || "background", {
+        type: bgMediaData.type || "application/octet-stream",
+      }),
+    );
     return;
   }
   if (overwrite) await clearBgFromDB();
@@ -139,7 +181,10 @@ function showRestoreChoice(data) {
     const links = Array.isArray(data?.links) ? data.links : [];
     const folders = links.filter((item) => item?.isFolder).length;
     const quickLinks = links.length - folders;
-    const settingsCount = data?.settings && typeof data.settings === "object" ? Object.keys(data.settings).length : 0;
+    const settingsCount =
+      data?.settings && typeof data.settings === "object"
+        ? Object.keys(data.settings).length
+        : 0;
     const historyCount = Array.isArray(data?.history) ? data.history.length : 0;
     const modal = document.createElement("div");
     modal.className = "modal active";
@@ -158,11 +203,22 @@ function showRestoreChoice(data) {
         </div>
         <button type="button" class="secondary restore-choice-cancel">Cancel</button>
       </div>`;
-    const finish = (choice) => { modal.remove(); resolve(choice); };
-    modal.addEventListener("click", (event) => { if (event.target === modal) finish("cancel"); });
-    modal.querySelector(".restore-choice-btn-overwrite")?.addEventListener("click", () => finish("overwrite"));
-    modal.querySelector(".restore-choice-btn-merge")?.addEventListener("click", () => finish("merge"));
-    modal.querySelector(".restore-choice-cancel")?.addEventListener("click", () => finish("cancel"));
+    const finish = (choice) => {
+      modal.remove();
+      resolve(choice);
+    };
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) finish("cancel");
+    });
+    modal
+      .querySelector(".restore-choice-btn-overwrite")
+      ?.addEventListener("click", () => finish("overwrite"));
+    modal
+      .querySelector(".restore-choice-btn-merge")
+      ?.addEventListener("click", () => finish("merge"));
+    modal
+      .querySelector(".restore-choice-cancel")
+      ?.addEventListener("click", () => finish("cancel"));
     document.body.appendChild(modal);
     modal.querySelector(".restore-choice-btn-merge")?.focus();
   });
@@ -175,28 +231,46 @@ export function restoreData(e, chooseRestoreModeFn, showToastFn) {
   reader.onload = async (event) => {
     try {
       const data = normalizeImportedData(JSON.parse(event.target.result));
-      const toast = typeof showToastFn === "function" ? showToastFn : (msg) => alert(msg);
+      const toast =
+        typeof showToastFn === "function" ? showToastFn : (msg) => alert(msg);
       const mode = await showRestoreChoice(data);
       if (mode !== "overwrite" && mode !== "merge") return;
       const current = store.getState();
       const hasImportedBackground = Boolean(data.bgMediaData?.base64);
       if (mode === "overwrite") {
         const settings = { ...data.settings };
-        if (settings.backgroundImage === "indexeddb" && !hasImportedBackground) settings.backgroundImage = null;
+        if (settings.backgroundImage === "indexeddb" && !hasImportedBackground)
+          settings.backgroundImage = null;
         await restoreBackground(data.bgMediaData, true);
-        await store.setState({ links: data.links, settings, searchHistory: data.history });
+        await store.setState({
+          links: data.links,
+          settings,
+          searchHistory: data.history,
+        });
       } else {
         await restoreBackground(data.bgMediaData, false);
         await store.setState({
           links: mergeLinks(current.links, data.links),
-          settings: mergeSettings(current.settings, data.settings, hasImportedBackground),
-          searchHistory: [...new Set([...(current.searchHistory || []), ...data.history])],
+          settings: mergeSettings(
+            current.settings,
+            data.settings,
+            hasImportedBackground,
+          ),
+          searchHistory: [
+            ...new Set([...(current.searchHistory || []), ...data.history]),
+          ],
         });
       }
-      toast(mode === "overwrite" ? "Backup restored successfully" : "Backup merged successfully", "success");
+      toast(
+        mode === "overwrite"
+          ? "Backup restored successfully"
+          : "Backup merged successfully",
+        "success",
+      );
       setTimeout(() => window.location.reload(), 500);
     } catch (err) {
-      const toast = typeof showToastFn === "function" ? showToastFn : (msg) => alert(msg);
+      const toast =
+        typeof showToastFn === "function" ? showToastFn : (msg) => alert(msg);
       toast("Restore failed: " + err.message, "error");
     } finally {
       if (e.target) e.target.value = "";

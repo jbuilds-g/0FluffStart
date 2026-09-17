@@ -1,54 +1,265 @@
 /* Final control layer for the standalone settings workspace. */
 
-#themeSelect .select-trigger::before { content:""; width:30px; height:20px; flex:0 0 30px; margin-right:9px; border:1px solid var(--border); border-radius:6px; background:var(--theme-preview,var(--card-hover)); }
-#themeSelect .select-trigger { justify-content:flex-start; }
-#themeSelect .select-trigger .selected-text { flex:1; }
-#themeSelect .select-trigger .select-arrow { flex:0 0 auto; }
+#themeSelect .select-trigger::before {
+  content: "";
+  width: 30px;
+  height: 20px;
+  flex: 0 0 30px;
+  margin-right: 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--theme-preview, var(--card-hover));
+}
+#themeSelect .select-trigger {
+  justify-content: flex-start;
+}
+#themeSelect .select-trigger .selected-text {
+  flex: 1;
+}
+#themeSelect .select-trigger .select-arrow {
+  flex: 0 0 auto;
+}
 
 /* Clock Style is the canonical visual-picker presentation. */
-#clockStyleSelect.clock-style-picker .select-option { flex-direction:column; align-items:center; justify-content:space-between; gap:5px; padding:11px 8px 9px; }
-#clockStyleSelect.clock-style-picker .select-option::before { content:none; }
-#clockStyleSelect.clock-style-picker .settings-clock-preview { display:block; width:auto; margin:0; color:var(--text); font-size:1.1rem; line-height:1; white-space:nowrap; transition:color .16s ease,opacity .16s ease,filter .16s ease; }
-#clockStyleSelect.clock-style-picker .settings-clock-preview.clock-style-block { display:inline-block; width:auto; padding:4px 8px; background:var(--card-hover); border:1px solid var(--border); border-radius:6px; }
-#clockStyleSelect.clock-style-picker .settings-clock-label { display:block; max-width:100%; overflow:hidden; color:inherit; font-size:.68rem; line-height:1.15; text-overflow:ellipsis; white-space:nowrap; }
-#clockStyleSelect.clock-style-picker .select-option[aria-checked="true"] .settings-clock-preview,
-#clockStyleSelect.clock-style-picker .select-option.selected .settings-clock-preview { color:var(--accent); }
+#clockStyleSelect.clock-style-picker .select-option {
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  padding: 11px 8px 9px;
+}
+#clockStyleSelect.clock-style-picker .select-option::before {
+  content: none;
+}
+#clockStyleSelect.clock-style-picker .settings-clock-preview {
+  display: block;
+  width: auto;
+  margin: 0;
+  color: var(--text);
+  font-size: 1.1rem;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    color 0.16s ease,
+    opacity 0.16s ease,
+    filter 0.16s ease;
+}
+#clockStyleSelect.clock-style-picker .settings-clock-preview.clock-style-block {
+  display: inline-block;
+  width: auto;
+  padding: 4px 8px;
+  background: var(--card-hover);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+#clockStyleSelect.clock-style-picker .settings-clock-label {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: inherit;
+  font-size: 0.68rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#clockStyleSelect.clock-style-picker
+  .select-option[aria-checked="true"]
+  .settings-clock-preview,
+#clockStyleSelect.clock-style-picker
+  .select-option.selected
+  .settings-clock-preview {
+  color: var(--accent);
+}
 #themeSelect .select-option[data-value="material-you"]::before,
-#themeSelect .select-trigger[data-material-you-preview="default"]::before { background:var(--theme-preview,linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)); }
+#themeSelect .select-trigger[data-material-you-preview="default"]::before {
+  background: var(
+    --theme-preview,
+    linear-gradient(
+      135deg,
+      #ff6b6b 0 25%,
+      #ffd166 25% 50%,
+      #06d6a0 50% 75%,
+      #118ab2 75%
+    )
+  );
+}
 
 /* Visual settings use the exact same geometry and scrolling as Clock Style. */
 .settings-page-shell .clock-style-picker,
 .settings-page-shell .clock-style-picker .select-dropdown {
-  width:100%; min-width:0; max-width:100%; overflow:hidden;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
-.settings-page-shell .clock-style-picker .select-trigger { display:none; }
+.settings-page-shell .clock-style-picker .select-trigger {
+  display: none;
+}
 .settings-page-shell .clock-style-picker .select-dropdown,
 .settings-page-shell .clock-style-picker .select-dropdown.hidden {
-  position:static; display:flex !important; flex-direction:row; align-items:stretch; gap:8px; width:100%; max-height:none; overflow-x:auto; overflow-y:hidden; visibility:visible; opacity:1; padding:3px 2px 10px; background:transparent; border:0; border-radius:0; box-shadow:none; scrollbar-width:thin;
+  position: static;
+  display: flex !important;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  visibility: visible;
+  opacity: 1;
+  padding: 3px 2px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  scrollbar-width: thin;
 }
 .settings-page-shell .clock-style-picker .select-option {
-  position:relative; flex:0 0 132px; width:132px; height:76px; min-width:132px; min-height:76px; max-width:132px; max-height:76px; padding:9px 8px 8px; display:flex !important; flex-direction:column !important; align-items:center; justify-content:space-between; gap:5px; overflow:hidden; background:var(--card); color:var(--dim); border:1px solid var(--border); border-radius:min(var(--radius),11px); font-size:.7rem; box-sizing:border-box; box-shadow:var(--shadow-sm); cursor:pointer;
+  position: relative;
+  flex: 0 0 132px;
+  width: 132px;
+  height: 76px;
+  min-width: 132px;
+  min-height: 76px;
+  max-width: 132px;
+  max-height: 76px;
+  padding: 9px 8px 8px;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  overflow: hidden;
+  background: var(--card);
+  color: var(--dim);
+  border: 1px solid var(--border);
+  border-radius: min(var(--radius), 11px);
+  font-size: 0.7rem;
+  box-sizing: border-box;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
 }
-.settings-page-shell .clock-style-picker .select-option::before { content:none; }
+.settings-page-shell .clock-style-picker .select-option::before {
+  content: none;
+}
 .settings-page-shell .clock-style-picker .select-option:hover,
 .settings-page-shell .clock-style-picker .select-option[aria-checked="true"],
-.settings-page-shell .clock-style-picker .select-option.selected { border-color:var(--accent); background:var(--card-hover); color:var(--accent); }
-.settings-page-shell .clock-style-picker .select-option:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
-.settings-page-shell .clock-style-picker .settings-clock-preview { display:block; width:auto; margin:0; color:var(--text); line-height:1; overflow:hidden; }
-.settings-page-shell .clock-style-picker .settings-clock-label { display:flex; align-items:center; justify-content:center; align-self:stretch; max-width:100%; min-width:0; overflow:hidden; color:inherit; font-size:.7rem; line-height:1.15; text-align:center; text-overflow:ellipsis; white-space:nowrap; }
-.settings-page-shell .clock-style-picker .clock-style-bold.settings-clock-preview { font-size:.92rem; line-height:1.08; letter-spacing:-.9px; padding:2px 0; box-sizing:border-box; }
+.settings-page-shell .clock-style-picker .select-option.selected {
+  border-color: var(--accent);
+  background: var(--card-hover);
+  color: var(--accent);
+}
+.settings-page-shell .clock-style-picker .select-option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.settings-page-shell .clock-style-picker .settings-clock-preview {
+  display: block;
+  width: auto;
+  margin: 0;
+  color: var(--text);
+  line-height: 1;
+  overflow: hidden;
+}
+.settings-page-shell .clock-style-picker .settings-clock-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: 0.7rem;
+  line-height: 1.15;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.settings-page-shell
+  .clock-style-picker
+  .clock-style-bold.settings-clock-preview {
+  font-size: 0.92rem;
+  line-height: 1.08;
+  letter-spacing: -0.9px;
+  padding: 2px 0;
+  box-sizing: border-box;
+}
 
-.settings-page-shell .clock-style-picker .settings-theme-preview { display:block; width:54px !important; max-width:54px; height:30px; flex:0 0 30px; align-self:center; margin:0 auto; border:1px solid rgba(255,255,255,.12); border-radius:6px; }
-.settings-page-shell .clock-style-picker .settings-searchbar-preview { position:relative; width:100%; height:28px; flex:0 0 28px; gap:3px; padding:7px 6px; background:var(--card-hover); border:1px solid var(--border); border-radius:6px; box-sizing:border-box; }
-.settings-page-shell .clock-style-picker .settings-searchbar-preview span { display:block; height:5px; border-radius:999px; background:var(--accent); opacity:.9; }
-.settings-page-shell .clock-style-picker .settings-searchbar-preview-unified span:first-child { width:88%; }
-.settings-page-shell .clock-style-picker .settings-searchbar-preview-unified span:nth-child(2),
-.settings-page-shell .clock-style-picker .settings-searchbar-preview-unified span:nth-child(3) { display:none; }
-.settings-page-shell .clock-style-picker .settings-searchbar-preview-segmented { flex-direction:row; }
-.settings-page-shell .clock-style-picker .settings-searchbar-preview-segmented span { flex:1; min-width:0; }
-.settings-page-shell .clock-style-picker .settings-provider-preview { width:40px; height:40px; min-width:40px; min-height:40px; font-size:1rem; }
-.settings-page-shell .clock-style-picker .settings-provider-preview .icon-mask { width:28px; height:28px; }
-.settings-page-shell .settings-picker-label-block { margin:2px 0 -2px; color:var(--text); font-size:.82rem; font-weight:600; }
+.settings-page-shell .clock-style-picker .settings-theme-preview {
+  display: block;
+  width: 54px !important;
+  max-width: 54px;
+  height: 30px;
+  flex: 0 0 30px;
+  align-self: center;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+}
+.settings-page-shell .clock-style-picker .settings-searchbar-preview {
+  position: relative;
+  width: 100%;
+  height: 28px;
+  flex: 0 0 28px;
+  gap: 3px;
+  padding: 7px 6px;
+  background: var(--card-hover);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+.settings-page-shell .clock-style-picker .settings-searchbar-preview span {
+  display: block;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  opacity: 0.9;
+}
+.settings-page-shell
+  .clock-style-picker
+  .settings-searchbar-preview-unified
+  span:first-child {
+  width: 88%;
+}
+.settings-page-shell
+  .clock-style-picker
+  .settings-searchbar-preview-unified
+  span:nth-child(2),
+.settings-page-shell
+  .clock-style-picker
+  .settings-searchbar-preview-unified
+  span:nth-child(3) {
+  display: none;
+}
+.settings-page-shell .clock-style-picker .settings-searchbar-preview-segmented {
+  flex-direction: row;
+}
+.settings-page-shell
+  .clock-style-picker
+  .settings-searchbar-preview-segmented
+  span {
+  flex: 1;
+  min-width: 0;
+}
+.settings-page-shell .clock-style-picker .settings-provider-preview {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  font-size: 1rem;
+}
+.settings-page-shell .clock-style-picker .settings-provider-preview .icon-mask {
+  width: 28px;
+  height: 28px;
+}
+.settings-page-shell .settings-picker-label-block {
+  margin: 2px 0 -2px;
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
 
 .settings-page-shell .radio-row .radio-option,
 .settings-page-shell button:not(.help-btn),
@@ -58,287 +269,503 @@
 .settings-page-shell input[type="number"],
 .settings-page-shell .engine-item,
 .settings-page-shell .link-item,
-.settings-page-shell .link-editor-box { background-color:var(--card); border-color:var(--border); color:var(--text); }
+.settings-page-shell .link-editor-box {
+  background-color: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
 .settings-page-shell .radio-row .radio-option:hover,
 .settings-page-shell button:not(.help-btn):hover,
 .settings-page-shell .engine-item:hover,
-.settings-page-shell .link-item:hover { background-color:var(--card-hover); border-color:var(--accent); }
-.settings-page-shell .save-btn { background-color:var(--accent); border-color:var(--accent); color:var(--bg); }
-.settings-page-shell .save-btn:hover { background-color:var(--accent); border-color:var(--accent); color:var(--bg); }
-.settings-page-shell input[type="range"]::-webkit-slider-thumb { background:var(--accent); }
-.settings-page-shell input[type="range"]::-moz-range-thumb { background:var(--accent); }
+.settings-page-shell .link-item:hover {
+  background-color: var(--card-hover);
+  border-color: var(--accent);
+}
+.settings-page-shell .save-btn {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+.settings-page-shell .save-btn:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+.settings-page-shell input[type="range"]::-webkit-slider-thumb {
+  background: var(--accent);
+}
+.settings-page-shell input[type="range"]::-moz-range-thumb {
+  background: var(--accent);
+}
 .settings-page-shell input[type="range"]::-webkit-slider-runnable-track,
-.settings-page-shell input[type="range"]::-moz-range-track { background:var(--card-hover); }
+.settings-page-shell input[type="range"]::-moz-range-track {
+  background: var(--card-hover);
+}
 
 /* The standalone settings page is one solid viewport, not a bordered modal. */
-html.settings-page, html.settings-page body { background:var(--bg) !important; }
-html.settings-page body > .bg-image, html.settings-page body > .bg-video, html.settings-page body > #bgOverlay { display:none !important; }
-html.settings-page body { padding:0; }
-html.settings-page .settings-page-shell { width:100%; min-height:100dvh; margin:0; border:0; border-radius:0; box-shadow:none; }
+html.settings-page,
+html.settings-page body {
+  background: var(--bg) !important;
+}
+html.settings-page body > .bg-image,
+html.settings-page body > .bg-video,
+html.settings-page body > #bgOverlay {
+  display: none !important;
+}
+html.settings-page body {
+  padding: 0;
+}
+html.settings-page .settings-page-shell {
+  width: 100%;
+  min-height: 100dvh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
 
 /* Tighten the vertical rhythm. */
-.settings-page-shell .settings-page-header { margin-bottom:30px; }
-.settings-page-shell .settings-section { padding-bottom:30px; margin-bottom:30px; }
-.settings-page-shell .settings-section-heading { margin-bottom:24px; }
-.settings-page-shell .settings-subsection { margin-top:30px; }
-.settings-page-shell .setting-row { padding:14px 0; }
-.settings-page-shell .setting-row-stack { gap:10px; }
-.settings-page-shell .settings-page-footer { margin-top:30px; }
-.settings-page-shell .settings-section:last-child { padding-bottom:0; margin-bottom:0; }
+.settings-page-shell .settings-page-header {
+  margin-bottom: 30px;
+}
+.settings-page-shell .settings-section {
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+}
+.settings-page-shell .settings-section-heading {
+  margin-bottom: 24px;
+}
+.settings-page-shell .settings-subsection {
+  margin-top: 30px;
+}
+.settings-page-shell .setting-row {
+  padding: 14px 0;
+}
+.settings-page-shell .setting-row-stack {
+  gap: 10px;
+}
+.settings-page-shell .settings-page-footer {
+  margin-top: 30px;
+}
+.settings-page-shell .settings-section:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
 
 /* All checkbox controls occupy the right side of their setting row. */
-.settings-page-shell label.radio-option:has(input[type="checkbox"]) { width:100%; justify-self:stretch; display:flex; align-items:center; justify-content:space-between; gap:18px; box-sizing:border-box; }
-.settings-page-shell .settings-subgroup label.radio-option:has(input[type="checkbox"]) { width:100%; }
+.settings-page-shell label.radio-option:has(input[type="checkbox"]) {
+  width: max-content;
+  max-width: 100%;
+  justify-self: end;
+  display: flex;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  box-sizing: border-box;
+}
+.settings-page-shell label.radio-option:has(input[type="checkbox"]) > span,
+.settings-page-shell
+  label.radio-option:has(input[type="checkbox"])
+  > :not(input[type="checkbox"]) {
+  order: 1;
+}
+.settings-page-shell
+  label.radio-option:has(input[type="checkbox"])
+  > input[type="checkbox"] {
+  order: 2;
+  margin-left: 0;
+}
+.settings-page-shell
+  .settings-subgroup
+  label.radio-option:has(input[type="checkbox"]) {
+  width: max-content;
+}
 
 /* Action buttons size to their content. */
-.settings-page-shell .action-btn-row, .settings-page-shell .editor-btn-row { align-items:center; }
-.settings-page-shell .action-btn-row > button, .settings-page-shell .editor-btn-row > button { width:auto !important; flex:0 0 auto; min-width:140px; }
-.settings-page-shell .restore-point-action { display:flex; align-items:center; flex-wrap:wrap; gap:14px; }
-.settings-page-shell .restore-point-action > button { width:auto !important; flex:0 0 auto; min-width:180px; }
-.settings-page-shell .restore-point-status { margin:0; }
+.settings-page-shell .action-btn-row,
+.settings-page-shell .editor-btn-row {
+  align-items: center;
+}
+.settings-page-shell .action-btn-row > button,
+.settings-page-shell .editor-btn-row > button {
+  width: auto !important;
+  flex: 0 0 auto;
+  min-width: 140px;
+}
+.settings-page-shell .restore-point-action {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.settings-page-shell .restore-point-action > button {
+  width: auto !important;
+  flex: 0 0 auto;
+  min-width: 180px;
+}
+.settings-page-shell .restore-point-status {
+  margin: 0;
+}
 
 /* Every link/folder/search-engine editor uses the same vertical spacing model. */
 html.settings-page .settings-page-shell .link-editor-box {
-  display:grid;
-  gap:10px;
-  margin-top:8px;
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
 }
 html.settings-page .settings-page-shell .link-editor-box input[type="text"],
 html.settings-page .settings-page-shell .link-editor-box input[type="url"] {
-  display:block;
-  width:100%;
-  margin:0;
+  display: block;
+  width: 100%;
+  margin: 0;
 }
 html.settings-page .settings-page-shell .link-editor-box .editor-btn-row {
-  display:flex;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 0;
 }
-html.settings-page .settings-page-shell .link-editor-box .editor-btn-row button {
-  width:auto !important;
-  min-width:104px;
-  flex:0 0 auto;
+html.settings-page
+  .settings-page-shell
+  .link-editor-box
+  .editor-btn-row
+  button {
+  width: auto !important;
+  min-width: 104px;
+  flex: 0 0 auto;
 }
 
 /* The persistent clock picker remains horizontal and scrollable. */
 #clockStyleSelect.clock-style-picker .select-dropdown,
 #clockStyleSelect.clock-style-picker .select-dropdown.hidden {
-  position:static; display:flex !important; flex-direction:row; width:100%; max-width:100%; max-height:none; overflow-x:auto; overflow-y:hidden; visibility:visible; opacity:1; padding:3px 2px 10px; background:transparent; border:0; border-radius:0; box-shadow:none;
+  position: static;
+  display: flex !important;
+  flex-direction: row;
+  width: 100%;
+  max-width: 100%;
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  visibility: visible;
+  opacity: 1;
+  padding: 3px 2px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
-#clockStyleSelect.clock-style-picker .select-option { flex:0 0 132px; }
+#clockStyleSelect.clock-style-picker .select-option {
+  flex: 0 0 132px;
+}
 
 /* Only actual mobile contexts should expose mobile-only settings. */
-html.settings-page.settings-desktop-context .mobile-only-setting { display:none !important; }
+html.settings-page.settings-desktop-context .mobile-only-setting {
+  display: none !important;
+}
 
-@media (max-width:900px) {
-  .settings-page-shell { box-shadow:none; }
+@media (max-width: 900px) {
+  .settings-page-shell {
+    box-shadow: none;
+  }
   .settings-page-shell .action-btn-row > button,
   .settings-page-shell .editor-btn-row > button,
-  .settings-page-shell .restore-point-action > button { min-width:0; }
+  .settings-page-shell .restore-point-action > button {
+    min-width: 0;
+  }
   html.settings-page.settings-desktop-context .setting-row-control,
-  html.settings-page.settings-desktop-context .setting-row-input { grid-template-columns:minmax(0,1fr) auto; gap:18px; }
-  html.settings-page.settings-desktop-context .setting-copy { min-width:0; }
+  html.settings-page.settings-desktop-context .setting-row-input {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px;
+  }
+  html.settings-page.settings-desktop-context .setting-copy {
+    min-width: 0;
+  }
 }
 
 /* Visual pickers with explanatory copy use the same stacked setting pattern. */
 .settings-page-shell .setting-row:has(> #themeSelect),
 .settings-page-shell .setting-row:has(> #searchBarLayoutSelect) {
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  gap:10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
 }
 
 /* Theme names need their full label instead of the generic one-line truncation. */
 .settings-page-shell #themeSelect .settings-clock-label {
-  overflow:visible;
-  text-overflow:clip;
-  white-space:normal;
-  line-height:1.15;
-  min-height:2.3em;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  align-self:stretch;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  line-height: 1.15;
+  min-height: 2.3em;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  align-self: stretch;
 }
 
 /* One cohesive theme preview, with no leftover custom-select swatch. */
 .settings-page-shell #themeSelect .select-option::before,
-.settings-page-shell #themeSelect .select-option::after { content:none !important; }
+.settings-page-shell #themeSelect .select-option::after {
+  content: none !important;
+}
 .settings-page-shell #themeSelect .settings-theme-preview {
-  width:54px !important;
-  max-width:54px;
-  height:30px;
-  flex:0 0 30px;
-  align-self:center;
-  margin:0 auto;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:6px;
+  width: 54px !important;
+  max-width: 54px;
+  height: 30px;
+  flex: 0 0 30px;
+  align-self: center;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
 }
 
 /* Search Bar Style uses fixed-size visual mockups. */
 .settings-page-shell #searchBarLayoutSelect .select-dropdown {
-  min-width:0;
+  min-width: 0;
 }
 
 .settings-page-shell #searchBarLayoutSelect .select-option {
-  width:132px;
-  min-width:132px;
-  max-width:132px;
-  flex:0 0 132px;
+  width: 132px;
+  min-width: 132px;
+  max-width: 132px;
+  flex: 0 0 132px;
 }
 
 /* Search Bar Style labels wrap instead of clipping from both sides. */
 .settings-page-shell #searchBarLayoutSelect .settings-clock-label {
-  overflow:hidden;
-  text-overflow:clip;
-  white-space:normal;
-  line-height:1.15;
-  min-height:2.3em;
-  align-items:flex-end;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: normal;
+  line-height: 1.15;
+  min-height: 2.3em;
+  align-items: flex-end;
 }
 
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  height:30px;
-  flex:0 0 30px;
-  min-width:0;
-  padding:0;
-  margin:0;
-  box-sizing:border-box;
-  overflow:hidden;
-  background:transparent;
-  border:0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 30px;
+  flex: 0 0 30px;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
 }
 
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview > span {
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex:0 0 auto;
-  min-width:0;
-  height:30px;
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  color:var(--text);
-  background:var(--card-hover);
-  border:1px solid var(--border);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 0;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: var(--text);
+  background: var(--card-hover);
+  border: 1px solid var(--border);
 }
 
 .settings-page-shell #searchBarLayoutSelect .searchbar-mock-engine {
-  width:27px;
-  border-radius:7px 0 0 7px;
-  font-size:9px;
-  font-weight:700;
+  width: 27px;
+  border-radius: 7px 0 0 7px;
+  font-size: 9px;
+  font-weight: 700;
 }
 
 .settings-page-shell #searchBarLayoutSelect .searchbar-mock-input {
-  flex:1 1 auto;
-  width:auto;
-  padding:0 7px;
-  justify-content:center;
-  gap:3px;
-  border-left:0;
-  border-right:0;
+  flex: 1 1 auto;
+  width: auto;
+  padding: 0 7px;
+  justify-content: center;
+  gap: 3px;
+  border-left: 0;
+  border-right: 0;
 }
 .settings-page-shell #searchBarLayoutSelect .searchbar-mock-input::before {
-  content:"Search";
-  display:block;
-  color:var(--dim);
-  font-size:7px;
-  line-height:1;
-  white-space:nowrap;
-  opacity:.8;
+  content: "Search";
+  display: block;
+  color: var(--dim);
+  font-size: 7px;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0.8;
 }
 
 .settings-page-shell #searchBarLayoutSelect .searchbar-mock-submit {
-  width:27px;
-  border-radius:0 7px 7px 0;
+  width: 27px;
+  border-radius: 0 7px 7px 0;
 }
 
 .settings-page-shell #searchBarLayoutSelect .searchbar-mock-submit .icon-mask {
-  width:11px;
-  height:11px;
-  color:var(--accent);
+  width: 11px;
+  height: 11px;
+  color: var(--accent);
 }
 
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified {
-  border:1px solid var(--border);
-  border-radius:7px;
-  background:var(--card-hover);
+.settings-page-shell
+  #searchBarLayoutSelect
+  .settings-searchbar-preview-unified {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--card-hover);
 }
 
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified > span {
-  background:transparent;
-  border:0;
+.settings-page-shell
+  #searchBarLayoutSelect
+  .settings-searchbar-preview-unified
+  > span {
+  background: transparent;
+  border: 0;
 }
 
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified .searchbar-mock-engine {
-  border-right:1px solid var(--border);
+.settings-page-shell
+  #searchBarLayoutSelect
+  .settings-searchbar-preview-unified
+  .searchbar-mock-engine {
+  border-right: 1px solid var(--border);
 }
 
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-unified .searchbar-mock-submit {
-  border-left:1px solid var(--border);
+.settings-page-shell
+  #searchBarLayoutSelect
+  .settings-searchbar-preview-unified
+  .searchbar-mock-submit {
+  border-left: 1px solid var(--border);
 }
 
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented {
-  gap:4px;
+.settings-page-shell
+  #searchBarLayoutSelect
+  .settings-searchbar-preview-segmented {
+  gap: 4px;
 }
 
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented > span {
-  border-radius:7px;
+.settings-page-shell
+  #searchBarLayoutSelect
+  .settings-searchbar-preview-segmented
+  > span {
+  border-radius: 7px;
 }
 
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented .searchbar-mock-input {
-  border-left:1px solid var(--border);
-  border-right:1px solid var(--border);
+.settings-page-shell
+  #searchBarLayoutSelect
+  .settings-searchbar-preview-segmented
+  .searchbar-mock-input {
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented .searchbar-mock-engine,
-.settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented .searchbar-mock-submit {
-  width:27px;
+.settings-page-shell
+  #searchBarLayoutSelect
+  .settings-searchbar-preview-segmented
+  .searchbar-mock-engine,
+.settings-page-shell
+  #searchBarLayoutSelect
+  .settings-searchbar-preview-segmented
+  .searchbar-mock-submit {
+  width: 27px;
 }
 
-@media (max-width:900px) {
+@media (max-width: 900px) {
   .settings-page-shell #searchBarLayoutSelect .select-option {
-    width:116px;
-    min-width:116px;
-    max-width:116px;
-    flex-basis:116px;
-    min-height:72px;
-    max-height:72px;
+    width: 116px;
+    min-width: 116px;
+    max-width: 116px;
+    flex-basis: 116px;
+    min-height: 72px;
+    max-height: 72px;
   }
 
   .settings-page-shell .clock-style-picker .select-option {
-    flex-basis:116px;
-    width:116px;
-    min-width:116px;
-    max-width:116px;
-    height:72px;
-    min-height:72px;
-    max-height:72px;
+    flex-basis: 116px;
+    width: 116px;
+    min-width: 116px;
+    max-width: 116px;
+    height: 72px;
+    min-height: 72px;
+    max-height: 72px;
   }
 
   .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview {
-    height:28px;
-    flex-basis:28px;
+    height: 28px;
+    flex-basis: 28px;
   }
 
-  .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview > span {
-    height:28px;
+  .settings-page-shell
+    #searchBarLayoutSelect
+    .settings-searchbar-preview
+    > span {
+    height: 28px;
   }
 
   .settings-page-shell #searchBarLayoutSelect .searchbar-mock-engine,
   .settings-page-shell #searchBarLayoutSelect .searchbar-mock-submit,
-  .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented .searchbar-mock-engine,
-  .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview-segmented .searchbar-mock-submit {
-    width:25px;
+  .settings-page-shell
+    #searchBarLayoutSelect
+    .settings-searchbar-preview-segmented
+    .searchbar-mock-engine,
+  .settings-page-shell
+    #searchBarLayoutSelect
+    .settings-searchbar-preview-segmented
+    .searchbar-mock-submit {
+    width: 25px;
   }
+}
+
+/* Compact binary controls: avoid stretching simple settings into full-width cards. */
+.settings-page-shell label.clock-format-toggle:has(input[type="checkbox"]) {
+  width: max-content !important;
+  min-width: 0;
+  max-width: 100%;
+  flex: 0 0 auto;
+  justify-self: end !important;
+  display: flex;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+.settings-page-shell label.clock-format-toggle > span {
+  order: 1;
+}
+.settings-page-shell label.clock-format-toggle > input[type="checkbox"] {
+  order: 2;
+}
+
+.settings-page-shell .clock-format-toggle input[type="checkbox"] {
+  flex: 0 0 auto;
+}
+
+.settings-page-shell .bg-radio-row {
+  width: auto;
+  height: 36px;
+}
+
+.settings-page-shell .bg-radio-row .bg-option-label {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 150px;
+}
+
+.settings-page-shell .bg-radio-row .reset-bg-btn {
+  flex: 0 0 36px;
+  width: 36px;
+  min-width: 36px;
+  max-width: 36px;
+  height: 36px;
+  padding: 0;
+  justify-content: center;
 }
