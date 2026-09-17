@@ -27,7 +27,7 @@
   position:static; display:flex !important; flex-direction:row; align-items:stretch; gap:8px; width:100%; max-height:none; overflow-x:auto; overflow-y:hidden; visibility:visible; opacity:1; padding:3px 2px 10px; background:transparent; border:0; border-radius:0; box-shadow:none; scrollbar-width:thin;
 }
 .settings-page-shell .clock-style-picker .select-option {
-  position:relative; flex:0 0 132px; width:132px; height:76px; min-width:132px; min-height:76px; max-width:132px; max-height:76px; padding:9px 8px 8px; display:flex; flex-direction:column !important; align-items:center; justify-content:space-between; gap:5px; overflow:hidden; background:var(--card); color:var(--dim); border:1px solid var(--border); border-radius:min(var(--radius),11px); font-size:.7rem; box-sizing:border-box; box-shadow:var(--shadow-sm); cursor:pointer;
+  position:relative; flex:0 0 132px; width:132px; height:76px; min-width:132px; min-height:76px; max-width:132px; max-height:76px; padding:9px 8px 8px; display:flex !important; flex-direction:column !important; align-items:center; justify-content:space-between; gap:5px; overflow:hidden; background:var(--card); color:var(--dim); border:1px solid var(--border); border-radius:min(var(--radius),11px); font-size:.7rem; box-sizing:border-box; box-shadow:var(--shadow-sm); cursor:pointer;
 }
 .settings-page-shell .clock-style-picker .select-option::before { content:none; }
 .settings-page-shell .clock-style-picker .select-option:hover,
@@ -159,8 +159,9 @@ html.settings-page.settings-desktop-context .mobile-only-setting { display:none 
   line-height:1.15;
   min-height:2.3em;
   display:flex;
-  align-items:center;
+  align-items:flex-end;
   justify-content:center;
+  align-self:stretch;
 }
 
 /* One cohesive theme preview, with no leftover custom-select swatch. */
@@ -187,6 +188,16 @@ html.settings-page.settings-desktop-context .mobile-only-setting { display:none 
   min-width:132px;
   max-width:132px;
   flex:0 0 132px;
+}
+
+/* Search Bar Style labels wrap instead of clipping from both sides. */
+.settings-page-shell #searchBarLayoutSelect .settings-clock-label {
+  overflow:hidden;
+  text-overflow:clip;
+  white-space:normal;
+  line-height:1.15;
+  min-height:2.3em;
+  align-items:flex-end;
 }
 
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview {
