@@ -263,6 +263,34 @@ document.addEventListener("DOMContentLoaded", async () => {
   themeSelect?.addEventListener("change", () => updateThemePreview());
 
   const clockPicker = document.getElementById("clockStyleSelect");
+  let clockPreviewOptions = [];
+
+  const formatPreviewTime = (date, settings) => {
+    const format = settings.clockFormat || "24h";
+    const showSeconds = settings.showSeconds !== false;
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+    let suffix = "";
+
+    if (format === "12h") {
+      suffix = hours >= 12 ? " PM" : " AM";
+      hours = hours % 12 || 12;
+    } else {
+      hours = String(hours).padStart(2, "0");
+    }
+
+    return `${showSeconds ? `${hours}:${minutes}:${seconds}` : `${hours}:${minutes}`}${suffix}`;
+  };
+
+  const updateClockStylePreviews = (settings = store.getState().settings || {}) => {
+    if (!clockPreviewOptions.length) return;
+    const time = formatPreviewTime(new Date(), settings);
+    clockPreviewOptions.forEach(({ preview }) => {
+      preview.textContent = time;
+    });
+  };
+
   if (clockPicker) {
     clockPicker.classList.add("clock-style-picker");
     clockPicker.setAttribute("role", "radiogroup");
@@ -272,14 +300,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     dropdown?.classList.remove("hidden");
 
     const options = Array.from(clockPicker.querySelectorAll(".select-option"));
-
-    options.forEach((option) => {
+    clockPreviewOptions = options.map((option) => {
       const value = option.dataset.value || "default";
       const label = option.textContent.trim();
       const preview = document.createElement("span");
       preview.className = `clock clock-style-${value} settings-clock-preview`;
       preview.setAttribute("aria-hidden", "true");
-      preview.textContent = "12:34";
 
       const labelEl = document.createElement("span");
       labelEl.className = "settings-clock-label";
@@ -305,6 +331,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         options[next]?.focus();
         options[next]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
       });
+
+      return { preview };
     });
 
     const syncClockSelection = () => {
@@ -320,7 +348,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderLinkManager();
 
   store.subscribe((prevState, currentState) => {
-    if (prevState.settings !== currentState.settings) updateThemePreview(currentState.settings || {});
+    if (prevState.settings !== currentState.settings) {
+      updateThemePreview(currentState.settings || {});
+      updateClockStylePreviews(currentState.settings || {});
+    }
     if (prevState.links !== currentState.links ||
         prevState.isSelectionMode !== currentState.isSelectionMode ||
         prevState.selectedLinkIds !== currentState.selectedLinkIds ||
@@ -331,7 +362,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   updateThemePreview();
+  updateClockStylePreviews();
   window.setTimeout(updateThemePreview, 0);
+  window.setInterval(() => updateClockStylePreviews(), 1000);
   initSettingsPageSearch();
 
   const overlay = document.getElementById("bgOverlay");
