@@ -36,6 +36,7 @@
 .settings-page-shell .clock-style-picker .select-option:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 .settings-page-shell .clock-style-picker .settings-clock-preview { display:block; width:auto; margin:0; color:var(--text); line-height:1; overflow:hidden; }
 .settings-page-shell .clock-style-picker .settings-clock-label { display:block; max-width:100%; overflow:hidden; color:inherit; font-size:.7rem; line-height:1.15; text-align:center; text-overflow:ellipsis; white-space:nowrap; }
+.settings-page-shell .clock-style-picker .clock-style-bold.settings-clock-preview { font-size:1rem; letter-spacing:-1px; }
 
 .settings-page-shell .clock-style-picker .settings-theme-preview { width:100%; height:24px; flex:0 0 24px; border:1px solid rgba(255,255,255,.12); border-radius:6px; }
 .settings-page-shell .clock-style-picker .settings-searchbar-preview { position:relative; width:100%; height:28px; flex:0 0 28px; gap:3px; padding:7px 6px; background:var(--card-hover); border:1px solid var(--border); border-radius:6px; box-sizing:border-box; }
@@ -45,8 +46,8 @@
 .settings-page-shell .clock-style-picker .settings-searchbar-preview-unified span:nth-child(3) { display:none; }
 .settings-page-shell .clock-style-picker .settings-searchbar-preview-segmented { flex-direction:row; }
 .settings-page-shell .clock-style-picker .settings-searchbar-preview-segmented span { flex:1; min-width:0; }
-.settings-page-shell .clock-style-picker .settings-provider-preview { width:58px; height:58px; min-width:58px; min-height:58px; font-size:1.1rem; }
-.settings-page-shell .clock-style-picker .settings-provider-preview .icon-mask { width:36px; height:36px; }
+.settings-page-shell .clock-style-picker .settings-provider-preview { width:40px; height:40px; min-width:40px; min-height:40px; font-size:1rem; }
+.settings-page-shell .clock-style-picker .settings-provider-preview .icon-mask { width:28px; height:28px; }
 .settings-page-shell .settings-picker-label-block { margin:2px 0 -2px; color:var(--text); font-size:.82rem; font-weight:600; }
 
 .settings-page-shell .radio-row .radio-option,
@@ -233,18 +234,6 @@ html.settings-page.settings-desktop-context .mobile-only-setting { display:none 
   border-left:0;
   border-right:0;
 }
-
-.settings-page-shell #searchBarLayoutSelect .searchbar-mock-input i {
-  display:block;
-  width:14px;
-  height:3px;
-  border-radius:999px;
-  background:var(--dim);
-  opacity:.65;
-}
-
-.settings-page-shell #searchBarLayoutSelect .searchbar-mock-input i:nth-child(2) { width:22px; }
-.settings-page-shell #searchBarLayoutSelect .searchbar-mock-input i:nth-child(3) { width:11px; }
 
 .settings-page-shell #searchBarLayoutSelect .searchbar-mock-submit {
   width:27px;
