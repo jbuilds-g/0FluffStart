@@ -226,9 +226,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   setupVisualPicker("searchBarLayoutSelect", (option) => {
     const preview = document.createElement("span");
-    preview.className = `settings-clock-preview settings-searchbar-preview settings-searchbar-preview-${option.dataset.value}`;
+    const layout = option.dataset.value || "unified";
+    preview.className = `settings-clock-preview settings-searchbar-preview settings-searchbar-preview-${layout}`;
     preview.setAttribute("aria-hidden", "true");
-    preview.innerHTML = '<span></span><span></span><span></span>';
+    preview.innerHTML = `
+      <span class="searchbar-mock-engine">G</span>
+      <span class="searchbar-mock-input"><i></i><i></i><i></i></span>
+      <span class="searchbar-mock-submit"><span class="icon-mask icon-search"></span></span>
+    `;
     return preview;
   });
 
