@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     preview.setAttribute("aria-hidden", "true");
     preview.innerHTML = `
       <span class="searchbar-mock-engine">G</span>
-      <span class="searchbar-mock-input"><i></i><i></i><i></i></span>
+      <span class="searchbar-mock-input"></span>
       <span class="searchbar-mock-submit"><span class="icon-mask icon-search"></span></span>
     `;
     return preview;
