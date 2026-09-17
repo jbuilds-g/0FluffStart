@@ -87,8 +87,11 @@ html.settings-page .settings-page-shell { width:100%; min-height:100dvh; margin:
 .settings-page-shell .settings-section:last-child { padding-bottom:0; margin-bottom:0; }
 
 /* All checkbox controls occupy the right side of their setting row. */
-.settings-page-shell label.radio-option:has(input[type="checkbox"]) { width:100%; justify-self:stretch; display:flex; align-items:center; justify-content:space-between; gap:18px; box-sizing:border-box; }
-.settings-page-shell .settings-subgroup label.radio-option:has(input[type="checkbox"]) { width:100%; }
+.settings-page-shell label.radio-option:has(input[type="checkbox"]) { width:max-content; max-width:100%; justify-self:end; display:flex; flex-direction:row !important; align-items:center; justify-content:flex-start; gap:12px; box-sizing:border-box; }
+.settings-page-shell label.radio-option:has(input[type="checkbox"]) > span,
+.settings-page-shell label.radio-option:has(input[type="checkbox"]) > :not(input[type="checkbox"]) { order:1; }
+.settings-page-shell label.radio-option:has(input[type="checkbox"]) > input[type="checkbox"] { order:2; margin-left:0; }
+.settings-page-shell .settings-subgroup label.radio-option:has(input[type="checkbox"]) { width:max-content; }
 
 /* Action buttons size to their content. */
 .settings-page-shell .action-btn-row, .settings-page-shell .editor-btn-row { align-items:center; }
@@ -345,20 +348,23 @@ html.settings-page.settings-desktop-context .mobile-only-setting { display:none 
 
 /* Compact binary controls: avoid stretching simple settings into full-width cards. */
 .settings-page-shell label.clock-format-toggle:has(input[type="checkbox"]) {
-  width:100% !important;
+  width:max-content !important;
   min-width:0;
-  max-width:none;
+  max-width:100%;
   flex:0 0 auto;
-  justify-self:stretch !important;
+  justify-self:end !important;
   display:flex;
+  flex-direction:row !important;
   align-items:center;
-  justify-content:space-between;
-  gap:14px;
+  justify-content:flex-start;
+  gap:12px;
   margin:0;
-  padding:8px 10px;
+  padding:0;
   box-sizing:border-box;
   white-space:nowrap;
 }
+.settings-page-shell label.clock-format-toggle > span { order:1; }
+.settings-page-shell label.clock-format-toggle > input[type="checkbox"] { order:2; }
 
 .settings-page-shell .clock-format-toggle input[type="checkbox"] {
   flex:0 0 auto;
