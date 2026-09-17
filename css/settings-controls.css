@@ -345,10 +345,13 @@ html.settings-page.settings-desktop-context .mobile-only-setting { display:none 
 
 /* Compact binary controls: avoid stretching simple settings into full-width cards. */
 .settings-page-shell label.clock-format-toggle:has(input[type="checkbox"]) {
-  width:auto;
-  min-width:170px;
-  max-width:220px;
+  width:100% !important;
+  min-width:0;
+  max-width:none;
   flex:0 0 auto;
+  justify-self:stretch !important;
+  display:flex;
+  align-items:center;
   justify-content:space-between;
   gap:14px;
   margin:0;
