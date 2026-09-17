@@ -308,8 +308,8 @@ const SETTINGS_MAP = [
   },
   {
     key: "clockFormat",
-    name: "clockFormat",
-    type: "radio-group",
+    id: "clockFormatToggle",
+    type: "clock-format-toggle",
     defaultVal: "24h",
   },
   {
@@ -529,11 +529,9 @@ export async function autoSaveSettings(updates = null) {
       } else if (item.type === "range") {
         const el = document.getElementById(item.id);
         if (el) settingsUpdates[item.key] = parseInt(el.value, 10);
-      } else if (item.type === "radio-group") {
-        const radios = document.getElementsByName(item.name);
-        for (const r of radios) {
-          if (r.checked) settingsUpdates[item.key] = r.value;
-        }
+      } else if (item.type === "clock-format-toggle") {
+        const el = document.getElementById(item.id);
+        if (el) settingsUpdates[item.key] = el?.checked ? "12h" : "24h";
       }
     });
   }
@@ -921,11 +919,11 @@ export async function loadSettings() {
     } else if (item.type === "range") {
       const el = document.getElementById(item.id);
       if (el) el.value = val;
-    } else if (item.type === "radio-group") {
-      const radios = document.getElementsByName(item.name);
-      for (let r of radios) {
-        r.checked = r.value === val;
-      }
+    } else if (item.type === "clock-format-toggle") {
+      const el = document.getElementById(item.id);
+      if (el) el.checked = val === "12h";
+      const label = document.getElementById("clockFormatValue");
+      if (label) label.textContent = val === "12h" ? "12-Hour" : "24-Hour";
     }
   });
 
