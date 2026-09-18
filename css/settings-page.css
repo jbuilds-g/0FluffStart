@@ -507,6 +507,7 @@ body > .bg-video {
 .bg-control-row {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
 }
 .custom-file-btn {
