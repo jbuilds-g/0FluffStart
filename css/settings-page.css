@@ -872,6 +872,31 @@ body > .bg-video {
     width: 100%;
     text-align: right;
   }
+
+  .settings-page-footer {
+    margin-top: 42px;
+    padding-bottom: calc(176px + env(safe-area-inset-bottom));
+  }
+
+  .settings-page-footer .footer-row {
+    align-items: flex-start;
+  }
+
+  .settings-page-footer .footer-row-secondary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 18px;
+  }
+
+  .settings-page-footer .footer-copy,
+  .settings-page-footer .footer-link,
+  .settings-page-footer .footer-credit {
+    min-width: 0;
+  }
+
+  .settings-page-footer .footer-credit {
+    grid-column: 1 / -1;
+  }
 }
 @media (max-width: 520px) {
   .settings-page-shell {
