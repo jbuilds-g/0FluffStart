@@ -38,13 +38,6 @@ export function initCustomSelects() {
     const dropdown = cs.querySelector(".select-dropdown");
     const options = cs.querySelectorAll(".select-option");
 
-    cs.addEventListener("click", () => {
-      document
-        .querySelectorAll("#settingsModal .setting-highlight-flash")
-        .forEach((el) => {
-          el.classList.remove("setting-highlight-flash");
-        });
-    });
 
     if (trigger) {
       trigger.setAttribute("role", "combobox");
