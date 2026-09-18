@@ -171,9 +171,6 @@ body.material-you .settings-page-shell .clock-style-picker .select-dropdown.hidd
   box-shadow: none !important;
 }
 
-body.material-you .settings-page-shell #themeSelect.clock-style-picker .select-option {
-  overflow: visible;
-}
 .settings-page-shell .clock-style-picker .select-option:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
