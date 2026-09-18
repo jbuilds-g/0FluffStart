@@ -809,6 +809,8 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
 .settings-page-shell .bg-radio-row {
   width: auto;
   height: 36px;
+  margin-left: auto;
+  justify-content: flex-end;
 }
 
 .settings-page-shell .bg-radio-row .bg-option-label {
