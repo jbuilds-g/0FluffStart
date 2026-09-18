@@ -15,6 +15,7 @@ body {
   min-height: 100svh;
   padding: 16px;
   overflow-x: hidden;
+  overflow-y: auto;
   background: var(--bg);
   align-items: initial;
   z-index: 0;
