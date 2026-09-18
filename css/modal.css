@@ -25,9 +25,6 @@
   pointer-events: none;
 }
 
-#settingsModal {
-  position: fixed;
-}
 
 .modal.active {
   visibility: visible;
@@ -75,7 +72,7 @@ body.material-you .setting-group {
 /* Unify Settings Inputs, Floating Controls & Buttons */
 body.material-you .modal-header .icon-btn,
 body.material-you .header-actions .icon-btn,
-body.material-you .floating-btn,
+body.material-you .floating-btn
 body.material-you .settings-modal-scroll-anchor {
   border-radius: 9999px;
   background-color: var(--md-sys-color-surface-container-highest);
