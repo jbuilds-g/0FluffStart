@@ -809,6 +809,96 @@ body > .bg-video {
   .setting-row {
     padding: 16px 0;
   }
+
+  .setting-slider-row {
+    grid-template-columns: minmax(0, 1fr) 58px;
+    gap: 10px;
+  }
+
+  .settings-page-shell input[type="range"] {
+    min-width: 0;
+    min-height: 32px;
+  }
+
+  .settings-page-shell input[type="number"].slider-number-input {
+    min-height: 38px;
+    padding-inline: 8px;
+  }
+
+  #standardActionBtns {
+    justify-content: flex-end;
+  }
+
+  #linkManagerContent .link-manager-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  #linkManagerContent .link-manager-item > .link-name {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions .drag-handle {
+    order: 3;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions .icon-btn.secondary {
+    order: 1;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions .delete-btn {
+    order: 2;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions .icon-btn {
+    flex: 0 0 34px;
+    width: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 7px;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions .drag-handle {
+    margin-left: 2px;
+  }
+
+  #data .action-btn-row {
+    justify-content: flex-end;
+  }
+
+  #data .restore-point-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  #data .restore-point-status {
+    width: 100%;
+    text-align: right;
+  }
+
+  .mobile-only-setting .radio-option {
+    width: 100%;
+    min-width: 0;
+    justify-content: space-between;
+    justify-self: stretch;
+    box-sizing: border-box;
+    white-space: normal;
+  }
+
   #clockStyleSelect.clock-style-picker .select-option {
     flex-basis: 116px;
     height: 72px;
