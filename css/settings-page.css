@@ -81,6 +81,7 @@ body > .bg-video {
 .settings-section-nav {
   position: sticky;
   top: 30px;
+  align-self: start;
   display: grid;
   gap: 3px;
 }
@@ -753,6 +754,7 @@ body > .bg-video {
   .settings-section-nav {
     position: sticky;
     top: 0;
+    align-self: stretch;
     z-index: 30;
     display: flex;
     gap: 6px;
