@@ -547,17 +547,25 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   gap: 10px;
 }
 
-/* Theme names need their full label instead of the generic one-line truncation. */
+/* Theme previews use a compact footprint so the full label stays inside the card. */
 .settings-page-shell #themeSelect .settings-clock-label {
-  overflow: visible;
-  text-overflow: clip;
-  white-space: normal;
-  line-height: 1.15;
-  min-height: 2.3em;
   display: flex;
-  align-items: flex-end;
+  flex: 0 0 26px;
+  align-items: center;
   justify-content: center;
   align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 26px;
+  max-height: 26px;
+  overflow: hidden;
+  color: inherit;
+  font-size: 0.7rem;
+  line-height: 13px;
+  text-align: center;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 /* One cohesive theme preview, with no leftover custom-select swatch. */
@@ -566,10 +574,10 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   content: none !important;
 }
 .settings-page-shell #themeSelect .settings-theme-preview {
-  width: 54px !important;
-  max-width: 54px;
-  height: 30px;
-  flex: 0 0 30px;
+  width: 48px !important;
+  max-width: 48px;
+  height: 26px;
+  flex: 0 0 26px;
   align-self: center;
   margin: 0 auto;
   border: 1px solid rgba(255, 255, 255, 0.12);
