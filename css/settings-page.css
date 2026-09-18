@@ -507,6 +507,7 @@ body > .bg-video {
 .bg-control-row {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
 }
 .custom-file-btn {
@@ -782,11 +783,119 @@ body > .bg-video {
   }
   .setting-row-control,
   .setting-row-input {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
   }
+
   .setting-row .radio-option {
     justify-self: start;
+  }
+
+  .mobile-only-setting .radio-option {
+    width: 100%;
+    min-width: 0;
+    justify-content: space-between;
+    justify-self: stretch !important;
+    box-sizing: border-box;
+    white-space: normal;
+  }
+
+  #standardActionBtns {
+    justify-content: flex-end;
+  }
+
+  #linkManagerContent .link-manager-item {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions {
+    display: contents;
+  }
+
+  #linkManagerContent .link-manager-item > .link-name {
+    grid-column: 3;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions .icon-btn.secondary {
+    grid-column: 1;
+    grid-row: 1;
+    width: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 7px;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions .delete-btn {
+    grid-column: 2;
+    grid-row: 1;
+    width: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 7px;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions .drag-handle {
+    grid-column: 5;
+    grid-row: 1;
+    justify-self: end;
+    margin-left: 0;
+    padding-inline: 6px;
+  }
+
+  #linkManagerContent .link-manager-item > .link-actions > button:not(.delete-btn):not(.secondary),
+  #linkManagerContent .link-manager-item > .link-actions > .move-out-btn {
+    grid-column: 4;
+    grid-row: 1;
+    justify-self: end;
+    width: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 7px;
+  }
+
+  #data .action-btn-row {
+    justify-content: flex-end;
+  }
+
+  #data .restore-point-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  #data .restore-point-status {
+    width: 100%;
+    text-align: right;
+  }
+
+  .settings-page-footer {
+    margin-top: 42px;
+    padding-bottom: calc(176px + env(safe-area-inset-bottom));
+  }
+
+  .settings-page-footer .footer-row {
+    align-items: flex-start;
+  }
+
+  .settings-page-footer .footer-row-secondary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 18px;
+  }
+
+  .settings-page-footer .footer-copy,
+  .settings-page-footer .footer-link,
+  .settings-page-footer .footer-credit {
+    min-width: 0;
+  }
+
+  .settings-page-footer .footer-credit {
+    grid-column: 1 / -1;
   }
 }
 @media (max-width: 520px) {
@@ -809,6 +918,22 @@ body > .bg-video {
   .setting-row {
     padding: 16px 0;
   }
+
+  .setting-slider-row {
+    grid-template-columns: minmax(0, 1fr) 58px;
+    gap: 10px;
+  }
+
+  .settings-page-shell input[type="range"] {
+    min-width: 0;
+    min-height: 32px;
+  }
+
+  .settings-page-shell input[type="number"].slider-number-input {
+    min-height: 38px;
+    padding-inline: 8px;
+  }
+
   #clockStyleSelect.clock-style-picker .select-option {
     flex-basis: 116px;
     height: 72px;

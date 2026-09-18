@@ -54,11 +54,15 @@
 }
 #clockStyleSelect.clock-style-picker .settings-clock-label {
   display: block;
+  flex: 0 0 16px;
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
   overflow: hidden;
   color: inherit;
   font-size: 0.68rem;
-  line-height: 1.15;
+  line-height: 16px;
+  text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -124,12 +128,12 @@
   min-height: 76px;
   max-width: 132px;
   max-height: 76px;
-  padding: 9px 8px 8px;
+  padding: 7px 8px;
   display: flex !important;
   flex-direction: column !important;
   align-items: center;
-  justify-content: space-between;
-  gap: 5px;
+  justify-content: stretch;
+  gap: 4px;
   overflow: hidden;
   background: var(--card);
   color: var(--dim);
@@ -143,6 +147,11 @@
 .settings-page-shell .clock-style-picker .select-option::before {
   content: none;
 }
+.settings-page-shell .clock-style-picker .settings-clock-preview {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 .settings-page-shell .clock-style-picker .select-option:hover,
 .settings-page-shell .clock-style-picker .select-option[aria-checked="true"],
 .settings-page-shell .clock-style-picker .select-option.selected {
@@ -150,13 +159,27 @@
   background: var(--card-hover);
   color: var(--accent);
 }
+
+/* Material You overrides the generic dropdown surface globally.
+   Visual pickers must keep their transparent track instead of becoming a
+   large rounded background panel. Theme labels also remain visible. */
+body.material-you .settings-page-shell .clock-style-picker .select-dropdown,
+body.material-you .settings-page-shell .clock-style-picker .select-dropdown.hidden {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
 .settings-page-shell .clock-style-picker .select-option:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 .settings-page-shell .clock-style-picker .settings-clock-preview {
   display: block;
+  flex: 1 1 auto;
   width: auto;
+  min-height: 0;
   margin: 0;
   color: var(--text);
   line-height: 1;
@@ -164,15 +187,17 @@
 }
 .settings-page-shell .clock-style-picker .settings-clock-label {
   display: flex;
+  flex: 0 0 16px;
   align-items: center;
   justify-content: center;
   align-self: stretch;
+  width: 100%;
   max-width: 100%;
   min-width: 0;
   overflow: hidden;
   color: inherit;
   font-size: 0.7rem;
-  line-height: 1.15;
+  line-height: 16px;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -469,6 +494,35 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   .settings-page-shell {
     box-shadow: none;
   }
+
+  /* Mobile-only checkbox rows use the full available width. */
+  .settings-page-shell .mobile-only-setting.setting-row-control {
+    display: block !important;
+  }
+
+  .settings-page-shell
+    .mobile-only-setting
+    label.radio-option:has(input[type="checkbox"]) {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 42px;
+    align-items: center;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0;
+    justify-self: stretch !important;
+    justify-content: initial;
+    gap: 12px;
+    box-sizing: border-box;
+  }
+
+  .settings-page-shell
+    .mobile-only-setting
+    label.radio-option:has(input[type="checkbox"])
+    > input[type="checkbox"] {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
   .settings-page-shell .action-btn-row > button,
   .settings-page-shell .editor-btn-row > button,
   .settings-page-shell .restore-point-action > button {
@@ -493,17 +547,25 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   gap: 10px;
 }
 
-/* Theme names need their full label instead of the generic one-line truncation. */
+/* Theme previews use a compact footprint so the full label stays inside the card. */
 .settings-page-shell #themeSelect .settings-clock-label {
-  overflow: visible;
-  text-overflow: clip;
-  white-space: normal;
-  line-height: 1.15;
-  min-height: 2.3em;
   display: flex;
-  align-items: flex-end;
+  flex: 0 0 26px;
+  align-items: center;
   justify-content: center;
   align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 26px;
+  max-height: 26px;
+  overflow: hidden;
+  color: inherit;
+  font-size: 0.7rem;
+  line-height: 13px;
+  text-align: center;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 /* One cohesive theme preview, with no leftover custom-select swatch. */
@@ -512,10 +574,10 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   content: none !important;
 }
 .settings-page-shell #themeSelect .settings-theme-preview {
-  width: 54px !important;
-  max-width: 54px;
-  height: 30px;
-  flex: 0 0 30px;
+  width: 48px !important;
+  max-width: 48px;
+  height: 26px;
+  flex: 0 0 26px;
   align-self: center;
   margin: 0 auto;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -752,6 +814,8 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
 .settings-page-shell .bg-radio-row {
   width: auto;
   height: 36px;
+  margin-left: auto;
+  justify-content: flex-end;
 }
 
 .settings-page-shell .bg-radio-row .bg-option-label {

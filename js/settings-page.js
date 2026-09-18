@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
-  controlStyles.href = "css/settings-controls.css?v=5";
+  controlStyles.href = "css/settings-controls.css?v=8";
   document.head.appendChild(controlStyles);
 
   document.documentElement.classList.add("settings-page");
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       position:fixed !important;
       right:24px !important;
       bottom:96px !important;
-      z-index:100 !important;
+      z-index:90 !important;
       display:inline-flex !important;
       align-items:center !important;
       justify-content:center !important;
