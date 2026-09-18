@@ -2,8 +2,15 @@
 html {
   scroll-behavior: smooth;
 }
+html.settings-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 body {
   display: block;
+  width: 100%;
+  max-width: 100%;
   min-height: 100dvh;
   min-height: 100svh;
   padding: 16px;
@@ -12,6 +19,7 @@ body {
   background: var(--bg);
   align-items: initial;
   z-index: 0;
+  box-sizing: border-box;
 }
 body > .bg-overlay,
 body > .bg-image,
@@ -722,6 +730,12 @@ body > .bg-video {
   font-weight: 700;
 }
 @media (max-width: 900px) {
+  html.settings-page,
+  html.settings-page body {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
   body {
     padding: 0;
   }
