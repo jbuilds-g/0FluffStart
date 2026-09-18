@@ -150,6 +150,21 @@
   background: var(--card-hover);
   color: var(--accent);
 }
+
+/* Material You overrides the generic dropdown surface globally.
+   Visual pickers must keep their transparent track instead of becoming a
+   large rounded background panel. Theme labels also remain visible. */
+body.material-you .settings-page-shell .clock-style-picker .select-dropdown,
+body.material-you .settings-page-shell .clock-style-picker .select-dropdown.hidden {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+body.material-you .settings-page-shell #themeSelect.clock-style-picker .select-option {
+  overflow: visible;
+}
 .settings-page-shell .clock-style-picker .select-option:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
