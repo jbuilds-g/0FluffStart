@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       position:fixed !important;
       right:24px !important;
       bottom:96px !important;
-      z-index:98 !important;
+      z-index:90 !important;
       display:inline-flex !important;
       align-items:center !important;
       justify-content:center !important;
