@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
-  controlStyles.href = "css/settings-controls.css?v=7";
+  controlStyles.href = "css/settings-controls.css?v=8";
   document.head.appendChild(controlStyles);
 
   document.documentElement.classList.add("settings-page");
