@@ -10,8 +10,9 @@ function injectStyles() {
   style.textContent = `
     .settings-search { position:relative; z-index:100; width:min(720px,100%); }
     .settings-search-desktop { margin-top:18px; }
-    .settings-search-input-wrap { position:relative; display:flex; align-items:center; gap:10px; height:42px; min-height:42px; padding:0 12px; box-sizing:border-box; background:var(--card); border:1px solid var(--border); border-radius:min(var(--radius),12px); box-shadow:var(--shadow-sm); }
-    .settings-search-input-wrap > .icon-mask { width:17px; height:17px; flex:0 0 17px; opacity:.72; }
+    .settings-search-input-wrap { position:relative; display:grid; grid-template-columns:17px minmax(0,1fr) auto; align-items:center; gap:10px; width:100%; height:42px; min-height:42px; padding:0 12px; box-sizing:border-box; background:var(--card); border:1px solid var(--border); border-radius:min(var(--radius),12px); box-shadow:var(--shadow-sm); overflow:hidden; }
+    .settings-search-input-wrap > .icon-mask { width:17px; height:17px; min-width:17px; flex:0 0 17px; opacity:.72; }
+    .settings-search-input-wrap > input { display:block; width:auto; min-width:0; max-width:none; height:100%; box-sizing:border-box; border:0 !important; outline:0; padding:0 !important; margin:0 !important; background:transparent !important; color:var(--text); font:inherit; font-size:.86rem; line-height:1.2; box-shadow:none !important; }
     .settings-page-shell .settings-search input { display:block; width:100%; min-width:0; height:100%; box-sizing:border-box; border:0 !important; outline:0; padding:0 !important; margin:0 !important; background:transparent !important; color:var(--text); font:inherit; font-size:.86rem; line-height:1.2; box-shadow:none !important; }
     .settings-page-shell .settings-search input::placeholder { color:var(--dim); opacity:1; }
     .settings-search-input-wrap:focus-within { border-color:var(--accent); box-shadow:0 0 0 2px var(--interactive-bg-alpha),var(--shadow-sm); }
