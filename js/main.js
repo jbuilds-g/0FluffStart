@@ -10,8 +10,6 @@ import { APP_VERSION } from "./version.js";
 import {
   loadSettings,
   autoSaveSettings,
-  toggleSettings,
-  closeModal,
   renderEngineDropdown,
   toggleEngineDropdown,
   updateClock,
@@ -158,8 +156,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   if (hash === "#settings") {
-    toggleSettings();
-    hasDeepLinkAction = true;
+    window.location.replace("settings.html");
+    return;
   }
 
   const queryParam = urlParams.get("q");
@@ -287,7 +285,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      closeModal("settingsModal");
       document.getElementById("engineDropdown")?.classList.add("hidden");
       document.getElementById("suggestionsContainer")?.classList.add("hidden");
       document
@@ -306,18 +303,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function bindStaticEvents() {
-  document
-    .getElementById("settingsToggleBtn")
-    ?.addEventListener("click", toggleSettings);
-  document
-    .getElementById("closeSettingsBtn")
-    ?.addEventListener("click", () => closeModal("settingsModal"));
-  document.getElementById("settingsModal")?.addEventListener("click", (e) => {
-    if (e.target === document.getElementById("settingsModal")) {
-      closeModal("settingsModal");
-    }
-  });
-
   document
     .getElementById("engineDropdownBtn")
     ?.addEventListener("click", toggleEngineDropdown);
@@ -361,91 +346,6 @@ function bindStaticEvents() {
       window.open("https://github.com/jbuilds-g/0FluffStart", "_blank"),
     );
   }
-
-  let isBulkAnimating = false;
-
-  function updateScrollToTopBtn() {
-    const btn = document.getElementById("settingsModalScrollAnchor");
-    const modalContent = document.querySelector(
-      "#settingsModal .modal-content",
-    );
-    if (!btn || !modalContent) return;
-
-    const panels = Array.from(
-      document.querySelectorAll("#settingsModal details.category-panel"),
-    );
-
-    const isAnyPanelOpen = panels.some((panel) => panel.open);
-    const isScrolledDown = modalContent.scrollTop > 30;
-
-    btn.classList.toggle("hidden", !(isAnyPanelOpen && isScrolledDown));
-  }
-
-  async function animateToggleAllCategories() {
-    const modalContent = document.querySelector(
-      "#settingsModal .modal-content",
-    );
-    const panels = Array.from(
-      document.querySelectorAll("#settingsModal details.category-panel"),
-    );
-
-    if (!panels.length || !modalContent) return;
-
-    const openPanels = panels.filter((p) => p.open);
-    const closedPanels = panels.filter((p) => !p.open);
-    const shouldCollapse = openPanels.length >= closedPanels.length;
-
-    if (shouldCollapse) {
-      panels.forEach((panel) => (panel.open = false));
-      updateScrollToTopBtn();
-      return;
-    }
-
-    isBulkAnimating = true;
-    closedPanels.forEach((panel) => {
-      panel.open = true;
-    });
-
-    const lastPanel = panels[panels.length - 1];
-    if (lastPanel) {
-      lastPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
-
-    setTimeout(() => {
-      isBulkAnimating = false;
-      updateScrollToTopBtn();
-    }, 350);
-  }
-
-  const toggleAllCategoriesBtn = document.getElementById(
-    "toggleAllCategoriesBtn",
-  );
-  if (toggleAllCategoriesBtn) {
-    toggleAllCategoriesBtn.addEventListener(
-      "click",
-      animateToggleAllCategories,
-    );
-  }
-
-  const modalContent = document.querySelector("#settingsModal .modal-content");
-  if (modalContent) {
-    modalContent.addEventListener("scroll", updateScrollToTopBtn);
-  }
-
-  const settingsModalScrollAnchor = document.getElementById(
-    "settingsModalScrollAnchor",
-  );
-  if (settingsModalScrollAnchor) {
-    settingsModalScrollAnchor.addEventListener("click", () => {
-      modalContent?.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
-
-  document
-    .querySelectorAll("#settingsModal details.category-panel")
-    .forEach((panel) => {
-      panel.addEventListener("toggle", updateScrollToTopBtn);
-    });
 
   const folderExitBtn = document.getElementById("folderExitBtn");
   const mobileSearchPill = document.getElementById("mobileSearchPill");
@@ -1057,11 +957,7 @@ function bindStaticEvents() {
       const link = links.find((l) => l.id === id);
       if (!link) return;
 
-      toggleSettings({
-        openDashboardLinks: true,
-        targetItemId: link.id,
-        isFolder: !!link.isFolder,
-      });
+      window.location.href = "settings.html#links-dashboard";
     });
   }
 }
