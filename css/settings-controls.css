@@ -54,11 +54,15 @@
 }
 #clockStyleSelect.clock-style-picker .settings-clock-label {
   display: block;
+  flex: 0 0 16px;
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
   overflow: hidden;
   color: inherit;
   font-size: 0.68rem;
-  line-height: 1.15;
+  line-height: 16px;
+  text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -124,12 +128,12 @@
   min-height: 76px;
   max-width: 132px;
   max-height: 76px;
-  padding: 9px 8px 8px;
+  padding: 7px 8px;
   display: flex !important;
   flex-direction: column !important;
   align-items: center;
-  justify-content: space-between;
-  gap: 5px;
+  justify-content: stretch;
+  gap: 4px;
   overflow: hidden;
   background: var(--card);
   color: var(--dim);
@@ -143,6 +147,11 @@
 .settings-page-shell .clock-style-picker .select-option::before {
   content: none;
 }
+.settings-page-shell .clock-style-picker .settings-clock-preview {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 .settings-page-shell .clock-style-picker .select-option:hover,
 .settings-page-shell .clock-style-picker .select-option[aria-checked="true"],
 .settings-page-shell .clock-style-picker .select-option.selected {
