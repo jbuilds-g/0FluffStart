@@ -627,15 +627,17 @@ export async function autoSaveSettings(updates = null) {
 export function updateSuggestSettingsVisibility() {
   const isEnabled = !!document.getElementById("externalSuggestToggle")?.checked;
   const proxyGroup = document.getElementById("customProxyContainer");
-  const cacheToggle = document
+  const cacheGroup = document
     .getElementById("cacheSuggestToggle")
-    ?.closest(".radio-option");
-  const providerSelect = document.getElementById("suggestProviderSelect");
+    ?.closest(".setting-option");
+  const providerGroup = document
+    .getElementById("suggestProviderSelect")
+    ?.closest(".setting-option");
   const quickToggle = document.getElementById("quickSuggestToggleBtn");
 
   if (proxyGroup) proxyGroup.classList.toggle("hidden", !isEnabled);
-  if (cacheToggle) cacheToggle.classList.toggle("hidden", !isEnabled);
-  if (providerSelect) providerSelect.classList.toggle("hidden", !isEnabled);
+  if (cacheGroup) cacheGroup.classList.toggle("hidden", !isEnabled);
+  if (providerGroup) providerGroup.classList.toggle("hidden", !isEnabled);
   if (quickToggle) {
     quickToggle.classList.toggle("active", isEnabled);
     quickToggle.title = isEnabled
