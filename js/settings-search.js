@@ -3,11 +3,13 @@ const SEARCH_ICON =
 const CLOSE_ICON =
   '<span class="icon-mask icon-close" aria-hidden="true"></span>';
 
+const MAX_RESULTS = 12;
+
 function injectStyles() {
   if (document.getElementById("settings-search-styles")) return;
   const style = document.createElement("style");
   style.id = "settings-search-styles";
-  style.textContent = `
+  style.textContent = \`
     .settings-search { position:relative; z-index:100; width:min(720px,100%); }
     .settings-search-desktop { margin-top:18px; }
     .settings-search-input-wrap { position:relative; display:grid; grid-template-columns:17px minmax(0,1fr) auto; align-items:center; gap:10px; width:100%; height:42px; min-height:42px; padding:0 12px; box-sizing:border-box; background:var(--card); border:1px solid var(--border); border-radius:min(var(--radius),12px); box-shadow:var(--shadow-sm); overflow:hidden; }
@@ -23,7 +25,7 @@ function injectStyles() {
     .settings-search-results { display:grid; gap:5px; max-height:390px; overflow:auto; margin-top:7px; padding:6px; background:var(--card); border:1px solid var(--border); border-radius:min(var(--radius),12px); box-shadow:var(--shadow-lg); }
     .settings-search-results[hidden] { display:none; }
     .settings-search-result { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px 12px; width:100%; padding:9px 10px; border:1px solid transparent; border-radius:8px; background:transparent; color:var(--text); text-align:left; cursor:pointer; font:inherit; }
-    .settings-search-result:hover, .settings-search-result:focus-visible { background:var(--card-hover); border-color:var(--border); outline:none; }
+    .settings-search-result:hover, .settings-search-result:focus-visible, .settings-search-result.is-active { background:var(--card-hover); border-color:var(--border); outline:none; }
     .settings-search-result strong { font-size:.82rem; font-weight:650; }
     .settings-search-result span { color:var(--dim); font-size:.68rem; align-self:center; }
     .settings-search-result small { grid-column:1 / -1; overflow:hidden; color:var(--dim); font-size:.7rem; line-height:1.35; text-overflow:ellipsis; white-space:nowrap; }
@@ -45,23 +47,47 @@ function injectStyles() {
       html.settings-page.settings-mobile-context .settings-search-mobile.active { display:block; }
       html.settings-page.settings-mobile-context .settings-search-mobile .settings-search-results { max-height:min(52vh,420px); }
     }
-  `;
+  \`;
   document.head.appendChild(style);
 }
 
-export function initSettingsPageSearch() {
-  injectStyles();
-  const page = document.querySelector(".settings-page-shell");
-  const header = document.querySelector(".settings-page-header");
-  const nav = document.querySelector(".settings-section-nav");
-  const content = document.querySelector(".settings-content");
-  if (!page || !header || !nav || !content) return;
+function normalize(value) {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
 
-  const rows = Array.from(content.querySelectorAll(".setting-row"))
+function collectControlText(row) {
+  return Array.from(
+    row.querySelectorAll(
+      "label, .setting-option-title, .settings-picker-label-block, .select-option, option, button",
+    ),
+  )
+    .map((node) => node.textContent.trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
+function buildSearchIndex(content) {
+  const candidates = Array.from(
+    content.querySelectorAll(".setting-row, .setting-option"),
+  );
+  const seen = new Set();
+
+  return candidates
     .map((row) => {
-      const title = row.querySelector(".setting-header h3")?.textContent.trim();
+      if (seen.has(row)) return null;
+
+      const title =
+        row.querySelector(".setting-header h3")?.textContent.trim() ||
+        row.querySelector(".setting-option-title")?.textContent.trim() ||
+        row.querySelector(".settings-picker-label-block")?.textContent.trim();
+
       if (!title) return null;
-      const help = row.querySelector(".help-text")?.textContent.trim() || "";
+
       const section = row.closest(".settings-section");
       const subsection = row
         .closest(".settings-subsection")
@@ -72,29 +98,73 @@ export function initSettingsPageSearch() {
           ?.querySelector(".settings-section-heading h2")
           ?.textContent.trim() || "";
       const category = subsection
-        ? `${sectionTitle} › ${subsection}`
+        ? \`\${sectionTitle} › \${subsection}\`
         : sectionTitle;
+
+      const help =
+        row.querySelector(".help-text")?.textContent.trim() ||
+        row.querySelector(".setting-option-help")?.textContent.trim() ||
+        "";
+
+      seen.add(row);
       return {
         row,
         title,
         help,
         category,
-        haystack: `${title} ${help} ${category}`.toLowerCase(),
+        controlText: collectControlText(row),
       };
     })
     .filter(Boolean);
+}
+
+function scoreEntry(entry, query) {
+  const title = normalize(entry.title);
+  const control = normalize(entry.controlText);
+  const help = normalize(entry.help);
+  const category = normalize(entry.category);
+  const terms = query.split(" ").filter(Boolean);
+  let score = 0;
+
+  if (title === query) score += 500;
+  if (title.startsWith(query)) score += 180;
+  if (title.includes(query)) score += 100;
+  if (control.includes(query)) score += 55;
+  if (help.includes(query)) score += 30;
+
+  for (const term of terms) {
+    if (title.includes(term)) score += 120;
+    else if (control.includes(term)) score += 70;
+    else if (help.includes(term)) score += 45;
+    else if (category.includes(term)) score += 25;
+    else return 0;
+  }
+
+  return score;
+}
+
+export function initSettingsPageSearch() {
+  injectStyles();
+  const page = document.querySelector(".settings-page-shell");
+  const header = document.querySelector(".settings-page-header");
+  const nav = document.querySelector(".settings-section-nav");
+  const content = document.querySelector(".settings-content");
+  if (!page || !header || !nav || !content) return;
+
+  const entries = buildSearchIndex(content);
+  if (!entries.length) return;
 
   const createSearch = (mobile = false) => {
     const wrapper = document.createElement("div");
-    wrapper.className = `settings-search ${mobile ? "settings-search-mobile" : "settings-search-desktop"}`;
-    wrapper.innerHTML = `
+    wrapper.className = \`settings-search \${mobile ? "settings-search-mobile" : "settings-search-desktop"}\`;
+    wrapper.innerHTML = \`
       <div class="settings-search-input-wrap">
-        ${SEARCH_ICON}
+        \${SEARCH_ICON}
         <input type="text" autocomplete="off" spellcheck="false" placeholder="Search settings..." aria-label="Search settings" />
-        <button type="button" class="settings-page-search-clear" aria-label="Clear settings search">${CLOSE_ICON}</button>
+        <button type="button" class="settings-page-search-clear" aria-label="Clear settings search">\${CLOSE_ICON}</button>
       </div>
       <div class="settings-search-results" role="listbox" aria-label="Settings search results" hidden></div>
-    `;
+    \`;
     return wrapper;
   };
 
@@ -104,7 +174,7 @@ export function initSettingsPageSearch() {
   const mobileTrigger = document.createElement("button");
   mobileTrigger.type = "button";
   mobileTrigger.className = "settings-search-mobile-trigger";
-  mobileTrigger.innerHTML = `${SEARCH_ICON}<span>Search settings</span>`;
+  mobileTrigger.innerHTML = \`\${SEARCH_ICON}<span>Search settings</span>\`;
   mobileTrigger.setAttribute("aria-label", "Search settings");
   document.body.appendChild(mobileTrigger);
 
@@ -121,30 +191,55 @@ export function initSettingsPageSearch() {
     mobile.querySelector("input"),
   ];
 
+  let activeWrapper = null;
+  let activeResults = [];
+  let activeIndex = -1;
+
   const renderResults = (wrapper, query) => {
     const results = wrapper.querySelector(".settings-search-results");
     const clear = wrapper.querySelector(".settings-page-search-clear");
-    const normalized = query.trim().toLowerCase();
+    const normalized = normalize(query);
     clear.classList.toggle("is-visible", Boolean(normalized));
     results.replaceChildren();
 
     if (!normalized) {
       results.hidden = true;
+      if (activeWrapper === wrapper) {
+        activeWrapper = null;
+        activeResults = [];
+        activeIndex = -1;
+      }
       return;
     }
 
-    const matches = rows.filter((entry) => entry.haystack.includes(normalized));
+    const matches = entries
+      .map((entry) => ({ entry, score: scoreEntry(entry, normalized) }))
+      .filter((item) => item.score > 0)
+      .sort(
+        (a, b) =>
+          b.score - a.score ||
+          a.entry.title.localeCompare(b.entry.title),
+      )
+      .slice(0, MAX_RESULTS);
+
+    if (activeWrapper === wrapper) {
+      activeResults = matches.map((item) => item.entry);
+      activeIndex = -1;
+    }
+
     if (!matches.length) {
       const empty = document.createElement("div");
       empty.className = "settings-search-empty";
-      empty.textContent = `No settings found matching "${query.trim()}".`;
+      empty.textContent = \`No settings found matching "\${query.trim()}".\`;
       results.appendChild(empty);
     } else {
-      matches.slice(0, 12).forEach((entry) => {
+      matches.forEach(({ entry }, index) => {
         const result = document.createElement("button");
         result.type = "button";
         result.className = "settings-search-result";
         result.setAttribute("role", "option");
+        result.setAttribute("aria-posinset", String(index + 1));
+        result.setAttribute("aria-setsize", String(matches.length));
         const title = document.createElement("strong");
         title.textContent = entry.title;
         const meta = document.createElement("span");
@@ -167,6 +262,9 @@ export function initSettingsPageSearch() {
     inputs.forEach((input) => {
       if (input !== source) input.value = query;
     });
+    activeWrapper = source.closest(".settings-search");
+    activeResults = [];
+    activeIndex = -1;
     renderResults(desktop, query);
     renderResults(mobile, query);
   };
@@ -193,21 +291,100 @@ export function initSettingsPageSearch() {
     renderResults(desktop, "");
     renderResults(mobile, "");
     closeMobileSearch();
+
     window.setTimeout(() => {
-      entry.row.scrollIntoView({ behavior: "smooth", block: "center" });
-      entry.row.classList.remove("setting-search-highlight");
-      void entry.row.offsetWidth;
-      entry.row.classList.add("setting-search-highlight");
+      let target = entry.row;
+      if (entry.row.closest(".hidden")) {
+        const visibleAncestor =
+          entry.row.closest(".settings-subgroup, .setting-row, .settings-subsection");
+        if (visibleAncestor && !visibleAncestor.closest(".hidden")) {
+          target = visibleAncestor;
+        }
+      }
+
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+      target.classList.remove("setting-search-highlight");
+      void target.offsetWidth;
+      target.classList.add("setting-search-highlight");
       window.setTimeout(
-        () => entry.row.classList.remove("setting-search-highlight"),
+        () => target.classList.remove("setting-search-highlight"),
         900,
       );
     }, 80);
   };
 
+  const moveActive = (direction) => {
+    if (!activeResults.length) return;
+    const wrapper =
+      activeWrapper ||
+      (mobile.classList.contains("active") ? mobile : desktop);
+    const next =
+      activeIndex < 0
+        ? direction > 0
+          ? 0
+          : activeResults.length - 1
+        : Math.max(
+            0,
+            Math.min(activeResults.length - 1, activeIndex + direction),
+          );
+    setActiveResult(next, wrapper);
+  };
+
+  const setActiveResult = (index, wrapper) => {
+    const results = wrapper.querySelectorAll(".settings-search-result");
+    results.forEach((result, resultIndex) => {
+      result.classList.toggle("is-active", resultIndex === index);
+      result.setAttribute(
+        "aria-selected",
+        resultIndex === index ? "true" : "false",
+      );
+    });
+    activeIndex = index;
+    activeWrapper = wrapper;
+    if (index >= 0 && results[index]) {
+      results[index].scrollIntoView({ block: "nearest" });
+    }
+  };
+
+  const handleSearchKeydown = (event, wrapper) => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      if (!activeResults.length) return;
+      event.preventDefault();
+      if (activeWrapper !== wrapper) {
+        activeWrapper = wrapper;
+        activeIndex = -1;
+      }
+      moveActive(event.key === "ArrowDown" ? 1 : -1);
+      return;
+    }
+
+    if (event.key === "Enter" && activeResults.length && activeIndex >= 0) {
+      event.preventDefault();
+      selectResult(activeResults[activeIndex]);
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      if (wrapper === mobile && mobile.classList.contains("active")) {
+        closeMobileSearch({ clear: true });
+      } else {
+        wrapper.querySelector("input")?.blur();
+      }
+    }
+  };
+
+  inputs.forEach((input, index) => {
+    const wrapper = index === 0 ? desktop : mobile;
+    input.addEventListener("keydown", (event) =>
+      handleSearchKeydown(event, wrapper),
+    );
+  });
+
   inputs.forEach((input) =>
     input.addEventListener("input", () => syncQuery(input)),
   );
+
   desktop
     .querySelector(".settings-page-search-clear")
     .addEventListener("click", () => {
@@ -215,6 +392,7 @@ export function initSettingsPageSearch() {
       syncQuery(desktop.querySelector("input"));
       desktop.querySelector("input").focus();
     });
+
   mobile
     .querySelector(".settings-page-search-clear")
     .addEventListener("click", () => {
@@ -238,13 +416,16 @@ export function initSettingsPageSearch() {
     if (
       event.target.closest(".settings-search-mobile") ||
       event.target.closest(".settings-search-mobile-trigger")
-    )
+    ) {
       return;
+    }
     closeMobileSearch();
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
-    if (mobile.classList.contains("active")) closeMobileSearch({ clear: true });
+    if (mobile.classList.contains("active")) {
+      closeMobileSearch({ clear: true });
+    }
   });
 }
