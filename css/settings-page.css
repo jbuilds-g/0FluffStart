@@ -939,3 +939,60 @@ body > .bg-video {
     height: 72px;
   }
 }
+
+
+/* Pass 4: concise, setting-specific helper copy and consistent control hierarchy. */
+.settings-page-shell .setting-option {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.settings-page-shell .setting-option-help {
+  margin: 0;
+  padding-left: 54px;
+  color: var(--dim);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.settings-page-shell .setting-control-label {
+  margin: 0 0 3px;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.settings-page-shell .settings-subgroup .setting-option {
+  gap: 2px;
+}
+
+.settings-page-shell .settings-subgroup .setting-option-help {
+  padding-left: 54px;
+  max-width: 620px;
+}
+
+.settings-page-shell .settings-inline-control.setting-option {
+  width: 100%;
+}
+
+.settings-page-shell .settings-inline-control.setting-option .radio-option {
+  width: max-content;
+  max-width: 100%;
+}
+
+@media (max-width: 900px) {
+  .settings-page-shell .setting-option-help,
+  .settings-page-shell .settings-subgroup .setting-option-help {
+    padding-left: 0;
+  }
+
+  .settings-page-shell .settings-inline-control.setting-option {
+    width: 100%;
+  }
+
+  .settings-page-shell .settings-inline-control.setting-option .radio-option {
+    width: 100%;
+    max-width: none;
+  }
+}
