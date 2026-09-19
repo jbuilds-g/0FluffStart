@@ -288,16 +288,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const providerPicker = document.getElementById("suggestProviderSelect");
   if (providerPicker) {
     providerPicker.dataset.label = "Suggestion Provider";
-    if (
-      !providerPicker.previousElementSibling?.classList.contains(
-        "settings-picker-label-block",
-      )
-    ) {
-      const providerLabel = document.createElement("div");
-      providerLabel.className = "settings-picker-label-block";
-      providerLabel.textContent = "Suggestion Provider";
-      providerPicker.parentNode.insertBefore(providerLabel, providerPicker);
-    }
   }
 
   setupVisualPicker("suggestProviderSelect", (option) => {
