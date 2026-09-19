@@ -9,7 +9,7 @@ function injectStyles() {
   if (document.getElementById("settings-search-styles")) return;
   const style = document.createElement("style");
   style.id = "settings-search-styles";
-  style.textContent = \`
+  style.textContent = `
     .settings-search { position:relative; z-index:100; width:min(720px,100%); }
     .settings-search-desktop { margin-top:18px; }
     .settings-search-input-wrap { position:relative; display:grid; grid-template-columns:17px minmax(0,1fr) auto; align-items:center; gap:10px; width:100%; height:42px; min-height:42px; padding:0 12px; box-sizing:border-box; background:var(--card); border:1px solid var(--border); border-radius:min(var(--radius),12px); box-shadow:var(--shadow-sm); overflow:hidden; }
@@ -47,7 +47,7 @@ function injectStyles() {
       html.settings-page.settings-mobile-context .settings-search-mobile.active { display:block; }
       html.settings-page.settings-mobile-context .settings-search-mobile .settings-search-results { max-height:min(52vh,420px); }
     }
-  \`;
+  `;
   document.head.appendChild(style);
 }
 
@@ -98,7 +98,7 @@ function buildSearchIndex(content) {
           ?.querySelector(".settings-section-heading h2")
           ?.textContent.trim() || "";
       const category = subsection
-        ? \`\${sectionTitle} › \${subsection}\`
+        ? `${sectionTitle} › ${subsection}`
         : sectionTitle;
 
       const help =
@@ -156,15 +156,15 @@ export function initSettingsPageSearch() {
 
   const createSearch = (mobile = false) => {
     const wrapper = document.createElement("div");
-    wrapper.className = \`settings-search \${mobile ? "settings-search-mobile" : "settings-search-desktop"}\`;
-    wrapper.innerHTML = \`
+    wrapper.className = `settings-search ${mobile ? "settings-search-mobile" : "settings-search-desktop"}`;
+    wrapper.innerHTML = `
       <div class="settings-search-input-wrap">
-        \${SEARCH_ICON}
+        ${SEARCH_ICON}
         <input type="text" autocomplete="off" spellcheck="false" placeholder="Search settings..." aria-label="Search settings" />
-        <button type="button" class="settings-page-search-clear" aria-label="Clear settings search">\${CLOSE_ICON}</button>
+        <button type="button" class="settings-page-search-clear" aria-label="Clear settings search">${CLOSE_ICON}</button>
       </div>
       <div class="settings-search-results" role="listbox" aria-label="Settings search results" hidden></div>
-    \`;
+    `;
     return wrapper;
   };
 
@@ -174,7 +174,7 @@ export function initSettingsPageSearch() {
   const mobileTrigger = document.createElement("button");
   mobileTrigger.type = "button";
   mobileTrigger.className = "settings-search-mobile-trigger";
-  mobileTrigger.innerHTML = \`\${SEARCH_ICON}<span>Search settings</span>\`;
+  mobileTrigger.innerHTML = `${SEARCH_ICON}<span>Search settings</span>`;
   mobileTrigger.setAttribute("aria-label", "Search settings");
   document.body.appendChild(mobileTrigger);
 
@@ -230,7 +230,7 @@ export function initSettingsPageSearch() {
     if (!matches.length) {
       const empty = document.createElement("div");
       empty.className = "settings-search-empty";
-      empty.textContent = \`No settings found matching "\${query.trim()}".\`;
+      empty.textContent = `No settings found matching "${query.trim()}".`;
       results.appendChild(empty);
     } else {
       matches.forEach(({ entry }, index) => {
