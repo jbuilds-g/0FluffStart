@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings — 0FluffStart</title>
     <link rel="stylesheet" href="css/core.css" />
-    <link rel="stylesheet" href="css/settings-page.css?v=6" />
+    <link rel="stylesheet" href="css/settings-page.css?v=7" />
   </head>
   <body class="dark">
     <div id="bgOverlay" class="bg-overlay"></div>
@@ -70,8 +70,7 @@
                     </button>
                   </div>
                   <div class="help-text">
-                    Custom display name shown in the top header greeting. Leave
-                    empty for a generic greeting.
+                    Shown in the dashboard greeting. Leave empty to use the default greeting.
                   </div>
                 </div>
                 <input
@@ -84,7 +83,7 @@
               <div class="setting-row setting-row-input">
                 <div class="setting-copy">
                   <div class="setting-header">
-                    <h3>Vibe</h3>
+                    <h3>Theme</h3>
                     <button
                       class="help-btn"
                       type="button"
@@ -97,8 +96,7 @@
                     </button>
                   </div>
                   <div class="help-text">
-                    Customizes color schemes, borders, and general visual
-                    styling across the dashboard.
+                    Controls the dashboard's color palette, surfaces, borders, and overall visual style.
                   </div>
                 </div>
                 <div class="custom-select" id="themeSelect" data-value="dark">
@@ -175,7 +173,7 @@
           >
             <div class="settings-section-heading">
               <h2>Appearance</h2>
-              <p>Fine-tune the interface, search bar, background, and clock.</p>
+              <p>Control interface styling, search bar, background, and clock.</p>
             </div>
 
             <div class="settings-subsection">
@@ -197,8 +195,7 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Controls overall shadow depth across search elements,
-                      shortcut cards, and modal windows.
+                      Controls shadow depth across interface elements. 0 disables shadows, 100 is the default, and 200 is the maximum.
                     </div>
                   </div>
                   <div class="setting-slider-row">
@@ -237,8 +234,7 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Disables mobile-specific optimizations to enforce standard
-                      desktop layout scaling.
+                      Uses the desktop layout on mobile instead of mobile-specific sizing and navigation behavior.
                     </div>
                   </div>
                   <label class="radio-option"
@@ -264,13 +260,12 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Enables custom reactive cursor animations. Disable to use
-                      the standard system mouse pointer.
+                      Use the theme-aware animated cursor instead of the standard system pointer.
                     </div>
                   </div>
                   <label class="radio-option"
                     ><input type="checkbox" id="customCursorToggle" checked />
-                    Enable Theme Adaptive Cursor</label
+                    Enable Custom Cursor</label
                   >
                 </div>
               </div>
@@ -295,8 +290,7 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Switches between a single unified search container and a
-                      segmented floating layout.
+                      Choose between one combined search bar or separate floating controls.
                     </div>
                   </div>
                   <div
@@ -339,44 +333,65 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Choose which interactive controls appear inside the search
-                      bar.
+                      Choose which controls appear inside the search bar. Turn the master switch off to hide all search controls.
                     </div>
                   </div>
-                  <label class="radio-option"
-                    ><input
-                      type="checkbox"
-                      id="showAllSearchControlsToggle"
-                      checked
-                    />
-                    Enable Search Bar Controls</label
-                  >
+                  <div class="setting-option">
+                    <label class="radio-option"
+                      ><input
+                        type="checkbox"
+                        id="showAllSearchControlsToggle"
+                        checked
+                      />
+                      Enable Search Bar Controls</label
+                    >
+                    <div class="setting-option-help">
+                      Master switch for the search-bar controls below.
+                    </div>
+                  </div>
                   <div
                     id="individualSearchControlsGroup"
                     class="settings-subgroup"
                   >
-                    <label class="radio-option"
-                      ><input
-                        type="checkbox"
-                        id="showEngineDropdownToggle"
-                        checked
-                      />
-                      Show Engine Switcher</label
-                    ><label class="radio-option"
-                      ><input
-                        type="checkbox"
-                        id="showQuickSuggestToggle"
-                        checked
-                      />
-                      Show Quick Suggest Toggle</label
-                    ><label class="radio-option"
-                      ><input
-                        type="checkbox"
-                        id="showSearchSubmitToggle"
-                        checked
-                      />
-                      Show Search Submit Button</label
-                    >
+                    <div class="setting-option">
+                      <label class="radio-option"
+                        ><input
+                          type="checkbox"
+                          id="showEngineDropdownToggle"
+                          checked
+                        />
+                        Show Engine Switcher</label
+                      >
+                      <div class="setting-option-help">
+                        Shows the control used to switch search engines.
+                      </div>
+                    </div>
+                    <div class="setting-option">
+                      <label class="radio-option"
+                        ><input
+                          type="checkbox"
+                          id="showQuickSuggestToggle"
+                          checked
+                        />
+                        Show Quick Suggest Toggle</label
+                      >
+                      <div class="setting-option-help">
+                        Shows the control used to turn live suggestions on or off.
+                      </div>
+                    </div>
+                    <div class="setting-option">
+                      <label class="radio-option"
+                        ><input
+                          type="checkbox"
+                          id="showSearchSubmitToggle"
+                          checked
+                        />
+                        Show Search Submit Button</label
+                      >
+                      <div class="setting-option-help">
+                        Shows the button used to submit the current search.
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -401,8 +416,7 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Upload a local image or video file to set a custom
-                      dashboard background.
+                      Use a local image or video as the dashboard background.
                     </div>
                   </div>
                   <div class="setting-item setting-item-col">
@@ -459,8 +473,7 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Customizes clock typography, 12h or 24h display formats,
-                      and live seconds visibility.
+                      Choose the clock style, time format, and whether live seconds are shown.
                     </div>
                   </div>
                   <div
@@ -516,17 +529,30 @@
                       </div>
                     </div>
                   </div>
-                  <label class="radio-option clock-format-toggle"
-                    ><span id="clockFormatValue">24-Hour</span
-                    ><input
-                      type="checkbox"
-                      id="clockFormatToggle"
-                      aria-label="Toggle clock format"
-                  /></label>
-                  <label class="radio-option"
-                    ><input type="checkbox" id="showSecondsToggle" checked />
-                    Display Live Seconds</label
-                  >
+                  <div class="setting-option">
+                    <label class="radio-option clock-format-toggle"
+                      ><span id="clockFormatValue">24-Hour</span
+                      ><input
+                        type="checkbox"
+                        id="clockFormatToggle"
+                        aria-label="Toggle clock format"
+                    /></label>
+                    <div class="setting-option-help">
+                      Switches the clock between 12-hour and 24-hour time.
+                    </div>
+                  </div>
+                  <div class="setting-option">
+                    <label class="radio-option"
+                      ><input
+                        type="checkbox"
+                        id="showSecondsToggle"
+                        checked
+                      />
+                      Display Live Seconds</label
+                    ><div class="setting-option-help">
+                      Adds seconds to the live clock display.
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -539,9 +565,7 @@
           >
             <div class="settings-section-heading">
               <h2>Search</h2>
-              <p>
-                Configure suggestions, search engines, history, and routing.
-              </p>
+              <p>Control suggestions, search engines, history, and search routing.</p>
             </div>
 
             <div class="settings-subsection">
@@ -563,8 +587,7 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Enables live query autocomplete recommendations and
-                      provider selection.
+                      Fetches autocomplete suggestions while you type. The controls below choose caching, proxy, and provider behavior.
                     </div>
                   </div>
                   <label class="radio-option"
@@ -573,45 +596,63 @@
                   >
                   <div
                     id="customProxyContainer"
-                    class="settings-inline-control"
+                    class="setting-option settings-inline-control"
                   >
+                    <div class="setting-option-title">Custom Proxy</div>
                     <input
                       type="url"
                       id="customProxyInput"
                       placeholder="Custom Proxy, e.g., https://my-proxy.com/?"
                       class="custom-proxy-input"
                     />
-                  </div>
-                  <label class="radio-option settings-inline-control"
-                    ><input type="checkbox" id="cacheSuggestToggle" checked />
-                    Cache Search Suggestions</label
-                  >
-                  <div
-                    class="custom-select settings-inline-control"
-                    id="suggestProviderSelect"
-                    data-value="auto"
-                  >
-                    <div class="select-trigger">
-                      <span class="selected-text">Automatic</span
-                      ><span class="select-arrow"
-                        ><span
-                          class="icon-mask icon-chevron"
-                          style="width: 12px; height: 12px"
-                        ></span
-                      ></span>
+                    <div class="setting-option-help">
+                      Optional proxy URL used to route live suggestion requests through a custom service.
                     </div>
-                    <div class="select-dropdown hidden">
-                      <div class="select-option selected" data-value="auto">
-                        Automatic
+                  </div>
+                  <div class="setting-option settings-inline-control">
+                    <label class="radio-option"
+                      ><input
+                        type="checkbox"
+                        id="cacheSuggestToggle"
+                        checked
+                      />
+                      Cache Search Suggestions</label
+                    ><div class="setting-option-help">
+                      Keeps recent suggestion results locally to reduce repeated requests.
+                    </div>
+                  </div>
+                  <div class="setting-option settings-inline-control">
+                    <div class="settings-picker-label-block">Suggestion Provider</div>
+                    <div class="setting-option-help">
+                      Chooses which service supplies live autocomplete suggestions.
+                    </div>
+                    <div
+                      class="custom-select"
+                      id="suggestProviderSelect"
+                      data-value="auto"
+                    >
+                      <div class="select-trigger">
+                        <span class="selected-text">Automatic</span
+                        ><span class="select-arrow"
+                          ><span
+                            class="icon-mask icon-chevron"
+                            style="width: 12px; height: 12px"
+                          ></span
+                        ></span>
                       </div>
-                      <div class="select-option" data-value="DuckDuckGo">
-                        DuckDuckGo
+                      <div class="select-dropdown hidden">
+                        <div class="select-option selected" data-value="auto">
+                          Automatic
+                        </div>
+                        <div class="select-option" data-value="DuckDuckGo">
+                          DuckDuckGo
+                        </div>
+                        <div class="select-option" data-value="Google">
+                          Google
+                        </div>
+                        <div class="select-option" data-value="Bing">Bing</div>
+                        <div class="select-option" data-value="Brave">Brave</div>
                       </div>
-                      <div class="select-option" data-value="Google">
-                        Google
-                      </div>
-                      <div class="select-option" data-value="Bing">Bing</div>
-                      <div class="select-option" data-value="Brave">Brave</div>
                     </div>
                   </div>
                 </div>
@@ -637,9 +678,7 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Choose active engines, set the default provider, and add
-                      custom shortcuts. The list scrolls independently as it
-                      grows.
+                      Choose which search engines are available, set the default engine, or add a custom engine.
                     </div>
                   </div>
                   <div class="engine-management">
@@ -709,8 +748,7 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Stores search history locally so recent queries can appear
-                      in suggestions.
+                      Stores recent searches locally so they can be shown in search history and suggestions.
                     </div>
                   </div>
                   <label class="radio-option"
@@ -750,8 +788,7 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Add, edit, organize, or remove shortcut icons and folders.
-                      The list scrolls independently as it grows.
+                      Add, edit, reorder, nest, or remove links and folders.
                     </div>
                   </div>
                   <div id="linkListContainer">
@@ -819,11 +856,13 @@
                       </button>
                     </div>
                   </div>
-                  <div class="desktop-only-setting settings-inline-control">
+                  <div class="setting-option desktop-only-setting settings-inline-control">
                     <label class="radio-option radio-option-no-margin"
-                      ><input type="checkbox" id="showTitlesToggle" /> Show
-                      Quick Link Titles</label
-                    >
+                      ><input type="checkbox" id="showTitlesToggle" />
+                      Show Quick Link Titles</label
+                    ><div class="setting-option-help">
+                      Shows each shortcut's name beneath its icon on the dashboard.
+                    </div>
                   </div>
                 </div>
               </div>
@@ -860,9 +899,7 @@
                       </button>
                     </div>
                     <div class="help-text">
-                      Create or restore backups, revert to your previous restore
-                      point, clear search history, or perform a full factory
-                      reset.
+                      Export your current data, import a backup, or restore the previous restore point.
                     </div>
                   </div>
                   <div class="action-btn-row">
