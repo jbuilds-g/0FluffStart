@@ -113,7 +113,10 @@ export function renderCustomBackgroundPreview(media = null) {
 
   if (typeEl) typeEl.textContent = isVideo ? "Video" : "Image";
   if (nameEl) nameEl.textContent = name;
-  fileNameEl?.classList.add("hidden");
+  if (fileNameEl) {
+    fileNameEl.textContent = name;
+    fileNameEl.classList.add("hidden");
+  }
   card.classList.remove("hidden");
 }
 
