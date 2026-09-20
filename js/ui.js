@@ -27,8 +27,14 @@ function revokeCustomBackgroundPreviewUrl() {
 function isVideoMedia(media) {
   return (
     (media?.type && media.type.startsWith("video/")) ||
-    (typeof media === "string" && /\.(mp4|webm|ogg|mov|m4v)(?:$|[?#])/i.test(media))
+    (typeof media === "string" &&
+      /\.(mp4|webm|ogg|mov|m4v)(?:$|[?#])/i.test(media))
   );
+}
+
+function setCustomBackgroundPreviewAspect(card, width, height) {
+  if (!width || !height) return;
+  card.style.setProperty("--bg-preview-aspect", `${width} / ${height}`);
 }
 
 export function renderCustomBackgroundPreview(media = null) {
@@ -37,17 +43,24 @@ export function renderCustomBackgroundPreview(media = null) {
   const video = document.getElementById("bgPreviewVideo");
   const typeEl = document.getElementById("bgPreviewType");
   const nameEl = document.getElementById("bgPreviewName");
+  const fileNameEl = document.getElementById("bgFileName");
 
   if (!card || !image || !video) return;
 
   revokeCustomBackgroundPreviewUrl();
+  image.onload = null;
+  image.onerror = null;
+  video.onloadedmetadata = null;
+  video.onerror = null;
   image.classList.add("hidden");
   video.classList.add("hidden");
   image.removeAttribute("src");
   video.removeAttribute("src");
+  card.style.removeProperty("--bg-preview-aspect");
 
   if (!media) {
     card.classList.add("hidden");
+    fileNameEl?.classList.remove("hidden");
     return;
   }
 
@@ -61,6 +74,7 @@ export function renderCustomBackgroundPreview(media = null) {
 
   if (!url) {
     card.classList.add("hidden");
+    fileNameEl?.classList.remove("hidden");
     return;
   }
 
@@ -74,17 +88,32 @@ export function renderCustomBackgroundPreview(media = null) {
       : media.name || "Custom media";
 
   if (isVideo) {
+    video.onloadedmetadata = () => {
+      setCustomBackgroundPreviewAspect(
+        card,
+        video.videoWidth,
+        video.videoHeight,
+      );
+    };
     video.src = url;
     video.classList.remove("hidden");
     video.load();
     video.play().catch(() => {});
   } else {
+    image.onload = () => {
+      setCustomBackgroundPreviewAspect(
+        card,
+        image.naturalWidth,
+        image.naturalHeight,
+      );
+    };
     image.src = url;
     image.classList.remove("hidden");
   }
 
   if (typeEl) typeEl.textContent = isVideo ? "Video" : "Image";
   if (nameEl) nameEl.textContent = name;
+  fileNameEl?.classList.add("hidden");
   card.classList.remove("hidden");
 }
 
