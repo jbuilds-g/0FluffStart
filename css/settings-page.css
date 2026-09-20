@@ -250,6 +250,11 @@ body > .bg-video {
   display: none;
 }
 
+.custom-background-preview-modal.is-video-preview {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .custom-background-full-media {
   display: block;
   max-width: calc(100vw - 32px);
