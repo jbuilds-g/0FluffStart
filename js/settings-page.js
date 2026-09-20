@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const pageStyles = document.querySelector(
     'link[href^="css/settings-page.css"]',
   );
-  if (pageStyles) pageStyles.href = "css/settings-page.css?v=7";
+  if (pageStyles) pageStyles.href = "css/settings-page.css?v=8";
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       min-width:40px !important;
       min-height:40px !important;
       padding:0 !important;
-      cursor:pointer !important;
+      cursor:none !important;
       opacity:1 !important;
       pointer-events:auto !important;
       visibility:visible !important;
@@ -137,6 +137,42 @@ document.addEventListener("DOMContentLoaded", async () => {
     { rootMargin: "-96px 0px -55% 0px", threshold: [0.05, 0.2, 0.5] },
   );
   sections.forEach((section) => observer.observe(section));
+
+  const engineSelectionList = document.getElementById("engineSelectionList");
+  if (engineSelectionList) {
+    let engineListScrollIntent = false;
+
+    engineSelectionList.addEventListener("pointerdown", () => {
+      engineListScrollIntent = true;
+    });
+
+    engineSelectionList.addEventListener("pointerleave", () => {
+      engineListScrollIntent = false;
+    });
+
+    engineSelectionList.addEventListener("wheel", (event) => {
+      if (
+        engineListScrollIntent ||
+        event.ctrlKey ||
+        event.deltaY === 0
+      ) {
+        return;
+      }
+
+      const deltaMultiplier =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 16
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? window.innerHeight
+            : 1;
+
+      event.preventDefault();
+      window.scrollBy({
+        top: event.deltaY * deltaMultiplier,
+        behavior: "auto",
+      });
+    }, { passive: false });
+  }
 
   const defaultMaterialPreview =
     "linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)";
@@ -234,8 +270,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const index = options.indexOf(option);
         const next =
           event.key === "ArrowRight"
-            ? Math.min(options.length - 1, index + 1)
-            : Math.max(0, index - 1);
+            ? (index + 1) % options.length
+            : (index - 1 + options.length) % options.length;
         options[next]?.focus();
         options[next]?.scrollIntoView({
           behavior: "smooth",
@@ -376,8 +412,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const index = options.indexOf(option);
         const next =
           event.key === "ArrowRight"
-            ? Math.min(options.length - 1, index + 1)
-            : Math.max(0, index - 1);
+            ? (index + 1) % options.length
+            : (index - 1 + options.length) % options.length;
         options[next]?.focus();
         options[next]?.scrollIntoView({
           behavior: "smooth",

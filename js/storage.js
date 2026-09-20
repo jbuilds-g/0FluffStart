@@ -109,29 +109,85 @@ export async function backupData() {
   URL.revokeObjectURL(url);
 }
 
+function normalizeImportedLinks(links) {
+  if (!Array.isArray(links)) return [];
+
+  return links
+    .filter((item) => item && typeof item === "object" && !Array.isArray(item))
+    .map((item) => {
+      const name = typeof item.name === "string" ? item.name.trim() : "";
+      const isFolder = item.isFolder === true;
+      const url = typeof item.url === "string" ? item.url.trim() : "";
+      const parentId = typeof item.parentId === "string" && item.parentId ? item.parentId : null;
+      if (!name || !item.id || typeof item.id !== "string") return null;
+      if (!isFolder && !url) return null;
+      return {
+        ...item,
+        id: item.id,
+        name,
+        isFolder,
+        ...(isFolder ? {} : { url }),
+        parentId,
+      };
+    })
+    .filter(Boolean);
+}
+
 function normalizeImportedData(data) {
+  const settings =
+    data?.settings &&
+    typeof data.settings === "object" &&
+    !Array.isArray(data.settings)
+      ? data.settings
+      : {};
+  const bgMediaData = data?.bgMediaData;
+  const validBackground =
+    bgMediaData &&
+    typeof bgMediaData === "object" &&
+    typeof bgMediaData.base64 === "string" &&
+    /^[A-Za-z0-9+/]*={0,2}$/.test(bgMediaData.base64)
+      ? {
+          type: typeof bgMediaData.type === "string" ? bgMediaData.type : "application/octet-stream",
+          name: typeof bgMediaData.name === "string" ? bgMediaData.name : "background",
+          base64: bgMediaData.base64,
+        }
+      : null;
+
   return {
-    links: Array.isArray(data?.links) ? data.links : [],
-    settings:
-      data?.settings &&
-      typeof data.settings === "object" &&
-      !Array.isArray(data.settings)
-        ? data.settings
-        : {},
-    history: Array.isArray(data?.history) ? data.history : [],
-    bgMediaData: data?.bgMediaData || null,
+    links: normalizeImportedLinks(data?.links),
+    settings,
+    history: Array.isArray(data?.history)
+      ? data.history.filter((item) => typeof item === "string")
+      : [],
+    bgMediaData: validBackground,
   };
 }
 
 function mergeLinks(currentLinks, importedLinks) {
   const merged = Array.isArray(currentLinks) ? [...currentLinks] : [];
-  const existingIds = new Set(merged.map((item) => item?.id).filter(Boolean));
+  const usedIds = new Set(merged.map((item) => item?.id).filter(Boolean));
+  const idMap = new Map();
+  const importedIds = new Set(importedLinks.map((item) => item.id));
+
   for (const item of importedLinks) {
-    if (!item || typeof item !== "object") continue;
-    if (item.id && existingIds.has(item.id)) continue;
-    merged.push(item);
-    if (item.id) existingIds.add(item.id);
+    let id = item.id;
+    if (usedIds.has(id) || idMap.has(id)) {
+      do {
+        id = crypto.randomUUID();
+      } while (usedIds.has(id) || importedIds.has(id));
+      idMap.set(item.id, id);
+    }
+    usedIds.add(id);
   }
+
+  for (const item of importedLinks) {
+    const id = idMap.get(item.id) || item.id;
+    const parentId = item.parentId
+      ? idMap.get(item.parentId) || item.parentId
+      : null;
+    merged.push({ ...item, id, parentId });
+  }
+
   return merged;
 }
 
