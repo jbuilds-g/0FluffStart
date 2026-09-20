@@ -185,16 +185,55 @@ body > .bg-video {
   line-height: 1.5;
 }
 .custom-background-control {
-  width: fit-content;
+  width: min(100%, 900px);
   max-width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 440px) minmax(300px, 1fr);
+  grid-template-columns: minmax(280px, 440px) minmax(0, 1fr);
   align-items: start;
   justify-content: start;
   gap: 24px;
 }
 
 .custom-background-control .bg-preview-card {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.custom-background-details {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  width: 100%;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.custom-background-control .bg-file-name {
+  width: 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.custom-background-url-row {
+  width: 100%;
+}
+
+.custom-background-url-row .bg-url-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.custom-background-control .bg-radio-row {
+  width: max-content;
+  height: auto;
+  margin: 0 !important;
+  justify-content: flex-start !important;
+}
+
+.bg-preview-card {
   grid-column: 1;
   grid-row: 1;
 }
