@@ -194,6 +194,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
   };
 
+  const scrollbarThemeObserver = new MutationObserver(() => {
+    syncScrollbarTheme();
+  });
+
   const updateThemePreview = (settings = store.getState().settings || {}) => {
     const select = document.getElementById("themeSelect");
     const materialOption = select?.querySelector(
@@ -221,6 +225,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     if (materialPreviewEl) materialPreviewEl.style.background = materialPreview;
   };
+
+  scrollbarThemeObserver.observe(document.body, {
+    attributes: true,
+    attributeFilter: ["class", "style"],
+  });
 
   const themePreviewColors = {
     dark: ["#000000", "#141418", "#00aaff"],
