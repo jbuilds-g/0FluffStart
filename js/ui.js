@@ -34,15 +34,13 @@ function isVideoMedia(media) {
 
 function setCustomBackgroundPreviewAspect(card, width, height) {
   if (!width || !height) return;
-  card.style.setProperty("--bg-preview-aspect", `${width} / ${height}`);
+  card.style.setProperty("--bg-preview-ratio", width / height);
 }
 
 export function renderCustomBackgroundPreview(media = null) {
   const card = document.getElementById("bgPreviewCard");
   const image = document.getElementById("bgPreviewImage");
   const video = document.getElementById("bgPreviewVideo");
-  const typeEl = document.getElementById("bgPreviewType");
-  const nameEl = document.getElementById("bgPreviewName");
   const fileNameEl = document.getElementById("bgFileName");
 
   if (!card || !image || !video) return;
@@ -56,7 +54,7 @@ export function renderCustomBackgroundPreview(media = null) {
   video.classList.add("hidden");
   image.removeAttribute("src");
   video.removeAttribute("src");
-  card.style.removeProperty("--bg-preview-aspect");
+  card.style.removeProperty("--bg-preview-ratio");
 
   if (!media) {
     card.classList.add("hidden");
@@ -111,11 +109,9 @@ export function renderCustomBackgroundPreview(media = null) {
     image.classList.remove("hidden");
   }
 
-  if (typeEl) typeEl.textContent = isVideo ? "Video" : "Image";
-  if (nameEl) nameEl.textContent = name;
   if (fileNameEl) {
     fileNameEl.textContent = name;
-    fileNameEl.classList.add("hidden");
+    fileNameEl.classList.remove("hidden");
   }
   card.classList.remove("hidden");
 }
