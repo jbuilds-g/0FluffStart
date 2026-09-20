@@ -125,6 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       backgroundFullVideo.load();
     }
     document.body.classList.remove("modal-open");
+    window.customCursorInstance?.setVisible(true);
   };
 
   const openBackgroundPreview = () => {
@@ -155,6 +156,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     backgroundPreviewModal.classList.remove("hidden");
     backgroundPreviewModal.setAttribute("aria-hidden", "false");
     document.body.classList.add("modal-open");
+    window.customCursorInstance?.setVisible(false);
     backgroundPreviewClose?.focus();
   };
 
