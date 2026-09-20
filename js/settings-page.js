@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const pageStyles = document.querySelector(
     'link[href^="css/settings-page.css"]',
   );
-  if (pageStyles) pageStyles.href = "css/settings-page.css?v=8";
+  if (pageStyles) pageStyles.href = "css/settings-page.css?v=11";
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
@@ -176,6 +176,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const defaultMaterialPreview =
     "linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)";
+
+  const syncScrollbarTheme = () => {
+    const styles = getComputedStyle(document.body);
+    const accent = styles.getPropertyValue("--accent").trim();
+    const card = styles.getPropertyValue("--card").trim();
+    if (!accent || !card) return;
+
+    const root = document.documentElement;
+    root.style.setProperty(
+      "--settings-scrollbar-thumb",
+      `color-mix(in srgb, ${accent} 58%, ${card})`,
+    );
+    root.style.setProperty(
+      "--settings-scrollbar-thumb-hover",
+      `color-mix(in srgb, ${accent} 78%, ${card})`,
+    );
+  };
 
   const updateThemePreview = (settings = store.getState().settings || {}) => {
     const select = document.getElementById("themeSelect");
@@ -444,6 +461,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   store.subscribe((prevState, currentState) => {
     if (prevState.settings !== currentState.settings) {
+      syncScrollbarTheme();
       updateThemePreview(currentState.settings || {});
       updateClockStylePreviews(currentState.settings || {});
     }
@@ -458,6 +476,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  syncScrollbarTheme();
   updateThemePreview();
   updateClockStylePreviews();
   window.setTimeout(updateThemePreview, 0);
