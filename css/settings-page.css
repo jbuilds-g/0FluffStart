@@ -198,9 +198,19 @@ body > .bg-video {
 .bg-preview-media {
   position: relative;
   width: 100%;
+  max-height: min(62vh, 560px);
   aspect-ratio: var(--bg-preview-aspect, 16 / 9);
   overflow: hidden;
   background: var(--bg);
+}
+
+.bg-preview-card {
+  max-height: min(62vh, 560px);
+}
+
+.bg-preview-image,
+.bg-preview-video {
+  max-height: min(62vh, 560px);
 }
 
 .bg-preview-image,
