@@ -357,6 +357,39 @@ export function initSettingsPageSearch() {
     );
   };
 
+  const waitForScrollToSettle = (target, timeout = 1400) =>
+    new Promise((resolve) => {
+      const startedAt = performance.now();
+      let previousTop = target.getBoundingClientRect().top;
+      let stableFrames = 0;
+
+      const check = () => {
+        if (!document.contains(target)) {
+          resolve();
+          return;
+        }
+
+        const currentTop = target.getBoundingClientRect().top;
+        const moved = Math.abs(currentTop - previousTop);
+        previousTop = currentTop;
+
+        if (moved < 0.5) {
+          stableFrames += 1;
+        } else {
+          stableFrames = 0;
+        }
+
+        if (stableFrames >= 3 || performance.now() - startedAt >= timeout) {
+          resolve();
+          return;
+        }
+
+        requestAnimationFrame(check);
+      };
+
+      requestAnimationFrame(check);
+    });
+
   const selectResult = (entry) => {
     inputs.forEach((input) => {
       input.value = "";
@@ -367,15 +400,23 @@ export function initSettingsPageSearch() {
 
     window.setTimeout(() => {
       const target = revealTarget(entry.target || entry.row);
-      target?.scrollIntoView({
+      if (!target) return;
+
+      target.scrollIntoView({
         behavior: "smooth",
         block: "center",
         inline: "nearest",
       });
-      if (target?.matches(".select-option, .engine-list-item")) {
+
+      if (target.matches(".select-option, .engine-list-item")) {
         target.focus?.({ preventScroll: true });
       }
-      highlightTarget(target);
+
+      waitForScrollToSettle(target).then(() => {
+        if (document.contains(target)) {
+          highlightTarget(target);
+        }
+      });
     }, 80);
   };
 
