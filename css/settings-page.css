@@ -184,6 +184,38 @@ body > .bg-video {
   color: var(--dim);
   line-height: 1.5;
 }
+.custom-background-control {
+  width: min(100%, 760px);
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: start;
+  column-gap: 24px;
+  row-gap: 8px;
+}
+
+.custom-background-control .bg-preview-card {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.custom-background-control .bg-file-name {
+  grid-column: 1;
+  grid-row: 2;
+  width: min(280px, 100%);
+  margin: 0;
+}
+
+.custom-background-control .bg-radio-row {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: auto;
+  height: auto;
+  margin: 0;
+  justify-content: flex-start;
+  align-self: start;
+}
+
 .bg-preview-card {
   width: min(280px, calc(150px * var(--bg-preview-ratio, 1.7778)));
   max-width: 100%;
@@ -214,6 +246,32 @@ body > .bg-video {
 }
 
 @media (max-width: 600px) {
+.custom-background-control {
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  row-gap: 10px;
+}
+
+.custom-background-control .bg-preview-card,
+.custom-background-control .bg-file-name,
+.custom-background-control .bg-radio-row {
+  grid-column: 1;
+}
+
+.custom-background-control .bg-preview-card {
+  grid-row: 1;
+}
+
+.custom-background-control .bg-file-name {
+  grid-row: 2;
+  width: 100%;
+}
+
+.custom-background-control .bg-radio-row {
+  grid-row: 3;
+}
+
   .bg-preview-card {
     width: min(240px, calc(120px * var(--bg-preview-ratio, 1.7778)));
   }
