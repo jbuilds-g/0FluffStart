@@ -234,8 +234,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const index = options.indexOf(option);
         const next =
           event.key === "ArrowRight"
-            ? Math.min(options.length - 1, index + 1)
-            : Math.max(0, index - 1);
+            ? (index + 1) % options.length
+            : (index - 1 + options.length) % options.length;
         options[next]?.focus();
         options[next]?.scrollIntoView({
           behavior: "smooth",
@@ -376,8 +376,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const index = options.indexOf(option);
         const next =
           event.key === "ArrowRight"
-            ? Math.min(options.length - 1, index + 1)
-            : Math.max(0, index - 1);
+            ? (index + 1) % options.length
+            : (index - 1 + options.length) % options.length;
         options[next]?.focus();
         options[next]?.scrollIntoView({
           behavior: "smooth",
