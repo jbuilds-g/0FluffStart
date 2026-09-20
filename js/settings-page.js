@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const pageStyles = document.querySelector(
     'link[href^="css/settings-page.css"]',
   );
-  if (pageStyles) pageStyles.href = "css/settings-page.css?v=11";
+  if (pageStyles) pageStyles.href = "css/settings-page.css?v=17";
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
