@@ -142,6 +142,7 @@ export async function renderCustomBackgroundPreview(media = null) {
           return;
         }
 
+        if (url.startsWith("blob:")) URL.revokeObjectURL(url);
         customBackgroundPreviewUrl = compressed.url;
         setCustomBackgroundPreviewAspect(
           card,
