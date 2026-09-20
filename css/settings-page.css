@@ -681,8 +681,12 @@ body > .bg-video {
 .link-manager-list {
   max-height: 360px;
   overflow-y: auto;
-  padding: 2px 5px 2px 0;
+  overscroll-behavior-y: auto;
   scrollbar-width: thin;
+}
+
+.engine-selection-list {
+  scrollbar-gutter: stable;
 }
 .settings-page-shell .engine-item,
 .settings-page-shell .link-item {
