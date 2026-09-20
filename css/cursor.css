@@ -23,6 +23,11 @@
     cursor: none !important;
   }
 
+  html[data-custom-cursor="active"] .settings-modal-scroll-anchor,
+  html[data-custom-cursor="active"] .settings-modal-scroll-anchor * {
+    cursor: none !important;
+  }
+
   /* Keep native control cursors hidden while the custom cursor is active. */
   html[data-custom-cursor="active"]
     body.material-you
