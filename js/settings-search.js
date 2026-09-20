@@ -73,23 +73,36 @@ function collectControlText(row) {
 
 function buildSearchIndex(content) {
   const candidates = Array.from(
-    content.querySelectorAll(".setting-row, .setting-option"),
+    content.querySelectorAll(
+      ".setting-row, .setting-option, .select-option, .engine-list-item",
+    ),
   );
   const seen = new Set();
 
   return candidates
-    .map((row) => {
-      if (seen.has(row)) return null;
+    .map((node) => {
+      if (seen.has(node)) return null;
+
+      const parentRow =
+        node.closest(".setting-row, .setting-option") || node;
+      const isOption = node.classList.contains("select-option");
+      const isEngine = node.classList.contains("engine-list-item");
 
       const title =
-        row.querySelector(".setting-header h3")?.textContent.trim() ||
-        row.querySelector(".setting-option-title")?.textContent.trim() ||
-        row.querySelector(".settings-picker-label-block")?.textContent.trim();
+        (isOption ? node.textContent.trim() : "") ||
+        (isEngine
+          ? node.querySelector(".engine-item-name")?.textContent.trim()
+          : "") ||
+        parentRow.querySelector(".setting-header h3")?.textContent.trim() ||
+        parentRow
+          .querySelector(".setting-option-title")?.textContent.trim() ||
+        parentRow
+          .querySelector(".settings-picker-label-block")?.textContent.trim();
 
       if (!title) return null;
 
-      const section = row.closest(".settings-section");
-      const subsection = row
+      const section = node.closest(".settings-section");
+      const subsection = node
         .closest(".settings-subsection")
         ?.querySelector(":scope > h3")
         ?.textContent.trim();
@@ -102,17 +115,24 @@ function buildSearchIndex(content) {
         : sectionTitle;
 
       const help =
-        row.querySelector(".help-text")?.textContent.trim() ||
-        row.querySelector(".setting-option-help")?.textContent.trim() ||
+        parentRow.querySelector(".help-text")?.textContent.trim() ||
+        parentRow.querySelector(".setting-option-help")?.textContent.trim() ||
         "";
 
-      seen.add(row);
+      seen.add(node);
       return {
-        row,
+        row: parentRow,
+        target: node,
         title,
         help,
         category,
-        controlText: collectControlText(row),
+        controlText: [
+          parentRow === node ? "" : parentRow.textContent.trim(),
+          node === parentRow ? "" : node.textContent.trim(),
+          isEngine ? "search engine" : "",
+        ]
+          .filter(Boolean)
+          .join(" "),
       };
     })
     .filter(Boolean);
@@ -151,8 +171,7 @@ export function initSettingsPageSearch() {
   const content = document.querySelector(".settings-content");
   if (!page || !header || !nav || !content) return;
 
-  const entries = buildSearchIndex(content);
-  if (!entries.length) return;
+  if (!buildSearchIndex(content).length) return;
 
   const createSearch = (mobile = false) => {
     const wrapper = document.createElement("div");
@@ -212,6 +231,7 @@ export function initSettingsPageSearch() {
       return;
     }
 
+    const entries = buildSearchIndex(content);
     const matches = entries
       .map((entry) => ({ entry, score: scoreEntry(entry, normalized) }))
       .filter((item) => item.score > 0)
@@ -284,6 +304,59 @@ export function initSettingsPageSearch() {
     mobile.querySelector("input")?.blur();
   };
 
+  const revealTarget = (target) => {
+    if (!target) return target;
+
+    target
+      .closest("details")
+      ?.toggleAttribute("open", true);
+
+    const collapsible = target.closest(
+      ".sub-collapsible-content, .settings-subcollapsible-content",
+    );
+    if (collapsible?.classList.contains("hidden")) {
+      const trigger =
+        collapsible.previousElementSibling?.closest(
+          ".sub-collapsible-trigger, .settings-subcollapsible-trigger, button",
+        ) ||
+        collapsible.parentElement?.querySelector(
+          ".sub-collapsible-trigger, .settings-subcollapsible-trigger",
+        );
+      trigger?.click();
+    }
+
+    let ancestor = target.parentElement;
+    while (ancestor && ancestor !== content) {
+      if (ancestor.classList.contains("hidden")) {
+        ancestor.classList.remove("hidden");
+        ancestor.removeAttribute("aria-hidden");
+      }
+      ancestor = ancestor.parentElement;
+    }
+
+    const customSelect = target.closest(".custom-select");
+    if (customSelect && !customSelect.classList.contains("clock-style-picker")) {
+      const dropdown = customSelect.querySelector(".select-dropdown");
+      const trigger = customSelect.querySelector(".select-trigger");
+      customSelect.classList.add("open");
+      dropdown?.classList.remove("hidden");
+      trigger?.setAttribute("aria-expanded", "true");
+    }
+
+    return target;
+  };
+
+  const highlightTarget = (target) => {
+    if (!target) return;
+    target.classList.remove("setting-search-highlight");
+    void target.offsetWidth;
+    target.classList.add("setting-search-highlight");
+    window.setTimeout(
+      () => target.classList.remove("setting-search-highlight"),
+      1200,
+    );
+  };
+
   const selectResult = (entry) => {
     inputs.forEach((input) => {
       input.value = "";
@@ -293,23 +366,16 @@ export function initSettingsPageSearch() {
     closeMobileSearch();
 
     window.setTimeout(() => {
-      let target = entry.row;
-      if (entry.row.closest(".hidden")) {
-        const visibleAncestor =
-          entry.row.closest(".settings-subgroup, .setting-row, .settings-subsection");
-        if (visibleAncestor && !visibleAncestor.closest(".hidden")) {
-          target = visibleAncestor;
-        }
+      const target = revealTarget(entry.target || entry.row);
+      target?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
+      if (target?.matches(".select-option, .engine-list-item")) {
+        target.focus?.({ preventScroll: true });
       }
-
-      target.scrollIntoView({ behavior: "smooth", block: "center" });
-      target.classList.remove("setting-search-highlight");
-      void target.offsetWidth;
-      target.classList.add("setting-search-highlight");
-      window.setTimeout(
-        () => target.classList.remove("setting-search-highlight"),
-        900,
-      );
+      highlightTarget(target);
     }, 80);
   };
 
