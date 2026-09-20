@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings — 0FluffStart</title>
     <link rel="stylesheet" href="css/core.css" />
-    <link rel="stylesheet" href="css/settings-page.css?v=10" />
+    <link rel="stylesheet" href="css/settings-page.css?v=12" />
   </head>
   <body class="dark">
     <div id="bgOverlay" class="bg-overlay"></div>
@@ -445,6 +445,28 @@
                           style="width: 18px; height: 18px"
                         ></span>
                       </button>
+                    </div>
+                    <div id="bgPreviewCard" class="bg-preview-card hidden">
+                      <div class="bg-preview-media">
+                        <img
+                          id="bgPreviewImage"
+                          class="bg-preview-image hidden"
+                          alt="Custom background preview"
+                        />
+                        <video
+                          id="bgPreviewVideo"
+                          class="bg-preview-video hidden"
+                          muted
+                          loop
+                          autoplay
+                          playsinline
+                          aria-label="Custom background video preview"
+                        ></video>
+                      </div>
+                      <div class="bg-preview-meta">
+                        <span id="bgPreviewType" class="bg-preview-type">Image</span>
+                        <span id="bgPreviewName" class="bg-preview-name">Custom media</span>
+                      </div>
                     </div>
                     <p id="bgFileName" class="bg-file-name">
                       No media selected.
