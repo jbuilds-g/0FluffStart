@@ -185,7 +185,9 @@ body > .bg-video {
   line-height: 1.5;
 }
 .bg-preview-card {
-  width: min(100%, 520px);
+  width: 100%;
+  max-width: 520px;
+  box-sizing: border-box;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: min(var(--radius), 14px);
@@ -196,7 +198,7 @@ body > .bg-video {
 .bg-preview-media {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: var(--bg-preview-aspect, 16 / 9);
   overflow: hidden;
   background: var(--bg);
 }
