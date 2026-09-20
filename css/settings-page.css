@@ -185,7 +185,8 @@ body > .bg-video {
   line-height: 1.5;
 }
 .bg-preview-card {
-  width: min(100%, 320px);
+  width: min(280px, calc(150px * var(--bg-preview-ratio, 1.7778)));
+  max-width: 100%;
   box-sizing: border-box;
   overflow: hidden;
   border: 1px solid var(--border);
@@ -196,8 +197,9 @@ body > .bg-video {
 
 .bg-preview-media {
   display: block;
-  width: min(100%, calc(160px * var(--bg-preview-ratio, 1.7778)));
+  width: 100%;
   aspect-ratio: var(--bg-preview-ratio, 1.7778);
+  max-height: 150px;
   min-height: 0;
   overflow: hidden;
   background: var(--bg);
@@ -213,12 +215,75 @@ body > .bg-video {
 
 @media (max-width: 600px) {
   .bg-preview-card {
-    width: min(100%, 280px);
+    width: min(240px, calc(120px * var(--bg-preview-ratio, 1.7778)));
   }
 
   .bg-preview-media {
-    width: min(100%, calc(140px * var(--bg-preview-ratio, 1.7778)));
+    max-height: 120px;
   }
+}
+
+.bg-preview-card {
+  cursor: pointer;
+}
+
+.bg-preview-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.custom-background-preview-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.custom-background-preview-modal.hidden {
+  display: none;
+}
+
+.custom-background-full-media {
+  display: block;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 32px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: min(var(--radius), 14px);
+}
+
+.custom-background-preview-close {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.custom-background-preview-close:hover {
+  color: var(--accent);
+}
+
+.custom-background-preview-close .icon-mask {
+  width: 22px;
+  height: 22px;
 }
 
 .bg-preview-image,
