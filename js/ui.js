@@ -16,6 +16,7 @@ import {
 const materialYouEngine = new MaterialYouEngine();
 
 let customBackgroundPreviewUrl = null;
+let customBackgroundPreviewGeneration = 0;
 
 function revokeCustomBackgroundPreviewUrl() {
   if (customBackgroundPreviewUrl) {
@@ -37,7 +38,41 @@ function setCustomBackgroundPreviewAspect(card, width, height) {
   card.style.setProperty("--bg-preview-ratio", width / height);
 }
 
-export function renderCustomBackgroundPreview(media = null) {
+async function createCompressedImagePreview(file) {
+  const bitmap = await createImageBitmap(file);
+  const maxDimension = 1280;
+  const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+  const width = Math.max(1, Math.round(bitmap.width * scale));
+  const height = Math.max(1, Math.round(bitmap.height * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+
+  const context = canvas.getContext("2d", { alpha: true });
+  if (!context) {
+    bitmap.close();
+    throw new Error("Preview canvas is unavailable");
+  }
+
+  context.drawImage(bitmap, 0, 0, width, height);
+  bitmap.close();
+
+  const blob = await new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (result) => (result ? resolve(result) : reject(new Error("Preview encoding failed"))),
+      "image/webp",
+      0.72,
+    );
+  });
+
+  return {
+    url: URL.createObjectURL(blob),
+    width,
+    height,
+  };
+}
+
+export async function renderCustomBackgroundPreview(media = null) {
   const card = document.getElementById("bgPreviewCard");
   const image = document.getElementById("bgPreviewImage");
   const video = document.getElementById("bgPreviewVideo");
@@ -45,6 +80,7 @@ export function renderCustomBackgroundPreview(media = null) {
 
   if (!card || !image || !video) return;
 
+  const generation = ++customBackgroundPreviewGeneration;
   revokeCustomBackgroundPreviewUrl();
   image.onload = null;
   image.onerror = null;
@@ -98,14 +134,36 @@ export function renderCustomBackgroundPreview(media = null) {
     video.load();
     video.play().catch(() => {});
   } else {
-    image.onload = () => {
-      setCustomBackgroundPreviewAspect(
-        card,
-        image.naturalWidth,
-        image.naturalHeight,
-      );
-    };
-    image.src = url;
+    if (media instanceof Blob || media instanceof File) {
+      try {
+        const compressed = await createCompressedImagePreview(media);
+        if (generation !== customBackgroundPreviewGeneration) {
+          URL.revokeObjectURL(compressed.url);
+          return;
+        }
+
+        customBackgroundPreviewUrl = compressed.url;
+        setCustomBackgroundPreviewAspect(
+          card,
+          compressed.width,
+          compressed.height,
+        );
+        image.src = compressed.url;
+      } catch {
+        if (generation !== customBackgroundPreviewGeneration) return;
+        image.src = url;
+      }
+    } else {
+      image.onload = () => {
+        if (generation !== customBackgroundPreviewGeneration) return;
+        setCustomBackgroundPreviewAspect(
+          card,
+          image.naturalWidth,
+          image.naturalHeight,
+        );
+      };
+      image.src = url;
+    }
     image.classList.remove("hidden");
   }
 
