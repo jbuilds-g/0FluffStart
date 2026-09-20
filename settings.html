@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings — 0FluffStart</title>
     <link rel="stylesheet" href="css/core.css" />
-    <link rel="stylesheet" href="css/settings-page.css?v=15" />
+    <link rel="stylesheet" href="css/settings-page.css?v=16" />
   </head>
   <body class="dark">
     <div id="bgOverlay" class="bg-overlay"></div>
@@ -420,32 +420,6 @@
                     </div>
                   </div>
                   <div class="setting-item setting-item-col custom-background-control">
-                    <div class="radio-row bg-radio-row">
-                      <input
-                        type="file"
-                        id="bgImageInput"
-                        accept="image/*,video/*"
-                        class="hidden-input"
-                      /><label
-                        for="bgImageInput"
-                        class="radio-option bg-option-label"
-                        ><span
-                          class="icon-mask icon-image"
-                          style="width: 16px; height: 16px"
-                        ></span>
-                        Choose Media</label
-                      ><button
-                        id="resetBgBtn"
-                        class="radio-option reset-bg-btn"
-                        type="button"
-                        title="Reset Background"
-                      >
-                        <span
-                          class="icon-mask icon-delete"
-                          style="width: 18px; height: 18px"
-                        ></span>
-                      </button>
-                    </div>
                     <div id="bgPreviewCard" class="bg-preview-card hidden">
                       <div class="bg-preview-media">
                         <img
@@ -464,9 +438,52 @@
                         ></video>
                       </div>
                     </div>
-                    <p id="bgFileName" class="bg-file-name">
-                      No media selected.
-                    </p>
+                    <div class="custom-background-details">
+                      <p id="bgFileName" class="bg-file-name">No media selected.</p>
+                      <div class="custom-background-url-row">
+                        <input
+                          type="url"
+                          id="bgUrlInput"
+                          class="bg-url-input"
+                          placeholder="Paste an image or video URL..."
+                          autocomplete="off"
+                          spellcheck="false"
+                        />
+                        <button
+                          id="bgUrlApplyBtn"
+                          class="radio-option bg-url-apply-btn"
+                          type="button"
+                        >
+                          Use URL
+                        </button>
+                      </div>
+                      <div class="radio-row bg-radio-row">
+                        <input
+                          type="file"
+                          id="bgImageInput"
+                          accept="image/*,video/*"
+                          class="hidden-input"
+                        /><label
+                          for="bgImageInput"
+                          class="radio-option bg-option-label"
+                          ><span
+                            class="icon-mask icon-image"
+                            style="width: 16px; height: 16px"
+                          ></span>
+                          Choose Media</label
+                        ><button
+                          id="resetBgBtn"
+                          class="radio-option reset-bg-btn"
+                          type="button"
+                          title="Reset Background"
+                        >
+                          <span
+                            class="icon-mask icon-delete"
+                            style="width: 18px; height: 18px"
+                          ></span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
