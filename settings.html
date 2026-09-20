@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings — 0FluffStart</title>
     <link rel="stylesheet" href="css/core.css" />
-    <link rel="stylesheet" href="css/settings-page.css?v=13" />
+    <link rel="stylesheet" href="css/settings-page.css?v=14" />
   </head>
   <body class="dark">
     <div id="bgOverlay" class="bg-overlay"></div>
@@ -1016,6 +1016,35 @@
     <div id="customCursorEngine" class="custom-cursor" aria-hidden="true">
       <span class="custom-cursor-icon icon-default-mouse-pointer"></span>
     </div>
+    <div
+      id="customBackgroundPreviewModal"
+      class="custom-background-preview-modal hidden"
+      aria-hidden="true"
+    >
+      <button
+        id="customBackgroundPreviewClose"
+        class="custom-background-preview-close"
+        type="button"
+        aria-label="Close full preview"
+      >
+        <span class="icon-mask icon-close" aria-hidden="true"></span>
+      </button>
+      <img
+        id="customBackgroundFullImage"
+        class="custom-background-full-media hidden"
+        alt="Full custom background preview"
+      />
+      <video
+        id="customBackgroundFullVideo"
+        class="custom-background-full-media hidden"
+        muted
+        loop
+        autoplay
+        playsinline
+        aria-label="Full custom background video preview"
+      ></video>
+    </div>
+
     <div id="toastContainer" class="toast-container"></div>
     <div class="modal" id="customDialogModal">
       <div class="modal-content custom-dialog-content">
@@ -1033,6 +1062,6 @@
       </div>
     </div>
 
-    <script type="module" src="js/settings-page.js?v=6"></script>
+    <script type="module" src="js/settings-page.js?v=7"></script>
   </body>
 </html>
