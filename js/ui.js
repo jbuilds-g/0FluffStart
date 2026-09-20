@@ -552,6 +552,7 @@ export async function updateBackgroundMedia(sourceType, data) {
     renderCustomBackgroundPreview(null);
     if (resetBtn) resetBtn.classList.add("hidden");
     if (overlay) overlay.classList.remove("bg-overlay-active");
+    renderCustomBackgroundPreview(null);
   }
 
   const settings = store.getState().settings || {};
@@ -854,6 +855,7 @@ export async function loadSettings() {
         }
 
         if (overlay) overlay.classList.add("bg-overlay-active");
+        renderCustomBackgroundPreview(bgData);
       }
     } catch (e) {
       console.error("Background load fail:", e);
