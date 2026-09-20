@@ -185,16 +185,41 @@ body > .bg-video {
   line-height: 1.5;
 }
 .custom-background-control {
-  width: min(100%, 760px);
+  width: fit-content;
+  max-width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 280px) max-content;
   grid-template-rows: auto auto;
   align-items: start;
+  justify-content: start;
   column-gap: 24px;
   row-gap: 8px;
 }
 
 .custom-background-control .bg-preview-card {
+  grid-column: 1;
+  grid-row: 1;
+  width: min(280px, 100%);
+}
+
+.custom-background-control .bg-file-name {
+  grid-column: 1;
+  grid-row: 2;
+  width: 100%;
+  margin: 0;
+}
+
+.custom-background-control .bg-radio-row {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: max-content;
+  height: auto;
+  margin: 0 !important;
+  justify-content: flex-start !important;
+  align-self: start;
+}
+
+.bg-preview-card {
   grid-column: 1;
   grid-row: 1;
 }
