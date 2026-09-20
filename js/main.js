@@ -654,18 +654,24 @@ function bindStaticEvents() {
   }
 
   const bgUrlInput = document.getElementById("bgUrlInput");
-  if (bgUrlInput) {
-    bgUrlInput.addEventListener(
-      "input",
-      debounce(async () => {
-        const val = bgUrlInput.value.trim();
-        if (val) {
-          await updateBackgroundMedia("url", val);
-        } else {
-          await updateBackgroundMedia("clear", null);
-        }
-      }, 400),
-    );
+  const bgUrlApplyBtn = document.getElementById("bgUrlApplyBtn");
+  if (bgUrlApplyBtn && bgUrlInput) {
+    const applyBackgroundUrl = async () => {
+      const value = bgUrlInput.value.trim();
+      if (!value) {
+        await updateBackgroundMedia("clear", null);
+        return;
+      }
+      await updateBackgroundMedia("url", value);
+    };
+
+    bgUrlApplyBtn.addEventListener("click", applyBackgroundUrl);
+    bgUrlInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        applyBackgroundUrl();
+      }
+    });
   }
 
   const resetBgBtn = document.getElementById("resetBgBtn");
