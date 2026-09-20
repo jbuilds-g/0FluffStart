@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       min-width:40px !important;
       min-height:40px !important;
       padding:0 !important;
-      cursor:pointer !important;
+      cursor:none !important;
       opacity:1 !important;
       pointer-events:auto !important;
       visibility:visible !important;
