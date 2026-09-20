@@ -353,15 +353,16 @@ export function initSettingsPageSearch() {
     target.classList.add("setting-search-highlight");
     window.setTimeout(
       () => target.classList.remove("setting-search-highlight"),
-      1200,
+      2200,
     );
   };
 
-  const waitForScrollToSettle = (target, timeout = 1400) =>
+  const waitForScrollToSettle = (target, timeout = 3200) =>
     new Promise((resolve) => {
       const startedAt = performance.now();
-      let previousTop = target.getBoundingClientRect().top;
+      let previousRect = target.getBoundingClientRect();
       let stableFrames = 0;
+      let hasMoved = false;
 
       const check = () => {
         if (!document.contains(target)) {
@@ -369,17 +370,26 @@ export function initSettingsPageSearch() {
           return;
         }
 
-        const currentTop = target.getBoundingClientRect().top;
-        const moved = Math.abs(currentTop - previousTop);
-        previousTop = currentTop;
+        const rect = target.getBoundingClientRect();
+        const moved =
+          Math.abs(rect.top - previousRect.top) >= 0.5 ||
+          Math.abs(rect.left - previousRect.left) >= 0.5;
 
-        if (moved < 0.5) {
-          stableFrames += 1;
-        } else {
+        if (moved) {
+          hasMoved = true;
           stableFrames = 0;
+        } else {
+          stableFrames += 1;
         }
 
-        if (stableFrames >= 3 || performance.now() - startedAt >= timeout) {
+        previousRect = rect;
+
+        // Require the target to have actually moved first, then remain
+        // stationary for a short run of frames before highlighting it.
+        if (
+          (hasMoved && stableFrames >= 10) ||
+          performance.now() - startedAt >= timeout
+        ) {
           resolve();
           return;
         }
