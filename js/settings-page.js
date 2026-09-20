@@ -99,6 +99,95 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   updateSettingsScrollAnchor();
 
+  const backgroundPreviewCard = document.getElementById("bgPreviewCard");
+  const backgroundPreviewModal = document.getElementById(
+    "customBackgroundPreviewModal",
+  );
+  const backgroundPreviewClose = document.getElementById(
+    "customBackgroundPreviewClose",
+  );
+  const backgroundFullImage = document.getElementById(
+    "customBackgroundFullImage",
+  );
+  const backgroundFullVideo = document.getElementById(
+    "customBackgroundFullVideo",
+  );
+
+  const closeBackgroundPreview = () => {
+    if (!backgroundPreviewModal) return;
+    backgroundPreviewModal.classList.add("hidden");
+    backgroundPreviewModal.setAttribute("aria-hidden", "true");
+    backgroundFullImage?.classList.add("hidden");
+    backgroundFullVideo?.classList.add("hidden");
+    if (backgroundFullVideo) {
+      backgroundFullVideo.pause();
+      backgroundFullVideo.removeAttribute("src");
+      backgroundFullVideo.load();
+    }
+    document.body.classList.remove("modal-open");
+  };
+
+  const openBackgroundPreview = () => {
+    if (!backgroundPreviewCard || !backgroundPreviewModal) return;
+
+    const previewImage = document.getElementById("bgPreviewImage");
+    const previewVideo = document.getElementById("bgPreviewVideo");
+    const activeMedia = previewImage && !previewImage.classList.contains("hidden")
+      ? previewImage
+      : previewVideo && !previewVideo.classList.contains("hidden")
+        ? previewVideo
+        : null;
+
+    if (!activeMedia?.src) return;
+
+    backgroundFullImage?.classList.add("hidden");
+    backgroundFullVideo?.classList.add("hidden");
+
+    if (activeMedia === previewImage && backgroundFullImage) {
+      backgroundFullImage.src = activeMedia.src;
+      backgroundFullImage.classList.remove("hidden");
+    } else if (backgroundFullVideo) {
+      backgroundFullVideo.src = activeMedia.src;
+      backgroundFullVideo.classList.remove("hidden");
+      backgroundFullVideo.play().catch(() => {});
+    }
+
+    backgroundPreviewModal.classList.remove("hidden");
+    backgroundPreviewModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    backgroundPreviewClose?.focus();
+  };
+
+  if (backgroundPreviewCard) {
+    backgroundPreviewCard.setAttribute("role", "button");
+    backgroundPreviewCard.setAttribute("tabindex", "0");
+    backgroundPreviewCard.setAttribute(
+      "aria-label",
+      "Open full custom background preview",
+    );
+    backgroundPreviewCard.addEventListener("click", openBackgroundPreview);
+    backgroundPreviewCard.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openBackgroundPreview();
+      }
+    });
+  }
+
+  backgroundPreviewClose?.addEventListener("click", closeBackgroundPreview);
+  backgroundPreviewModal?.addEventListener("click", (event) => {
+    if (event.target === backgroundPreviewModal) closeBackgroundPreview();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Escape" &&
+      backgroundPreviewModal &&
+      !backgroundPreviewModal.classList.contains("hidden")
+    ) {
+      closeBackgroundPreview();
+    }
+  });
+
   const nav = document.querySelector(".settings-section-nav");
   const sections = Array.from(document.querySelectorAll(".settings-section"));
   if (!nav || !sections.length) return;
