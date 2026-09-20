@@ -149,6 +149,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       backgroundFullImage.classList.remove("hidden");
     } else if (backgroundFullVideo) {
       backgroundFullVideo.src = activeMedia.src;
+      backgroundFullVideo.style.maxWidth = "min(calc(100vw - 32px), 1920px)";
+      backgroundFullVideo.style.maxHeight = "min(calc(100dvh - 32px), 1080px)";
+      backgroundFullVideo.preload = "metadata";
       backgroundFullVideo.classList.remove("hidden");
       backgroundFullVideo.play().catch(() => {});
     }
