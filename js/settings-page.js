@@ -138,6 +138,42 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
   sections.forEach((section) => observer.observe(section));
 
+  const engineSelectionList = document.getElementById("engineSelectionList");
+  if (engineSelectionList) {
+    let engineListScrollIntent = false;
+
+    engineSelectionList.addEventListener("pointerdown", () => {
+      engineListScrollIntent = true;
+    });
+
+    engineSelectionList.addEventListener("pointerleave", () => {
+      engineListScrollIntent = false;
+    });
+
+    engineSelectionList.addEventListener("wheel", (event) => {
+      if (
+        engineListScrollIntent ||
+        event.ctrlKey ||
+        event.deltaY === 0
+      ) {
+        return;
+      }
+
+      const deltaMultiplier =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 16
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? window.innerHeight
+            : 1;
+
+      event.preventDefault();
+      window.scrollBy({
+        top: event.deltaY * deltaMultiplier,
+        behavior: "auto",
+      });
+    }, { passive: false });
+  }
+
   const defaultMaterialPreview =
     "linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)";
 
