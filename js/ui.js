@@ -15,6 +15,79 @@ import {
 
 const materialYouEngine = new MaterialYouEngine();
 
+let customBackgroundPreviewUrl = null;
+
+function revokeCustomBackgroundPreviewUrl() {
+  if (customBackgroundPreviewUrl) {
+    URL.revokeObjectURL(customBackgroundPreviewUrl);
+    customBackgroundPreviewUrl = null;
+  }
+}
+
+function isVideoMedia(media) {
+  return (
+    (media?.type && media.type.startsWith("video/")) ||
+    (typeof media === "string" && /\.(mp4|webm|ogg|mov|m4v)(?:$|[?#])/i.test(media))
+  );
+}
+
+export function renderCustomBackgroundPreview(media = null) {
+  const card = document.getElementById("bgPreviewCard");
+  const image = document.getElementById("bgPreviewImage");
+  const video = document.getElementById("bgPreviewVideo");
+  const typeEl = document.getElementById("bgPreviewType");
+  const nameEl = document.getElementById("bgPreviewName");
+
+  if (!card || !image || !video) return;
+
+  revokeCustomBackgroundPreviewUrl();
+  image.classList.add("hidden");
+  video.classList.add("hidden");
+  image.removeAttribute("src");
+  video.removeAttribute("src");
+
+  if (!media) {
+    card.classList.add("hidden");
+    return;
+  }
+
+  const isVideo = isVideoMedia(media);
+  const url =
+    media instanceof Blob || media instanceof File
+      ? URL.createObjectURL(media)
+      : typeof media === "string"
+        ? media
+        : null;
+
+  if (!url) {
+    card.classList.add("hidden");
+    return;
+  }
+
+  if (media instanceof Blob || media instanceof File) {
+    customBackgroundPreviewUrl = url;
+  }
+
+  const name =
+    typeof media === "string"
+      ? media.split("/").pop()?.split(/[?#]/)[0] || "Remote media"
+      : media.name || "Custom media";
+
+  if (isVideo) {
+    video.src = url;
+    video.classList.remove("hidden");
+    video.load();
+    video.play().catch(() => {});
+  } else {
+    image.src = url;
+    image.classList.remove("hidden");
+  }
+
+  if (typeEl) typeEl.textContent = isVideo ? "Video" : "Image";
+  if (nameEl) nameEl.textContent = name;
+  card.classList.remove("hidden");
+}
+
 const GENERIC_SEARCH_ICON = `<span class="icon-mask icon-search"></span>`;
 
 export {
@@ -451,6 +524,7 @@ export async function updateBackgroundMedia(sourceType, data) {
       }
 
       if (fileNameEl) fileNameEl.innerText = data.name || "Custom Media Active";
+      renderCustomBackgroundPreview(data);
       if (resetBtn) resetBtn.classList.remove("hidden");
       if (overlay) overlay.classList.add("bg-overlay-active");
     } catch (e) {
@@ -475,6 +549,7 @@ export async function updateBackgroundMedia(sourceType, data) {
 
     if (bgImageInput) bgImageInput.value = "";
     if (fileNameEl) fileNameEl.innerText = "Default CSS Vibe Active";
+    renderCustomBackgroundPreview(null);
     if (resetBtn) resetBtn.classList.add("hidden");
     if (overlay) overlay.classList.remove("bg-overlay-active");
   }
