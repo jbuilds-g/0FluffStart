@@ -21,6 +21,46 @@ body {
   z-index: 0;
   box-sizing: border-box;
 }
+
+/* --- THEMED SCROLLBARS --- */
+body,
+.settings-page-shell * {
+  scrollbar-color: color-mix(in srgb, var(--accent) 58%, var(--card))
+    transparent;
+  scrollbar-width: thin;
+}
+
+body::-webkit-scrollbar,
+.settings-page-shell *::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+body::-webkit-scrollbar-track,
+.settings-page-shell *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb,
+.settings-page-shell *::-webkit-scrollbar-thumb {
+  min-height: 34px;
+  background: color-mix(in srgb, var(--accent) 58%, var(--card));
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+body::-webkit-scrollbar-thumb:hover,
+.settings-page-shell *::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--accent) 78%, var(--card));
+  border-width: 1px;
+}
+
+body::-webkit-scrollbar-corner,
+.settings-page-shell *::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 body > .bg-overlay,
 body > .bg-image,
 body > .bg-video {
