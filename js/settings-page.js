@@ -117,6 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!backgroundPreviewModal) return;
     backgroundPreviewModal.classList.add("hidden");
     backgroundPreviewModal.setAttribute("aria-hidden", "true");
+    backgroundPreviewModal.classList.remove("is-video-preview");
     backgroundFullImage?.classList.add("hidden");
     backgroundFullVideo?.classList.add("hidden");
     if (backgroundFullVideo) {
@@ -144,13 +145,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     backgroundFullImage?.classList.add("hidden");
     backgroundFullVideo?.classList.add("hidden");
 
+    const isVideoPreview = activeMedia === previewVideo;
+    backgroundPreviewModal.classList.toggle("is-video-preview", isVideoPreview);
+
     if (activeMedia === previewImage && backgroundFullImage) {
       backgroundFullImage.src = activeMedia.src;
       backgroundFullImage.classList.remove("hidden");
     } else if (backgroundFullVideo) {
       backgroundFullVideo.src = activeMedia.src;
-      backgroundFullVideo.style.maxWidth = "min(calc(100vw - 32px), 1920px)";
-      backgroundFullVideo.style.maxHeight = "min(calc(100dvh - 32px), 1080px)";
       backgroundFullVideo.preload = "metadata";
       backgroundFullVideo.classList.remove("hidden");
       backgroundFullVideo.play().catch(() => {});
