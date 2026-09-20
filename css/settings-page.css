@@ -14,8 +14,8 @@ body {
   min-height: 100dvh;
   min-height: 100svh;
   padding: 16px;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow-x: clip;
+  overflow-y: visible;
   background: var(--bg);
   align-items: initial;
   z-index: 0;
