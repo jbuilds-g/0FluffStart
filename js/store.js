@@ -208,7 +208,7 @@ let state = {
   isCreatingFolder: false,
 };
 
-let isInitialized = false;
+let initializationPromise = null;
 const listeners = new Set();
 
 /**
@@ -224,11 +224,18 @@ function queuePersistence(key, data) {
 
   persistenceQueues.set(key, next);
 
-  next.finally(() => {
-    if (persistenceQueues.get(key) === next) {
-      persistenceQueues.delete(key);
-    }
-  });
+  next.then(
+    () => {
+      if (persistenceQueues.get(key) === next) {
+        persistenceQueues.delete(key);
+      }
+    },
+    () => {
+      if (persistenceQueues.get(key) === next) {
+        persistenceQueues.delete(key);
+      }
+    },
+  );
 
   return next;
 }
@@ -238,10 +245,18 @@ export const store = {
    * Initializes store state from storage sources asynchronously.
    */
   async init() {
-    if (isInitialized) return state;
-    state = await loadInitialState();
-    isInitialized = true;
-    return state;
+    if (!initializationPromise) {
+      initializationPromise = loadInitialState()
+        .then((nextState) => {
+          state = nextState;
+          return state;
+        })
+        .catch((error) => {
+          initializationPromise = null;
+          throw error;
+        });
+    }
+    return initializationPromise;
   },
 
   /**
