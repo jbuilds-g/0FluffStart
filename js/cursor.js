@@ -18,6 +18,7 @@ export class CustomCursorEngine {
     this.isDragging = false;
     this.isFirstMove = true;
     this.rafId = null;
+    this.pointerDirty = false;
 
     this.onPointerMove = this.onPointerMove.bind(this);
     this.onPointerDown = this.onPointerDown.bind(this);
@@ -110,6 +111,7 @@ export class CustomCursorEngine {
 
     this.targetX = e.clientX;
     this.targetY = e.clientY;
+    this.pointerDirty = true;
 
     if (!this.isVisible) {
       this.setVisible(true);
@@ -254,13 +256,16 @@ export class CustomCursorEngine {
 
   render() {
     if (!this.isTracking) return;
-    this.currentX += (this.targetX - this.currentX) * 0.45;
-    this.currentY += (this.targetY - this.currentY) * 0.45;
+    if (this.pointerDirty) {
+      this.currentX += (this.targetX - this.currentX) * 0.45;
+      this.currentY += (this.targetY - this.currentY) * 0.45;
 
-    const x = Math.round(this.currentX * 100) / 100;
-    const y = Math.round(this.currentY * 100) / 100;
+      const x = Math.round(this.currentX * 100) / 100;
+      const y = Math.round(this.currentY * 100) / 100;
 
-    this.container.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      this.container.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      this.pointerDirty = false;
+    }
     this.rafId = requestAnimationFrame(this.render);
   }
 }

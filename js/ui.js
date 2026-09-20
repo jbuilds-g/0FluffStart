@@ -15,6 +15,189 @@ import {
 
 const materialYouEngine = new MaterialYouEngine();
 
+let customBackgroundPreviewUrl = null;
+let customBackgroundPreviewGeneration = 0;
+
+function revokeCustomBackgroundPreviewUrl() {
+  if (customBackgroundPreviewUrl) {
+    URL.revokeObjectURL(customBackgroundPreviewUrl);
+    customBackgroundPreviewUrl = null;
+  }
+}
+
+function isVideoMedia(media) {
+  return (
+    (media?.type && media.type.startsWith("video/")) ||
+    (typeof media === "string" &&
+      /\.(mp4|webm|ogg|mov|m4v)(?:$|[?#])/i.test(media))
+  );
+}
+
+function getRemoteBackgroundName(url) {
+  try {
+    const parsed = new URL(url);
+    const name = decodeURIComponent(parsed.pathname.split("/").pop() || "").trim();
+    return name || parsed.hostname;
+  } catch {
+    return "Remote media";
+  }
+}
+
+function normalizeBackgroundUrl(value) {
+  const safeUrl = sanitizeUrl(value);
+  if (safeUrl === "#") return null;
+
+  try {
+    const parsed = new URL(safeUrl, window.location.href);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+    return parsed.href;
+  } catch {
+    return null;
+  }
+}
+
+function setCustomBackgroundPreviewAspect(card, width, height) {
+  if (!width || !height) return;
+  card.style.setProperty("--bg-preview-ratio", width / height);
+}
+
+async function createCompressedImagePreview(file) {
+  const bitmap = await createImageBitmap(file);
+  const maxDimension = 1280;
+  const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+  const width = Math.max(1, Math.round(bitmap.width * scale));
+  const height = Math.max(1, Math.round(bitmap.height * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+
+  const context = canvas.getContext("2d", { alpha: true });
+  if (!context) {
+    bitmap.close();
+    throw new Error("Preview canvas is unavailable");
+  }
+
+  context.drawImage(bitmap, 0, 0, width, height);
+  bitmap.close();
+
+  const blob = await new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (result) => (result ? resolve(result) : reject(new Error("Preview encoding failed"))),
+      "image/webp",
+      0.72,
+    );
+  });
+
+  return {
+    url: URL.createObjectURL(blob),
+    width,
+    height,
+  };
+}
+
+export async function renderCustomBackgroundPreview(media = null) {
+  const card = document.getElementById("bgPreviewCard");
+  const image = document.getElementById("bgPreviewImage");
+  const video = document.getElementById("bgPreviewVideo");
+  const fileNameEl = document.getElementById("bgFileName");
+
+  if (!card || !image || !video) return;
+
+  const generation = ++customBackgroundPreviewGeneration;
+  revokeCustomBackgroundPreviewUrl();
+  image.onload = null;
+  image.onerror = null;
+  video.onloadedmetadata = null;
+  video.onerror = null;
+  image.classList.add("hidden");
+  video.classList.add("hidden");
+  image.removeAttribute("src");
+  video.removeAttribute("src");
+  card.style.removeProperty("--bg-preview-ratio");
+
+  if (!media) {
+    card.classList.add("hidden");
+    fileNameEl?.classList.remove("hidden");
+    return;
+  }
+
+  const isVideo = isVideoMedia(media);
+  const url =
+    media instanceof Blob || media instanceof File
+      ? URL.createObjectURL(media)
+      : typeof media === "string"
+        ? media
+        : null;
+
+  if (!url) {
+    card.classList.add("hidden");
+    fileNameEl?.classList.remove("hidden");
+    return;
+  }
+
+  if (media instanceof Blob || media instanceof File) {
+    customBackgroundPreviewUrl = url;
+  }
+
+  const name =
+    typeof media === "string"
+      ? media.split("/").pop()?.split(/[?#]/)[0] || "Remote media"
+      : media.name || "Custom media";
+
+  if (isVideo) {
+    video.onloadedmetadata = () => {
+      setCustomBackgroundPreviewAspect(
+        card,
+        video.videoWidth,
+        video.videoHeight,
+      );
+    };
+    video.src = url;
+    video.classList.remove("hidden");
+    video.load();
+    video.play().catch(() => {});
+  } else {
+    if (media instanceof Blob || media instanceof File) {
+      try {
+        const compressed = await createCompressedImagePreview(media);
+        if (generation !== customBackgroundPreviewGeneration) {
+          URL.revokeObjectURL(compressed.url);
+          return;
+        }
+
+        if (url.startsWith("blob:")) URL.revokeObjectURL(url);
+        customBackgroundPreviewUrl = compressed.url;
+        setCustomBackgroundPreviewAspect(
+          card,
+          compressed.width,
+          compressed.height,
+        );
+        image.src = compressed.url;
+      } catch {
+        if (generation !== customBackgroundPreviewGeneration) return;
+        image.src = url;
+      }
+    } else {
+      image.onload = () => {
+        if (generation !== customBackgroundPreviewGeneration) return;
+        setCustomBackgroundPreviewAspect(
+          card,
+          image.naturalWidth,
+          image.naturalHeight,
+        );
+      };
+      image.src = url;
+    }
+    image.classList.remove("hidden");
+  }
+
+  if (fileNameEl) {
+    fileNameEl.textContent = name;
+    fileNameEl.classList.remove("hidden");
+  }
+  card.classList.remove("hidden");
+}
+
 const GENERIC_SEARCH_ICON = `<span class="icon-mask icon-search"></span>`;
 
 export {
@@ -411,6 +594,7 @@ export async function updateBackgroundMedia(sourceType, data) {
   const fileNameEl = document.getElementById("bgFileName");
   const resetBtn = document.getElementById("resetBgBtn");
   const bgImageInput = document.getElementById("bgImageInput");
+  const bgUrlInput = document.getElementById("bgUrlInput");
   const overlay = document.getElementById("bgOverlay");
   const bgImage = document.getElementById("bgImage");
   const bgVideo = document.getElementById("bgVideo");
@@ -433,9 +617,7 @@ export async function updateBackgroundMedia(sourceType, data) {
           bgVideo.src = objectUrl;
           bgVideo.classList.remove("hidden");
           bgVideo.classList.add("active");
-          bgVideo
-            .play()
-            .catch((err) => console.warn("Playback prevented:", err));
+          bgVideo.play().catch((err) => console.warn("Playback prevented:", err));
         }
       } else {
         if (bgVideo) {
@@ -450,12 +632,63 @@ export async function updateBackgroundMedia(sourceType, data) {
         }
       }
 
+      if (bgUrlInput) bgUrlInput.value = "";
       if (fileNameEl) fileNameEl.innerText = data.name || "Custom Media Active";
+      renderCustomBackgroundPreview(data);
       if (resetBtn) resetBtn.classList.remove("hidden");
       if (overlay) overlay.classList.add("bg-overlay-active");
     } catch (e) {
       console.error("Failed to save media to DB", e);
       showToast("Failed to save background media. Database error.", "error");
+    }
+  } else if (sourceType === "url" && data) {
+    const url = normalizeBackgroundUrl(data);
+    if (!url) {
+      showToast("Enter a valid HTTP(S) image or video URL.", "error");
+      return false;
+    }
+
+    try {
+      autoSaveSettings({ backgroundImage: url });
+      materialYouEngine.revokeActiveObjectUrl();
+      const isVideo = isVideoMedia(url);
+
+      if (isVideo) {
+        if (bgImage) {
+          bgImage.style.backgroundImage = "";
+          bgImage.classList.add("hidden");
+          bgImage.classList.remove("active");
+        }
+        if (bgVideo) {
+          bgVideo.src = url;
+          bgVideo.classList.remove("hidden");
+          bgVideo.classList.add("active");
+          bgVideo.play().catch((err) => console.warn("Playback prevented:", err));
+        }
+      } else {
+        if (bgVideo) {
+          bgVideo.src = "";
+          bgVideo.classList.add("hidden");
+          bgVideo.classList.remove("active");
+        }
+        if (bgImage) {
+          bgImage.style.backgroundImage = `url('${url}')`;
+          bgImage.classList.remove("hidden");
+          bgImage.classList.add("active");
+        }
+      }
+
+      if (fileNameEl) fileNameEl.innerText = getRemoteBackgroundName(url);
+      if (bgUrlInput) bgUrlInput.value = url;
+      renderCustomBackgroundPreview(url);
+      if (resetBtn) resetBtn.classList.remove("hidden");
+      if (overlay) overlay.classList.add("bg-overlay-active");
+      materialYouEngine.triggerMaterialYou(store.getState().settings, getBgFromDB);
+      return true;
+    } catch (e) {
+      console.error("Failed to apply background URL", e);
+      showToast("Failed to apply background URL.", "error");
+      return false;
     }
   } else {
     autoSaveSettings({ backgroundImage: null, materialYouPalette: null });
@@ -474,13 +707,16 @@ export async function updateBackgroundMedia(sourceType, data) {
     }
 
     if (bgImageInput) bgImageInput.value = "";
+    if (bgUrlInput) bgUrlInput.value = "";
     if (fileNameEl) fileNameEl.innerText = "Default CSS Vibe Active";
+    renderCustomBackgroundPreview(null);
     if (resetBtn) resetBtn.classList.add("hidden");
     if (overlay) overlay.classList.remove("bg-overlay-active");
   }
 
   const settings = store.getState().settings || {};
   materialYouEngine.triggerMaterialYou(settings, getBgFromDB);
+  return true;
 }
 
 export async function handleImageUpload(input) {
@@ -742,6 +978,15 @@ export async function loadSettings() {
 
   const overlay = document.getElementById("bgOverlay");
   const bgVideo = document.getElementById("bgVideo");
+  const bgUrlInput = document.getElementById("bgUrlInput");
+
+  if (bgUrlInput) {
+    bgUrlInput.value =
+      typeof settings.backgroundImage === "string" &&
+      settings.backgroundImage.startsWith("http")
+        ? settings.backgroundImage
+        : "";
+  }
 
   if (settings.backgroundImage === "indexeddb") {
     try {
@@ -779,10 +1024,47 @@ export async function loadSettings() {
         }
 
         if (overlay) overlay.classList.add("bg-overlay-active");
+        renderCustomBackgroundPreview(bgData);
       }
     } catch (e) {
       console.error("Background load fail:", e);
     }
+  } else if (typeof settings.backgroundImage === "string" && settings.backgroundImage.startsWith("http")) {
+    const url = settings.backgroundImage;
+    const isVideo = isVideoMedia(url);
+    materialYouEngine.revokeActiveObjectUrl();
+
+    if (isVideo) {
+      const bgImage = document.getElementById("bgImage");
+      if (bgImage) {
+        bgImage.style.backgroundImage = "";
+        bgImage.classList.add("hidden");
+        bgImage.classList.remove("active");
+      }
+      if (bgVideo) {
+        bgVideo.src = url;
+        bgVideo.classList.remove("hidden");
+        bgVideo.classList.add("active");
+        bgVideo.play().catch((err) => console.warn("Playback prevented:", err));
+      }
+    } else {
+      if (bgVideo) {
+        bgVideo.src = "";
+        bgVideo.classList.add("hidden");
+        bgVideo.classList.remove("active");
+      }
+      const bgImage = document.getElementById("bgImage");
+      if (bgImage) {
+        bgImage.style.backgroundImage = `url('${url}')`;
+        bgImage.classList.remove("hidden");
+        bgImage.classList.add("active");
+      }
+    }
+
+    const fileNameEl = document.getElementById("bgFileName");
+    if (fileNameEl) fileNameEl.innerText = getRemoteBackgroundName(url);
+    if (overlay) overlay.classList.add("bg-overlay-active");
+    renderCustomBackgroundPreview(url);
   } else {
     materialYouEngine.revokeActiveObjectUrl();
     const bgImage = document.getElementById("bgImage");

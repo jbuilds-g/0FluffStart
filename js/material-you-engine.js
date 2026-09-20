@@ -310,6 +310,20 @@ export class MaterialYouEngine {
       } catch (e) {
         console.error("Material You engine failed:", e);
       }
+    } else if (
+      typeof settings.backgroundImage === "string" &&
+      /^https?:\/\//i.test(settings.backgroundImage)
+    ) {
+      if (generation !== this._extractionGeneration) return;
+
+      const url = settings.backgroundImage;
+      const isVideo = /\.(mp4|webm|ogg|mov|m4v)(?:$|[?#])/i.test(url);
+
+      if (isVideo) {
+        this._extractVideoColor(url, generation);
+      } else {
+        this._extractImageColor(url, generation);
+      }
     } else {
       if (generation !== this._extractionGeneration) return;
       this._clearThemeProperties();

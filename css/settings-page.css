@@ -1,6 +1,8 @@
 /* Standalone settings workspace. */
 html {
   scroll-behavior: smooth;
+  scrollbar-color: var(--settings-scrollbar-thumb) transparent;
+  scrollbar-width: thin;
 }
 html.settings-page {
   width: 100%;
@@ -21,6 +23,51 @@ body {
   z-index: 0;
   box-sizing: border-box;
 }
+
+/* --- THEMED SCROLLBARS --- */
+html,
+body,
+.settings-page-shell * {
+  scrollbar-color: var(--settings-scrollbar-thumb) transparent;
+  scrollbar-width: thin;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.settings-page-shell *::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+.settings-page-shell *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+.settings-page-shell *::-webkit-scrollbar-thumb {
+  min-height: 34px;
+  background: var(--settings-scrollbar-thumb);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+.settings-page-shell *::-webkit-scrollbar-thumb:hover {
+  background: var(--settings-scrollbar-thumb-hover);
+  border-width: 1px;
+}
+
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner,
+.settings-page-shell *::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 body > .bg-overlay,
 body > .bg-image,
 body > .bg-video {
@@ -137,6 +184,213 @@ body > .bg-video {
   color: var(--dim);
   line-height: 1.5;
 }
+.custom-background-control {
+  width: 100%;
+  max-width: 760px;
+  display: grid;
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.custom-background-control .bg-preview-card {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.custom-background-details {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  width: 100%;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.custom-background-control .bg-file-name {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-background-url-row {
+  width: 100%;
+  min-width: 0;
+}
+
+.custom-background-url-row .bg-url-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.custom-background-control .bg-radio-row {
+  width: max-content;
+  height: auto;
+  margin: 0 !important;
+  justify-content: flex-start !important;
+}
+
+.bg-preview-card {
+  width: min(280px, calc(150px * var(--bg-preview-ratio, 1.7778)));
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: min(var(--radius), 14px);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+}
+
+.bg-preview-media {
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--bg-preview-ratio, 1.7778);
+  max-height: 150px;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.bg-preview-image,
+.bg-preview-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 900px) {
+  .custom-background-control {
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .custom-background-control .bg-preview-card,
+  .custom-background-details {
+    grid-column: 1;
+  }
+
+  .custom-background-control .bg-preview-card {
+    grid-row: 1;
+  }
+
+  .custom-background-details {
+    grid-row: 2;
+  }
+}
+
+
+.bg-preview-card {
+  cursor: pointer;
+}
+
+.bg-preview-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.custom-background-preview-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.custom-background-preview-modal.hidden {
+  display: none;
+}
+
+.custom-background-preview-modal.is-video-preview {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.custom-background-full-media {
+  display: block;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 32px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: min(var(--radius), 14px);
+}
+
+.custom-background-preview-close {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.custom-background-preview-close:hover {
+  color: var(--accent);
+}
+
+.custom-background-preview-close .icon-mask {
+  width: 22px;
+  height: 22px;
+}
+
+.bg-preview-image,
+.bg-preview-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bg-preview-meta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+}
+
+.bg-preview-type {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bg-preview-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .settings-subsection {
   margin-top: 42px;
 }

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const pageStyles = document.querySelector(
     'link[href^="css/settings-page.css"]',
   );
-  if (pageStyles) pageStyles.href = "css/settings-page.css?v=8";
+  if (pageStyles) pageStyles.href = "css/settings-page.css?v=19";
 
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
@@ -99,6 +99,102 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   updateSettingsScrollAnchor();
 
+  const backgroundPreviewCard = document.getElementById("bgPreviewCard");
+  const backgroundPreviewModal = document.getElementById(
+    "customBackgroundPreviewModal",
+  );
+  const backgroundPreviewClose = document.getElementById(
+    "customBackgroundPreviewClose",
+  );
+  const backgroundFullImage = document.getElementById(
+    "customBackgroundFullImage",
+  );
+  const backgroundFullVideo = document.getElementById(
+    "customBackgroundFullVideo",
+  );
+
+  const closeBackgroundPreview = () => {
+    if (!backgroundPreviewModal) return;
+    backgroundPreviewModal.classList.add("hidden");
+    backgroundPreviewModal.setAttribute("aria-hidden", "true");
+    backgroundPreviewModal.classList.remove("is-video-preview");
+    backgroundFullImage?.classList.add("hidden");
+    backgroundFullVideo?.classList.add("hidden");
+    if (backgroundFullVideo) {
+      backgroundFullVideo.pause();
+      backgroundFullVideo.removeAttribute("src");
+      backgroundFullVideo.load();
+    }
+    document.body.classList.remove("modal-open");
+    window.customCursorInstance?.setVisible(true);
+  };
+
+  const openBackgroundPreview = () => {
+    if (!backgroundPreviewCard || !backgroundPreviewModal) return;
+
+    const previewImage = document.getElementById("bgPreviewImage");
+    const previewVideo = document.getElementById("bgPreviewVideo");
+    const activeMedia = previewImage && !previewImage.classList.contains("hidden")
+      ? previewImage
+      : previewVideo && !previewVideo.classList.contains("hidden")
+        ? previewVideo
+        : null;
+
+    if (!activeMedia?.src) return;
+
+    backgroundFullImage?.classList.add("hidden");
+    backgroundFullVideo?.classList.add("hidden");
+
+    const isVideoPreview = activeMedia === previewVideo;
+    backgroundPreviewModal.classList.toggle("is-video-preview", isVideoPreview);
+
+    if (activeMedia === previewImage && backgroundFullImage) {
+      backgroundFullImage.src = activeMedia.src;
+      backgroundFullImage.classList.remove("hidden");
+    } else if (backgroundFullVideo) {
+      backgroundFullVideo.src = activeMedia.src;
+      backgroundFullVideo.preload = "metadata";
+      backgroundFullVideo.classList.remove("hidden");
+      backgroundFullVideo.play().catch(() => {});
+    }
+
+    backgroundPreviewModal.classList.remove("hidden");
+    backgroundPreviewModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    window.customCursorInstance?.setVisible(false);
+    backgroundPreviewClose?.focus();
+  };
+
+  if (backgroundPreviewCard) {
+    backgroundPreviewCard.setAttribute("role", "button");
+    backgroundPreviewCard.setAttribute("tabindex", "0");
+    backgroundPreviewCard.setAttribute(
+      "aria-label",
+      "Open full custom background preview",
+    );
+    backgroundPreviewCard.addEventListener("click", openBackgroundPreview);
+    backgroundPreviewCard.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openBackgroundPreview();
+      }
+    });
+  }
+
+  backgroundPreviewClose?.addEventListener("click", closeBackgroundPreview);
+  backgroundPreviewModal?.addEventListener("click", (event) => {
+    if (event.target === backgroundPreviewModal) closeBackgroundPreview();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Escape" &&
+      backgroundPreviewModal &&
+      !backgroundPreviewModal.classList.contains("hidden")
+    ) {
+      closeBackgroundPreview();
+    }
+  });
+
   const nav = document.querySelector(".settings-section-nav");
   const sections = Array.from(document.querySelectorAll(".settings-section"));
   if (!nav || !sections.length) return;
@@ -177,6 +273,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   const defaultMaterialPreview =
     "linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)";
 
+  const syncScrollbarTheme = () => {
+    const styles = getComputedStyle(document.body);
+    const accent = styles.getPropertyValue("--accent").trim();
+    const card = styles.getPropertyValue("--card").trim();
+    if (!accent || !card) return;
+
+    const root = document.documentElement;
+    root.style.setProperty(
+      "--settings-scrollbar-thumb",
+      `color-mix(in srgb, ${accent} 58%, ${card})`,
+    );
+    root.style.setProperty(
+      "--settings-scrollbar-thumb-hover",
+      `color-mix(in srgb, ${accent} 78%, ${card})`,
+    );
+  };
+
+  const scrollbarThemeObserver = new MutationObserver(() => {
+    syncScrollbarTheme();
+  });
+
   const updateThemePreview = (settings = store.getState().settings || {}) => {
     const select = document.getElementById("themeSelect");
     const materialOption = select?.querySelector(
@@ -204,6 +321,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     if (materialPreviewEl) materialPreviewEl.style.background = materialPreview;
   };
+
+  scrollbarThemeObserver.observe(document.body, {
+    attributes: true,
+    attributeFilter: ["class", "style"],
+  });
 
   const themePreviewColors = {
     dark: ["#000000", "#141418", "#00aaff"],
@@ -444,6 +566,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   store.subscribe((prevState, currentState) => {
     if (prevState.settings !== currentState.settings) {
+      syncScrollbarTheme();
       updateThemePreview(currentState.settings || {});
       updateClockStylePreviews(currentState.settings || {});
     }
@@ -458,6 +581,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  syncScrollbarTheme();
   updateThemePreview();
   updateClockStylePreviews();
   window.setTimeout(updateThemePreview, 0);

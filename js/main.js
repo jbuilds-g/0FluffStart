@@ -655,17 +655,36 @@ function bindStaticEvents() {
 
   const bgUrlInput = document.getElementById("bgUrlInput");
   if (bgUrlInput) {
-    bgUrlInput.addEventListener(
-      "input",
-      debounce(async () => {
-        const val = bgUrlInput.value.trim();
-        if (val) {
-          await updateBackgroundMedia("url", val);
-        } else {
+    let lastAppliedUrl =
+      store.getState().settings?.backgroundImage?.startsWith("http")
+        ? store.getState().settings.backgroundImage
+        : "";
+
+    const applyBackgroundUrl = async () => {
+      const value = bgUrlInput.value.trim();
+      if (value === lastAppliedUrl) return;
+
+      if (!value) {
+        if (lastAppliedUrl) {
           await updateBackgroundMedia("clear", null);
+          lastAppliedUrl = "";
         }
-      }, 400),
-    );
+        return;
+      }
+
+      const applied = await updateBackgroundMedia("url", value);
+      if (applied) {
+        lastAppliedUrl = bgUrlInput.value.trim();
+      }
+    };
+
+    bgUrlInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        applyBackgroundUrl();
+      }
+    });
+    bgUrlInput.addEventListener("blur", applyBackgroundUrl);
   }
 
   const resetBgBtn = document.getElementById("resetBgBtn");
