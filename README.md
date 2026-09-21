@@ -26,17 +26,6 @@
 
 ---
 
-## 🧪 Experimental Settings Page
-
-A new standalone Settings page is currently under active development. Anyone can test the latest experimental version and provide feedback:
-
-[**⚙️ Open Experimental Settings**](https://0fluffstart.pages.dev/settings.html)
-
-> [!NOTE]
-> The experimental Settings page is still being refined. Some controls and visual components may change before the next stable release. Feedback on layout, behavior, and usability is welcome.
-
----
-
 ## 📸 Demo
 
 |                     💻 Desktop Experience                      |                    📱 Mobile Experience                     |
