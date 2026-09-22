@@ -19,21 +19,18 @@
 
 ## 📖 Overview
 
-0FluffStart is built around a **Zero-Fluff** philosophy: no trackers, no backend, and zero runtime dependencies.
+0FluffStart is built around a **Zero-Fluff** philosophy: no tracking, no accounts, no application backend, and zero runtime dependencies. Core settings, links, history, and background media are stored locally. Optional live autocomplete can make requests to external search services through the built-in or user-configured proxy.
 
 - **Desktop:** A fully integrated browser extension (Manifest V3) or standalone start page.
 - **Mobile & Web:** A high-performance **Progressive Web App (PWA)** with offline support and native installation on mobile devices.
 
 ---
 
-## 🧪 Experimental Settings Page
+## ⚙️ Standalone Settings
 
-A new standalone Settings page is currently under active development. Anyone can test the latest experimental version and provide feedback:
+0FluffStart includes a dedicated Settings page for configuring personalization, appearance, search behavior, dashboard links, and local data management.
 
-[**⚙️ Open Experimental Settings**](https://0fluffstart.pages.dev/settings.html)
-
-> [!NOTE]
-> The experimental Settings page is still being refined. Some controls and visual components may change before the next stable release. Feedback on layout, behavior, and usability is welcome.
+[**⚙️ Open Settings**](https://0fluffstart.pages.dev/settings.html)
 
 ---
 
@@ -57,13 +54,15 @@ A new standalone Settings page is currently under active development. Anyone can
 | **Instant Tag Routing**          | Prefix queries using shortcut tags (`?g`, `?d`, `?b`, `?bi`, `?st`, `?s`, `?e`, `?k`, `?w`, `?y`) to switch target engines on the fly.           |
 | **Custom Engine Integration**    | Add, edit, or delete custom search engines with personalized query endpoints and shortcut tags.                                                  |
 | **Engine Checklist**             | Multi-select menu within settings to filter which built-in and custom search engines appear in the search bar dropdown.                          |
-| **Privacy Autocomplete Proxy**   | Route live autocomplete suggestion feeds securely through a custom lightweight CORS proxy with self-hosted endpoint support.                     |
-| **In-Memory Suggestion Caching** | Private LRU cache storing recent autocomplete responses for faster results on repeated queries.                                                  |
+| **Autocomplete Proxy Routing**  | Route optional live autocomplete requests through the built-in Cloudflare Worker proxy or a user-configured proxy endpoint.                       |
+| **Suggestion Provider Selection** | Choose Automatic, DuckDuckGo, Google, Bing, or Brave as the live suggestion provider.                                                        |
+| **In-Memory Suggestion Caching** | Optional local LRU cache storing recent autocomplete responses for faster repeated queries.                                                        |
 | **Quick Suggestion Switcher**    | Dedicated inline toggle (`#quickSuggestToggleBtn`) inside the search bar to instantly pause/resume autocomplete network calls.                   |
 | **Granular Visibility Control**  | Independent master/child toggles to hide or show the Engine Switcher, Suggestion Toggle, and Search/Submit Button.                               |
 | **Dual Search Bar Layouts**      | Toggle between a **Unified Search Bar** container and a **Segmented Floating Bar** presentation style.                                           |
 | **New Tab Guard**                | Dedicated setting (`openInNewTab`) to force search queries and quick link clicks into a new browser tab (`_blank`) or replace the active window. |
-| **Offline Search History**       | Privacy-focused local query logging with history-based autocomplete suggestions and a 1-click purge tool.                                        |
+| **Force Desktop Mode**           | Optional setting that keeps the desktop dashboard layout active on smaller screens.                                                              |
+| **Offline Search History**       | Local query history with history-based autocomplete suggestions, configurable retention, and a 1-click purge tool.                              |
 
 </details>
 <details>
@@ -72,8 +71,9 @@ A new standalone Settings page is currently under active development. Anyone can
 
 | Feature                       | Description                                                                                                                                                                                 |
 | :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Material You Monet Engine** | Dynamic color extraction that analyzes custom background images and video loops to build adaptive UI accent palettes.                                                                       |
-| **IndexedDB Binary Storage**  | Offline binary storage (`Blob`/`File`) for custom high-resolution background photos and video loops using IndexedDB.                                                                        |
+| **Material You Monet Engine** | Dynamic color extraction that analyzes custom background images and video loops to build adaptive UI accent palettes when source access permits.                                           |
+| **IndexedDB Binary Storage**  | Offline binary storage (`Blob`/`File`) for local custom background photos and video loops using IndexedDB.                                                                              |
+| **Remote Background Media**   | Use HTTP(S) image or video URLs as custom backgrounds in addition to locally selected media.                                                     |
 | **Base64 JSON Serialization** | Backup and restore pipeline converting binary background files stored in IndexedDB into portable Base64 strings inside exported `.json` files.                                              |
 | **Fluid Theme Presets**       | 15+ built-in aesthetic themes (OLED Dark, True Black AMOLED, Material You, Cyberpunk, Nord Frost, Dracula, Rose Pine, Sunset Drive, Paper & Ink, etc.) with GPU-accelerated hover dynamics. |
 | **Shadow Intensity Control**  | Global CSS variable slider (`--shadow-intensity`) providing real-time depth control over shadows on cards, search bars, modals, and quick link icons.                                       |
@@ -112,9 +112,9 @@ A new standalone Settings page is currently under active development. Anyone can
 
 | Feature                  | Description                                                                                                                                                              |
 | :----------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Command-Style Search** | Embedded search input in the settings header (`#settingsSearchInput`) with live card filtering, snippet highlighting, and target panel auto-expansion (`jumpToSetting`). |
-| **Accordion Management** | Categorized setting sections with master **Expand All** and **Collapse All** controls.                                                                                   |
-| **Data Sync Suite**      | Complete offline tools for **Backup (Save)**, **Restore (Load)**, **Clear History**, and **Factory Reset**.                                                              |
+| **Command-Style Search** | Dedicated Settings search with live filtering, nested-setting discovery, automatic expansion, focus handling, scrolling, and result highlighting.                 |
+| **Accordion Management** | Categorized setting sections with master **Expand All** and **Collapse All** controls, plus section navigation and setting search.                                       |
+| **Data Sync Suite**      | Local tools for **Backup**, **Restore**, **Restore Previous**, **Clear History**, and **Factory Reset**, with validation during backup restoration.                     |
 | **Deep-Linking Router**  | URL parameter parsing (`?q=`, `?engine=`, `#settings`, `?folder=`) allowing direct deep-link triggers with post-execution state cleaning via `history.replaceState()`.   |
 
 </details>
@@ -187,11 +187,12 @@ The hosted version is a fully compliant **PWA**, meaning it can be installed as 
 
 ## 💾 Data Sync & Management
 
-Data is stored locally in `localStorage` and `IndexedDB`. Background images and videos are serialized directly into Base64 JSON backups.
+Data is stored locally in `localStorage` and `IndexedDB`. Local background images and videos are serialized into portable Base64 JSON backups.
 
-1. **Export:** Go to _Settings → Data Management_ → click **Backup (Save)**.
+1. **Export:** Go to _Settings → Data_ → click **Backup**.
 2. **Transfer:** Send the `.json` file to your target device.
-3. **Import:** Open the app on the new device → _Settings → Data Management_ → click **Restore (Load)**.
+3. **Import:** Open the app on the new device → _Settings → Data_ → click **Restore**.
+4. **Previous restore:** After a restore, use **Restore Previous** when a local restore point is available.
 
 ---
 
@@ -211,6 +212,8 @@ Data is stored locally in `localStorage` and `IndexedDB`. Background images and 
 │   ├── mobile.css               # Mobile-specific responsive styles
 │   ├── modal.css                # Modal and dialog styles
 │   ├── search.css               # Search bar and suggestion styles
+│   ├── settings-controls.css    # Settings control and picker styles
+│   ├── settings-page.css        # Standalone Settings page styles
 │   ├── themes.css               # Theme and visual customization styles
 │   ├── utilities.css            # Reusable utility classes
 │   └── variables.css             # Global CSS custom properties and tokens
@@ -219,13 +222,17 @@ Data is stored locally in `localStorage` and `IndexedDB`. Background images and 
 │   ├── cursor.js               # Theme-adaptive custom vector cursor
 │   ├── links.js                # Link management & drag-and-drop tree engine
 │   ├── material-you-engine.js  # Dynamic Monet HSL color extractor
+│   ├── restore-point.js        # Local previous-restore state handling
 │   ├── storage.js              # IndexedDB & Base64 backup/restore handlers
 │   ├── store.js                # Centralized reactive state engine
+│   ├── settings-page.js        # Standalone Settings page behavior
+│   ├── settings-search.js      # Settings search and navigation
 │   ├── suggestions.js          # Live search & history log controllers
 │   ├── ui.js                   # UI render state & settings management
 │   ├── utils.js                # Shared sanitizers, debouncers & helpers
 │   └── version.js              # Application version metadata
 ├── index.html                   # Core HTML5 application entry point
+├── settings.html                # Standalone Settings page
 ├── manifest.json                # Manifest V3 extension configuration (Chromium)
 ├── manifest.firefox.json        # Gecko extension manifest configuration
 ├── pwa-manifest.json            # PWA web application manifest
