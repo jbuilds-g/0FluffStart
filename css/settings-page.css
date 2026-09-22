@@ -1287,11 +1287,12 @@ body > .bg-video {
 /* Pass 4: concise, setting-specific helper copy and consistent control hierarchy. */
 .settings-page-shell .setting-option {
   display: grid;
-  gap: 3px;
+  gap: 10px;
   min-width: 0;
 }
 
 .settings-page-shell .setting-option-help {
+  order: 99;
   margin: 0;
   padding-left: 54px;
   color: var(--dim);
@@ -1307,7 +1308,7 @@ body > .bg-video {
 }
 
 .settings-page-shell .settings-subgroup .setting-option {
-  gap: 2px;
+  gap: 8px;
 }
 
 .settings-page-shell .settings-subgroup .setting-option-help {
