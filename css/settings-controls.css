@@ -595,6 +595,8 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   max-width: 190px;
   flex: 0 0 190px;
   height: 112px;
+  min-height: 112px;
+  max-height: 112px;
   padding: 10px 12px 12px;
   gap: 10px;
 }
@@ -602,11 +604,12 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
 /* Search Bar Style labels wrap instead of clipping from both sides. */
 .settings-page-shell #searchBarLayoutSelect .settings-clock-label {
   display: flex;
-  flex: 0 0 auto;
+  flex: 0 0 31px;
   width: 100%;
   min-width: 0;
-  min-height: 2.4em;
-  max-height: 2.4em;
+  height: 31px;
+  min-height: 31px;
+  max-height: 31px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -750,8 +753,11 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
     min-width: 116px;
     max-width: 116px;
     flex-basis: 116px;
-    min-height: 88px;
-    max-height: 88px;
+    height: 100px;
+    min-height: 100px;
+    max-height: 100px;
+    padding: 8px 10px 10px;
+    gap: 8px;
   }
 
   .settings-page-shell .clock-style-picker .select-option {
@@ -767,6 +773,16 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview {
     height: 28px;
     flex-basis: 28px;
+  }
+
+  .settings-page-shell #searchBarLayoutSelect .settings-clock-label {
+    flex-basis: 30px;
+    height: 30px;
+    min-height: 30px;
+    max-height: 30px;
+    font-size: 0.72rem;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
   }
 
   .settings-page-shell
