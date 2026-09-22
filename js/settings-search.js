@@ -202,6 +202,30 @@ export function initSettingsPageSearch() {
   const mobile = createSearch(true);
   document.body.appendChild(mobile);
 
+  const navSearchButton = document.querySelector(".settings-search-nav");
+
+  const focusSettingsSearch = () => {
+    const isMobile = window.matchMedia("(max-width: 900px)").matches;
+
+    if (isMobile) {
+      mobileTrigger.classList.add("hidden");
+      mobile.classList.add("active");
+      searchBackdrop.classList.add("active");
+      document.body.classList.add("settings-search-open");
+      window.setTimeout(() => {
+        const input = mobile.querySelector("input");
+        input?.focus();
+        input?.select();
+      }, 0);
+      return;
+    }
+
+    const input = desktop.querySelector("input");
+    input?.focus();
+    input?.select();
+    header.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const searchBackdrop = document.createElement("div");
   searchBackdrop.className = "search-backdrop";
   searchBackdrop.setAttribute("aria-hidden", "true");
@@ -519,6 +543,8 @@ export function initSettingsPageSearch() {
       syncQuery(mobile.querySelector("input"));
       mobile.querySelector("input").focus();
     });
+
+  navSearchButton?.addEventListener("click", focusSettingsSearch);
 
   mobileTrigger.addEventListener("click", () => {
     mobileTrigger.classList.add("hidden");
