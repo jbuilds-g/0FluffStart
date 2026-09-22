@@ -252,6 +252,12 @@ body > .bg-video {
   height: auto;
   margin: 0 !important;
   justify-content: flex-start !important;
+  padding-top: 2px;
+}
+
+.custom-background-details .custom-background-url-row {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
 }
 
 .bg-preview-card {
@@ -417,10 +423,11 @@ body > .bg-video {
 }
 .settings-subsection > h3 {
   margin: 0 0 11px;
-  color: var(--dim);
-  font-size: 0.7rem;
-  font-weight: 750;
-  letter-spacing: 0.11em;
+  color: var(--text);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  line-height: 1.3;
   text-transform: uppercase;
 }
 .settings-group {
@@ -458,8 +465,9 @@ body > .bg-video {
 .setting-header h3 {
   margin: 0;
   color: var(--text);
-  font-size: 0.94rem;
+  font-size: 0.96rem;
   font-weight: 650;
+  line-height: 1.3;
 }
 .settings-page-shell .help-text {
   display: block;
@@ -469,7 +477,7 @@ body > .bg-video {
   border: 0;
   background: none;
   color: var(--dim);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   line-height: 1.5;
 }
 .settings-page-shell .help-text.show {
@@ -477,6 +485,12 @@ body > .bg-video {
 }
 .settings-page-shell .help-btn {
   display: none;
+}
+
+.settings-page-shell .setting-option-help {
+  color: var(--dim);
+  font-size: 0.76rem;
+  line-height: 1.5;
 }
 .settings-page-shell input[type="text"],
 .settings-page-shell input[type="url"],
@@ -719,10 +733,30 @@ body > .bg-video {
 }
 .settings-subgroup {
   display: grid;
-  gap: 9px;
-  margin-top: 2px;
-  padding: 12px 0 2px 16px;
+  gap: 11px;
+  margin-top: 4px;
+  padding: 12px 0 4px 18px;
   border-left: 2px solid var(--border);
+}
+
+.settings-subgroup .setting-option {
+  min-width: 0;
+}
+
+.settings-subgroup .setting-option-title,
+.settings-subgroup .settings-picker-label-block {
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.settings-subgroup .setting-option-help {
+  margin-top: 3px;
+  padding-left: 0;
+  color: var(--dim);
+  font-size: 0.76rem;
+  line-height: 1.5;
 }
 .settings-row-actions,
 .action-btn-row,
@@ -731,6 +765,30 @@ body > .bg-video {
   flex-wrap: wrap;
   gap: 9px;
 }
+
+.data-danger-actions {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.data-danger-heading {
+  margin: 2px 0 -2px;
+  color: var(--dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.engine-management {
+  display: grid;
+  gap: 12px;
+}
+
+.engine-management .link-editor-box {
+  margin-top: 2px;
+}
+
 .settings-page-shell button:not(.help-btn) {
   min-height: 38px;
   padding: 8px 14px;
