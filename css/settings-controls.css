@@ -721,6 +721,39 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   border-left: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
 }
 
+@media (min-width: 901px) {
+  .settings-page-shell
+    #searchBarLayoutSelect
+    .settings-searchbar-preview-unified
+    > .searchbar-mock-engine:first-child {
+    width: 48px;
+    min-width: 48px;
+    flex: 0 0 48px;
+    justify-content: center;
+  }
+
+  .settings-page-shell
+    #searchBarLayoutSelect
+    .settings-searchbar-preview-unified
+    > .searchbar-mock-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+    justify-content: center;
+    padding: 0 14px;
+  }
+
+  .settings-page-shell
+    #searchBarLayoutSelect
+    .settings-searchbar-preview-unified
+    > .searchbar-mock-submit:last-child {
+    width: 48px;
+    min-width: 48px;
+    flex: 0 0 48px;
+    justify-content: center;
+  }
+}
+
 .settings-page-shell
   #searchBarLayoutSelect
   .settings-searchbar-preview-segmented {
