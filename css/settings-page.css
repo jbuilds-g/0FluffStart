@@ -132,24 +132,36 @@ body > .bg-video {
   display: grid;
   gap: 3px;
 }
-.settings-section-nav a {
+.settings-section-nav a,
+.settings-section-nav .settings-search-nav {
   display: flex;
   align-items: center;
   min-height: 38px;
   padding: 0 12px;
+  border: 0;
   border-left: 2px solid transparent;
   border-radius: min(var(--radius), 8px);
   color: var(--dim);
   text-decoration: none;
   font-size: 0.84rem;
+  font-family: inherit;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
   transition:
     color 0.16s ease,
     background-color 0.16s ease,
     border-color 0.16s ease;
 }
+.settings-section-nav .settings-search-nav {
+  width: 100%;
+  gap: 8px;
+}
 .settings-section-nav a:hover,
 .settings-section-nav a:focus-visible,
-.settings-section-nav a.active {
+.settings-section-nav a.active,
+.settings-section-nav .settings-search-nav:hover,
+.settings-section-nav .settings-search-nav:focus-visible {
   color: var(--text);
   border-left-color: var(--accent);
   background: var(--interactive-bg-alpha);
@@ -1036,7 +1048,9 @@ body > .bg-video {
   }
   .settings-section-nav a:hover,
   .settings-section-nav a:focus-visible,
-  .settings-section-nav a.active {
+  .settings-section-nav a.active,
+  .settings-section-nav .settings-search-nav:hover,
+  .settings-section-nav .settings-search-nav:focus-visible {
     border-color: var(--accent);
   }
   .setting-row-control,
