@@ -97,7 +97,9 @@ function buildSearchIndex(content) {
         parentRow
           .querySelector(".setting-option-title")?.textContent.trim() ||
         parentRow
-          .querySelector(".settings-picker-label-block")?.textContent.trim();
+          .querySelector(".settings-picker-label-block")?.textContent.trim() ||
+        parentRow.querySelector("label")?.textContent.trim() ||
+        (node.matches("label") ? node.textContent.trim() : "");
 
       if (!title) return null;
 
