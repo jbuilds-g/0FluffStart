@@ -1339,3 +1339,40 @@ body > .bg-video {
     max-width: none;
   }
 }
+
+
+/* Pass 5: keep all Settings helper copy inside the same contextual help card. */
+.settings-page-shell .setting-option-help {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  max-width: 680px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: min(var(--radius), 10px);
+  background: transparent;
+  color: var(--dim);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.settings-page-shell .setting-option-help .icon-help {
+  display: block;
+  width: 14px;
+  height: 14px;
+  color: var(--dim);
+  opacity: 0.9;
+}
+
+.settings-page-shell .settings-subgroup .setting-option-help {
+  max-width: 680px;
+}
+
+@media (max-width: 900px) {
+  .settings-page-shell .setting-option-help,
+  .settings-page-shell .settings-subgroup .setting-option-help {
+    padding: 12px;
+  }
+}
