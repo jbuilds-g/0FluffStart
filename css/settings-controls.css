@@ -618,8 +618,8 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 48px;
-  flex: 0 0 48px;
+  height: 44px;
+  flex: 0 0 44px;
   min-width: 0;
   padding: 0;
   margin: 0;
@@ -636,7 +636,7 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   justify-content: center;
   flex: 0 0 auto;
   min-width: 0;
-  height: 48px;
+  height: 44px;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -647,7 +647,7 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
 
 .settings-page-shell #searchBarLayoutSelect .searchbar-mock-engine {
   width: 42px;
-  border-radius: 10px 0 0 10px;
+  border-radius: 8px 0 0 8px;
   font-size: 13px;
   font-weight: 700;
 }
@@ -655,7 +655,7 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
 .settings-page-shell #searchBarLayoutSelect .searchbar-mock-input {
   flex: 1 1 auto;
   width: auto;
-  padding: 0 12px;
+  padding: 0 11px;
   justify-content: flex-start;
   gap: 3px;
   border-left: 0;
@@ -673,12 +673,12 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
 
 .settings-page-shell #searchBarLayoutSelect .searchbar-mock-submit {
   width: 42px;
-  border-radius: 0 10px 10px 0;
+  border-radius: 0 8px 8px 0;
 }
 
 .settings-page-shell #searchBarLayoutSelect .searchbar-mock-submit .icon-mask {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   color: var(--accent);
 }
 
@@ -686,7 +686,7 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   #searchBarLayoutSelect
   .settings-searchbar-preview-unified {
   border: 1px solid var(--border);
-  border-radius: 7px;
+  border-radius: 8px;
   background: var(--card-hover);
 }
 
@@ -715,7 +715,7 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
 .settings-page-shell
   #searchBarLayoutSelect
   .settings-searchbar-preview-segmented {
-  gap: 6px;
+  gap: 5px;
 }
 
 .settings-page-shell
@@ -729,6 +729,9 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   #searchBarLayoutSelect
   .settings-searchbar-preview-segmented
   .searchbar-mock-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 44px;
   border-left: 1px solid var(--border);
   border-right: 1px solid var(--border);
 }
