@@ -601,16 +601,22 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
 
 /* Search Bar Style labels wrap instead of clipping from both sides. */
 .settings-page-shell #searchBarLayoutSelect .settings-clock-label {
-  overflow: hidden;
-  text-overflow: clip;
-  white-space: normal;
-  line-height: 1.2;
+  display: flex;
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
   min-height: 2.4em;
+  max-height: 2.4em;
   align-items: center;
+  justify-content: center;
+  overflow: hidden;
   color: var(--text);
   font-size: 0.82rem;
   font-weight: 600;
+  line-height: 1.2;
   text-align: center;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 .settings-page-shell #searchBarLayoutSelect .settings-searchbar-preview {
@@ -702,14 +708,14 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   #searchBarLayoutSelect
   .settings-searchbar-preview-unified
   .searchbar-mock-engine {
-  border-right: 1px solid var(--border);
+  border-right: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
 }
 
 .settings-page-shell
   #searchBarLayoutSelect
   .settings-searchbar-preview-unified
   .searchbar-mock-submit {
-  border-left: 1px solid var(--border);
+  border-left: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
 }
 
 .settings-page-shell
@@ -736,16 +742,7 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   border-right: 1px solid var(--border);
 }
 
-.settings-page-shell
-  #searchBarLayoutSelect
-  .settings-searchbar-preview-segmented
-  .searchbar-mock-engine,
-.settings-page-shell
-  #searchBarLayoutSelect
-  .settings-searchbar-preview-segmented
-  .searchbar-mock-submit {
-  width: 27px;
-}
+/* Segmented mock controls use the same 42px width as the unified mock. */
 
 @media (max-width: 900px) {
   .settings-page-shell #searchBarLayoutSelect .select-option {
@@ -753,8 +750,8 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
     min-width: 116px;
     max-width: 116px;
     flex-basis: 116px;
-    min-height: 72px;
-    max-height: 72px;
+    min-height: 88px;
+    max-height: 88px;
   }
 
   .settings-page-shell .clock-style-picker .select-option {
