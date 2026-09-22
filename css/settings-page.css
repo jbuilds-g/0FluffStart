@@ -186,15 +186,21 @@ body > .bg-video {
 .settings-section-heading h2 {
   margin: 0;
   color: var(--text);
-  font-size: clamp(1.55rem, 2.7vw, 2rem);
-  line-height: 1.15;
-  letter-spacing: -0.025em;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.65rem, 2.8vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 .settings-section-heading p {
   max-width: 700px;
-  margin: 8px 0 0;
-  color: var(--dim);
-  line-height: 1.5;
+  margin: 10px 0 0;
+  color: var(--text);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
 }
 .custom-background-control {
   width: 100%;
