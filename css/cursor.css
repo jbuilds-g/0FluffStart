@@ -20,7 +20,20 @@
   }
   html[data-custom-cursor="active"],
   html[data-custom-cursor="active"] * {
-    cursor: none !important;
+    cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgAAAAAgAB4iG8MwAAAABJRU5ErkJggg=="), none !important;
+  }
+
+  /* Native scrollbar chrome can bypass inherited cursor:none. Use the same
+     transparent fallback there so the custom cursor remains the only visible pointer. */
+  html[data-custom-cursor="active"]::-webkit-scrollbar,
+  html[data-custom-cursor="active"]::-webkit-scrollbar-thumb,
+  html[data-custom-cursor="active"]::-webkit-scrollbar-track,
+  html[data-custom-cursor="active"]::-webkit-scrollbar-corner,
+  html[data-custom-cursor="active"] *::-webkit-scrollbar,
+  html[data-custom-cursor="active"] *::-webkit-scrollbar-thumb,
+  html[data-custom-cursor="active"] *::-webkit-scrollbar-track,
+  html[data-custom-cursor="active"] *::-webkit-scrollbar-corner {
+    cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgAAAAAgAB4iG8MwAAAABJRU5ErkJggg=="), none !important;
   }
 
   html[data-custom-cursor="active"] .settings-modal-scroll-anchor,
