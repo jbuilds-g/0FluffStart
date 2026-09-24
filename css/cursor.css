@@ -119,12 +119,16 @@
 
 
 /* --- DOM CUSTOM SCROLLBAR --- */
+html[data-custom-cursor="active"],
+html[data-custom-cursor="active"] body,
 html[data-custom-cursor="active"].custom-scrollbar-host,
 html[data-custom-cursor="active"] .custom-scrollbar-host {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
 
+html[data-custom-cursor="active"]::-webkit-scrollbar,
+html[data-custom-cursor="active"] body::-webkit-scrollbar,
 html[data-custom-cursor="active"].custom-scrollbar-host::-webkit-scrollbar,
 html[data-custom-cursor="active"] .custom-scrollbar-host::-webkit-scrollbar {
   display: none !important;
@@ -134,10 +138,6 @@ html[data-custom-cursor="active"] .custom-scrollbar-host::-webkit-scrollbar {
 
 .custom-scrollbar-track {
   position: fixed;
-  top: 0;
-  right: 2px;
-  width: 9px;
-  height: 0;
   z-index: 999998;
   pointer-events: none;
   opacity: 0;
@@ -148,20 +148,39 @@ html[data-custom-cursor="active"] .custom-scrollbar-host::-webkit-scrollbar {
   opacity: 1;
 }
 
+.custom-scrollbar-track-vertical {
+  width: 9px;
+}
+
+.custom-scrollbar-track-horizontal {
+  height: 9px;
+}
+
 .custom-scrollbar-thumb {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 9px;
-  min-height: 34px;
   box-sizing: border-box;
   border: 2px solid transparent;
   border-radius: 999px;
-  background: var(--settings-scrollbar-thumb, var(--border, rgba(255, 255, 255, 0.15)));
+  background: var(
+    --settings-scrollbar-thumb,
+    var(--border, rgba(255, 255, 255, 0.15))
+  );
   background-clip: padding-box;
   pointer-events: auto;
   cursor: none !important;
   touch-action: none;
+}
+
+.custom-scrollbar-track-vertical .custom-scrollbar-thumb {
+  top: 0;
+  left: 0;
+  min-height: 34px;
+}
+
+.custom-scrollbar-track-horizontal .custom-scrollbar-thumb {
+  top: 0;
+  left: 0;
+  min-width: 34px;
 }
 
 .custom-scrollbar-thumb:hover,
@@ -171,14 +190,7 @@ html[data-custom-cursor="active"] .custom-scrollbar-host::-webkit-scrollbar {
   background-clip: padding-box;
 }
 
-.custom-scrollbar-track:has(.custom-scrollbar-thumb) {
-  display: block;
-}
-
+html[data-custom-cursor="active"] .custom-scrollbar-track,
 html[data-custom-cursor="active"] .custom-scrollbar-thumb {
-  cursor: none !important;
-}
-
-html[data-custom-cursor="active"] .custom-scrollbar-track {
   cursor: none !important;
 }
