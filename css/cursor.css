@@ -120,17 +120,26 @@
 
 /* --- DOM CUSTOM SCROLLBAR --- */
 html[data-custom-cursor="active"],
-html[data-custom-cursor="active"] body,
-html[data-custom-cursor="active"].custom-scrollbar-host,
-html[data-custom-cursor="active"] .custom-scrollbar-host {
+html[data-custom-cursor="active"] *,
+html[data-custom-cursor="active"] body {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
 
 html[data-custom-cursor="active"]::-webkit-scrollbar,
 html[data-custom-cursor="active"] body::-webkit-scrollbar,
-html[data-custom-cursor="active"].custom-scrollbar-host::-webkit-scrollbar,
-html[data-custom-cursor="active"] .custom-scrollbar-host::-webkit-scrollbar {
+html[data-custom-cursor="active"] *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+html[data-custom-cursor="active"]::-webkit-scrollbar-thumb,
+html[data-custom-cursor="active"]::-webkit-scrollbar-track,
+html[data-custom-cursor="active"]::-webkit-scrollbar-corner,
+html[data-custom-cursor="active"] *::-webkit-scrollbar-thumb,
+html[data-custom-cursor="active"] *::-webkit-scrollbar-track,
+html[data-custom-cursor="active"] *::-webkit-scrollbar-corner {
   display: none !important;
   width: 0 !important;
   height: 0 !important;
