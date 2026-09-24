@@ -16,6 +16,7 @@ export class CustomScrollbarManager {
     this.enabled = false;
     this.rafId = null;
     this.drag = null;
+    this.observer = new MutationObserver(() => this.scheduleRefresh());
 
     this.refresh = this.refresh.bind(this);
     this.updateAll = this.updateAll.bind(this);
@@ -36,6 +37,7 @@ export class CustomScrollbarManager {
     }
 
     this.bindEvents();
+    this.observer.observe(document.body, { childList: true, subtree: true });
     this.refresh();
   }
 
@@ -381,6 +383,7 @@ export class CustomScrollbarManager {
 
   destroy() {
     this.unbindEvents();
+    this.observer.disconnect();
 
     if (this.rafId !== null) {
       cancelAnimationFrame(this.rafId);
