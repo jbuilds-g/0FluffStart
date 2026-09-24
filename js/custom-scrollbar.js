@@ -8,7 +8,10 @@ export class CustomScrollbarManager {
     this.onPointerDown = this.onPointerDown.bind(this);
     this.onPointerMove = this.onPointerMove.bind(this);
     this.onPointerUp = this.onPointerUp.bind(this);
-    this.onResize = this.scheduleRefresh.bind(this);
+    this.onResize = this.handleResize.bind(this);
+    this.onMutations = this.handleMutations.bind(this);
+    this.observer = null;
+    this.candidates = new Set();
   }
 
   init() {
@@ -19,6 +22,14 @@ export class CustomScrollbarManager {
       capture: true,
     });
     window.addEventListener("resize", this.onResize, { passive: true });
+
+    this.observer = new MutationObserver(this.onMutations);
+    this.observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
+
+    this.discoverCandidates();
     window.addEventListener("pointerdown", this.onPointerDown, {
       passive: false,
     });
@@ -41,7 +52,27 @@ export class CustomScrollbarManager {
     }
 
     this.hosts.clear();
+    this.candidates.clear();
     this.drag = null;
+  }
+
+  handleResize() {
+    this.discoverCandidates();
+    this.scheduleRefresh();
+  }
+
+  handleMutations() {
+    this.discoverCandidates();
+    this.scheduleRefresh();
+  }
+
+  discoverCandidates() {
+    this.candidates.clear();
+    this.candidates.add(document.documentElement);
+
+    for (const element of document.body?.querySelectorAll("*") || []) {
+      this.candidates.add(element);
+    }
   }
 
   scheduleRefresh() {
@@ -54,22 +85,12 @@ export class CustomScrollbarManager {
   }
 
   getCandidates() {
-    const selectors = [
-      ".link-grid",
-      ".settings-section-nav",
-      ".settings-page-shell .engine-selection-list",
-      ".settings-page-shell .link-manager-list",
-      ".settings-page-shell .clock-style-picker",
-      ".settings-page-shell .settings-search-results",
-    ];
-
-    return [
-      document.documentElement,
-      ...document.querySelectorAll(selectors.join(", ")),
-    ];
+    return this.candidates;
   }
 
   refresh() {
+    if (!this.candidates.size) this.discoverCandidates();
+
     const active = new Set();
 
     for (const host of this.getCandidates()) {
