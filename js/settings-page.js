@@ -416,14 +416,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const buildThemePreviewGradient = (colors) => {
     const [base, secondary, accent, extra] = colors;
     const fallback = base || "#141418";
-    const left = accent || secondary || fallback;
-    const right = secondary || accent || fallback;
-    const lower = extra || accent || secondary || fallback;
+    const glowA = secondary || accent || fallback;
+    const glowB = accent || secondary || fallback;
+    const glowC = extra || glowA || fallback;
 
     return [
-      `radial-gradient(circle at 24% 50%, ${left} 0%, transparent 58%)`,
-      `radial-gradient(circle at 76% 50%, ${right} 0%, transparent 58%)`,
-      `radial-gradient(circle at 50% 78%, ${lower} 0%, transparent 48%)`,
+      `radial-gradient(circle at 22% 50%, ${glowA} 0%, transparent 62%)`,
+      `radial-gradient(circle at 78% 50%, ${glowB} 0%, transparent 62%)`,
+      `radial-gradient(circle at 50% 50%, ${glowC} 0%, transparent 72%)`,
       `linear-gradient(135deg, ${fallback}, ${fallback})`,
     ].join(", ");
   };
