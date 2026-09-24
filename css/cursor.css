@@ -20,20 +20,7 @@
   }
   html[data-custom-cursor="active"],
   html[data-custom-cursor="active"] * {
-    cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgAAAAAgAB4iG8MwAAAABJRU5ErkJggg=="), none !important;
-  }
-
-  /* Native scrollbar chrome can bypass inherited cursor:none. Use the same
-     transparent fallback there so the custom cursor remains the only visible pointer. */
-  html[data-custom-cursor="active"]::-webkit-scrollbar,
-  html[data-custom-cursor="active"]::-webkit-scrollbar-thumb,
-  html[data-custom-cursor="active"]::-webkit-scrollbar-track,
-  html[data-custom-cursor="active"]::-webkit-scrollbar-corner,
-  html[data-custom-cursor="active"] *::-webkit-scrollbar,
-  html[data-custom-cursor="active"] *::-webkit-scrollbar-thumb,
-  html[data-custom-cursor="active"] *::-webkit-scrollbar-track,
-  html[data-custom-cursor="active"] *::-webkit-scrollbar-corner {
-    cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgAAAAAgAB4iG8MwAAAABJRU5ErkJggg=="), none !important;
+    cursor: none !important;
   }
 
   html[data-custom-cursor="active"] .settings-modal-scroll-anchor,
@@ -115,91 +102,4 @@
 /* Transform Modifications */
 .custom-cursor.is-active .custom-cursor-icon {
   transform: scale(0.9);
-}
-
-
-/* --- DOM CUSTOM SCROLLBAR --- */
-html[data-custom-cursor="active"],
-html[data-custom-cursor="active"] *,
-html[data-custom-cursor="active"] body {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-
-html[data-custom-cursor="active"]::-webkit-scrollbar,
-html[data-custom-cursor="active"] body::-webkit-scrollbar,
-html[data-custom-cursor="active"] *::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-html[data-custom-cursor="active"]::-webkit-scrollbar-thumb,
-html[data-custom-cursor="active"]::-webkit-scrollbar-track,
-html[data-custom-cursor="active"]::-webkit-scrollbar-corner,
-html[data-custom-cursor="active"] *::-webkit-scrollbar-thumb,
-html[data-custom-cursor="active"] *::-webkit-scrollbar-track,
-html[data-custom-cursor="active"] *::-webkit-scrollbar-corner {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-.custom-scrollbar-track {
-  position: fixed;
-  z-index: 999998;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.custom-scrollbar-track.is-visible {
-  opacity: 1;
-}
-
-.custom-scrollbar-track-vertical {
-  width: 9px;
-}
-
-.custom-scrollbar-track-horizontal {
-  height: 9px;
-}
-
-.custom-scrollbar-thumb {
-  position: absolute;
-  box-sizing: border-box;
-  border: 2px solid transparent;
-  border-radius: 999px;
-  background: var(
-    --settings-scrollbar-thumb,
-    var(--border, rgba(255, 255, 255, 0.15))
-  );
-  background-clip: padding-box;
-  pointer-events: auto;
-  cursor: none !important;
-  touch-action: none;
-}
-
-.custom-scrollbar-track-vertical .custom-scrollbar-thumb {
-  top: 0;
-  left: 0;
-  min-height: 34px;
-}
-
-.custom-scrollbar-track-horizontal .custom-scrollbar-thumb {
-  top: 0;
-  left: 0;
-  min-width: 34px;
-}
-
-.custom-scrollbar-thumb:hover,
-.custom-scrollbar-thumb:active {
-  border-width: 1px;
-  background: var(--settings-scrollbar-thumb-hover, var(--accent, #8b5cf6));
-  background-clip: padding-box;
-}
-
-html[data-custom-cursor="active"] .custom-scrollbar-track,
-html[data-custom-cursor="active"] .custom-scrollbar-thumb {
-  cursor: none !important;
 }
