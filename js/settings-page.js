@@ -269,9 +269,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, { passive: false });
   }
 
-  const defaultMaterialPreview =
-    "linear-gradient(135deg,#ff6b6b 0 25%,#ffd166 25% 50%,#06d6a0 50% 75%,#118ab2 75%)";
-
   const syncScrollbarTheme = () => {
     const styles = getComputedStyle(document.body);
     const accent = styles.getPropertyValue("--accent").trim();
@@ -309,10 +306,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           palette["--accent"],
         ].filter(Boolean)
       : [];
-    const materialPreview =
+    const materialPreview = buildThemePreviewGradient(
       colors.length && settings.backgroundImage === "indexeddb"
-        ? `linear-gradient(135deg, ${colors.join(", ")})`
-        : defaultMaterialPreview;
+        ? colors
+        : themePreviewColors["material-you"],
+    );
 
     materialOption.style.setProperty("--theme-preview", materialPreview);
     const materialPreviewEl = materialOption.querySelector(
@@ -415,15 +413,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     syncSelection();
   };
 
+  const buildThemePreviewGradient = (colors) => {
+    const [base, secondary, accent, extra] = colors;
+    const fallback = base || "#141418";
+    return [
+      `radial-gradient(circle at 14% 20%, ${accent || secondary || fallback} 0%, transparent 58%)`,
+      `radial-gradient(circle at 84% 24%, ${secondary || accent || fallback} 0%, transparent 62%)`,
+      `radial-gradient(circle at 48% 92%, ${extra || accent || secondary || fallback} 0%, transparent 66%)`,
+      `linear-gradient(135deg, ${fallback}, ${secondary || fallback})`,
+    ].join(", ");
+  };
+
   const createThemePreview = (option) => {
     const value = option.dataset.value || "dark";
     const colors = themePreviewColors[value] || themePreviewColors.dark;
     const preview = document.createElement("span");
     preview.className = "settings-clock-preview settings-theme-preview";
     preview.setAttribute("aria-hidden", "true");
-    preview.style.background = `linear-gradient(135deg, ${colors[0]} 0 42%, ${colors[1]} 42% 72%, ${colors[2]} 72% 100%)`;
-    if (value === "material-you")
-      preview.style.background = defaultMaterialPreview;
+    preview.style.background = buildThemePreviewGradient(colors);
     return preview;
   };
 
