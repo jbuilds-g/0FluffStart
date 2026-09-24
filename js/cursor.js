@@ -1,5 +1,4 @@
 import { store } from "./store.js";
-import { CustomScrollbarManager } from "./custom-scrollbar.js";
 
 export class CustomCursorEngine {
   constructor() {
@@ -7,8 +6,6 @@ export class CustomCursorEngine {
     if (!this.container) return;
 
     window.customCursorInstance = this;
-    this.scrollbarManager = new CustomScrollbarManager();
-    this.scrollbarManager.init();
 
     this.iconEl = this.container.querySelector(".custom-cursor-icon");
     this.targetX = 0;
@@ -50,8 +47,6 @@ export class CustomCursorEngine {
 
   toggleEnabled(enabled) {
     this.isEnabled = enabled;
-    this.scrollbarManager.setEnabled(enabled);
-
     if (enabled) {
       this.isFirstMove = true;
       this.unbindEvents();
