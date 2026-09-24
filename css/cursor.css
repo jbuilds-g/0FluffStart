@@ -103,3 +103,70 @@
 .custom-cursor.is-active .custom-cursor-icon {
   transform: scale(0.9);
 }
+
+/* --- DOM CUSTOM SCROLLBARS --- */
+.custom-scrollbar {
+  position: fixed;
+  z-index: 999998;
+  display: none;
+  box-sizing: border-box;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.custom-scrollbar-vertical {
+  padding: 1px 0;
+}
+
+.custom-scrollbar-horizontal {
+  padding: 0 1px;
+}
+
+.custom-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  min-width: 100%;
+  min-height: 100%;
+  border-radius: 999px;
+  background: var(--settings-scrollbar-thumb, color-mix(in srgb, var(--accent, #00aaff) 58%, var(--card, #141418)));
+  opacity: 0.82;
+  transition:
+    background-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.custom-scrollbar:hover .custom-scrollbar-thumb,
+.custom-scrollbar-thumb:hover {
+  background: var(--settings-scrollbar-thumb-hover, var(--accent, #00aaff));
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html[data-custom-cursor="active"],
+  html[data-custom-cursor="active"] * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  html[data-custom-cursor="active"]::-webkit-scrollbar,
+  html[data-custom-cursor="active"] *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  html[data-custom-cursor="active"]::-webkit-scrollbar-thumb,
+  html[data-custom-cursor="active"]::-webkit-scrollbar-track,
+  html[data-custom-cursor="active"]::-webkit-scrollbar-corner,
+  html[data-custom-cursor="active"] *::-webkit-scrollbar-thumb,
+  html[data-custom-cursor="active"] *::-webkit-scrollbar-track,
+  html[data-custom-cursor="active"] *::-webkit-scrollbar-corner {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
