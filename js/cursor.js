@@ -40,6 +40,7 @@ export class CustomCursorEngine {
       return;
     }
 
+    this.scrollbarManager.setEnabled(true);
     this.bindEvents();
     this.startLoop();
 
@@ -49,7 +50,6 @@ export class CustomCursorEngine {
 
   toggleEnabled(enabled) {
     this.isEnabled = enabled;
-    this.scrollbarManager?.setEnabled(enabled);
     if (enabled) {
       this.isFirstMove = true;
       this.unbindEvents();
@@ -76,27 +76,13 @@ export class CustomCursorEngine {
   }
 
   bindEvents() {
-    window.addEventListener("pointermove", this.onPointerMove, {
-      passive: true,
-    });
-    window.addEventListener("pointerdown", this.onPointerDown, {
-      passive: true,
-    });
+    window.addEventListener("pointermove", this.onPointerMove, { passive: true });
+    window.addEventListener("pointerdown", this.onPointerDown, { passive: true });
     window.addEventListener("pointerup", this.onPointerUp, { passive: true });
-
-    document.body.addEventListener("pointerover", this.onPointerOver, {
-      passive: true,
-    });
-    document.body.addEventListener("pointerout", this.onPointerOut, {
-      passive: true,
-    });
-
-    document.documentElement.addEventListener("mouseleave", this.onLeave, {
-      passive: true,
-    });
-    document.documentElement.addEventListener("mouseenter", this.onEnter, {
-      passive: true,
-    });
+    document.body.addEventListener("pointerover", this.onPointerOver, { passive: true });
+    document.body.addEventListener("pointerout", this.onPointerOut, { passive: true });
+    document.documentElement.addEventListener("mouseleave", this.onLeave, { passive: true });
+    document.documentElement.addEventListener("mouseenter", this.onEnter, { passive: true });
     window.addEventListener("blur", this.onLeave, { passive: true });
   }
 
@@ -105,20 +91,15 @@ export class CustomCursorEngine {
       this.deactivateTouch();
       return;
     }
-
     if (this.isFirstMove) {
       this.currentX = e.clientX;
       this.currentY = e.clientY;
       this.isFirstMove = false;
     }
-
     this.targetX = e.clientX;
     this.targetY = e.clientY;
     this.pointerDirty = true;
-
-    if (!this.isVisible) {
-      this.setVisible(true);
-    }
+    if (!this.isVisible) this.setVisible(true);
   }
 
   onPointerDown(e) {
@@ -143,49 +124,24 @@ export class CustomCursorEngine {
 
   updateCursorForElement(element) {
     if (!element || !this.iconEl || this.isDragging) return;
-
-    const textInput = element.closest(
-      "input[type='text'], input[type='url'], input[type='number'], textarea, [contenteditable='true']",
-    );
+    const textInput = element.closest("input[type='text'], input[type='url'], input[type='number'], textarea, [contenteditable='true']");
     const dragHandle = element.closest(".drag-handle");
-    const interactive = element.closest(
-      "a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .suggestion-item, .suggestions-container *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content, .floating-btn, .back-btn, .back-pill, .back-icon-circle, .modal-close, [role='button']",
-    );
+    const interactive = element.closest("a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .suggestion-item, .suggestions-container *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content, .floating-btn, .back-btn, .back-pill, .back-icon-circle, .modal-close, [role='button']");
+    const isTextElement = element.closest("p, h1, h2, h3, h4, h5, h6, .link-grid .link-name, .greeting, .clock, code, .help-text");
+    const computedStyle = isTextElement ? window.getComputedStyle(isTextElement) : null;
+    const isSelectableText = isTextElement && computedStyle && computedStyle.userSelect !== "none" && isTextElement.textContent.trim().length > 0;
 
-    const isTextElement = element.closest(
-      "p, h1, h2, h3, h4, h5, h6, .link-grid .link-name, .greeting, .clock, code, .help-text",
-    );
-    const computedStyle = isTextElement
-      ? window.getComputedStyle(isTextElement)
-      : null;
-    const isSelectableText =
-      isTextElement &&
-      computedStyle &&
-      computedStyle.userSelect !== "none" &&
-      isTextElement.textContent.trim().length > 0;
-
-    if (textInput || isSelectableText) {
-      this.setCursorClass("icon-text-i-beam-cursor");
-    } else if (dragHandle) {
-      this.setCursorClass("icon-drag-grip-cursor");
-    } else if (interactive) {
-      this.setCursorClass("icon-interactive-hover-ring-target");
-    } else {
-      this.setCursorClass("icon-default-mouse-pointer");
-    }
+    if (textInput || isSelectableText) this.setCursorClass("icon-text-i-beam-cursor");
+    else if (dragHandle) this.setCursorClass("icon-drag-grip-cursor");
+    else if (interactive) this.setCursorClass("icon-interactive-hover-ring-target");
+    else this.setCursorClass("icon-default-mouse-pointer");
   }
 
-  onLeave() {
-    this.setVisible(false);
-  }
-
-  onEnter() {
-    this.setVisible(true);
-  }
+  onLeave() { this.setVisible(false); }
+  onEnter() { this.setVisible(true); }
 
   setVisible(visible) {
     this.isVisible = visible;
-
     if (visible && this.isEnabled) {
       this.container.classList.add("is-visible");
       this.container.removeAttribute("aria-hidden");
@@ -193,15 +149,8 @@ export class CustomCursorEngine {
       this.container.classList.remove("is-visible");
       this.container.setAttribute("aria-hidden", "true");
     }
-
-    // Keep scrollbar suppression tied to the setting, not cursor visibility.
-    // The native viewport scrollbar can sit outside the document and trigger
-    // mouseleave, so removing this attribute there would expose it again.
-    if (this.isEnabled) {
-      document.documentElement.setAttribute("data-custom-cursor", "active");
-    } else {
-      document.documentElement.removeAttribute("data-custom-cursor");
-    }
+    if (this.isEnabled) document.documentElement.setAttribute("data-custom-cursor", "active");
+    else document.documentElement.removeAttribute("data-custom-cursor");
   }
 
   deactivateTouch() {
@@ -209,13 +158,8 @@ export class CustomCursorEngine {
     this.toggleEnabled(false);
   }
 
-  setCursorClass(className) {
-    this.iconEl.className = `custom-cursor-icon ${className}`;
-  }
-
-  setDragState(dragging) {
-    this.isDragging = dragging;
-  }
+  setCursorClass(className) { this.iconEl.className = `custom-cursor-icon ${className}`; }
+  setDragState(dragging) { this.isDragging = dragging; }
 
   startLoop() {
     if (this.rafId !== null) return;
@@ -234,10 +178,8 @@ export class CustomCursorEngine {
 
   render() {
     if (!this.pointerDirty || !this.isVisible || !this.isEnabled) return;
-
     this.currentX += (this.targetX - this.currentX) * 0.35;
     this.currentY += (this.targetY - this.currentY) * 0.35;
-
     this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
     this.pointerDirty = false;
   }
