@@ -15,42 +15,20 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .custom-cursor {
-    display: block;
-  }
+  .custom-cursor { display: block; }
   html[data-custom-cursor="active"],
-  html[data-custom-cursor="active"] * {
-    cursor: none !important;
-  }
+  html[data-custom-cursor="active"] * { cursor: none !important; }
 
   html[data-custom-cursor="active"] .settings-modal-scroll-anchor,
-  html[data-custom-cursor="active"] .settings-modal-scroll-anchor * {
-    cursor: none !important;
-  }
+  html[data-custom-cursor="active"] .settings-modal-scroll-anchor * { cursor: none !important; }
 
-  /* Keep native control cursors hidden while the custom cursor is active. */
-  html[data-custom-cursor="active"]
-    body.material-you
-    input[type="checkbox"]:not(.manager-checkbox) {
-    cursor: none !important;
-  }
-
-  html[data-custom-cursor="active"]
-    body
-    input[type="range"]::-webkit-slider-thumb {
-    cursor: none !important;
-  }
-
-  html[data-custom-cursor="active"] body input[type="range"]::-moz-range-thumb {
-    cursor: none !important;
-  }
+  html[data-custom-cursor="active"] body.material-you input[type="checkbox"]:not(.manager-checkbox) { cursor: none !important; }
+  html[data-custom-cursor="active"] body input[type="range"]::-webkit-slider-thumb { cursor: none !important; }
+  html[data-custom-cursor="active"] body input[type="range"]::-moz-range-thumb { cursor: none !important; }
 }
 
-.custom-cursor.is-visible {
-  opacity: 1;
-}
+.custom-cursor.is-visible { opacity: 1; }
 
-/* Base Icon Mask Container */
 .custom-cursor-icon {
   position: absolute;
   top: -12px;
@@ -64,45 +42,14 @@
   mask-position: center;
   -webkit-mask-size: contain;
   mask-size: contain;
-  transition:
-    transform 0.15s ease,
-    background-color 0.2s ease;
+  transition: transform 0.15s ease, background-color 0.2s ease;
 }
 
-/* Default Mouse Pointer */
-.icon-default-mouse-pointer {
-  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%204v14l4.5-3.5L12%2021.5l3-1.5-3.5-7H18L4%204z%22%2F%3E%3C%2Fsvg%3E");
-  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%204v14l4.5-3.5L12%2021.5l3-1.5-3.5-7H18L4%204z%22%2F%3E%3C%2Fsvg%3E");
-}
-
-/* Interactive Hover Target */
-.icon-interactive-hover-ring-target {
-  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%227%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222%22%20fill%3D%22currentColor%22%2F%3E%3Cpath%20d%3D%22M12%202v3m0%2014v3M2%2012h3m14%200h3%22%2F%3E%3C%2Fsvg%3E");
-  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%227%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222%22%20fill%3D%22currentColor%22%2F%3E%3Cpath%20d%3D%22M12%202v3m0%2014v3M2%2012h3m14%200h3%22%2F%3E%3C%2Fsvg%3E");
-}
-
-/* Text I-Beam Cursor */
-.icon-text-i-beam-cursor {
-  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%204h8%22%2F%3E%3Cpath%20d%3D%22M12%204v16%22%2F%3E%3Cpath%20d%3D%22M8%2020h8%22%2F%3E%3C%2Fsvg%3E");
-  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%204h8%22%2F%3E%3Cpath%20d%3D%22M12%204v16%22%2F%3E%3Cpath%20d%3D%22M8%2020h8%22%2F%3E%3C%2Fsvg%3E");
-}
-
-/* Multidirectional Drag Handle */
-.icon-multidirectional-drag-handle {
-  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222.5%22%2F%3E%3Cpath%20d%3D%22M12%202v6%22%2F%3E%3Cpath%20d%3D%22M12%2016v6%22%2F%3E%3Cpath%20d%3D%22M2%2012h6%22%2F%3E%3Cpath%20d%3D%22M16%2012h6%22%2F%3E%3Cpath%20d%3D%22m9%205%203-3%203%203%22%2F%3E%3Cpath%20d%3D%22m9%2019%203%203%203-3%22%2F%3E%3Cpath%20d%3D%22m5%209-3%203%203%203%22%2F%3E%3Cpath%20d%3D%22m19%209%203%203-3%203%22%2F%3E%3C%2Fsvg%3E");
-  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222.5%22%2F%3E%3Cpath%20d%3D%22M12%202v6%22%2F%3E%3Cpath%20d%3D%22M12%2016v6%22%2F%3E%3Cpath%20d%3D%22M2%2012h6%22%2F%3E%3Cpath%20d%3D%22M16%2012h6%22%2F%3E%3Cpath%20d%3D%22m9%205%203-3%203%203%22%2F%3E%3Cpath%20d%3D%22m9%2019%203%203%203-3%22%2F%3E%3Cpath%20d%3D%22m5%209-3%203%203%203%22%2F%3E%3Cpath%20d%3D%22m19%209%203%203-3%203%22%2F%3E%3C%2Fsvg%3E");
-}
-
-/* Active Drag Grip Hand */
-.icon-drag-grip-cursor {
-  -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17%2011v-3.5c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v7.5%22%2F%3E%3Cpath%20d%3D%22M12%207.5v-2c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v9.5%22%2F%3E%3Cpath%20d%3D%22M7%208v-1c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v6c0%204.42%203.58%208%208%208h5c2.21%200%204-1.79%204-4v-3c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5%22%2F%3E%3C%2Fsvg%3E");
-  mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17%2011v-3.5c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v7.5%22%2F%3E%3Cpath%20d%3D%22M12%207.5v-2c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v9.5%22%2F%3E%3Cpath%20d%3D%22M7%208v-1c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v6c0%204.42%203.58%208%208%208h5c2.21%200%204-1.79%204-4v-3c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5%22%2F%3E%3C%2Fsvg%3E");
-}
-
-/* Transform Modifications */
-.custom-cursor.is-active .custom-cursor-icon {
-  transform: scale(0.9);
-}
+/* Existing cursor masks */
+.icon-default-mouse-pointer { -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M4%204v14l4.5-3.5L12%2021.5l3-1.5-3.5-7H18L4%204z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M4%204v14l4.5-3.5L12%2021.5l3-1.5-3.5-7H18L4%204z%22%2F%3E%3C%2Fsvg%3E"); }
+.icon-interactive-hover-ring-target { -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%227%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%227%22%2F%3E%3C%2Fsvg%3E"); }
+.icon-text-i-beam-cursor { -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M8%204h8M12%204v16M8%2020h8%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M8%204h8M12%204v16M8%2020h8%22%2F%3E%3C%2Fsvg%3E"); }
+.icon-multidirectional-drag-handle, .icon-drag-grip-cursor { -webkit-mask-image: none; mask-image: none; }
 
 /* --- DOM CUSTOM SCROLLBARS --- */
 .custom-scrollbar {
@@ -115,15 +62,8 @@
   user-select: none;
   -webkit-user-select: none;
 }
-
-.custom-scrollbar-vertical {
-  padding: 1px 0;
-}
-
-.custom-scrollbar-horizontal {
-  padding: 0 1px;
-}
-
+.custom-scrollbar-vertical { padding: 1px 0; }
+.custom-scrollbar-horizontal { padding: 0 1px; }
 .custom-scrollbar-thumb {
   position: absolute;
   top: 0;
@@ -134,11 +74,8 @@
   border-radius: 999px;
   background: var(--settings-scrollbar-thumb, color-mix(in srgb, var(--accent, #00aaff) 58%, var(--card, #141418)));
   opacity: 0.82;
-  transition:
-    background-color 0.15s ease,
-    opacity 0.15s ease;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
 }
-
 .custom-scrollbar:hover .custom-scrollbar-thumb,
 .custom-scrollbar-thumb:hover {
   background: var(--settings-scrollbar-thumb-hover, var(--accent, #00aaff));
@@ -146,25 +83,23 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  html[data-custom-cursor="active"],
-  html[data-custom-cursor="active"] * {
+  html[data-custom-scrollbar],
+  html[data-custom-scrollbar] * {
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
   }
-
-  html[data-custom-cursor="active"]::-webkit-scrollbar,
-  html[data-custom-cursor="active"] *::-webkit-scrollbar {
+  html[data-custom-scrollbar]::-webkit-scrollbar,
+  html[data-custom-scrollbar] *::-webkit-scrollbar {
     display: none !important;
     width: 0 !important;
     height: 0 !important;
   }
-
-  html[data-custom-cursor="active"]::-webkit-scrollbar-thumb,
-  html[data-custom-cursor="active"]::-webkit-scrollbar-track,
-  html[data-custom-cursor="active"]::-webkit-scrollbar-corner,
-  html[data-custom-cursor="active"] *::-webkit-scrollbar-thumb,
-  html[data-custom-cursor="active"] *::-webkit-scrollbar-track,
-  html[data-custom-cursor="active"] *::-webkit-scrollbar-corner {
+  html[data-custom-scrollbar]::-webkit-scrollbar-thumb,
+  html[data-custom-scrollbar]::-webkit-scrollbar-track,
+  html[data-custom-scrollbar]::-webkit-scrollbar-corner,
+  html[data-custom-scrollbar] *::-webkit-scrollbar-thumb,
+  html[data-custom-scrollbar] *::-webkit-scrollbar-track,
+  html[data-custom-scrollbar] *::-webkit-scrollbar-corner {
     display: none !important;
     width: 0 !important;
     height: 0 !important;
