@@ -29,7 +29,6 @@ export class CustomScrollbarManager {
 
   setEnabled(enabled) {
     if (this.enabled === enabled) return;
-
     this.enabled = enabled;
     document.documentElement.toggleAttribute("data-custom-scrollbar", enabled);
 
@@ -107,7 +106,6 @@ export class CustomScrollbarManager {
     for (const host of hosts) {
       const metrics = this.getMetrics(host);
       let entry = this.entries.get(host);
-
       if (!metrics.vertical && !metrics.horizontal) {
         if (entry) {
           entry.vertical.remove();
@@ -116,7 +114,6 @@ export class CustomScrollbarManager {
         }
         continue;
       }
-
       if (!entry) {
         entry = this.createEntry(host);
         this.entries.set(host, entry);
@@ -130,32 +127,22 @@ export class CustomScrollbarManager {
     const rect = isRoot
       ? { top: 0, left: 0, right: window.innerWidth, bottom: window.innerHeight, width: window.innerWidth, height: window.innerHeight }
       : host.getBoundingClientRect();
-
-    return {
-      isRoot,
-      rect,
-      vertical: host.scrollHeight > host.clientHeight + 1,
-      horizontal: host.scrollWidth > host.clientWidth + 1,
-    };
+    return { isRoot, rect, vertical: host.scrollHeight > host.clientHeight + 1, horizontal: host.scrollWidth > host.clientWidth + 1 };
   }
 
   createEntry(host) {
     const vertical = document.createElement("div");
     vertical.className = "custom-scrollbar custom-scrollbar-vertical";
     vertical.dataset.scrollbarAxis = "vertical";
-
     const horizontal = document.createElement("div");
     horizontal.className = "custom-scrollbar custom-scrollbar-horizontal";
     horizontal.dataset.scrollbarAxis = "horizontal";
-
     const verticalThumb = document.createElement("div");
     verticalThumb.className = "custom-scrollbar-thumb";
     vertical.append(verticalThumb);
-
     const horizontalThumb = document.createElement("div");
     horizontalThumb.className = "custom-scrollbar-thumb";
     horizontal.append(horizontalThumb);
-
     document.body.append(vertical, horizontal);
     return { vertical, horizontal, verticalThumb, horizontalThumb, host };
   }
@@ -164,7 +151,6 @@ export class CustomScrollbarManager {
     const { rect, isRoot } = metrics;
     const inset = isRoot ? 4 : 2;
     const thickness = 8;
-
     this.positionTrack(entry.vertical, rect.right - thickness - inset, rect.top + inset, thickness, Math.max(0, rect.height - inset * 2), metrics.vertical);
     this.positionTrack(entry.horizontal, rect.left + inset, rect.bottom - thickness - inset, Math.max(0, rect.width - inset * 2), thickness, metrics.horizontal);
     this.updateThumb(host, entry.vertical, entry.verticalThumb, "vertical", metrics.vertical);
@@ -188,12 +174,10 @@ export class CustomScrollbarManager {
     const scroll = vertical ? host.scrollTop : host.scrollLeft;
     const trackSize = vertical ? track.clientHeight : track.clientWidth;
     if (trackSize <= 0 || content <= viewport) return;
-
     const thumbSize = Math.max(28, Math.round((viewport / content) * trackSize));
     const maxOffset = Math.max(0, trackSize - thumbSize);
     const maxScroll = Math.max(1, content - viewport);
     const offset = Math.min(maxOffset, Math.max(0, (scroll / maxScroll) * maxOffset));
-
     if (vertical) {
       thumb.style.height = `${thumbSize}px`;
       thumb.style.width = "100%";
@@ -201,7 +185,7 @@ export class CustomScrollbarManager {
     } else {
       thumb.style.width = `${thumbSize}px`;
       thumb.style.height = "100%";
-      thumb.style.transform = `translateX(${Math.round(offset)}px`;
+      thumb.style.transform = `translateX(${Math.round(offset)}px)`;
     }
   }
 
@@ -219,7 +203,6 @@ export class CustomScrollbarManager {
     if (!this.enabled || event.button !== 0) return;
     const part = this.findEntryPart(event.target);
     if (!part) return;
-
     const { entry, axis, track, thumb } = part;
     const host = entry.host;
     const isVertical = axis === "vertical";
@@ -255,7 +238,6 @@ export class CustomScrollbarManager {
       thumbSize,
       maxScroll: isVertical ? Math.max(0, host.scrollHeight - host.clientHeight) : Math.max(0, host.scrollWidth - host.clientWidth),
     };
-
     thumb.setPointerCapture?.(event.pointerId);
     event.preventDefault();
     window.customCursorInstance?.setDragState(true);
