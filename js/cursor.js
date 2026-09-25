@@ -121,65 +121,24 @@ export class CustomCursorEngine {
     }
   }
 
-  onPointerDown() {
-    if (this.isTouchDevice) return;
-    this.container.classList.add("is-active");
+  onPointerDown(e) {
+    if (e.pointerType === "touch" || !this.isEnabled) return;
+    this.isDragging = true;
   }
 
-  onPointerUp(e) {
-    if (this.isTouchDevice) return;
-    this.container.classList.remove("is-active");
-
-    if (this.isDragging) {
-      if (
-        e.target.hasPointerCapture &&
-        e.target.hasPointerCapture(e.pointerId)
-      ) {
-        e.target.releasePointerCapture(e.pointerId);
-      }
-      this.isDragging = false;
-    }
-
-    const hoveredEl = document.elementFromPoint(this.targetX, this.targetY);
-    if (hoveredEl) {
-      this.updateCursorForElement(hoveredEl);
-    } else {
-      this.setCursorClass("icon-default-mouse-pointer");
-    }
+  onPointerUp() {
+    this.isDragging = false;
   }
 
   onPointerOver(e) {
-    if (this.isTouchDevice || this.isDragging) return;
+    if (!this.isEnabled || this.isDragging) return;
     this.updateCursorForElement(e.target);
   }
 
   onPointerOut(e) {
-    if (this.isTouchDevice || this.isDragging) return;
+    if (!this.isEnabled || this.isDragging) return;
     const related = e.relatedTarget;
-    if (related) {
-      this.updateCursorForElement(related);
-    } else {
-      this.setCursorClass("icon-default-mouse-pointer");
-    }
-  }
-
-  setCursorClass(className) {
-    if (!this.iconEl) return;
-    this.iconEl.className = `custom-cursor-icon ${className}`;
-  }
-
-  setDragState(isDragging) {
-    this.isDragging = isDragging;
-    if (isDragging) {
-      this.setCursorClass("icon-drag-grip-cursor");
-    } else {
-      const hoveredEl = document.elementFromPoint(this.targetX, this.targetY);
-      if (hoveredEl) {
-        this.updateCursorForElement(hoveredEl);
-      } else {
-        this.setCursorClass("icon-default-mouse-pointer");
-      }
-    }
+    if (related instanceof Node) this.updateCursorForElement(related);
   }
 
   updateCursorForElement(element) {
@@ -226,49 +185,60 @@ export class CustomCursorEngine {
 
   setVisible(visible) {
     this.isVisible = visible;
+
     if (visible && this.isEnabled) {
       this.container.classList.add("is-visible");
       this.container.removeAttribute("aria-hidden");
-      document.documentElement.setAttribute("data-custom-cursor", "active");
     } else {
       this.container.classList.remove("is-visible");
       this.container.setAttribute("aria-hidden", "true");
+    }
+
+    // Keep scrollbar suppression tied to the setting, not cursor visibility.
+    // The native viewport scrollbar can sit outside the document and trigger
+    // mouseleave, so removing this attribute there would expose it again.
+    if (this.isEnabled) {
+      document.documentElement.setAttribute("data-custom-cursor", "active");
+    } else {
       document.documentElement.removeAttribute("data-custom-cursor");
     }
   }
 
   deactivateTouch() {
     this.isTouchDevice = true;
-    this.setVisible(false);
-    this.stopLoop();
+    this.toggleEnabled(false);
+  }
+
+  setCursorClass(className) {
+    this.iconEl.className = `custom-cursor-icon ${className}`;
+  }
+
+  setDragState(dragging) {
+    this.isDragging = dragging;
   }
 
   startLoop() {
-    if (!this.isTracking) {
-      this.isTracking = true;
-      this.rafId = requestAnimationFrame(this.render);
-    }
+    if (this.rafId !== null) return;
+    const renderFrame = () => {
+      this.rafId = requestAnimationFrame(renderFrame);
+      this.render();
+    };
+    this.rafId = requestAnimationFrame(renderFrame);
   }
 
   stopLoop() {
-    if (this.isTracking) {
-      this.isTracking = false;
-      if (this.rafId) cancelAnimationFrame(this.rafId);
-    }
+    if (this.rafId === null) return;
+    cancelAnimationFrame(this.rafId);
+    this.rafId = null;
   }
 
   render() {
-    if (!this.isTracking) return;
-    if (this.pointerDirty) {
-      this.currentX += (this.targetX - this.currentX) * 0.45;
-      this.currentY += (this.targetY - this.currentY) * 0.45;
+    if (!this.pointerDirty || !this.isVisible || !this.isEnabled) return;
 
-      const x = Math.round(this.currentX * 100) / 100;
-      const y = Math.round(this.currentY * 100) / 100;
+    this.currentX += (this.targetX - this.currentX) * 0.35;
+    this.currentY += (this.targetY - this.currentY) * 0.35;
 
-      this.container.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      this.pointerDirty = false;
-    }
-    this.rafId = requestAnimationFrame(this.render);
+    this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+    this.pointerDirty = false;
   }
 }
