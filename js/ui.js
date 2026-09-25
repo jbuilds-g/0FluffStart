@@ -544,7 +544,7 @@ const SETTINGS_MAP = [
     key: "customCursorEnabled",
     id: "customCursorToggle",
     type: "checkbox",
-    defaultVal: true,
+    defaultVal: false,
   },
   {
     key: "openInNewTab",

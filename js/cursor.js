@@ -1,4 +1,5 @@
 import { store } from "./store.js";
+import { CustomScrollbarManager } from "./custom-scrollbar.js";
 
 export class CustomCursorEngine {
   constructor() {
@@ -6,6 +7,7 @@ export class CustomCursorEngine {
     if (!this.container) return;
 
     window.customCursorInstance = this;
+    this.scrollbarManager = new CustomScrollbarManager();
 
     this.iconEl = this.container.querySelector(".custom-cursor-icon");
     this.targetX = 0;
@@ -38,6 +40,7 @@ export class CustomCursorEngine {
       return;
     }
 
+    this.scrollbarManager.setEnabled(true);
     this.bindEvents();
     this.startLoop();
 
@@ -73,27 +76,13 @@ export class CustomCursorEngine {
   }
 
   bindEvents() {
-    window.addEventListener("pointermove", this.onPointerMove, {
-      passive: true,
-    });
-    window.addEventListener("pointerdown", this.onPointerDown, {
-      passive: true,
-    });
+    window.addEventListener("pointermove", this.onPointerMove, { passive: true });
+    window.addEventListener("pointerdown", this.onPointerDown, { passive: true });
     window.addEventListener("pointerup", this.onPointerUp, { passive: true });
-
-    document.body.addEventListener("pointerover", this.onPointerOver, {
-      passive: true,
-    });
-    document.body.addEventListener("pointerout", this.onPointerOut, {
-      passive: true,
-    });
-
-    document.documentElement.addEventListener("mouseleave", this.onLeave, {
-      passive: true,
-    });
-    document.documentElement.addEventListener("mouseenter", this.onEnter, {
-      passive: true,
-    });
+    document.body.addEventListener("pointerover", this.onPointerOver, { passive: true });
+    document.body.addEventListener("pointerout", this.onPointerOut, { passive: true });
+    document.documentElement.addEventListener("mouseleave", this.onLeave, { passive: true });
+    document.documentElement.addEventListener("mouseenter", this.onEnter, { passive: true });
     window.addEventListener("blur", this.onLeave, { passive: true });
   }
 
@@ -102,170 +91,96 @@ export class CustomCursorEngine {
       this.deactivateTouch();
       return;
     }
-
     if (this.isFirstMove) {
       this.currentX = e.clientX;
       this.currentY = e.clientY;
       this.isFirstMove = false;
     }
-
     this.targetX = e.clientX;
     this.targetY = e.clientY;
     this.pointerDirty = true;
-
-    if (!this.isVisible) {
-      this.setVisible(true);
-    }
+    if (!this.isVisible) this.setVisible(true);
   }
 
-  onPointerDown() {
-    if (this.isTouchDevice) return;
-    this.container.classList.add("is-active");
+  onPointerDown(e) {
+    if (e.pointerType === "touch" || !this.isEnabled) return;
+    this.isDragging = true;
   }
 
-  onPointerUp(e) {
-    if (this.isTouchDevice) return;
-    this.container.classList.remove("is-active");
-
-    if (this.isDragging) {
-      if (
-        e.target.hasPointerCapture &&
-        e.target.hasPointerCapture(e.pointerId)
-      ) {
-        e.target.releasePointerCapture(e.pointerId);
-      }
-      this.isDragging = false;
-    }
-
-    const hoveredEl = document.elementFromPoint(this.targetX, this.targetY);
-    if (hoveredEl) {
-      this.updateCursorForElement(hoveredEl);
-    } else {
-      this.setCursorClass("icon-default-mouse-pointer");
-    }
+  onPointerUp() {
+    this.isDragging = false;
   }
 
   onPointerOver(e) {
-    if (this.isTouchDevice || this.isDragging) return;
+    if (!this.isEnabled || this.isDragging) return;
     this.updateCursorForElement(e.target);
   }
 
   onPointerOut(e) {
-    if (this.isTouchDevice || this.isDragging) return;
+    if (!this.isEnabled || this.isDragging) return;
     const related = e.relatedTarget;
-    if (related) {
-      this.updateCursorForElement(related);
-    } else {
-      this.setCursorClass("icon-default-mouse-pointer");
-    }
-  }
-
-  setCursorClass(className) {
-    if (!this.iconEl) return;
-    this.iconEl.className = `custom-cursor-icon ${className}`;
-  }
-
-  setDragState(isDragging) {
-    this.isDragging = isDragging;
-    if (isDragging) {
-      this.setCursorClass("icon-drag-grip-cursor");
-    } else {
-      const hoveredEl = document.elementFromPoint(this.targetX, this.targetY);
-      if (hoveredEl) {
-        this.updateCursorForElement(hoveredEl);
-      } else {
-        this.setCursorClass("icon-default-mouse-pointer");
-      }
-    }
+    if (related instanceof Node) this.updateCursorForElement(related);
   }
 
   updateCursorForElement(element) {
     if (!element || !this.iconEl || this.isDragging) return;
-
-    const textInput = element.closest(
-      "input[type='text'], input[type='url'], input[type='number'], textarea, [contenteditable='true']",
-    );
+    const textInput = element.closest("input[type='text'], input[type='url'], input[type='number'], textarea, [contenteditable='true']");
     const dragHandle = element.closest(".drag-handle");
-    const interactive = element.closest(
-      "a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .suggestion-item, .suggestions-container *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content, .floating-btn, .back-btn, .back-pill, .back-icon-circle, .modal-close, [role='button']",
-    );
+    const interactive = element.closest("a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .suggestion-item, .suggestions-container *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content, .floating-btn, .back-btn, .back-pill, .back-icon-circle, .modal-close, [role='button']");
+    const isTextElement = element.closest("p, h1, h2, h3, h4, h5, h6, .link-grid .link-name, .greeting, .clock, code, .help-text");
+    const computedStyle = isTextElement ? window.getComputedStyle(isTextElement) : null;
+    const isSelectableText = isTextElement && computedStyle && computedStyle.userSelect !== "none" && isTextElement.textContent.trim().length > 0;
 
-    const isTextElement = element.closest(
-      "p, h1, h2, h3, h4, h5, h6, .link-grid .link-name, .greeting, .clock, code, .help-text",
-    );
-    const computedStyle = isTextElement
-      ? window.getComputedStyle(isTextElement)
-      : null;
-    const isSelectableText =
-      isTextElement &&
-      computedStyle &&
-      computedStyle.userSelect !== "none" &&
-      isTextElement.textContent.trim().length > 0;
-
-    if (textInput || isSelectableText) {
-      this.setCursorClass("icon-text-i-beam-cursor");
-    } else if (dragHandle) {
-      this.setCursorClass("icon-drag-grip-cursor");
-    } else if (interactive) {
-      this.setCursorClass("icon-interactive-hover-ring-target");
-    } else {
-      this.setCursorClass("icon-default-mouse-pointer");
-    }
+    if (textInput || isSelectableText) this.setCursorClass("icon-text-i-beam-cursor");
+    else if (dragHandle) this.setCursorClass("icon-drag-grip-cursor");
+    else if (interactive) this.setCursorClass("icon-interactive-hover-ring-target");
+    else this.setCursorClass("icon-default-mouse-pointer");
   }
 
-  onLeave() {
-    this.setVisible(false);
-  }
-
-  onEnter() {
-    this.setVisible(true);
-  }
+  onLeave() { this.setVisible(false); }
+  onEnter() { this.setVisible(true); }
 
   setVisible(visible) {
     this.isVisible = visible;
     if (visible && this.isEnabled) {
       this.container.classList.add("is-visible");
       this.container.removeAttribute("aria-hidden");
-      document.documentElement.setAttribute("data-custom-cursor", "active");
     } else {
       this.container.classList.remove("is-visible");
       this.container.setAttribute("aria-hidden", "true");
-      document.documentElement.removeAttribute("data-custom-cursor");
     }
+    if (this.isEnabled) document.documentElement.setAttribute("data-custom-cursor", "active");
+    else document.documentElement.removeAttribute("data-custom-cursor");
   }
 
   deactivateTouch() {
     this.isTouchDevice = true;
-    this.setVisible(false);
-    this.stopLoop();
+    this.toggleEnabled(false);
   }
 
+  setCursorClass(className) { this.iconEl.className = `custom-cursor-icon ${className}`; }
+  setDragState(dragging) { this.isDragging = dragging; }
+
   startLoop() {
-    if (!this.isTracking) {
-      this.isTracking = true;
-      this.rafId = requestAnimationFrame(this.render);
-    }
+    if (this.rafId !== null) return;
+    const renderFrame = () => {
+      this.rafId = requestAnimationFrame(renderFrame);
+      this.render();
+    };
+    this.rafId = requestAnimationFrame(renderFrame);
   }
 
   stopLoop() {
-    if (this.isTracking) {
-      this.isTracking = false;
-      if (this.rafId) cancelAnimationFrame(this.rafId);
-    }
+    if (this.rafId === null) return;
+    cancelAnimationFrame(this.rafId);
+    this.rafId = null;
   }
 
   render() {
-    if (!this.isTracking) return;
-    if (this.pointerDirty) {
-      this.currentX += (this.targetX - this.currentX) * 0.45;
-      this.currentY += (this.targetY - this.currentY) * 0.45;
-
-      const x = Math.round(this.currentX * 100) / 100;
-      const y = Math.round(this.currentY * 100) / 100;
-
-      this.container.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      this.pointerDirty = false;
-    }
-    this.rafId = requestAnimationFrame(this.render);
+    if (!this.pointerDirty || !this.isVisible || !this.isEnabled) return;
+    this.currentX += (this.targetX - this.currentX) * 0.35;
+    this.currentY += (this.targetY - this.currentY) * 0.35;
+    this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+    this.pointerDirty = false;
   }
 }

@@ -99,7 +99,44 @@
   mask-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17%2011v-3.5c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v7.5%22%2F%3E%3Cpath%20d%3D%22M12%207.5v-2c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v9.5%22%2F%3E%3Cpath%20d%3D%22M7%208v-1c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5v6c0%204.42%203.58%208%208%208h5c2.21%200%204-1.79%204-4v-3c0-1.38-1.12-2.5-2.5-2.5s-2.5%201.12-2.5%202.5%22%2F%3E%3C%2Fsvg%3E");
 }
 
-/* Transform Modifications */
-.custom-cursor.is-active .custom-cursor-icon {
-  transform: scale(0.9);
+.custom-cursor.is-active .custom-cursor-icon { transform: scale(0.9); }
+
+.custom-scrollbar {
+  position: fixed;
+  z-index: 999998;
+  display: none;
+  box-sizing: border-box;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.custom-scrollbar-vertical { padding: 1px 0; }
+.custom-scrollbar-horizontal { padding: 0 1px; }
+.custom-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--settings-scrollbar-thumb, color-mix(in srgb, var(--accent, #00aaff) 58%, var(--card, #141418)));
+  opacity: 0.82;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+.custom-scrollbar:hover .custom-scrollbar-thumb,
+.custom-scrollbar-thumb:hover { background: var(--settings-scrollbar-thumb-hover, var(--accent, #00aaff)); opacity: 1; }
+
+@media (hover: hover) and (pointer: fine) {
+  html[data-custom-scrollbar],
+  html[data-custom-scrollbar] * { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+  html[data-custom-scrollbar]::-webkit-scrollbar,
+  html[data-custom-scrollbar] *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+  html[data-custom-scrollbar]::-webkit-scrollbar-thumb,
+  html[data-custom-scrollbar]::-webkit-scrollbar-track,
+  html[data-custom-scrollbar]::-webkit-scrollbar-corner,
+  html[data-custom-scrollbar] *::-webkit-scrollbar-thumb,
+  html[data-custom-scrollbar] *::-webkit-scrollbar-track,
+  html[data-custom-scrollbar] *::-webkit-scrollbar-corner { display: none !important; width: 0 !important; height: 0 !important; }
 }
