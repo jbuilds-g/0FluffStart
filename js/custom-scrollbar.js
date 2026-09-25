@@ -127,11 +127,13 @@ export class CustomScrollbarManager {
       : host.getBoundingClientRect();
 
     if (isRoot) {
+      const contentWidth = Math.max(document.documentElement.scrollWidth, document.body?.scrollWidth || 0);
+      const contentHeight = Math.max(document.documentElement.scrollHeight, document.body?.scrollHeight || 0);
       return {
         isRoot: true,
         rect,
-        vertical: document.documentElement.scrollHeight > window.innerHeight + 1,
-        horizontal: document.documentElement.scrollWidth > window.innerWidth + 1,
+        vertical: contentHeight > window.innerHeight + 1,
+        horizontal: contentWidth > window.innerWidth + 1,
       };
     }
 
@@ -187,9 +189,11 @@ export class CustomScrollbarManager {
 
   getScrollState(host, axis, isRoot) {
     if (isRoot) {
+      const contentWidth = Math.max(document.documentElement.scrollWidth, document.body?.scrollWidth || 0);
+      const contentHeight = Math.max(document.documentElement.scrollHeight, document.body?.scrollHeight || 0);
       return axis === "vertical"
-        ? { viewport: window.innerHeight, content: document.documentElement.scrollHeight, scroll: window.scrollY }
-        : { viewport: window.innerWidth, content: document.documentElement.scrollWidth, scroll: window.scrollX };
+        ? { viewport: window.innerHeight, content: contentHeight, scroll: window.scrollY }
+        : { viewport: window.innerWidth, content: contentWidth, scroll: window.scrollX };
     }
 
     return axis === "vertical"
@@ -279,6 +283,8 @@ export class CustomScrollbarManager {
       thumb,
       isRoot,
       pointerStart: pointer,
+      grabOffset: Math.min(thumbSize, Math.max(0, pointer - thumbStart)),
+      trackStart: isVertical ? trackRect.top : trackRect.left,
       scrollStart: scroll,
       trackSize: isVertical ? trackRect.height : trackRect.width,
       thumbSize,
@@ -293,11 +299,11 @@ export class CustomScrollbarManager {
   onPointerMove(event) {
     if (!this.drag || event.pointerId !== this.drag.pointerId) return;
 
-    const { axis, pointerStart, scrollStart, trackSize, thumbSize, maxScroll, host, isRoot } = this.drag;
+    const { axis, trackStart, trackSize, thumbSize, maxScroll, host, isRoot, grabOffset } = this.drag;
     const pointer = axis === "vertical" ? event.clientY : event.clientX;
     const usable = Math.max(1, trackSize - thumbSize);
-    const delta = pointer - pointerStart;
-    const scroll = Math.max(0, Math.min(maxScroll, scrollStart + (delta / usable) * maxScroll));
+    const thumbPosition = Math.min(usable, Math.max(0, pointer - trackStart - grabOffset));
+    const scroll = maxScroll > 0 ? (thumbPosition / usable) * maxScroll : 0;
 
     this.setHostScroll(host, axis, scroll);
     this.scheduleUpdate();
