@@ -185,6 +185,7 @@
 }
 .quick-link-actions button:hover { color: var(--accent); border-color: var(--accent); }
 .quick-link-actions .remove { color: var(--delete); }
+.quick-link-actions .move-out { color: var(--accent); }
 
 .quick-link-drag-handle {
   position: absolute;
