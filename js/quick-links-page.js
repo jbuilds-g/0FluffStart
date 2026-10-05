@@ -1,7 +1,6 @@
-import "./main.js";
-import { store } from "./store.js";
+import { customConfirm, loadSettings, showToast } from "./ui.js";
+import { CustomCursorEngine } from "./cursor.js";import { store } from "./store.js";
 import { generateId } from "./utils.js";
-import { customConfirm, showToast } from "./ui.js";
 import { getFolderDepth } from "./links.js";
 
 const grid = document.getElementById("quickLinksGrid");
@@ -18,6 +17,7 @@ let editingId = null;
 let creatingFolder = false;
 let dragState = null;
 let hoverOpenTimer = null;
+let hoverFolderId = null;
 
 function childrenOf(parentId) {
   return (store.getState().links || []).filter(
@@ -124,9 +124,12 @@ function render() {
 
     const remove = document.createElement("button");
     remove.type = "button";
-    remove.className = "remove";
-    remove.title = link.parentId ? "Move out of folder" : "Delete";
-    remove.innerHTML = '<span class="icon-mask icon-close" aria-hidden="true"></span>';
+    remove.className = link.parentId ? "move-out" : "remove";
+    remove.title = link.parentId ? "Move to parent folder" : "Delete";
+    remove.setAttribute("aria-label", link.parentId ? "Move to parent folder" : "Delete");
+    remove.innerHTML = link.parentId
+      ? '<span class="icon-mask icon-back" style="transform:rotate(90deg)" aria-hidden="true"></span>'
+      : '<span class="icon-mask icon-close" aria-hidden="true"></span>';
     remove.addEventListener("click", async (event) => {
       event.stopPropagation();
       if (link.parentId) {
@@ -141,7 +144,15 @@ function render() {
     const handle = document.createElement("span");
     handle.className = "quick-link-drag-handle";
     handle.textContent = "::";
-    handle.setAttribute("aria-hidden", "true");
+    handle.title = "Drag to reorder or move";
+    handle.setAttribute("role", "button");
+    handle.setAttribute("tabindex", "0");
+    handle.setAttribute("aria-label", "Drag to reorder or move");
+    handle.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+      event.stopPropagation();
+      startDrag(event, link, card);
+    });
 
     card.append(icon, name, actions, handle);
     bindCard(card, link);
@@ -160,14 +171,15 @@ function bindCard(card, link) {
   });
 
   card.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0 || event.target.closest("button")) return;
-    startDrag(event, link, card);
+    if (event.button !== 0 || event.target.closest("button, .quick-link-drag-handle")) return;
   });
 }
 
 function navigate(folderId) {
   currentFolderId = folderId;
   clearTimeout(hoverOpenTimer);
+  hoverOpenTimer = null;
+  hoverFolderId = null;
   render();
 }
 
@@ -254,12 +266,29 @@ async function moveOut(id) {
   const index = links.findIndex((link) => link.id === id);
   if (index < 0) return;
   const item = links[index];
-  item.parentId = null;
+  const currentParent = item.parentId || null;
+  const parentFolder = currentParent
+    ? links.find((link) => link.id === currentParent)
+    : null;
+  const destinationParentId = parentFolder?.parentId || null;
+
+  item.parentId = destinationParentId;
   links.splice(index, 1);
-  links.push(item);
+
+  const siblings = links.filter(
+    (link) => (link.parentId || null) === destinationParentId,
+  );
+  const lastSiblingIndex = siblings.length
+    ? links.lastIndexOf(siblings[siblings.length - 1])
+    : -1;
+  links.splice(lastSiblingIndex + 1, 0, item);
+
   await store.setState({ links });
   render();
-  showToast("Moved to dashboard", "success");
+  showToast(
+    destinationParentId ? "Moved to parent folder" : "Moved to dashboard",
+    "success",
+  );
 }
 
 function startDrag(event, link, card) {
@@ -308,16 +337,27 @@ function startDrag(event, link, card) {
 
 function updateDragTarget(event) {
   clearDropState();
-  const hover = document.elementFromPoint(event.clientX, event.clientY)?.closest(".quick-link-card");
+
+  const hover = document
+    .elementFromPoint(event.clientX, event.clientY)
+    ?.closest(".quick-link-card");
+
   if (!hover || hover === dragState.card) {
     dragState.target = null;
+    clearTimeout(hoverOpenTimer);
+    hoverOpenTimer = null;
+    hoverFolderId = null;
     return;
   }
 
   const links = store.getState().links || [];
   const targetId = hover.dataset.id;
+
   if (isDescendant(targetId, dragState.link.id, links)) {
     dragState.target = null;
+    clearTimeout(hoverOpenTimer);
+    hoverOpenTimer = null;
+    hoverFolderId = null;
     return;
   }
 
@@ -325,28 +365,38 @@ function updateDragTarget(event) {
   if (!target) return;
 
   const rect = hover.getBoundingClientRect();
-  const ratio = (event.clientX - rect.left) / Math.max(rect.width, 1);
 
   if (target.isFolder && currentFolderId !== target.id) {
     dragState.target = { id: target.id, position: "inside" };
     hover.classList.add("drag-over");
 
-    clearTimeout(hoverOpenTimer);
-    hoverOpenTimer = setTimeout(() => {
-      if (!dragState?.started || dragState.target?.id !== target.id) return;
-      navigate(target.id);
-      dragState.target = { id: target.id, position: "inside" };
-    }, 500);
+    if (hoverFolderId !== target.id) {
+      clearTimeout(hoverOpenTimer);
+      hoverFolderId = target.id;
+      hoverOpenTimer = setTimeout(() => {
+        if (!dragState?.started || hoverFolderId !== target.id) return;
+        navigate(target.id);
+        if (dragState) dragState.target = null;
+      }, 500);
+    }
     return;
   }
 
+  clearTimeout(hoverOpenTimer);
+  hoverOpenTimer = null;
+  hoverFolderId = null;
+
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  const sameRow = Math.abs(event.clientY - centerY) <= rect.height * 0.65;
+  const before = sameRow ? event.clientX < centerX : event.clientY < centerY;
+
   dragState.target = {
     id: target.id,
-    position: ratio < 0.5 ? "before" : "after",
+    position: before ? "before" : "after",
   };
-  hover.classList.add(ratio < 0.5 ? "drop-before" : "drop-after");
+  hover.classList.add(before ? "drop-before" : "drop-after");
 }
-
 async function performDrop(state) {
   const links = [...(store.getState().links || [])];
   const draggedIndex = links.findIndex((link) => link.id === state.link.id);
@@ -357,15 +407,22 @@ async function performDrop(state) {
   const target = links[targetIndex];
 
   if (state.target.position === "inside") {
-    const depth = getFolderDepth(target.id, links);
-    const potentialDepth = depth + (dragged.isFolder ? 1 : 0);
+    const destinationParentId = target.id;
+    const destinationDepth = getFolderDepth(destinationParentId, links);
+    const potentialDepth = destinationDepth + (dragged.isFolder ? 1 : 0);
     if (potentialDepth > 3) {
       return showToast("Folder depth limit reached (max 3 levels).", "error");
     }
-    dragged.parentId = target.id;
+
+    dragged.parentId = destinationParentId;
     links.splice(draggedIndex, 1);
-    links.push(dragged);
-  } else {
+
+    const folderChildren = links.filter(
+      (link) => (link.parentId || null) === destinationParentId,
+    );
+    const lastChild = folderChildren[folderChildren.length - 1];
+    const insertIndex = lastChild ? links.indexOf(lastChild) + 1 : links.length;
+    links.splice(insertIndex, 0, dragged);  } else {
     dragged.parentId = target.parentId || null;
     links.splice(draggedIndex, 1);
     const newTargetIndex = links.findIndex((link) => link.id === target.id);
@@ -389,5 +446,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 await store.init();
+await loadSettings();
+new CustomCursorEngine();
 await new Promise((resolve) => requestAnimationFrame(resolve));
 render();
