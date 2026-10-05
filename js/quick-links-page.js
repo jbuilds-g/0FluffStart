@@ -85,12 +85,12 @@ function render() {
 
   links.forEach((link) => {
     const card = document.createElement("article");
-    card.className = "quick-link-card";
+    card.className = "link-item quick-link-card";
     card.dataset.id = link.id;
     card.tabIndex = 0;
 
     const icon = document.createElement("div");
-    icon.className = "quick-link-icon";
+    icon.className = "link-icon-circle";
     if (link.isFolder) {
       icon.innerHTML = '<span class="icon-mask icon-folder" style="width:26px;height:26px"></span>';
     } else {
@@ -107,7 +107,7 @@ function render() {
     }
 
     const name = document.createElement("div");
-    name.className = "quick-link-name";
+    name.className = "link-name";
     name.textContent = link.name;
 
     const actions = document.createElement("div");
