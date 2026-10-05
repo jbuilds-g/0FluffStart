@@ -144,7 +144,7 @@ function render() {
 
     const handle = document.createElement("span");
     handle.className = "quick-link-drag-handle";
-    handle.textContent = "::";
+    handle.innerHTML = '<span class="icon-mask icon-multidirectional-drag-handle" aria-hidden="true"></span>';
     handle.title = "Drag to reorder or move";
     handle.setAttribute("role", "button");
     handle.setAttribute("tabindex", "0");
@@ -352,6 +352,10 @@ function startDrag(event, link, card, handle) {
     handle.releasePointerCapture?.(pointerId);
     card.classList.remove("is-dragging");
     window.customCursorInstance?.setDragState(false);
+    const pointerTarget = document.elementFromPoint(startX, startY);
+    if (pointerTarget) {
+      window.customCursorInstance?.updateCursorForElement(pointerTarget);
+    }
 
     window.removeEventListener("pointermove", onMove);
     window.removeEventListener("pointerup", onUp);
@@ -451,7 +455,8 @@ async function performDrop(state) {
     );
     const lastChild = folderChildren[folderChildren.length - 1];
     const insertIndex = lastChild ? links.indexOf(lastChild) + 1 : links.length;
-    links.splice(insertIndex, 0, dragged);  } else {
+    links.splice(insertIndex, 0, dragged);
+  } else {
     dragged.parentId = target.parentId || null;
     links.splice(draggedIndex, 1);
     const newTargetIndex = links.findIndex((link) => link.id === target.id);
