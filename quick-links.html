@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick Links — 0FluffStart</title>
+    <link rel="stylesheet" href="css/core.css" />
+    <link rel="stylesheet" href="css/links.css" />
+    <link rel="stylesheet" href="css/quick-links-page.css?v=1" />
+  </head>
+  <body class="dark">
+    <div id="bgOverlay" class="bg-overlay"></div>
+    <div id="bgImage" class="bg-image hidden"></div>
+    <video id="bgVideo" class="bg-video hidden" loop muted autoplay playsinline></video>
+
+    <main class="quick-links-page">
+      <header class="quick-links-header">
+        <div>
+          <a class="quick-links-back" href="./settings.html#links-dashboard">← Settings</a>
+          <h1>Quick Links</h1>
+          <p>Organize your dashboard links and folders.</p>
+        </div>
+        <div class="quick-links-actions">
+          <button id="addLinkBtn" class="secondary" type="button">+ Add Link</button>
+          <button id="addFolderBtn" class="secondary" type="button">+ Add Folder</button>
+        </div>
+      </header>
+
+      <div class="quick-links-toolbar">
+        <button id="rootBtn" class="quick-links-breadcrumb" type="button">Dashboard</button>
+        <span id="breadcrumbSeparator" class="quick-links-breadcrumb-separator hidden">/</span>
+        <div id="breadcrumbs" class="quick-links-breadcrumbs"></div>
+      </div>
+
+      <section id="quickLinksGrid" class="quick-links-grid" aria-label="Quick links"></section>
+      <p id="emptyState" class="quick-links-empty hidden">No links or folders here yet.</p>
+    </main>
+
+    <div id="customCursorEngine" class="custom-cursor" aria-hidden="true">
+      <span class="custom-cursor-icon icon-default-mouse-pointer"></span>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+    <div class="modal" id="customDialogModal">
+      <div class="modal-content custom-dialog-content">
+        <h3 id="customDialogTitle" class="custom-dialog-title">Are you sure?</h3>
+        <p id="customDialogMessage" class="custom-dialog-message"></p>
+        <div class="action-btn-row">
+          <button id="customDialogCancelBtn" class="secondary" type="button">Cancel</button>
+          <button id="customDialogConfirmBtn" class="save-btn" type="button">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="linkEditorModal" class="quick-links-editor hidden" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+      <div class="quick-links-editor-card">
+        <h2 id="editorTitle">Add Link</h2>
+        <label>
+          Name
+          <input id="editName" type="text" maxlength="50" autocomplete="off" />
+        </label>
+        <label id="editUrlRow">
+          URL
+          <input id="editUrl" type="url" autocomplete="url" placeholder="https://example.com" />
+        </label>
+        <div class="quick-links-editor-actions">
+          <button id="cancelEditBtn" class="secondary" type="button">Cancel</button>
+          <button id="saveLinkBtn" class="save-btn" type="button">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/quick-links-page.js?v=1"></script>
+  </body>
+</html>
