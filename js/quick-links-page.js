@@ -20,6 +20,7 @@ let dragState = null;
 let hoverOpenTimer = null;
 let hoverFolderId = null;
 let dropSlot = null;
+let dropSlotKey = null;
 
 function childrenOf(parentId) {
   return (store.getState().links || []).filter(
@@ -43,9 +44,10 @@ function removeDropSlot() {
     dropSlot.remove();
     dropSlot = null;
   }
+  dropSlotKey = null;
 }
 
-function clearDropState() {
+function clearDropState({ removeSlot = true } = {}) {
   grid.querySelectorAll(".quick-link-card").forEach((card) => {
     card.classList.remove(
       "drag-over",
@@ -54,23 +56,60 @@ function clearDropState() {
       "drop-after",
     );
   });
-  removeDropSlot();
+  if (removeSlot) removeDropSlot();
 }
 
-function showDropSlot(card, position) {
-  removeDropSlot();
+function animateGridReflow(beforeRects) {
+  if (!beforeRects.size) return;
+
+  grid.querySelectorAll(".quick-link-card").forEach((card) => {
+    const before = beforeRects.get(card.dataset.id);
+    if (!before) return;
+
+    const after = card.getBoundingClientRect();
+    const dx = before.left - after.left;
+    const dy = before.top - after.top;
+
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+
+    card.animate(
+      [
+        { transform: `translate(${dx}px, ${dy}px)` },
+        { transform: "translate(0, 0)" },
+      ],
+      { duration: 180, easing: "cubic-bezier(.2,.8,.2,1)" },
+    );
+  });
+}
+
+function moveDropSlot(card, position) {
+  const key = `${card.dataset.id}:${position}`;
+  if (dropSlotKey === key && dropSlot?.isConnected) return;
+
+  const beforeRects = new Map();
+  grid.querySelectorAll(".quick-link-card").forEach((item) => {
+    beforeRects.set(item.dataset.id, item.getBoundingClientRect());
+  });
+
+  if (!dropSlot) {
+    dropSlot = document.createElement("div");
+    dropSlot.className = "quick-link-drop-slot";
+    dropSlot.setAttribute("aria-hidden", "true");
+  }
+
   const rect = card.getBoundingClientRect();
-  dropSlot = document.createElement("div");
-  dropSlot.className = "quick-link-drop-slot";
-  dropSlot.dataset.position = position;
   dropSlot.style.height = `${rect.height}px`;
-  dropSlot.setAttribute("aria-hidden", "true");
+  dropSlot.style.width = `${rect.width}px`;
+  dropSlot.dataset.position = position;
 
   if (position === "before") {
     grid.insertBefore(dropSlot, card);
   } else {
     grid.insertBefore(dropSlot, card.nextSibling);
   }
+
+  dropSlotKey = key;
+  animateGridReflow(beforeRects);
 }
 
 function renderBreadcrumbs() {
@@ -405,7 +444,7 @@ function updateDragTarget(event) {
 
   dragState.lastX = event.clientX;
   dragState.lastY = event.clientY;
-  clearDropState();
+  clearDropState({ removeSlot: false });
 
   const point = document.elementFromPoint(event.clientX, event.clientY);
   const hover = point?.closest(".quick-link-card");
@@ -460,6 +499,7 @@ function updateDragTarget(event) {
   dragState.target = { id: target.id, position };
 
   if (position === "inside" && target.isFolder) {
+    removeDropSlot();
     hover.classList.add("drag-enter-folder");
 
     if (hoverFolderId !== target.id) {
@@ -493,12 +533,13 @@ function updateDragTarget(event) {
   hoverFolderId = null;
 
   if (position === "inside") {
+    removeDropSlot();
     hover.classList.add("drag-over");
     return;
   }
 
   hover.classList.add(position === "before" ? "drop-before" : "drop-after");
-  showDropSlot(hover, position);
+  moveDropSlot(hover, position);
 }
 
 async function performDrop(state) {
