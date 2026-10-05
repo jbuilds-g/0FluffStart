@@ -109,22 +109,71 @@
   transform: translateY(-2px);
 }
 .quick-link-card.is-dragging { opacity: .35; cursor: grabbing; }
-.quick-link-card.drag-over {
+.quick-link-card.drag-over,
+.quick-link-card.drag-enter-folder {
   background: color-mix(in srgb, var(--accent) 14%, var(--card));
   border-color: var(--accent);
 }
+
+.quick-link-card.drag-enter-folder {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.quick-link-card.drag-enter-folder::after {
+  content: "Enter folder";
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translate(-50%, 100%);
+  z-index: 5;
+  padding: 3px 8px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--accent);
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 .quick-link-card.drop-before::before,
 .quick-link-card.drop-after::after {
   content: "";
   position: absolute;
-  left: -8px;
-  right: -8px;
-  height: 3px;
+  top: 50%;
+  width: 5px;
+  height: calc(100% - 10px);
+  transform: translateY(-50%);
   background: var(--accent);
   border-radius: 999px;
+  z-index: 4;
 }
-.quick-link-card.drop-before::before { top: -5px; }
-.quick-link-card.drop-after::after { bottom: -5px; }
+
+.quick-link-card.drop-before::before { left: -8px; }
+.quick-link-card.drop-after::after { right: -8px; }
+
+.quick-link-drop-slot {
+  min-width: 0;
+  border: 2px dashed var(--accent);
+  border-radius: calc(var(--radius) + 4px);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  box-sizing: border-box;
+  pointer-events: none;
+  animation: quickLinkDropSlotIn .12s ease-out;
+}
+
+@keyframes quickLinkDropSlotIn {
+  from {
+    opacity: 0;
+    transform: scale(.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
 .quick-link-icon {
   width: 56px;
