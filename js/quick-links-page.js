@@ -19,6 +19,7 @@ let creatingFolder = false;
 let dragState = null;
 let hoverOpenTimer = null;
 let hoverFolderId = null;
+let dropSlot = null;
 
 function childrenOf(parentId) {
   return (store.getState().links || []).filter(
@@ -37,10 +38,39 @@ function isDescendant(candidateId, ancestorId, links) {
   return false;
 }
 
+function removeDropSlot() {
+  if (dropSlot) {
+    dropSlot.remove();
+    dropSlot = null;
+  }
+}
+
 function clearDropState() {
   grid.querySelectorAll(".quick-link-card").forEach((card) => {
-    card.classList.remove("drag-over", "drop-before", "drop-after");
+    card.classList.remove(
+      "drag-over",
+      "drag-enter-folder",
+      "drop-before",
+      "drop-after",
+    );
   });
+  removeDropSlot();
+}
+
+function showDropSlot(card, position) {
+  removeDropSlot();
+  const rect = card.getBoundingClientRect();
+  dropSlot = document.createElement("div");
+  dropSlot.className = "quick-link-drop-slot";
+  dropSlot.dataset.position = position;
+  dropSlot.style.height = `${rect.height}px`;
+  dropSlot.setAttribute("aria-hidden", "true");
+
+  if (position === "before") {
+    grid.insertBefore(dropSlot, card);
+  } else {
+    grid.insertBefore(dropSlot, card.nextSibling);
+  }
 }
 
 function renderBreadcrumbs() {
@@ -307,6 +337,8 @@ function startDrag(event, link, card, handle) {
     started: false,
     target: null,
     position: "after",
+    lastX: startX,
+    lastY: startY,
   };
 
   handle.setPointerCapture?.(pointerId);
@@ -369,14 +401,23 @@ function startDrag(event, link, card, handle) {
   window.addEventListener("pointercancel", cleanup);
 }
 function updateDragTarget(event) {
+  if (!dragState?.started) return;
+
+  dragState.lastX = event.clientX;
+  dragState.lastY = event.clientY;
   clearDropState();
 
-  const hover = document
-    .elementFromPoint(event.clientX, event.clientY)
-    ?.closest(".quick-link-card");
+  const point = document.elementFromPoint(event.clientX, event.clientY);
+  const hover = point?.closest(".quick-link-card");
 
   if (!hover || hover === dragState.card) {
-    dragState.target = null;
+    const insideGrid = point && grid.contains(point);
+    if (insideGrid && currentFolderId) {
+      dragState.target = { id: currentFolderId, position: "inside" };
+    } else {
+      dragState.target = null;
+    }
+
     clearTimeout(hoverOpenTimer);
     hoverOpenTimer = null;
     hoverFolderId = null;
@@ -398,19 +439,51 @@ function updateDragTarget(event) {
   if (!target) return;
 
   const rect = hover.getBoundingClientRect();
+  const ratio = Math.max(
+    0,
+    Math.min(1, (event.clientX - rect.left) / rect.width),
+  );
 
+  let position;
   if (target.isFolder && currentFolderId !== target.id) {
-    dragState.target = { id: target.id, position: "inside" };
-    hover.classList.add("drag-over");
+    if (ratio < 0.3) {
+      position = "before";
+    } else if (ratio > 0.7) {
+      position = "after";
+    } else {
+      position = "inside";
+    }
+  } else {
+    position = ratio < 0.5 ? "before" : "after";
+  }
+
+  dragState.target = { id: target.id, position };
+
+  if (position === "inside" && target.isFolder) {
+    hover.classList.add("drag-enter-folder");
 
     if (hoverFolderId !== target.id) {
       clearTimeout(hoverOpenTimer);
       hoverFolderId = target.id;
       hoverOpenTimer = setTimeout(() => {
-        if (!dragState?.started || hoverFolderId !== target.id) return;
+        if (
+          !dragState?.started ||
+          hoverFolderId !== target.id ||
+          dragState.target?.position !== "inside"
+        ) {
+          return;
+        }
+
         navigate(target.id);
-        if (dragState) dragState.target = null;
-      }, 500);
+
+        requestAnimationFrame(() => {
+          if (!dragState?.started) return;
+          updateDragTarget({
+            clientX: dragState.lastX,
+            clientY: dragState.lastY,
+          });
+        });
+      }, 650);
     }
     return;
   }
@@ -419,17 +492,15 @@ function updateDragTarget(event) {
   hoverOpenTimer = null;
   hoverFolderId = null;
 
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
-  const sameRow = Math.abs(event.clientY - centerY) <= rect.height * 0.65;
-  const before = sameRow ? event.clientX < centerX : event.clientY < centerY;
+  if (position === "inside") {
+    hover.classList.add("drag-over");
+    return;
+  }
 
-  dragState.target = {
-    id: target.id,
-    position: before ? "before" : "after",
-  };
-  hover.classList.add(before ? "drop-before" : "drop-after");
+  hover.classList.add(position === "before" ? "drop-before" : "drop-after");
+  showDropSlot(hover, position);
 }
+
 async function performDrop(state) {
   const links = [...(store.getState().links || [])];
   const draggedIndex = links.findIndex((link) => link.id === state.link.id);
@@ -440,7 +511,8 @@ async function performDrop(state) {
   const target = links[targetIndex];
 
   if (state.target.position === "inside") {
-    const destinationParentId = target.id;
+    const destinationParentId = target.isFolder ? target.id : currentFolderId;
+    if (!destinationParentId) return;
     const destinationDepth = getFolderDepth(destinationParentId, links);
     const potentialDepth = destinationDepth + (dragged.isFolder ? 1 : 0);
     if (potentialDepth > 3) {
