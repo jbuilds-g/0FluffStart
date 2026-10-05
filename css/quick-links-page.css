@@ -1,0 +1,256 @@
+.quick-links-page {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 42px 0 72px;
+  position: relative;
+  z-index: 1;
+}
+
+.quick-links-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+
+.quick-links-back {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--dim);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+}
+.quick-links-back:hover { color: var(--accent); }
+
+.quick-links-header h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+.quick-links-header p {
+  margin: 8px 0 0;
+  color: var(--dim);
+}
+
+.quick-links-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.quick-links-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  margin-bottom: 18px;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.quick-links-breadcrumb {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  padding: 4px;
+}
+.quick-links-breadcrumb:hover { color: var(--accent); }
+.quick-links-breadcrumb-separator { color: var(--dim); }
+.quick-links-breadcrumbs {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  overflow: auto;
+}
+.quick-links-breadcrumbs button {
+  border: 0;
+  background: transparent;
+  color: var(--dim);
+  font: inherit;
+  cursor: pointer;
+  padding: 4px;
+  white-space: nowrap;
+}
+.quick-links-breadcrumbs button:last-child {
+  color: var(--text);
+  cursor: default;
+}
+.quick-links-breadcrumbs button:not(:last-child):hover { color: var(--accent); }
+
+.quick-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.quick-link-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding: 8px 6px 10px;
+  border: 1px solid transparent;
+  border-radius: calc(var(--radius) + 4px);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  transition: transform .15s ease, background-color .15s ease, border-color .15s ease;
+}
+.quick-link-card:hover {
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  border-color: var(--border);
+  transform: translateY(-2px);
+}
+.quick-link-card.is-dragging { opacity: .35; cursor: grabbing; }
+.quick-link-card.drag-over {
+  background: color-mix(in srgb, var(--accent) 14%, var(--card));
+  border-color: var(--accent);
+}
+.quick-link-card.drop-before::before,
+.quick-link-card.drop-after::after {
+  content: "";
+  position: absolute;
+  left: -8px;
+  right: -8px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 999px;
+}
+.quick-link-card.drop-before::before { top: -5px; }
+.quick-link-card.drop-after::after { bottom: -5px; }
+
+.quick-link-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 40%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  transition: transform .2s, border-radius .4s cubic-bezier(.175,.885,.32,1.275);
+}
+.quick-link-card:hover .quick-link-icon { transform: scale(1.04); }
+.quick-link-card .link-acronym {
+  font-weight: 600;
+  color: var(--accent);
+}
+.quick-link-name {
+  width: 100%;
+  margin-top: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  color: var(--text);
+  font-size: var(--font-size-xs);
+}
+
+.quick-link-actions {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: flex;
+  gap: 3px;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity .15s ease, transform .15s ease;
+}
+.quick-link-card:hover .quick-link-actions,
+.quick-link-card:focus-within .quick-link-actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+.quick-link-actions button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.quick-link-actions button:hover { color: var(--accent); border-color: var(--accent); }
+.quick-link-actions .remove { color: var(--delete); }
+
+.quick-link-drag-handle {
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  color: var(--dim);
+  opacity: 0;
+  font-size: 12px;
+  letter-spacing: -2px;
+  cursor: grab;
+}
+.quick-link-card:hover .quick-link-drag-handle { opacity: .8; }
+
+.quick-links-empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--dim);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+.quick-links-editor {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0,0,0,.55);
+}
+.quick-links-editor.hidden { display: none; }
+.quick-links-editor-card {
+  width: min(420px, 100%);
+  padding: 22px;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+.quick-links-editor-card h2 { margin: 0 0 18px; }
+.quick-links-editor-card label {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 14px;
+  color: var(--dim);
+  font-size: var(--font-size-sm);
+}
+.quick-links-editor-card input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.quick-links-editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+@media (max-width: 700px) {
+  .quick-links-page { width: min(100% - 20px, 600px); padding-top: 24px; }
+  .quick-links-header { align-items: flex-start; flex-direction: column; }
+  .quick-links-actions { justify-content: flex-start; }
+  .quick-links-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .quick-link-actions, .quick-link-drag-handle { opacity: 1; }
+}
+@media (max-width: 420px) {
+  .quick-links-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
