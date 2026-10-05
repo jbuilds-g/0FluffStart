@@ -378,6 +378,10 @@ function startDrag(event, link, card, handle) {
     position: "after",
     lastX: startX,
     lastY: startY,
+    offsetX: 0,
+    offsetY: 0,
+    width: 0,
+    height: 0,
   };
 
   handle.setPointerCapture?.(pointerId);
@@ -394,12 +398,25 @@ function startDrag(event, link, card, handle) {
 
     if (!dragState.started) {
       dragState.started = true;
+      const rect = card.getBoundingClientRect();
+      dragState.offsetX = moveEvent.clientX - rect.left;
+      dragState.offsetY = moveEvent.clientY - rect.top;
+      dragState.width = rect.width;
+      dragState.height = rect.height;
       card.classList.add("is-dragging");
+      card.style.width = `${rect.width}px`;
+      card.style.height = `${rect.height}px`;
+      card.style.left = `${rect.left}px`;
+      card.style.top = `${rect.top}px`;
       window.customCursorInstance?.setCursorClass("icon-drag-grip-cursor");
       window.customCursorInstance?.setDragState(true);
     }
 
     moveEvent.preventDefault();
+    if (dragState.started) {
+      card.style.left = `${moveEvent.clientX - dragState.offsetX}px`;
+      card.style.top = `${moveEvent.clientY - dragState.offsetY}px`;
+    }
     updateDragTarget(moveEvent);
   };
 
@@ -422,6 +439,10 @@ function startDrag(event, link, card, handle) {
 
     handle.releasePointerCapture?.(pointerId);
     card.classList.remove("is-dragging");
+    card.style.width = "";
+    card.style.height = "";
+    card.style.left = "";
+    card.style.top = "";
     window.customCursorInstance?.setDragState(false);
     const pointerTarget = document.elementFromPoint(startX, startY);
     if (pointerTarget) {
