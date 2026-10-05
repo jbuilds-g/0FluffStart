@@ -108,7 +108,17 @@
   border-color: var(--border);
   transform: translateY(-2px);
 }
-.quick-link-card.is-dragging { opacity: .35; cursor: grabbing; }
+.quick-link-card.is-dragging {
+  position: fixed;
+  z-index: 100;
+  margin: 0;
+  opacity: .96;
+  cursor: grabbing;
+  pointer-events: none;
+  transition: none;
+  box-shadow: var(--shadow-lg);
+  transform: scale(1.03);
+}
 .quick-link-card.drag-over,
 .quick-link-card.drag-enter-folder {
   background: color-mix(in srgb, var(--accent) 14%, var(--card));
@@ -156,23 +166,24 @@
 
 .quick-link-drop-slot {
   min-width: 0;
-  border: 2px dashed var(--accent);
+  border: 1px dashed color-mix(in srgb, var(--accent) 55%, var(--border));
   border-radius: calc(var(--radius) + 4px);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
   box-sizing: border-box;
   pointer-events: none;
-  animation: quickLinkDropSlotIn .12s ease-out;
+  opacity: .7;
+  transition: opacity .15s ease;
 }
-
-@keyframes quickLinkDropSlotIn {
-  from {
-    opacity: 0;
-    transform: scale(.92);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.quick-link-drop-slot::after {
+  content: "";
+  display: block;
+  width: 34px;
+  height: 4px;
+  margin: 50% auto 0;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: var(--accent);
+  opacity: .7;
 }
 
 .quick-link-icon {
