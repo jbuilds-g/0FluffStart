@@ -108,16 +108,22 @@
   border-color: var(--border);
   transform: translateY(-2px);
 }
-.quick-link-card.is-dragging {
-  position: fixed;
-  z-index: 100;
-  margin: 0;
-  opacity: .96;
-  cursor: grabbing;
+.quick-link-card.is-drag-source {
+  opacity: 0;
   pointer-events: none;
   transition: none;
+}
+.quick-link-drag-preview {
+  position: fixed;
+  z-index: 1100;
+  margin: 0;
+  opacity: .98;
+  pointer-events: none;
+  box-sizing: border-box;
+  cursor: grabbing;
   box-shadow: var(--shadow-lg);
-  transform: scale(1.03);
+  transform: scale(1.02);
+  transition: none !important;
 }
 .quick-link-card.drag-over,
 .quick-link-card.drag-enter-folder {
@@ -166,24 +172,22 @@
 
 .quick-link-drop-slot {
   min-width: 0;
-  border: 1px dashed color-mix(in srgb, var(--accent) 55%, var(--border));
-  border-radius: calc(var(--radius) + 4px);
-  background: color-mix(in srgb, var(--accent) 5%, transparent);
   box-sizing: border-box;
+  border: 2px solid color-mix(in srgb, var(--accent) 70%, var(--border));
+  border-radius: calc(var(--radius) + 4px);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
   pointer-events: none;
-  opacity: .7;
-  transition: opacity .15s ease;
+  opacity: .95;
+  position: relative;
 }
 .quick-link-drop-slot::after {
   content: "";
-  display: block;
-  width: 34px;
+  position: absolute;
+  inset: 50% 12px auto;
   height: 4px;
-  margin: 50% auto 0;
   transform: translateY(-50%);
   border-radius: 999px;
   background: var(--accent);
-  opacity: .7;
 }
 
 .quick-link-icon {
