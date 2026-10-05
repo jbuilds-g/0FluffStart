@@ -98,8 +98,8 @@
   padding: 8px 6px 10px;
   border: 1px solid transparent;
   border-radius: calc(var(--radius) + 4px);
-  cursor: grab;
-  touch-action: none;
+  cursor: default;
+  touch-action: auto;
   user-select: none;
   transition: transform .15s ease, background-color .15s ease, border-color .15s ease;
 }
