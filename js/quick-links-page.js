@@ -1,5 +1,6 @@
 import { customConfirm, loadSettings, showToast } from "./ui.js";
-import { CustomCursorEngine } from "./cursor.js";import { store } from "./store.js";
+import { CustomCursorEngine } from "./cursor.js";
+import { store } from "./store.js";
 import { generateId } from "./utils.js";
 import { getFolderDepth } from "./links.js";
 
@@ -151,7 +152,7 @@ function render() {
     handle.addEventListener("pointerdown", (event) => {
       if (event.button !== 0) return;
       event.stopPropagation();
-      startDrag(event, link, card);
+      startDrag(event, link, card, handle);
     });
 
     card.append(icon, name, actions, handle);
@@ -291,15 +292,33 @@ async function moveOut(id) {
   );
 }
 
-function startDrag(event, link, card) {
+function startDrag(event, link, card, handle) {
   const startX = event.clientX;
   const startY = event.clientY;
   const pointerId = event.pointerId;
-  dragState = { link, card, pointerId, startX, startY, started: false, target: null, position: "after" };
+
+  dragState = {
+    link,
+    card,
+    handle,
+    pointerId,
+    startX,
+    startY,
+    started: false,
+    target: null,
+    position: "after",
+  };
+
+  handle.setPointerCapture?.(pointerId);
 
   const onMove = (moveEvent) => {
     if (!dragState || moveEvent.pointerId !== pointerId) return;
-    const distance = Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY);
+
+    const distance = Math.hypot(
+      moveEvent.clientX - startX,
+      moveEvent.clientY - startY,
+    );
+
     if (!dragState.started && distance < 8) return;
 
     if (!dragState.started) {
@@ -314,19 +333,29 @@ function startDrag(event, link, card) {
 
   const onUp = async (upEvent) => {
     if (!dragState || upEvent.pointerId !== pointerId) return;
+
     const state = dragState;
     cleanup();
-    if (state.started && state.target) await performDrop(state);
+
+    if (state.started && state.target) {
+      await performDrop(state);
+    }
   };
 
   const cleanup = () => {
     clearTimeout(hoverOpenTimer);
+    hoverOpenTimer = null;
+    hoverFolderId = null;
     clearDropState();
+
+    handle.releasePointerCapture?.(pointerId);
     card.classList.remove("is-dragging");
     window.customCursorInstance?.setDragState(false);
+
     window.removeEventListener("pointermove", onMove);
     window.removeEventListener("pointerup", onUp);
     window.removeEventListener("pointercancel", cleanup);
+
     dragState = null;
   };
 
@@ -334,7 +363,6 @@ function startDrag(event, link, card) {
   window.addEventListener("pointerup", onUp);
   window.addEventListener("pointercancel", cleanup);
 }
-
 function updateDragTarget(event) {
   clearDropState();
 
