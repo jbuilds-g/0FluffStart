@@ -125,7 +125,7 @@ export class CustomCursorEngine {
   updateCursorForElement(element) {
     if (!element || !this.iconEl || this.isDragging) return;
     const textInput = element.closest("input[type='text'], input[type='url'], input[type='number'], textarea, [contenteditable='true']");
-    const dragHandle = element.closest(".drag-handle");
+    const dragHandle = element.closest(".drag-handle, .quick-link-drag-handle");
     const interactive = element.closest("a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .suggestion-item, .suggestions-container *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content, .floating-btn, .back-btn, .back-pill, .back-icon-circle, .modal-close, [role='button']");
     const isTextElement = element.closest("p, h1, h2, h3, h4, h5, h6, .link-grid .link-name, .greeting, .clock, code, .help-text");
     const computedStyle = isTextElement ? window.getComputedStyle(isTextElement) : null;
