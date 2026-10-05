@@ -324,6 +324,7 @@ function startDrag(event, link, card, handle) {
     if (!dragState.started) {
       dragState.started = true;
       card.classList.add("is-dragging");
+      window.customCursorInstance?.setCursorClass("icon-drag-grip-cursor");
       window.customCursorInstance?.setDragState(true);
     }
 
