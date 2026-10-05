@@ -364,39 +364,85 @@ async function moveOut(id) {
   );
 }
 
+function createDragPreview(card, rect) {
+  const preview = card.cloneNode(true);
+  preview.classList.remove("is-dragging");
+  preview.classList.add("quick-link-drag-preview");
+  preview.style.width = rect.width + "px";
+  preview.style.height = rect.height + "px";
+  preview.style.left = rect.left + "px";
+  preview.style.top = rect.top + "px";
+  preview.setAttribute("aria-hidden", "true");
+  document.body.appendChild(preview);
+  return preview;
+}
+
+function placeInitialDropSlot(card, rect) {
+  if (!dropSlot) {
+    dropSlot = document.createElement("div");
+    dropSlot.className = "quick-link-drop-slot";
+    dropSlot.setAttribute("aria-hidden", "true");
+  }
+  dropSlot.style.height = rect.height + "px";
+  dropSlot.style.width = "";
+  grid.insertBefore(dropSlot, card);
+  card.style.display = "none";
+  dropSlotKey = "source:" + card.dataset.id;
+}
+
+function moveDropSlot(card, position) {
+  const key = card.dataset.id + ":" + position;
+  if (dropSlotKey === key && dropSlot?.isConnected) return;
+
+  const beforeRects = new Map();
+  grid.querySelectorAll(".quick-link-card").forEach((item) => {
+    if (item !== dragState?.card && item.style.display !== "none") {
+      beforeRects.set(item.dataset.id, item.getBoundingClientRect());
+    }
+  });
+
+  if (!dropSlot) {
+    dropSlot = document.createElement("div");
+    dropSlot.className = "quick-link-drop-slot";
+    dropSlot.setAttribute("aria-hidden", "true");
+  }
+
+  dropSlot.style.height = (dragState?.height || card.getBoundingClientRect().height) + "px";
+  dropSlot.style.width = "";
+
+  if (position === "before") grid.insertBefore(dropSlot, card);
+  else grid.insertBefore(dropSlot, card.nextSibling);
+
+  dropSlotKey = key;
+  animateGridReflow(beforeRects);
+}
+
+function updateDragPreview(event) {
+  if (!dragState?.preview) return;
+  dragState.preview.style.left = (event.clientX - dragState.offsetX) + "px";
+  dragState.preview.style.top = (event.clientY - dragState.offsetY) + "px";
+}
+
+function statefulRemovePreview(preview) {
+  if (preview?.isConnected) preview.remove();
+}
+
 function startDrag(event, link, card, handle) {
   const startX = event.clientX;
   const startY = event.clientY;
   const pointerId = event.pointerId;
 
   dragState = {
-    link,
-    card,
-    handle,
-    pointerId,
-    startX,
-    startY,
-    started: false,
-    target: null,
-    position: "after",
-    lastX: startX,
-    lastY: startY,
-    offsetX: 0,
-    offsetY: 0,
-    width: 0,
-    height: 0,
+    link, card, handle, pointerId, startX, startY, started: false,
+    target: null, position: "after", lastX: startX, lastY: startY,
+    offsetX: 0, offsetY: 0, width: 0, height: 0, preview: null,
   };
 
   handle.setPointerCapture?.(pointerId);
 
   const onMove = (moveEvent) => {
     if (!dragState || moveEvent.pointerId !== pointerId) return;
-
-    const distance = Math.hypot(
-      moveEvent.clientX - startX,
-      moveEvent.clientY - startY,
-    );
-
+    const distance = Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY);
     if (!dragState.started && distance < 8) return;
 
     if (!dragState.started) {
@@ -406,32 +452,22 @@ function startDrag(event, link, card, handle) {
       dragState.offsetY = moveEvent.clientY - rect.top;
       dragState.width = rect.width;
       dragState.height = rect.height;
-      card.classList.add("is-dragging");
-      card.style.width = `${rect.width}px`;
-      card.style.height = `${rect.height}px`;
-      card.style.left = `${rect.left}px`;
-      card.style.top = `${rect.top}px`;
+      dragState.preview = createDragPreview(card, rect);
+      placeInitialDropSlot(card, rect);
       window.customCursorInstance?.setCursorClass("icon-drag-grip-cursor");
       window.customCursorInstance?.setDragState(true);
     }
 
     moveEvent.preventDefault();
-    if (dragState.started) {
-      card.style.left = `${moveEvent.clientX - dragState.offsetX}px`;
-      card.style.top = `${moveEvent.clientY - dragState.offsetY}px`;
-    }
+    updateDragPreview(moveEvent);
     updateDragTarget(moveEvent);
   };
 
   const onUp = async (upEvent) => {
     if (!dragState || upEvent.pointerId !== pointerId) return;
-
     const state = dragState;
     cleanup();
-
-    if (state.started && state.target) {
-      await performDrop(state);
-    }
+    if (state.started && state.target) await performDrop(state);
   };
 
   const cleanup = () => {
@@ -439,24 +475,16 @@ function startDrag(event, link, card, handle) {
     hoverOpenTimer = null;
     hoverFolderId = null;
     clearDropState();
-
     handle.releasePointerCapture?.(pointerId);
-    card.classList.remove("is-dragging");
-    card.style.width = "";
-    card.style.height = "";
-    card.style.left = "";
-    card.style.top = "";
-    if (card.parentElement !== grid) card.remove();
+    statefulRemovePreview(dragState?.preview);
+    if (card.parentElement === grid) card.style.display = "";
+    else card.remove();
     window.customCursorInstance?.setDragState(false);
-    const pointerTarget = document.elementFromPoint(startX, startY);
-    if (pointerTarget) {
-      window.customCursorInstance?.updateCursorForElement(pointerTarget);
-    }
-
+    const pointerTarget = document.elementFromPoint(dragState?.lastX ?? startX, dragState?.lastY ?? startY);
+    if (pointerTarget) window.customCursorInstance?.updateCursorForElement(pointerTarget);
     window.removeEventListener("pointermove", onMove);
     window.removeEventListener("pointerup", onUp);
     window.removeEventListener("pointercancel", cleanup);
-
     dragState = null;
   };
 
@@ -464,24 +492,42 @@ function startDrag(event, link, card, handle) {
   window.addEventListener("pointerup", onUp);
   window.addEventListener("pointercancel", cleanup);
 }
+
+function getGridTargetAtPoint(x, y) {
+  const point = document.elementFromPoint(x, y);
+  const hover = point?.closest(".quick-link-card");
+  if (hover && hover !== dragState?.card && hover.style.display !== "none") return hover;
+
+  const cards = [...grid.querySelectorAll(".quick-link-card")].filter(
+    (card) => card !== dragState?.card && card.style.display !== "none",
+  );
+  if (!cards.length) return null;
+
+  let closest = null;
+  let closestDistance = Infinity;
+  cards.forEach((card) => {
+    const rect = card.getBoundingClientRect();
+    const distance = Math.hypot(x - (rect.left + rect.width / 2), y - (rect.top + rect.height / 2));
+    if (distance < closestDistance) { closestDistance = distance; closest = card; }
+  });
+  return closest;
+}
+
 function updateDragTarget(event) {
   if (!dragState?.started) return;
-
   dragState.lastX = event.clientX;
   dragState.lastY = event.clientY;
   clearDropState({ removeSlot: false });
 
   const point = document.elementFromPoint(event.clientX, event.clientY);
-  const hover = point?.closest(".quick-link-card");
+  const hover = getGridTargetAtPoint(event.clientX, event.clientY);
+  const links = store.getState().links || [];
 
-  if (!hover || hover === dragState.card) {
+  if (!hover) {
     const insideGrid = point && grid.contains(point);
-    if (insideGrid && currentFolderId) {
-      dragState.target = { id: currentFolderId, position: "inside" };
-    } else {
-      dragState.target = null;
-    }
-
+    if (insideGrid && currentFolderId) dragState.target = { id: currentFolderId, position: "inside" };
+    else if (insideGrid) dragState.target = { id: null, position: "root-end" };
+    else dragState.target = null;
     clearTimeout(hoverOpenTimer);
     hoverOpenTimer = null;
     hoverFolderId = null;
@@ -489,65 +535,41 @@ function updateDragTarget(event) {
     return;
   }
 
-  const links = store.getState().links || [];
   const targetId = hover.dataset.id;
-
   if (isDescendant(targetId, dragState.link.id, links)) {
     dragState.target = null;
     clearTimeout(hoverOpenTimer);
     hoverOpenTimer = null;
     hoverFolderId = null;
+    removeDropSlot();
     return;
   }
 
   const target = links.find((link) => link.id === targetId);
   if (!target) return;
-
   const rect = hover.getBoundingClientRect();
-  const ratio = Math.max(
-    0,
-    Math.min(1, (event.clientX - rect.left) / rect.width),
-  );
-
+  const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
   let position;
   if (target.isFolder && currentFolderId !== target.id) {
-    if (ratio < 0.3) {
-      position = "before";
-    } else if (ratio > 0.7) {
-      position = "after";
-    } else {
-      position = "inside";
-    }
+    if (ratio < 0.3) position = "before";
+    else if (ratio > 0.7) position = "after";
+    else position = "inside";
   } else {
     position = ratio < 0.5 ? "before" : "after";
   }
-
   dragState.target = { id: target.id, position };
 
   if (position === "inside" && target.isFolder) {
     removeDropSlot();
     hover.classList.add("drag-enter-folder");
-
     if (hoverFolderId !== target.id) {
       clearTimeout(hoverOpenTimer);
       hoverFolderId = target.id;
       hoverOpenTimer = setTimeout(() => {
-        if (
-          !dragState?.started ||
-          hoverFolderId !== target.id ||
-          dragState.target?.position !== "inside"
-        ) {
-          return;
-        }
-
+        if (!dragState?.started || hoverFolderId !== target.id || dragState.target?.position !== "inside") return;
         navigate(target.id);
-
         requestAnimationFrame(() => {
-          if (!dragState?.started) return;
-          updateDragTarget({
-            clientX: dragState.lastX,
-            clientY: dragState.lastY,
-          });
+          if (dragState?.started) updateDragTarget({ clientX: dragState.lastX, clientY: dragState.lastY });
         });
       }, 650);
     }
@@ -557,13 +579,11 @@ function updateDragTarget(event) {
   clearTimeout(hoverOpenTimer);
   hoverOpenTimer = null;
   hoverFolderId = null;
-
   if (position === "inside") {
-    removeDropSlot();
     hover.classList.add("drag-over");
+    removeDropSlot();
     return;
   }
-
   hover.classList.add(position === "before" ? "drop-before" : "drop-after");
   moveDropSlot(hover, position);
 }
@@ -571,41 +591,40 @@ function updateDragTarget(event) {
 async function performDrop(state) {
   const links = [...(store.getState().links || [])];
   const draggedIndex = links.findIndex((link) => link.id === state.link.id);
-  const targetIndex = links.findIndex((link) => link.id === state.target.id);
-  if (draggedIndex < 0 || targetIndex < 0) return;
-
+  if (draggedIndex < 0) return;
   const dragged = links[draggedIndex];
-  const target = links[targetIndex];
 
-  if (state.target.position === "inside") {
-    const destinationParentId = target.isFolder ? target.id : currentFolderId;
-    if (!destinationParentId) return;
-    const destinationDepth = getFolderDepth(destinationParentId, links);
-    const potentialDepth = destinationDepth + (dragged.isFolder ? 1 : 0);
-    if (potentialDepth > 3) {
-      return showToast("Folder depth limit reached (max 3 levels).", "error");
-    }
-
-    dragged.parentId = destinationParentId;
+  if (state.target.position === "root-end") {
+    dragged.parentId = null;
     links.splice(draggedIndex, 1);
-
-    const folderChildren = links.filter(
-      (link) => (link.parentId || null) === destinationParentId,
-    );
-    const lastChild = folderChildren[folderChildren.length - 1];
-    const insertIndex = lastChild ? links.indexOf(lastChild) + 1 : links.length;
-    links.splice(insertIndex, 0, dragged);
+    links.push(dragged);
   } else {
-    dragged.parentId = target.parentId || null;
-    links.splice(draggedIndex, 1);
-    const newTargetIndex = links.findIndex((link) => link.id === target.id);
-    links.splice(state.target.position === "before" ? newTargetIndex : newTargetIndex + 1, 0, dragged);
+    const targetIndex = links.findIndex((link) => link.id === state.target.id);
+    if (targetIndex < 0) return;
+    const target = links[targetIndex];
+    if (state.target.position === "inside") {
+      const destinationParentId = target.isFolder ? target.id : currentFolderId;
+      if (!destinationParentId) return;
+      const destinationDepth = getFolderDepth(destinationParentId, links);
+      const potentialDepth = destinationDepth + (dragged.isFolder ? 1 : 0);
+      if (potentialDepth > 3) return showToast("Folder depth limit reached (max 3 levels).", "error");
+      dragged.parentId = destinationParentId;
+      links.splice(draggedIndex, 1);
+      const folderChildren = links.filter((link) => (link.parentId || null) === destinationParentId);
+      const lastChild = folderChildren[folderChildren.length - 1];
+      const insertIndex = lastChild ? links.indexOf(lastChild) + 1 : links.length;
+      links.splice(insertIndex, 0, dragged);
+    } else {
+      dragged.parentId = target.parentId || null;
+      links.splice(draggedIndex, 1);
+      const newTargetIndex = links.findIndex((link) => link.id === target.id);
+      links.splice(state.target.position === "before" ? newTargetIndex : newTargetIndex + 1, 0, dragged);
+    }
   }
 
   await store.setState({ links });
   render();
 }
-
 document.getElementById("rootBtn").addEventListener("click", () => navigate(null));
 document.getElementById("addLinkBtn").addEventListener("click", () => openEditor());
 document.getElementById("addFolderBtn").addEventListener("click", () => openEditor(null, true));
