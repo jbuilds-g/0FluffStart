@@ -139,8 +139,6 @@ function render() {
   addLink.innerHTML = '<span class="quick-link-add-plus" aria-hidden="true">+</span><span class="quick-link-add-label">Link</span>';
   addLink.addEventListener("click", () => openEditor());
 
-  grid.append(addFolder, addLink);
-
   links.forEach((link) => {
     const card = document.createElement("article");
     card.className = "link-item quick-link-card";
@@ -216,6 +214,9 @@ function render() {
     bindCard(card, link);
     grid.appendChild(card);
   });
+
+  // Keep the add actions at the end of the current folder.
+  grid.append(addFolder, addLink);
 }
 
 function bindCard(card, link) {
