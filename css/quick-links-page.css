@@ -196,6 +196,7 @@
   font-size: 12px;
   letter-spacing: -2px;
   cursor: grab;
+  touch-action: none;
 }
 .quick-link-card:hover .quick-link-drag-handle { opacity: .8; }
 
