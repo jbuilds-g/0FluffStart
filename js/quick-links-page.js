@@ -82,36 +82,6 @@ function animateGridReflow(beforeRects) {
   });
 }
 
-function moveDropSlot(card, position) {
-  const key = `${card.dataset.id}:${position}`;
-  if (dropSlotKey === key && dropSlot?.isConnected) return;
-
-  const beforeRects = new Map();
-  grid.querySelectorAll(".quick-link-card").forEach((item) => {
-    beforeRects.set(item.dataset.id, item.getBoundingClientRect());
-  });
-
-  if (!dropSlot) {
-    dropSlot = document.createElement("div");
-    dropSlot.className = "quick-link-drop-slot";
-    dropSlot.setAttribute("aria-hidden", "true");
-  }
-
-  const rect = card.getBoundingClientRect();
-  dropSlot.style.height = `${rect.height}px`;
-  dropSlot.style.width = `${rect.width}px`;
-  dropSlot.dataset.position = position;
-
-  if (position === "before") {
-    grid.insertBefore(dropSlot, card);
-  } else {
-    grid.insertBefore(dropSlot, card.nextSibling);
-  }
-
-  dropSlotKey = key;
-  animateGridReflow(beforeRects);
-}
-
 function renderBreadcrumbs() {
   breadcrumbs.innerHTML = "";
   const state = store.getState();
