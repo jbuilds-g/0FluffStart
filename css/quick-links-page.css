@@ -120,17 +120,17 @@
   transform: translateY(0);
 }
 
-.quick-link-add-card:first-child {
+.quick-link-add-folder {
   border-color: color-mix(in srgb, var(--accent) 65%, var(--border));
 }
 
-.quick-link-add-card:nth-child(2) {
+.quick-link-add-link {
   border-color: color-mix(in srgb, var(--text) 38%, var(--border));
   color: var(--text);
 }
 
-.quick-link-add-card:nth-child(2):hover,
-.quick-link-add-card:nth-child(2):focus-visible {
+ .quick-link-add-link:hover,
+.quick-link-add-link:focus-visible {
   border-color: var(--text);
   background: color-mix(in srgb, var(--text) 6%, var(--card));
 }
