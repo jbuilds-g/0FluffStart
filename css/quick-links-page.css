@@ -89,6 +89,63 @@
   align-items: start;
 }
 
+.quick-link-add-card {
+  position: relative;
+  min-width: 0;
+  min-height: 96px;
+  padding: 8px 6px 10px;
+  border: 2px dashed color-mix(in srgb, var(--accent) 55%, var(--border));
+  border-radius: calc(var(--radius) + 4px);
+  background: color-mix(in srgb, var(--card) 35%, transparent);
+  color: var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color .15s ease, border-color .15s ease, transform .15s ease;
+}
+
+.quick-link-add-card:hover,
+.quick-link-add-card:focus-visible {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--card));
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.quick-link-add-card:active {
+  transform: translateY(0);
+}
+
+.quick-link-add-card:first-child {
+  border-color: color-mix(in srgb, var(--accent) 65%, var(--border));
+}
+
+.quick-link-add-card:nth-child(2) {
+  border-color: color-mix(in srgb, var(--text) 38%, var(--border));
+  color: var(--text);
+}
+
+.quick-link-add-card:nth-child(2):hover,
+.quick-link-add-card:nth-child(2):focus-visible {
+  border-color: var(--text);
+  background: color-mix(in srgb, var(--text) 6%, var(--card));
+}
+
+.quick-link-add-plus {
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.quick-link-add-label {
+  font-size: var(--font-size-xs);
+  color: var(--dim);
+}
+
 .quick-link-card {
   position: relative;
   display: flex;
