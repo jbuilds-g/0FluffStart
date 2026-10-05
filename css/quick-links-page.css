@@ -256,3 +256,14 @@
 @media (max-width: 420px) {
   .quick-links-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+@media (pointer: coarse) {
+  .quick-link-drag-handle {
+    opacity: 0.8;
+  }
+
+  .quick-link-card .quick-link-actions {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
