@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluffstart-cache-v2.0.10";
+const CACHE_NAME = "0fluffstart-cache-v2.0.11";
 
 const CORE_APP_SHELL = [
   "./",
