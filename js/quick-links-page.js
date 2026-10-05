@@ -121,7 +121,25 @@ function render() {
   const links = childrenOf(currentFolderId);
   grid.innerHTML = "";
   renderBreadcrumbs();
-  emptyState.classList.toggle("hidden", links.length !== 0);
+  emptyState.classList.add("hidden");
+
+  const addFolder = document.createElement("button");
+  addFolder.type = "button";
+  addFolder.className = "quick-link-add-card";
+  addFolder.title = "Add Folder";
+  addFolder.setAttribute("aria-label", "Add Folder");
+  addFolder.innerHTML = '<span class="quick-link-add-plus" aria-hidden="true">+</span><span class="quick-link-add-label">Folder</span>';
+  addFolder.addEventListener("click", () => openEditor(null, true));
+
+  const addLink = document.createElement("button");
+  addLink.type = "button";
+  addLink.className = "quick-link-add-card";
+  addLink.title = "Add Link";
+  addLink.setAttribute("aria-label", "Add Link");
+  addLink.innerHTML = '<span class="quick-link-add-plus" aria-hidden="true">+</span><span class="quick-link-add-label">Link</span>';
+  addLink.addEventListener("click", () => openEditor());
+
+  grid.append(addFolder, addLink);
 
   links.forEach((link) => {
     const card = document.createElement("article");
@@ -596,8 +614,6 @@ async function performDrop(state) {
   render();
 }
 document.getElementById("rootBtn").addEventListener("click", () => navigate(null));
-document.getElementById("addLinkBtn").addEventListener("click", () => openEditor());
-document.getElementById("addFolderBtn").addEventListener("click", () => openEditor(null, true));
 document.getElementById("cancelEditBtn").addEventListener("click", closeEditor);
 document.getElementById("saveLinkBtn").addEventListener("click", saveEditor);
 editor.addEventListener("click", (event) => {
