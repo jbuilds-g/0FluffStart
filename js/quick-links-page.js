@@ -125,7 +125,7 @@ function render() {
 
   const addFolder = document.createElement("button");
   addFolder.type = "button";
-  addFolder.className = "quick-link-add-card";
+  addFolder.className = "quick-link-add-card quick-link-add-folder";
   addFolder.title = "Add Folder";
   addFolder.setAttribute("aria-label", "Add Folder");
   addFolder.innerHTML = '<span class="quick-link-add-plus" aria-hidden="true">+</span><span class="quick-link-add-label">Folder</span>';
@@ -133,7 +133,7 @@ function render() {
 
   const addLink = document.createElement("button");
   addLink.type = "button";
-  addLink.className = "quick-link-add-card";
+  addLink.className = "quick-link-add-card quick-link-add-link";
   addLink.title = "Add Link";
   addLink.setAttribute("aria-label", "Add Link");
   addLink.innerHTML = '<span class="quick-link-add-plus" aria-hidden="true">+</span><span class="quick-link-add-label">Link</span>';
