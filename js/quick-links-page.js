@@ -246,6 +246,9 @@ function bindCard(card, link) {
 }
 
 function navigate(folderId) {
+  if (dragState?.started && dragState.card?.parentElement === grid) {
+    document.body.appendChild(dragState.card);
+  }
   currentFolderId = folderId;
   clearTimeout(hoverOpenTimer);
   hoverOpenTimer = null;
@@ -443,6 +446,7 @@ function startDrag(event, link, card, handle) {
     card.style.height = "";
     card.style.left = "";
     card.style.top = "";
+    if (card.parentElement !== grid) card.remove();
     window.customCursorInstance?.setDragState(false);
     const pointerTarget = document.elementFromPoint(startX, startY);
     if (pointerTarget) {
@@ -481,6 +485,7 @@ function updateDragTarget(event) {
     clearTimeout(hoverOpenTimer);
     hoverOpenTimer = null;
     hoverFolderId = null;
+    removeDropSlot();
     return;
   }
 
