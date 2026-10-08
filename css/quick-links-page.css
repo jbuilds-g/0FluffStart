@@ -368,23 +368,133 @@
 }
 
 @media (max-width: 700px) {
-  .quick-links-page { width: min(100% - 20px, 600px); padding-top: 24px; }
-  .quick-links-header { align-items: flex-start; flex-direction: column; }
-  .quick-links-actions { justify-content: flex-start; }
-  .quick-links-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-  .quick-link-actions, .quick-link-drag-handle { opacity: 1; }
+  .quick-links-page {
+    width: min(100% - 20px, 600px);
+    padding-top: 24px;
+  }
+
+  .quick-links-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .quick-links-actions {
+    justify-content: flex-start;
+  }
+
+  .quick-links-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .quick-link-card {
+    min-height: 108px;
+    padding: 14px 8px 10px;
+    overflow: visible;
+  }
+
+  .quick-link-card:hover {
+    transform: none;
+  }
+
+  .quick-link-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .quick-link-name {
+    margin-top: 7px;
+    padding: 0 2px;
+  }
+
+  .quick-link-drag-handle {
+    left: 6px;
+    top: 6px;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    box-shadow: var(--shadow);
+    opacity: 1;
+    font-size: 14px;
+    letter-spacing: -2px;
+    z-index: 3;
+  }
+
+  .quick-link-actions {
+    top: 6px;
+    right: 6px;
+    gap: 4px;
+    opacity: 1;
+    transform: none;
+    z-index: 3;
+  }
+
+  .quick-link-actions button {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+  }
+
+  .quick-link-add-card {
+    min-height: 108px;
+    padding: 14px 8px 10px;
+  }
+
+  .quick-link-drag-preview {
+    transform: scale(1.01);
+  }
+
+  .quick-link-card.drag-enter-folder {
+    transform: none;
+  }
+
+  .quick-link-card.drag-enter-folder::after {
+    bottom: 2px;
+    font-size: 9px;
+  }
+
+  .quick-link-card.drop-before::before {
+    left: -6px;
+  }
+
+  .quick-link-card.drop-after::after {
+    right: -6px;
+  }
 }
+
 @media (max-width: 420px) {
-  .quick-links-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .quick-links-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quick-link-card {
+    min-height: 112px;
+  }
+
+  .quick-link-add-card {
+    min-height: 112px;
+  }
+
+  .quick-link-icon {
+    width: 50px;
+    height: 50px;
+  }
 }
 
 @media (pointer: coarse) {
   .quick-link-drag-handle {
-    opacity: 0.8;
+    opacity: 1;
   }
 
   .quick-link-card .quick-link-actions {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
