@@ -406,6 +406,24 @@ function moveDropSlot(card, position) {
   animateGridReflow(beforeRects);
 }
 
+function updateDragAutoScroll(event) {
+  if (!dragState?.started) return;
+
+  const edge = 72;
+  const maxStep = 16;
+  let step = 0;
+
+  if (event.clientY < edge) {
+    step = -Math.ceil(((edge - event.clientY) / edge) * maxStep);
+  } else if (event.clientY > window.innerHeight - edge) {
+    step = Math.ceil(((event.clientY - (window.innerHeight - edge)) / edge) * maxStep);
+  }
+
+  if (step) {
+    window.scrollBy(0, step);
+  }
+}
+
 function updateDragPreview(event) {
   if (!dragState?.preview) return;
   dragState.preview.style.left = (event.clientX - dragState.offsetX) + "px";
@@ -437,8 +455,9 @@ function startDrag(event, link, card, handle) {
     if (!dragState.started) {
       dragState.started = true;
       const rect = card.getBoundingClientRect();
-      dragState.offsetX = moveEvent.clientX - rect.left;
-      dragState.offsetY = moveEvent.clientY - rect.top;
+      const isTouch = moveEvent.pointerType === "touch";
+      dragState.offsetX = isTouch ? rect.width / 2 : moveEvent.clientX - rect.left;
+      dragState.offsetY = isTouch ? Math.min(28, rect.height / 2) : moveEvent.clientY - rect.top;
       dragState.width = rect.width;
       dragState.height = rect.height;
       dragState.preview = createDragPreview(card, rect);
@@ -448,6 +467,7 @@ function startDrag(event, link, card, handle) {
     }
 
     moveEvent.preventDefault();
+    updateDragAutoScroll(moveEvent);
     updateDragPreview(moveEvent);
     updateDragTarget(moveEvent);
   };
@@ -626,6 +646,7 @@ document.addEventListener("keydown", (event) => {
 
 await store.init();
 await loadSettings();
+document.body.classList.add("quick-links-body");
 new CustomCursorEngine();
 await new Promise((resolve) => requestAnimationFrame(resolve));
 render();
