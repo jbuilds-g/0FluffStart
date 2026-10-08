@@ -1,3 +1,13 @@
+body.quick-links-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-items: stretch;
+}
+
+body.quick-links-body .quick-links-page {
+  flex: 0 0 auto;
+}
+
 .quick-links-page {
   width: min(1100px, calc(100% - 32px));
   margin: 0 auto;
@@ -371,26 +381,24 @@
   .quick-links-page {
     width: min(100% - 20px, 600px);
     padding-top: 24px;
+    padding-bottom: 48px;
   }
 
   .quick-links-header {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .quick-links-actions {
-    justify-content: flex-start;
+    margin-bottom: 18px;
   }
 
   .quick-links-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
 
-  .quick-link-card {
-    min-height: 108px;
-    padding: 14px 8px 10px;
-    overflow: visible;
+  .quick-link-card,
+  .quick-link-add-card {
+    min-height: 116px;
+    padding: 12px 8px 10px;
   }
 
   .quick-link-card:hover {
@@ -398,57 +406,56 @@
   }
 
   .quick-link-icon {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
   }
 
   .quick-link-name {
     margin-top: 7px;
-    padding: 0 2px;
+    padding: 0 4px;
   }
 
   .quick-link-drag-handle {
-    left: 6px;
-    top: 6px;
-    width: 38px;
-    height: 38px;
+    left: 7px;
+    top: 7px;
+    width: 34px;
+    height: 34px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 0;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    background: color-mix(in srgb, var(--card) 88%, transparent);
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--card) 92%, transparent);
     box-shadow: var(--shadow);
     opacity: 1;
-    font-size: 14px;
+    font-size: 13px;
     letter-spacing: -2px;
     z-index: 3;
   }
 
   .quick-link-actions {
-    top: 6px;
-    right: 6px;
-    gap: 4px;
+    top: 7px;
+    right: 7px;
+    gap: 3px;
     opacity: 1;
     transform: none;
     z-index: 3;
   }
 
   .quick-link-actions button {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: color-mix(in srgb, var(--card) 88%, transparent);
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--card) 92%, transparent);
   }
 
   .quick-link-add-card {
-    min-height: 108px;
-    padding: 14px 8px 10px;
+    padding: 12px 8px 10px;
   }
 
   .quick-link-drag-preview {
-    transform: scale(1.01);
+    transform: scale(1);
   }
 
   .quick-link-card.drag-enter-folder {
@@ -461,11 +468,11 @@
   }
 
   .quick-link-card.drop-before::before {
-    left: -6px;
+    left: -5px;
   }
 
   .quick-link-card.drop-after::after {
-    right: -6px;
+    right: -5px;
   }
 }
 
