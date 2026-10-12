@@ -222,12 +222,18 @@ function render() {
         actionMenu.hidden = true;
         mobileMenu.setAttribute("aria-expanded", "false");
         if (action === "edit") openEditor(link.id);
+        else if (action === "up") await moveSibling(link.id, -1);
+        else if (action === "down") await moveSibling(link.id, 1);
         else if (action === "move") await moveOut(link.id);
         else if (action === "delete") await deleteItem(link.id);
       });
       actionMenu.appendChild(button);
     };
     addMenuAction("Edit", "edit");
+    const siblings = childrenOf(link.parentId || null);
+    const siblingIndex = siblings.findIndex((item) => item.id === link.id);
+    if (siblingIndex > 0) addMenuAction("Move up", "up");
+    if (siblingIndex >= 0 && siblingIndex < siblings.length - 1) addMenuAction("Move down", "down");
     if (link.parentId) addMenuAction("Move to parent", "move");
     addMenuAction("Delete", "delete");
 
@@ -398,6 +404,21 @@ async function moveOut(id) {
     destinationParentId ? "Moved to parent folder" : "Moved to dashboard",
     "success",
   );
+}
+
+async function moveSibling(id, direction) {
+  const links = [...(store.getState().links || [])];
+  const index = links.findIndex((item) => item.id === id);
+  if (index < 0) return;
+  const item = links[index];
+  const siblings = links.filter((candidate) => (candidate.parentId || null) === (item.parentId || null));
+  const siblingIndex = siblings.findIndex((candidate) => candidate.id === id);
+  const target = siblings[siblingIndex + direction];
+  if (!target) return;
+  const targetIndex = links.findIndex((candidate) => candidate.id === target.id);
+  [links[index], links[targetIndex]] = [links[targetIndex], links[index]];
+  await store.setState({ links });
+  render();
 }
 
 function createDragPreview(card, rect) {
