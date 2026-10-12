@@ -197,6 +197,53 @@ function render() {
 
     actions.append(edit, remove);
 
+    const mobileMenu = document.createElement("button");
+    mobileMenu.type = "button";
+    mobileMenu.className = "quick-link-mobile-menu";
+    mobileMenu.textContent = "⋯";
+    mobileMenu.title = "Link actions";
+    mobileMenu.setAttribute("aria-label", `Actions for ${link.name}`);
+    mobileMenu.setAttribute("aria-haspopup", "menu");
+    mobileMenu.setAttribute("aria-expanded", "false");
+
+    const actionMenu = document.createElement("div");
+    actionMenu.className = "quick-link-action-menu";
+    actionMenu.setAttribute("role", "menu");
+    actionMenu.hidden = true;
+
+    const addMenuAction = (label, action) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.setAttribute("role", "menuitem");
+      button.dataset.action = action;
+      button.textContent = label;
+      button.addEventListener("click", async (event) => {
+        event.stopPropagation();
+        actionMenu.hidden = true;
+        mobileMenu.setAttribute("aria-expanded", "false");
+        if (action === "edit") openEditor(link.id);
+        else if (action === "move") await moveOut(link.id);
+        else if (action === "delete") await deleteItem(link.id);
+      });
+      actionMenu.appendChild(button);
+    };
+    addMenuAction("Edit", "edit");
+    if (link.parentId) addMenuAction("Move to parent", "move");
+    addMenuAction("Delete", "delete");
+
+    mobileMenu.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const opening = actionMenu.hidden;
+      grid.querySelectorAll(".quick-link-action-menu").forEach((menu) => {
+        menu.hidden = true;
+        menu.previousElementSibling?.setAttribute("aria-expanded", "false");
+      });
+      actionMenu.hidden = !opening;
+      mobileMenu.setAttribute("aria-expanded", String(opening));
+    });
+    actionMenu.addEventListener("click", (event) => event.stopPropagation());
+    card.append(mobileMenu, actionMenu);
+
     const handle = document.createElement("span");
     handle.className = "quick-link-drag-handle";
     handle.innerHTML = '<span class="icon-mask icon-multidirectional-drag-handle" aria-hidden="true"></span>';
@@ -640,8 +687,20 @@ document.getElementById("saveLinkBtn").addEventListener("click", saveEditor);
 editor.addEventListener("click", (event) => {
   if (event.target === editor) closeEditor();
 });
+document.addEventListener("click", () => {
+  grid.querySelectorAll(".quick-link-action-menu").forEach((menu) => {
+    menu.hidden = true;
+    menu.previousElementSibling?.setAttribute("aria-expanded", "false");
+  });
+});
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !editor.classList.contains("hidden")) closeEditor();
+  if (event.key === "Escape") {
+    if (!editor.classList.contains("hidden")) closeEditor();
+    grid.querySelectorAll(".quick-link-action-menu").forEach((menu) => {
+      menu.hidden = true;
+      menu.previousElementSibling?.setAttribute("aria-expanded", "false");
+    });
+  }
 });
 
 await store.init();
