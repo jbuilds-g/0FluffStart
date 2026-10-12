@@ -219,9 +219,7 @@ function render() {
       button.textContent = label;
       button.addEventListener("click", async (event) => {
         event.stopPropagation();
-        actionMenu.hidden = true;
-        card.classList.remove("menu-open");
-        mobileMenu.setAttribute("aria-expanded", "false");
+        closeMobileActionMenus();
         if (action === "edit") openEditor(link.id);
         else if (action === "up") await moveSibling(link.id, -1);
         else if (action === "down") await moveSibling(link.id, 1);
@@ -243,6 +241,8 @@ function render() {
       const opening = actionMenu.hidden;
       closeMobileActionMenus();
       if (opening) {
+        actionMenu._ownerCard = card;
+        document.body.appendChild(actionMenu);
         actionMenu.hidden = false;
         card.classList.add("menu-open");
         const rect = mobileMenu.getBoundingClientRect();
@@ -724,11 +724,12 @@ editor.addEventListener("click", (event) => {
   if (event.target === editor) closeEditor();
 });
 function closeMobileActionMenus() {
-  grid.querySelectorAll(".quick-link-action-menu").forEach((menu) => {
+  document.querySelectorAll(".quick-link-action-menu").forEach((menu) => {
     menu.hidden = true;
-    const card = menu.closest(".quick-link-card");
+    const card = menu._ownerCard || menu.closest(".quick-link-card");
     card?.classList.remove("menu-open");
     card?.querySelector(".quick-link-mobile-menu")?.setAttribute("aria-expanded", "false");
+    if (card && menu.parentElement !== card) card.appendChild(menu);
   });
 }
 document.addEventListener("click", (event) => {
