@@ -220,6 +220,7 @@ function render() {
       button.addEventListener("click", async (event) => {
         event.stopPropagation();
         actionMenu.hidden = true;
+        card.classList.remove("menu-open");
         mobileMenu.setAttribute("aria-expanded", "false");
         if (action === "edit") openEditor(link.id);
         else if (action === "up") await moveSibling(link.id, -1);
