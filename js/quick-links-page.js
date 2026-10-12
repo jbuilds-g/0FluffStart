@@ -241,11 +241,19 @@ function render() {
     mobileMenu.addEventListener("click", (event) => {
       event.stopPropagation();
       const opening = actionMenu.hidden;
-      grid.querySelectorAll(".quick-link-action-menu").forEach((menu) => {
-        menu.hidden = true;
-        menu.previousElementSibling?.setAttribute("aria-expanded", "false");
-      });
-      actionMenu.hidden = !opening;
+      closeMobileActionMenus();
+      if (opening) {
+        actionMenu.hidden = false;
+        card.classList.add("menu-open");
+        const rect = mobileMenu.getBoundingClientRect();
+        const menuWidth = Math.min(220, window.innerWidth - 32);
+        const menuHeight = actionMenu.getBoundingClientRect().height || actionMenu.scrollHeight || 180;
+        const left = Math.max(16, Math.min(window.innerWidth - menuWidth - 16, rect.right - menuWidth));
+        const availableBelow = window.innerHeight - rect.bottom - 16;
+        const top = availableBelow >= menuHeight + 8 ? rect.bottom + 8 : Math.max(16, rect.top - menuHeight - 8);
+        actionMenu.style.left = left + "px";
+        actionMenu.style.top = top + "px";
+      }
       mobileMenu.setAttribute("aria-expanded", String(opening));
     });
     actionMenu.addEventListener("click", (event) => event.stopPropagation());
@@ -477,20 +485,23 @@ function moveDropSlot(card, position) {
 
 function updateDragAutoScroll(event) {
   if (!dragState?.started) return;
-
-  const edge = 72;
-  const maxStep = 16;
-  let step = 0;
-
-  if (event.clientY < edge) {
-    step = -Math.ceil(((edge - event.clientY) / edge) * maxStep);
-  } else if (event.clientY > window.innerHeight - edge) {
-    step = Math.ceil(((event.clientY - (window.innerHeight - edge)) / edge) * maxStep);
-  }
-
-  if (step) {
-    window.scrollBy(0, step);
-  }
+  dragState.lastX = event.clientX;
+  dragState.lastY = event.clientY;
+  if (dragState.autoScrollFrame) return;
+  const tick = () => {
+    if (!dragState?.started) return;
+    const y = dragState.lastY;
+    const edge = Math.min(112, Math.max(72, window.innerHeight * 0.16));
+    let step = 0;
+    if (y < edge) step = -Math.ceil(Math.min(1, (edge - y) / edge) * 20);
+    else if (y > window.innerHeight - edge) step = Math.ceil(Math.min(1, (y - (window.innerHeight - edge)) / edge) * 20);
+    if (step) {
+      window.scrollBy(0, step);
+      updateDragTarget({ clientX: dragState.lastX, clientY: dragState.lastY });
+      dragState.autoScrollFrame = requestAnimationFrame(tick);
+    } else dragState.autoScrollFrame = 0;
+  };
+  dragState.autoScrollFrame = requestAnimationFrame(tick);
 }
 
 function updateDragPreview(event) {
@@ -511,7 +522,7 @@ function startDrag(event, link, card, handle) {
   dragState = {
     link, card, handle, pointerId, startX, startY, started: false,
     target: null, position: "after", lastX: startX, lastY: startY,
-    offsetX: 0, offsetY: 0, width: 0, height: 0, preview: null,
+    offsetX: 0, offsetY: 0, width: 0, height: 0, preview: null, autoScrollFrame: 0,
   };
 
   handle.setPointerCapture?.(pointerId);
@@ -549,6 +560,7 @@ function startDrag(event, link, card, handle) {
   };
 
   const cleanup = () => {
+    if (dragState?.autoScrollFrame) cancelAnimationFrame(dragState.autoScrollFrame);
     clearTimeout(hoverOpenTimer);
     hoverOpenTimer = null;
     hoverFolderId = null;
@@ -626,14 +638,16 @@ function updateDragTarget(event) {
   const target = links.find((link) => link.id === targetId);
   if (!target) return;
   const rect = hover.getBoundingClientRect();
-  const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+  const ratioX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+  const ratioY = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
   let position;
-  if (target.isFolder && currentFolderId !== target.id) {
-    if (ratio < 0.3) position = "before";
-    else if (ratio > 0.7) position = "after";
-    else position = "inside";
+  if (target.isFolder && currentFolderId !== target.id && ratioX > 0.25 && ratioX < 0.75 && ratioY > 0.2 && ratioY < 0.8) {
+    position = "inside";
   } else {
-    position = ratio < 0.5 ? "before" : "after";
+    const verticalOffset = event.clientY - (rect.top + rect.height / 2);
+    position = Math.abs(verticalOffset) > Math.min(28, rect.height * 0.22)
+      ? (verticalOffset < 0 ? "before" : "after")
+      : (ratioX < 0.5 ? "before" : "after");
   }
   dragState.target = { id: target.id, position };
 
@@ -709,19 +723,23 @@ document.getElementById("saveLinkBtn").addEventListener("click", saveEditor);
 editor.addEventListener("click", (event) => {
   if (event.target === editor) closeEditor();
 });
-document.addEventListener("click", () => {
+function closeMobileActionMenus() {
   grid.querySelectorAll(".quick-link-action-menu").forEach((menu) => {
     menu.hidden = true;
-    menu.previousElementSibling?.setAttribute("aria-expanded", "false");
+    const card = menu.closest(".quick-link-card");
+    card?.classList.remove("menu-open");
+    card?.querySelector(".quick-link-mobile-menu")?.setAttribute("aria-expanded", "false");
   });
+}
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".quick-link-mobile-menu, .quick-link-action-menu")) closeMobileActionMenus();
 });
+window.addEventListener("resize", closeMobileActionMenus);
+window.addEventListener("scroll", closeMobileActionMenus, true);
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     if (!editor.classList.contains("hidden")) closeEditor();
-    grid.querySelectorAll(".quick-link-action-menu").forEach((menu) => {
-      menu.hidden = true;
-      menu.previousElementSibling?.setAttribute("aria-expanded", "false");
-    });
+    closeMobileActionMenus();
   }
 });
 
