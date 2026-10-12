@@ -1377,3 +1377,30 @@ body > .bg-video {
     padding: 12px;
   }
 }
+
+
+.quick-link-manager-launch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--card) 72%, transparent);
+}
+.quick-link-manager-description {
+  margin: 0;
+  color: var(--dim);
+  font-size: var(--font-size-sm);
+}
+.quick-link-manager-launch .add-link-btn {
+  flex: 0 0 auto;
+  text-decoration: none;
+}
+@media (max-width: 700px) {
+  .quick-link-manager-launch {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
