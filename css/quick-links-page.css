@@ -420,7 +420,6 @@ body.quick-links-body .quick-links-page {
  .quick-link-add-plus { font-size:2.25rem; }
  .quick-link-add-label { font-size:var(--font-size-sm); }
  .quick-link-drag-preview { display:flex !important; opacity:.98; border:2px solid var(--accent); background:#151518; box-shadow:0 16px 44px rgba(0,0,0,.55); transform:none; transition:none !important; will-change:left,top; }
- .quick-link-card.is-dragging { opacity:.18; }
  .quick-link-drop-slot { min-height:148px; border:2px dashed var(--accent); border-radius:18px; background:color-mix(in srgb,var(--accent) 9%,transparent); }
  .quick-link-card.drop-before,.quick-link-card.drop-after { outline:2px solid var(--accent); outline-offset:2px; }
  .quick-link-card.drag-enter-folder::after { content:"Release to move into folder"; font-size:12px; line-height:1.3; }
