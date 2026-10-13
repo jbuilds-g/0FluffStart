@@ -665,6 +665,21 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
         : startEvent.clientY - rect.top;
     session.width = rect.width;
     session.height = rect.height;
+    // Freeze the layout geometry once, before the source is lifted or a drop
+    // slot is inserted. Targeting must never read geometry that our own
+    // placeholder has just changed.
+    session.targetRects = [...grid.querySelectorAll(".quick-link-card")]
+      .filter((item) => item !== card && item.style.display !== "none")
+      .map((item) => ({
+        id: item.dataset.id,
+        card: item,
+        rect: (() => {
+          const r = item.getBoundingClientRect();
+          return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
+        })(),
+      }));
+    const gridRect = grid.getBoundingClientRect();
+    session.gridRect = { left: gridRect.left, top: gridRect.top, right: gridRect.right, bottom: gridRect.bottom };
     session.originalStyle = {
       position: card.style.position,
       left: card.style.left,
@@ -803,33 +818,27 @@ function statefulRemovePreview(preview) {
 }
 
 function getGridTargetAtPoint(x, y) {
-  const point = document.elementFromPoint(x, y);
-  const direct = point?.closest(".quick-link-card");
-  if (direct && direct !== dragState?.card && direct.style.display !== "none")
-    return direct;
-
-  // Gaps are valid only when they are genuinely close to a card. Never guess
-  // across the entire grid; that was a major source of accidental drops.
-  const cards = [...grid.querySelectorAll(".quick-link-card")].filter(
-    (card) => card !== dragState?.card && card.style.display !== "none",
-  );
+  const targets = dragState?.targetRects || [];
   let closest = null;
   let closestDistance = Infinity;
-  for (const card of cards) {
-    const rect = card.getBoundingClientRect();
+
+  // Use immutable pre-drag rectangles, not live hit-testing: inserting a slot
+  // must not move the hit targets that decide where that slot belongs.
+  for (const entry of targets) {
+    const { rect } = entry;
+    if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom)
+      return entry.card;
+
     const dx = Math.max(rect.left - x, 0, x - rect.right);
     const dy = Math.max(rect.top - y, 0, y - rect.bottom);
     const distance = Math.hypot(dx, dy);
-    const maxDistance = Math.min(
-      34,
-      Math.max(18, Math.min(rect.width, rect.height) * 0.22),
-    );
+    const maxDistance = Math.min(28, Math.max(12, Math.min(rect.width, rect.height) * 0.16));
     if (distance <= maxDistance && distance < closestDistance) {
-      closest = card;
+      closest = entry;
       closestDistance = distance;
     }
   }
-  return closest;
+  return closest?.card || null;
 }
 
 function updateDragTarget(event) {
@@ -838,26 +847,23 @@ function updateDragTarget(event) {
   session.lastX = event.clientX;
   session.lastY = event.clientY;
 
-  // Only update visual state when the target actually changes. The grid itself
-  // remains stationary during the gesture, avoiding feedback-loop jitter.
-  const point = document.elementFromPoint(event.clientX, event.clientY);
-  // The placeholder itself is the current drop position. Keep the target
-  // stable while the grid animates around it instead of re-targeting a neighbor.
-  if (point?.closest(".quick-link-drop-slot") && session.target) return;
+  // Resolve targets against the frozen pre-drag layout. The live grid moves
+  // when a slot is inserted, so DOM hit-testing here creates a feedback loop.
   const hover = getGridTargetAtPoint(event.clientX, event.clientY);
   const links = store.getState().links || [];
   let nextTarget = null;
   let position = null;
 
   if (!hover) {
-    const insideGrid = point && grid.contains(point);
+    const bounds = session.gridRect;
+    const insideGrid = bounds && event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom;
     if (insideGrid && currentFolderId)
       nextTarget = { id: currentFolderId, position: "inside" };
     else if (insideGrid) nextTarget = { id: null, position: "root-end" };
   } else {
     const target = links.find((link) => link.id === hover.dataset.id);
     if (target && !isDescendant(target.id, session.link.id, links)) {
-      const rect = hover.getBoundingClientRect();
+      const rect = session.targetRects.find((entry) => entry.card === hover)?.rect || hover.getBoundingClientRect();
       const rx = (event.clientX - rect.left) / Math.max(1, rect.width);
       const ry = (event.clientY - rect.top) / Math.max(1, rect.height);
       const centralFolderDrop =
