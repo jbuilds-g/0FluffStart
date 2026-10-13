@@ -176,7 +176,8 @@ body.quick-links-body .quick-links-page {
   transform: translateY(-2px);
 }
 .quick-link-card.is-drag-source {
-  opacity: 0;
+  opacity: .24;
+  border-color: var(--accent);
   pointer-events: none;
   transition: none;
 }
@@ -189,8 +190,9 @@ body.quick-links-body .quick-links-page {
   box-sizing: border-box;
   cursor: grabbing;
   box-shadow: var(--shadow-lg);
-  transform: scale(1.02);
+  transform: none;
   transition: none !important;
+  will-change: left, top;
 }
 .quick-link-card.drag-over,
 .quick-link-card.drag-enter-folder {
@@ -336,6 +338,16 @@ body.quick-links-body .quick-links-page {
   touch-action: none;
 }
 .quick-link-card:hover .quick-link-drag-handle { opacity: .8; }
+.quick-link-drag-handle:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.quick-link-card.drop-before,
+.quick-link-card.drop-after {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 .quick-links-empty {
   padding: 60px 20px;
