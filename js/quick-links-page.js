@@ -506,12 +506,25 @@ function startDrag(event, link, card, handle) {
     preview: null, autoScrollFrame: 0,
   };
   const session = dragState;
+  const suppressClickAfterDrag = (clickEvent) => {
+    if (!session.started) return;
+    clickEvent.preventDefault();
+    clickEvent.stopPropagation();
+    card.removeEventListener("click", suppressClickAfterDrag, true);
+  };
+  card.addEventListener("click", suppressClickAfterDrag, true);
   handle.setPointerCapture?.(pointerId);
 
   const cleanup = () => {
     if (finished) return;
     finished = true;
     if (session.autoScrollFrame) cancelAnimationFrame(session.autoScrollFrame);
+    if (!session.started) {
+      card.removeEventListener("click", suppressClickAfterDrag, true);
+    } else {
+      // pointercancel may not produce a click, so do not leave a stale guard.
+      setTimeout(() => card.removeEventListener("click", suppressClickAfterDrag, true), 0);
+    }
     try {
       if (handle.hasPointerCapture?.(pointerId)) handle.releasePointerCapture(pointerId);
     } catch {}
