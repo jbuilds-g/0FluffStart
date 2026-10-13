@@ -677,9 +677,9 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
     };
     session.preview = createDragPreview(card, rect);
     card.classList.add("is-drag-source");
-    card.style.position = "absolute";
-    card.style.left = rect.left + window.scrollX + "px";
-    card.style.top = rect.top + window.scrollY + "px";
+    card.style.position = "fixed";
+    card.style.left = rect.left + "px";
+    card.style.top = rect.top + "px";
     card.style.width = rect.width + "px";
     card.style.height = rect.height + "px";
     card.style.margin = "0";
