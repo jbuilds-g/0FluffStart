@@ -665,8 +665,26 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
         : startEvent.clientY - rect.top;
     session.width = rect.width;
     session.height = rect.height;
+    session.originalStyle = {
+      position: card.style.position,
+      left: card.style.left,
+      top: card.style.top,
+      width: card.style.width,
+      height: card.style.height,
+      zIndex: card.style.zIndex,
+      margin: card.style.margin,
+      pointerEvents: card.style.pointerEvents,
+    };
     session.preview = createDragPreview(card, rect);
     card.classList.add("is-drag-source");
+    card.style.position = "absolute";
+    card.style.left = rect.left + window.scrollX + "px";
+    card.style.top = rect.top + window.scrollY + "px";
+    card.style.width = rect.width + "px";
+    card.style.height = rect.height + "px";
+    card.style.margin = "0";
+    card.style.pointerEvents = "none";
+    card.style.zIndex = "-1";
     card.classList.remove("is-long-pressing");
     window.customCursorInstance?.setCursorClass("icon-drag-grip-cursor");
     window.customCursorInstance?.setDragState(true);
@@ -705,6 +723,16 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
     clearDropState();
     statefulRemovePreview(session.preview);
     card.classList.remove("is-drag-source");
+    if (session.originalStyle) {
+      card.style.position = session.originalStyle.position;
+      card.style.left = session.originalStyle.left;
+      card.style.top = session.originalStyle.top;
+      card.style.width = session.originalStyle.width;
+      card.style.height = session.originalStyle.height;
+      card.style.zIndex = session.originalStyle.zIndex;
+      card.style.margin = session.originalStyle.margin;
+      card.style.pointerEvents = session.originalStyle.pointerEvents;
+    }
     card.style.display = "";
     window.customCursorInstance?.setDragState(false);
     window.customCursorInstance?.updateCursorForElement(
@@ -868,7 +896,6 @@ function updateDragTarget(event) {
   const newKey = nextTarget ? nextTarget.id + ":" + nextTarget.position : "";
   if (oldKey === newKey) return;
 
-  const beforeRects = captureGridRects();
   clearDropState();
   session.target = nextTarget;
   if (!nextTarget) return;
@@ -884,7 +911,8 @@ function updateDragTarget(event) {
       );
     }
   }
-  animateGridReflow(beforeRects);
+  // Avoid transform-based FLIP animations here: hit-testing uses card bounds,
+  // so animated transforms feed back into target selection and cause oscillation.
 }
 
 async function performDrop(state) {
