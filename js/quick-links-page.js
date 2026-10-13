@@ -18,7 +18,6 @@ let editingId = null;
 let creatingFolder = false;
 let dragState = null;
 let suppressCardClickUntil = 0;
-let suppressCardClickUntil = 0;
 let dropSlot = null;
 let dropSlotKey = null;
 
