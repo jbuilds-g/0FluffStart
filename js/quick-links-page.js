@@ -444,6 +444,32 @@ function createDragPreview(card, rect) {
   return preview;
 }
 
+function updateDragAutoScroll(event) {
+  if (!dragState?.started) return;
+  dragState.lastX = event.clientX;
+  dragState.lastY = event.clientY;
+  if (dragState.autoScrollFrame) return;
+
+  const tick = () => {
+    if (!dragState?.started) return;
+    const y = dragState.lastY;
+    const edge = Math.min(100, Math.max(64, window.innerHeight * 0.14));
+    let step = 0;
+    if (y < edge) step = -Math.ceil(Math.min(1, (edge - y) / edge) * 12);
+    else if (y > window.innerHeight - edge) {
+      step = Math.ceil(Math.min(1, (y - (window.innerHeight - edge)) / edge) * 12);
+    }
+    if (step) {
+      window.scrollBy(0, step);
+      updateDragTarget({ clientX: dragState.lastX, clientY: dragState.lastY });
+      dragState.autoScrollFrame = requestAnimationFrame(tick);
+    } else {
+      dragState.autoScrollFrame = 0;
+    }
+  };
+  dragState.autoScrollFrame = requestAnimationFrame(tick);
+}
+
 function updateDragPreview(event) {
   if (!dragState?.preview) return;
   // Keep the preview under the pointer without making the pointer hunt for it.
