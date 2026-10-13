@@ -39,13 +39,16 @@ function isDescendant(candidateId, ancestorId, links) {
   return false;
 }
 
-function getSubtreeFolderDepth(folderId, links) {
+function getSubtreeFolderDepth(folderId, links, path = new Set()) {
+  if (path.has(folderId)) return 0;
   const root = links.find((link) => link.id === folderId);
   if (!root?.isFolder) return 0;
 
+  const nextPath = new Set(path);
+  nextPath.add(folderId);
   const children = links.filter((link) => link.parentId === folderId && link.isFolder);
   if (!children.length) return 1;
-  return 1 + Math.max(...children.map((child) => getSubtreeFolderDepth(child.id, links)));
+  return 1 + Math.max(...children.map((child) => getSubtreeFolderDepth(child.id, links, nextPath)));
 }
 
 function removeDropSlot() {
