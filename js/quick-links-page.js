@@ -39,6 +39,15 @@ function isDescendant(candidateId, ancestorId, links) {
   return false;
 }
 
+function getSubtreeFolderDepth(folderId, links) {
+  const root = links.find((link) => link.id === folderId);
+  if (!root?.isFolder) return 0;
+
+  const children = links.filter((link) => link.parentId === folderId && link.isFolder);
+  if (!children.length) return 1;
+  return 1 + Math.max(...children.map((child) => getSubtreeFolderDepth(child.id, links)));
+}
+
 function removeDropSlot() {
   if (dropSlot) {
     dropSlot.remove();
@@ -639,35 +648,52 @@ function updateDragTarget(event) {
 async function performDrop(state) {
   const links = [...(store.getState().links || [])];
   const draggedIndex = links.findIndex((link) => link.id === state.link.id);
-  if (draggedIndex < 0) return;
+  if (draggedIndex < 0 || !state.target) return;
   const dragged = links[draggedIndex];
+
+  let target = null;
+  let destinationParentId = null;
+  if (state.target.position === "root-end") {
+    destinationParentId = null;
+  } else {
+    target = links.find((link) => link.id === state.target.id);
+    if (!target) return;
+    destinationParentId = state.target.position === "inside"
+      ? (target.isFolder ? target.id : currentFolderId)
+      : (target.parentId || null);
+  }
+
+  if (destinationParentId && isDescendant(destinationParentId, dragged.id, links)) {
+    showToast("A folder cannot be moved into itself or one of its descendants.", "error");
+    return;
+  }
+
+  // Validate the whole folder subtree, not just the folder being dragged.
+  const destinationDepth = destinationParentId ? getFolderDepth(destinationParentId, links) : 0;
+  const subtreeDepth = dragged.isFolder ? getSubtreeFolderDepth(dragged.id, links) : 0;
+  if (destinationDepth + subtreeDepth > 3) {
+    showToast("Folder depth limit reached (max 3 levels).", "error");
+    return;
+  }
 
   if (state.target.position === "root-end") {
     dragged.parentId = null;
     links.splice(draggedIndex, 1);
     links.push(dragged);
+  } else if (state.target.position === "inside") {
+    if (!destinationParentId) return;
+    dragged.parentId = destinationParentId;
+    links.splice(draggedIndex, 1);
+    const folderChildren = links.filter((link) => (link.parentId || null) === destinationParentId);
+    const lastChild = folderChildren[folderChildren.length - 1];
+    const insertIndex = lastChild ? links.indexOf(lastChild) + 1 : links.length;
+    links.splice(insertIndex, 0, dragged);
   } else {
-    const targetIndex = links.findIndex((link) => link.id === state.target.id);
-    if (targetIndex < 0) return;
-    const target = links[targetIndex];
-    if (state.target.position === "inside") {
-      const destinationParentId = target.isFolder ? target.id : currentFolderId;
-      if (!destinationParentId) return;
-      const destinationDepth = getFolderDepth(destinationParentId, links);
-      const potentialDepth = destinationDepth + (dragged.isFolder ? 1 : 0);
-      if (potentialDepth > 3) return showToast("Folder depth limit reached (max 3 levels).", "error");
-      dragged.parentId = destinationParentId;
-      links.splice(draggedIndex, 1);
-      const folderChildren = links.filter((link) => (link.parentId || null) === destinationParentId);
-      const lastChild = folderChildren[folderChildren.length - 1];
-      const insertIndex = lastChild ? links.indexOf(lastChild) + 1 : links.length;
-      links.splice(insertIndex, 0, dragged);
-    } else {
-      dragged.parentId = target.parentId || null;
-      links.splice(draggedIndex, 1);
-      const newTargetIndex = links.findIndex((link) => link.id === target.id);
-      links.splice(state.target.position === "before" ? newTargetIndex : newTargetIndex + 1, 0, dragged);
-    }
+    dragged.parentId = destinationParentId;
+    links.splice(draggedIndex, 1);
+    const newTargetIndex = links.findIndex((link) => link.id === target.id);
+    if (newTargetIndex < 0) return;
+    links.splice(state.target.position === "before" ? newTargetIndex : newTargetIndex + 1, 0, dragged);
   }
 
   await store.setState({ links });
