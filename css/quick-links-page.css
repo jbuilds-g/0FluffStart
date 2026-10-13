@@ -413,7 +413,7 @@ body.quick-links-body .quick-links-page {
  .quick-links-breadcrumbs::-webkit-scrollbar { display:none; }
  .quick-links-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; align-items:stretch; }
  .quick-link-card,.quick-link-add-card { min-height:148px; box-sizing:border-box; border-radius:18px; }
- .quick-link-card { display:flex; align-items:center; justify-content:center; padding:18px 10px 14px; border:1px solid var(--border); background:color-mix(in srgb,var(--card) 78%,transparent); box-shadow:var(--shadow); cursor:pointer; -webkit-tap-highlight-color:transparent; }
+ .quick-link-card { display:flex; align-items:center; justify-content:center; padding:18px 10px 14px; border:1px solid var(--border); background:color-mix(in srgb,var(--card) 78%,transparent); box-shadow:var(--shadow); cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:none; }
  .quick-link-card:active { transform:scale(.98); }
  .quick-link-card.is-long-pressing { outline:2px solid var(--accent); outline-offset:2px; }
  .quick-link-card:hover { transform:none; border-color:var(--border); background:color-mix(in srgb,var(--card) 78%,transparent); }
