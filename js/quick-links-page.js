@@ -520,6 +520,7 @@ function startDrag(event, link, card, handle) {
     if (finished) return;
     finished = true;
     if (session.autoScrollFrame) cancelAnimationFrame(session.autoScrollFrame);
+    card.classList.remove("is-long-pressing");
     if (!session.started) {
       card.removeEventListener("click", suppressClickAfterDrag, true);
     } else {
