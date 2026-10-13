@@ -18,8 +18,7 @@ let editingId = null;
 let creatingFolder = false;
 let dragState = null;
 let suppressCardClickUntil = 0;
-let hoverOpenTimer = null;
-let hoverFolderId = null;
+let suppressCardClickUntil = 0;
 let dropSlot = null;
 let dropSlotKey = null;
 
@@ -280,13 +279,13 @@ function render() {
     handle.setAttribute("tabindex", "0");
     handle.setAttribute("aria-label", "Drag to reorder or move");
     handle.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0) return;
+      if (event.button !== 0 || event.pointerType === "touch") return;
       event.stopPropagation();
       startDrag(event, link, card, handle);
     });
 
     card.append(icon, name, actions, handle);
-    bindCard(card, link);
+    bindCard(card, link, handle);
     grid.appendChild(card);
   });
 
@@ -294,18 +293,23 @@ function render() {
   grid.append(addFolder, addLink);
 }
 
-function bindCard(card, link) {
+function bindCard(card, link, handle) {
   card.addEventListener("click", () => {
+    if (card.dataset.suppressNextClick === "true") {
+      delete card.dataset.suppressNextClick;
+      return;
+    }
     if (dragState?.started) return;
     if (link.isFolder) navigate(link.id);
   });
-
   card.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && link.isFolder) navigate(link.id);
   });
-
   card.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0 || event.target.closest("button, .quick-link-drag-handle")) return;
+    if (event.pointerType !== "touch" || event.button !== 0) return;
+    if (event.target.closest("button, .quick-link-action-menu, .quick-link-drag-handle")) return;
+    card.classList.add("is-long-pressing");
+    startDrag(event, link, card, handle, { longPress: true });
   });
 }
 
@@ -314,9 +318,6 @@ function navigate(folderId) {
     document.body.appendChild(dragState.card);
   }
   currentFolderId = folderId;
-  clearTimeout(hoverOpenTimer);
-  hoverOpenTimer = null;
-  hoverFolderId = null;
   render();
 }
 
@@ -492,43 +493,78 @@ function updateDragPreview(event) {
   dragState.preview.style.top = y + "px";
 }
 
-function startDrag(event, link, card, handle) {
+function startDrag(event, link, card, handle, { longPress = false } = {}) {
   if (dragState) return;
   const startX = event.clientX;
   const startY = event.clientY;
   const pointerId = event.pointerId;
   const pointerType = event.pointerType;
   let finished = false;
+  let longPressTimer = 0;
 
   dragState = {
     link, card, handle, pointerId, startX, startY, started: false,
     target: null, lastX: startX, lastY: startY,
     offsetX: 0, offsetY: 0, width: 0, height: 0,
-    preview: null, autoScrollFrame: 0,
+    preview: null, autoScrollFrame: 0, scrolling: false,
   };
   const session = dragState;
+  const captureTarget = event.currentTarget || handle;
+  try { captureTarget.setPointerCapture?.(pointerId); } catch {}
+
   const suppressClickAfterDrag = (clickEvent) => {
     if (!session.started) return;
     clickEvent.preventDefault();
     clickEvent.stopPropagation();
+    clickEvent.stopImmediatePropagation();
+    delete card.dataset.suppressNextClick;
     card.removeEventListener("click", suppressClickAfterDrag, true);
   };
   card.addEventListener("click", suppressClickAfterDrag, true);
-  handle.setPointerCapture?.(pointerId);
+
+  const beginDrag = (startEvent) => {
+    if (finished || session.started) return;
+    session.started = true;
+    const rect = card.getBoundingClientRect();
+    session.offsetX = pointerType === "touch" ? rect.width / 2 : startEvent.clientX - rect.left;
+    session.offsetY = pointerType === "touch" ? Math.min(24, rect.height / 3) : startEvent.clientY - rect.top;
+    session.width = rect.width;
+    session.height = rect.height;
+    session.preview = createDragPreview(card, rect);
+    card.classList.add("is-drag-source");
+    card.classList.remove("is-long-pressing");
+    window.customCursorInstance?.setCursorClass("icon-drag-grip-cursor");
+    window.customCursorInstance?.setDragState(true);
+    updateDragPreview(startEvent);
+  };
+
+  if (longPress) {
+    longPressTimer = window.setTimeout(() => {
+      longPressTimer = 0;
+      if (finished) return;
+      beginDrag({ clientX: session.lastX, clientY: session.lastY });
+      card.dataset.suppressNextClick = "true";
+    }, 420);
+  }
 
   const cleanup = () => {
     if (finished) return;
     finished = true;
     if (session.autoScrollFrame) cancelAnimationFrame(session.autoScrollFrame);
+    if (longPressTimer) window.clearTimeout(longPressTimer);
     card.classList.remove("is-long-pressing");
-    if (!session.started) {
-      card.removeEventListener("click", suppressClickAfterDrag, true);
+    if (session.started) {
+      suppressCardClickUntil = Date.now() + 800;
+      card.dataset.suppressNextClick = "true";
+      window.setTimeout(() => {
+        card.removeEventListener("click", suppressClickAfterDrag, true);
+        delete card.dataset.suppressNextClick;
+      }, 800);
     } else {
-      // pointercancel may not produce a click, so do not leave a stale guard.
-      setTimeout(() => card.removeEventListener("click", suppressClickAfterDrag, true), 0);
+      card.removeEventListener("click", suppressClickAfterDrag, true);
     }
     try {
-      if (handle.hasPointerCapture?.(pointerId)) handle.releasePointerCapture(pointerId);
+      if (captureTarget.hasPointerCapture?.(pointerId)) captureTarget.releasePointerCapture(pointerId);
     } catch {}
     clearDropState();
     statefulRemovePreview(session.preview);
@@ -546,22 +582,30 @@ function startDrag(event, link, card, handle) {
   const onMove = (moveEvent) => {
     if (finished || moveEvent.pointerId !== pointerId) return;
     const distance = Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY);
-    if (!session.started && distance < (pointerType === "touch" ? 10 : 5)) return;
-
-    if (!session.started) {
-      session.started = true;
-      const rect = card.getBoundingClientRect();
-      session.offsetX = pointerType === "touch" ? rect.width / 2 : moveEvent.clientX - rect.left;
-      session.offsetY = pointerType === "touch" ? Math.min(24, rect.height / 3) : moveEvent.clientY - rect.top;
-      session.width = rect.width;
-      session.height = rect.height;
-      session.preview = createDragPreview(card, rect);
-      card.classList.add("is-drag-source");
-      window.customCursorInstance?.setCursorClass("icon-drag-grip-cursor");
-      window.customCursorInstance?.setDragState(true);
+    if (longPress && !session.started && distance > 10) {
+      // Movement before the hold threshold is a scroll gesture, not a drag.
+      if (longPressTimer) window.clearTimeout(longPressTimer);
+      longPressTimer = 0;
+      session.scrolling = true;
+      suppressCardClickUntil = Date.now() + 500;
+      const deltaY = session.lastY - moveEvent.clientY;
+      if (Math.abs(deltaY)) window.scrollBy(0, deltaY);
+      session.lastX = moveEvent.clientX;
+      session.lastY = moveEvent.clientY;
+      moveEvent.preventDefault();
+      return;
     }
-
-    moveEvent.preventDefault();
+    if (session.scrolling) {
+      const deltaY = session.lastY - moveEvent.clientY;
+      if (Math.abs(deltaY)) window.scrollBy(0, deltaY);
+      session.lastX = moveEvent.clientX;
+      session.lastY = moveEvent.clientY;
+      moveEvent.preventDefault();
+      return;
+    }
+    if (!session.started && distance < (pointerType === "touch" ? 10 : 5)) return;
+    if (!session.started) beginDrag(moveEvent);
+    if (session.started) moveEvent.preventDefault();
     session.lastX = moveEvent.clientX;
     session.lastY = moveEvent.clientY;
     updateDragAutoScroll(moveEvent);
