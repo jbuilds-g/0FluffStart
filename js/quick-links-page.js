@@ -432,252 +432,178 @@ async function moveSibling(id, direction) {
 
 function createDragPreview(card, rect) {
   const preview = card.cloneNode(true);
-  preview.classList.remove("is-dragging");
+  preview.classList.remove("is-dragging", "is-drag-source", "drag-over", "drag-enter-folder", "drop-before", "drop-after");
   preview.classList.add("quick-link-drag-preview");
   preview.style.width = rect.width + "px";
   preview.style.height = rect.height + "px";
   preview.style.left = rect.left + "px";
   preview.style.top = rect.top + "px";
   preview.setAttribute("aria-hidden", "true");
+  preview.querySelectorAll("button").forEach((button) => { button.tabIndex = -1; });
   document.body.appendChild(preview);
   return preview;
 }
 
-function placeInitialDropSlot(card, rect) {
-  if (!dropSlot) {
-    dropSlot = document.createElement("div");
-    dropSlot.className = "quick-link-drop-slot";
-    dropSlot.setAttribute("aria-hidden", "true");
-  }
-  dropSlot.style.height = rect.height + "px";
-  dropSlot.style.width = "";
-  grid.insertBefore(dropSlot, card);
-  card.style.display = "none";
-  dropSlotKey = "source:" + card.dataset.id;
-}
-
-function moveDropSlot(card, position) {
-  const key = card.dataset.id + ":" + position;
-  if (dropSlotKey === key && dropSlot?.isConnected) return;
-
-  const beforeRects = new Map();
-  grid.querySelectorAll(".quick-link-card").forEach((item) => {
-    if (item !== dragState?.card && item.style.display !== "none") {
-      beforeRects.set(item.dataset.id, item.getBoundingClientRect());
-    }
-  });
-
-  if (!dropSlot) {
-    dropSlot = document.createElement("div");
-    dropSlot.className = "quick-link-drop-slot";
-    dropSlot.setAttribute("aria-hidden", "true");
-  }
-
-  dropSlot.style.height = (dragState?.height || card.getBoundingClientRect().height) + "px";
-  dropSlot.style.width = "";
-
-  if (position === "before") grid.insertBefore(dropSlot, card);
-  else grid.insertBefore(dropSlot, card.nextSibling);
-
-  dropSlotKey = key;
-  animateGridReflow(beforeRects);
-}
-
-function updateDragAutoScroll(event) {
-  if (!dragState?.started) return;
-  dragState.lastX = event.clientX;
-  dragState.lastY = event.clientY;
-  if (dragState.autoScrollFrame) return;
-  const tick = () => {
-    if (!dragState?.started) return;
-    const y = dragState.lastY;
-    const edge = Math.min(112, Math.max(72, window.innerHeight * 0.16));
-    let step = 0;
-    if (y < edge) step = -Math.ceil(Math.min(1, (edge - y) / edge) * 20);
-    else if (y > window.innerHeight - edge) step = Math.ceil(Math.min(1, (y - (window.innerHeight - edge)) / edge) * 20);
-    if (step) {
-      window.scrollBy(0, step);
-      updateDragTarget({ clientX: dragState.lastX, clientY: dragState.lastY });
-      dragState.autoScrollFrame = requestAnimationFrame(tick);
-    } else dragState.autoScrollFrame = 0;
-  };
-  dragState.autoScrollFrame = requestAnimationFrame(tick);
-}
-
 function updateDragPreview(event) {
   if (!dragState?.preview) return;
-  dragState.preview.style.left = (event.clientX - dragState.offsetX) + "px";
-  dragState.preview.style.top = (event.clientY - dragState.offsetY) + "px";
-}
-
-function statefulRemovePreview(preview) {
-  if (preview?.isConnected) preview.remove();
+  // Keep the preview under the pointer without making the pointer hunt for it.
+  const x = event.clientX - dragState.offsetX;
+  const y = event.clientY - dragState.offsetY;
+  dragState.preview.style.left = x + "px";
+  dragState.preview.style.top = y + "px";
 }
 
 function startDrag(event, link, card, handle) {
+  if (dragState) return;
   const startX = event.clientX;
   const startY = event.clientY;
   const pointerId = event.pointerId;
+  const pointerType = event.pointerType;
+  let finished = false;
 
   dragState = {
     link, card, handle, pointerId, startX, startY, started: false,
-    target: null, position: "after", lastX: startX, lastY: startY,
-    offsetX: 0, offsetY: 0, width: 0, height: 0, preview: null, autoScrollFrame: 0,
+    target: null, lastX: startX, lastY: startY,
+    offsetX: 0, offsetY: 0, width: 0, height: 0,
+    preview: null, autoScrollFrame: 0,
+  };
+  const session = dragState;
+
+  const cleanup = () => {
+    if (finished) return;
+    finished = true;
+    if (session.autoScrollFrame) cancelAnimationFrame(session.autoScrollFrame);
+    clearDropState();
+    statefulRemovePreview(session.preview);
+    card.classList.remove("is-drag-source");
+    card.style.display = "";
+    window.customCursorInstance?.setDragState(false);
+    window.customCursorInstance?.updateCursorForElement(document.elementFromPoint(session.lastX, session.lastY));
+    window.removeEventListener("pointermove", onMove);
+    window.removeEventListener("pointerup", onUp);
+    window.removeEventListener("pointercancel", onCancel);
+    window.removeEventListener("blur", onCancel);
+    if (dragState === session) dragState = null;
   };
 
-  handle.setPointerCapture?.(pointerId);
-
   const onMove = (moveEvent) => {
-    if (!dragState || moveEvent.pointerId !== pointerId) return;
+    if (finished || moveEvent.pointerId !== pointerId) return;
     const distance = Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY);
-    if (!dragState.started && distance < 8) return;
+    if (!session.started && distance < (pointerType === "touch" ? 10 : 5)) return;
 
-    if (!dragState.started) {
-      dragState.started = true;
+    if (!session.started) {
+      session.started = true;
       const rect = card.getBoundingClientRect();
-      const isTouch = moveEvent.pointerType === "touch";
-      dragState.offsetX = isTouch ? rect.width / 2 : moveEvent.clientX - rect.left;
-      dragState.offsetY = isTouch ? Math.min(28, rect.height / 2) : moveEvent.clientY - rect.top;
-      dragState.width = rect.width;
-      dragState.height = rect.height;
-      dragState.preview = createDragPreview(card, rect);
-      placeInitialDropSlot(card, rect);
+      session.offsetX = pointerType === "touch" ? rect.width / 2 : moveEvent.clientX - rect.left;
+      session.offsetY = pointerType === "touch" ? Math.min(24, rect.height / 3) : moveEvent.clientY - rect.top;
+      session.width = rect.width;
+      session.height = rect.height;
+      session.preview = createDragPreview(card, rect);
+      card.classList.add("is-drag-source");
       window.customCursorInstance?.setCursorClass("icon-drag-grip-cursor");
       window.customCursorInstance?.setDragState(true);
     }
 
     moveEvent.preventDefault();
+    session.lastX = moveEvent.clientX;
+    session.lastY = moveEvent.clientY;
     updateDragAutoScroll(moveEvent);
     updateDragPreview(moveEvent);
     updateDragTarget(moveEvent);
   };
 
   const onUp = async (upEvent) => {
-    if (!dragState || upEvent.pointerId !== pointerId) return;
-    const state = dragState;
+    if (finished || upEvent.pointerId !== pointerId) return;
+    const shouldDrop = session.started && session.target;
+    const finalState = { link: session.link, target: session.target };
     cleanup();
-    if (state.started && state.target) await performDrop(state);
+    if (shouldDrop) await performDrop(finalState);
   };
-
-  const cleanup = () => {
-    if (dragState?.autoScrollFrame) cancelAnimationFrame(dragState.autoScrollFrame);
-    clearTimeout(hoverOpenTimer);
-    hoverOpenTimer = null;
-    hoverFolderId = null;
-    clearDropState();
-    handle.releasePointerCapture?.(pointerId);
-    statefulRemovePreview(dragState?.preview);
-    if (card.parentElement === grid) card.style.display = "";
-    else card.remove();
-    window.customCursorInstance?.setDragState(false);
-    const pointerTarget = document.elementFromPoint(dragState?.lastX ?? startX, dragState?.lastY ?? startY);
-    if (pointerTarget) window.customCursorInstance?.updateCursorForElement(pointerTarget);
-    window.removeEventListener("pointermove", onMove);
-    window.removeEventListener("pointerup", onUp);
-    window.removeEventListener("pointercancel", cleanup);
-    dragState = null;
-  };
+  const onCancel = () => cleanup();
 
   window.addEventListener("pointermove", onMove, { passive: false });
   window.addEventListener("pointerup", onUp);
-  window.addEventListener("pointercancel", cleanup);
+  window.addEventListener("pointercancel", onCancel);
+  window.addEventListener("blur", onCancel);
+}
+
+function statefulRemovePreview(preview) {
+  if (preview?.isConnected) preview.remove();
 }
 
 function getGridTargetAtPoint(x, y) {
   const point = document.elementFromPoint(x, y);
-  const hover = point?.closest(".quick-link-card");
-  if (hover && hover !== dragState?.card && hover.style.display !== "none") return hover;
+  const direct = point?.closest(".quick-link-card");
+  if (direct && direct !== dragState?.card && direct.style.display !== "none") return direct;
 
+  // Gaps are valid only when they are genuinely close to a card. Never guess
+  // across the entire grid; that was a major source of accidental drops.
   const cards = [...grid.querySelectorAll(".quick-link-card")].filter(
     (card) => card !== dragState?.card && card.style.display !== "none",
   );
-  if (!cards.length) return null;
-
   let closest = null;
   let closestDistance = Infinity;
-  cards.forEach((card) => {
+  for (const card of cards) {
     const rect = card.getBoundingClientRect();
-    const distance = Math.hypot(x - (rect.left + rect.width / 2), y - (rect.top + rect.height / 2));
-    if (distance < closestDistance) { closestDistance = distance; closest = card; }
-  });
+    const dx = Math.max(rect.left - x, 0, x - rect.right);
+    const dy = Math.max(rect.top - y, 0, y - rect.bottom);
+    const distance = Math.hypot(dx, dy);
+    const maxDistance = Math.min(34, Math.max(18, Math.min(rect.width, rect.height) * 0.22));
+    if (distance <= maxDistance && distance < closestDistance) {
+      closest = card;
+      closestDistance = distance;
+    }
+  }
   return closest;
 }
 
 function updateDragTarget(event) {
   if (!dragState?.started) return;
-  dragState.lastX = event.clientX;
-  dragState.lastY = event.clientY;
-  clearDropState({ removeSlot: false });
+  const session = dragState;
+  session.lastX = event.clientX;
+  session.lastY = event.clientY;
 
+  // Only update visual state when the target actually changes. The grid itself
+  // remains stationary during the gesture, avoiding feedback-loop jitter.
   const point = document.elementFromPoint(event.clientX, event.clientY);
   const hover = getGridTargetAtPoint(event.clientX, event.clientY);
   const links = store.getState().links || [];
+  let nextTarget = null;
+  let position = null;
 
   if (!hover) {
     const insideGrid = point && grid.contains(point);
-    if (insideGrid && currentFolderId) dragState.target = { id: currentFolderId, position: "inside" };
-    else if (insideGrid) dragState.target = { id: null, position: "root-end" };
-    else dragState.target = null;
-    clearTimeout(hoverOpenTimer);
-    hoverOpenTimer = null;
-    hoverFolderId = null;
-    removeDropSlot();
-    return;
-  }
-
-  const targetId = hover.dataset.id;
-  if (isDescendant(targetId, dragState.link.id, links)) {
-    dragState.target = null;
-    clearTimeout(hoverOpenTimer);
-    hoverOpenTimer = null;
-    hoverFolderId = null;
-    removeDropSlot();
-    return;
-  }
-
-  const target = links.find((link) => link.id === targetId);
-  if (!target) return;
-  const rect = hover.getBoundingClientRect();
-  const ratioX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-  const ratioY = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
-  let position;
-  if (target.isFolder && currentFolderId !== target.id && ratioX > 0.25 && ratioX < 0.75 && ratioY > 0.2 && ratioY < 0.8) {
-    position = "inside";
+    if (insideGrid && currentFolderId) nextTarget = { id: currentFolderId, position: "inside" };
+    else if (insideGrid) nextTarget = { id: null, position: "root-end" };
   } else {
-    const verticalOffset = event.clientY - (rect.top + rect.height / 2);
-    position = Math.abs(verticalOffset) > Math.min(28, rect.height * 0.22)
-      ? (verticalOffset < 0 ? "before" : "after")
-      : (ratioX < 0.5 ? "before" : "after");
-  }
-  dragState.target = { id: target.id, position };
-
-  if (position === "inside" && target.isFolder) {
-    removeDropSlot();
-    hover.classList.add("drag-enter-folder");
-    if (hoverFolderId !== target.id) {
-      clearTimeout(hoverOpenTimer);
-      hoverFolderId = target.id;
-      hoverOpenTimer = setTimeout(() => {
-        if (!dragState?.started || hoverFolderId !== target.id || dragState.target?.position !== "inside") return;
-        navigate(target.id);
-        requestAnimationFrame(() => {
-          if (dragState?.started) updateDragTarget({ clientX: dragState.lastX, clientY: dragState.lastY });
-        });
-      }, 650);
+    const target = links.find((link) => link.id === hover.dataset.id);
+    if (target && !isDescendant(target.id, session.link.id, links)) {
+      const rect = hover.getBoundingClientRect();
+      const rx = (event.clientX - rect.left) / Math.max(1, rect.width);
+      const ry = (event.clientY - rect.top) / Math.max(1, rect.height);
+      const centralFolderDrop = target.isFolder && target.id !== session.link.id &&
+        rx >= 0.28 && rx <= 0.72 && ry >= 0.24 && ry <= 0.76;
+      if (centralFolderDrop) {
+        position = "inside";
+      } else {
+        // Use the dominant axis of the grid item to make before/after stable.
+        const dx = (event.clientX - (rect.left + rect.width / 2)) / Math.max(1, rect.width);
+        const dy = (event.clientY - (rect.top + rect.height / 2)) / Math.max(1, rect.height);
+        position = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? "before" : "after") : (dy < 0 ? "before" : "after");
+      }
+      nextTarget = { id: target.id, position };
     }
-    return;
   }
 
-  clearTimeout(hoverOpenTimer);
-  hoverOpenTimer = null;
-  hoverFolderId = null;
-  if (position === "inside") {
-    hover.classList.add("drag-over");
-    removeDropSlot();
-    return;
-  }
-  hover.classList.add(position === "before" ? "drop-before" : "drop-after");
-  moveDropSlot(hover, position);
+  const oldKey = session.target ? session.target.id + ":" + session.target.position : "";
+  const newKey = nextTarget ? nextTarget.id + ":" + nextTarget.position : "";
+  if (oldKey === newKey) return;
+
+  clearDropState();
+  session.target = nextTarget;
+  if (!hover || !nextTarget || nextTarget.position === "root-end") return;
+  if (nextTarget.position === "inside") hover.classList.add("drag-enter-folder");
+  else hover.classList.add(nextTarget.position === "before" ? "drop-before" : "drop-after");
 }
 
 async function performDrop(state) {
