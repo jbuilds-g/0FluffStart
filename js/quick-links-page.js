@@ -67,6 +67,39 @@ function removeDropSlot() {
   dropSlotKey = null;
 }
 
+function captureGridRects() {
+  return new Map(
+    [...grid.querySelectorAll(".quick-link-card")].map((card) => [
+      card.dataset.id,
+      card.getBoundingClientRect(),
+    ]),
+  );
+}
+
+function showDropSlot(targetCard, position, key) {
+  if (dropSlotKey === key && dropSlot?.isConnected) return;
+  removeDropSlot();
+
+  const slot = document.createElement("div");
+  slot.className = "quick-link-drop-slot";
+  slot.setAttribute("aria-hidden", "true");
+  if (dragState?.height) slot.style.height = dragState.height + "px";
+
+  if (position === "root-end") {
+    const firstAddAction = grid.querySelector(".quick-link-add-card");
+    grid.insertBefore(slot, firstAddAction);
+  } else if (targetCard && position === "before") {
+    grid.insertBefore(slot, targetCard);
+  } else if (targetCard && position === "after") {
+    grid.insertBefore(slot, targetCard.nextSibling);
+  } else {
+    return;
+  }
+
+  dropSlot = slot;
+  dropSlotKey = key;
+}
+
 function clearDropState({ removeSlot = true } = {}) {
   grid.querySelectorAll(".quick-link-card").forEach((card) => {
     card.classList.remove(
@@ -780,6 +813,9 @@ function updateDragTarget(event) {
   // Only update visual state when the target actually changes. The grid itself
   // remains stationary during the gesture, avoiding feedback-loop jitter.
   const point = document.elementFromPoint(event.clientX, event.clientY);
+  // The placeholder itself is the current drop position. Keep the target
+  // stable while the grid animates around it instead of re-targeting a neighbor.
+  if (point?.closest(".quick-link-drop-slot") && session.target) return;
   const hover = getGridTargetAtPoint(event.clientX, event.clientY);
   const links = store.getState().links || [];
   let nextTarget = null;
@@ -832,15 +868,23 @@ function updateDragTarget(event) {
   const newKey = nextTarget ? nextTarget.id + ":" + nextTarget.position : "";
   if (oldKey === newKey) return;
 
+  const beforeRects = captureGridRects();
   clearDropState();
   session.target = nextTarget;
-  if (!hover || !nextTarget || nextTarget.position === "root-end") return;
-  if (nextTarget.position === "inside")
-    hover.classList.add("drag-enter-folder");
-  else
-    hover.classList.add(
-      nextTarget.position === "before" ? "drop-before" : "drop-after",
-    );
+  if (!nextTarget) return;
+
+  if (nextTarget.position === "inside") {
+    if (hover) hover.classList.add("drag-enter-folder");
+  } else {
+    const key = nextTarget.id + ":" + nextTarget.position;
+    showDropSlot(hover, nextTarget.position, key);
+    if (hover && nextTarget.position !== "root-end") {
+      hover.classList.add(
+        nextTarget.position === "before" ? "drop-before" : "drop-after",
+      );
+    }
+  }
+  animateGridReflow(beforeRects);
 }
 
 async function performDrop(state) {
