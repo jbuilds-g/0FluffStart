@@ -494,11 +494,15 @@ function startDrag(event, link, card, handle) {
     preview: null, autoScrollFrame: 0,
   };
   const session = dragState;
+  handle.setPointerCapture?.(pointerId);
 
   const cleanup = () => {
     if (finished) return;
     finished = true;
     if (session.autoScrollFrame) cancelAnimationFrame(session.autoScrollFrame);
+    try {
+      if (handle.hasPointerCapture?.(pointerId)) handle.releasePointerCapture(pointerId);
+    } catch {}
     clearDropState();
     statefulRemovePreview(session.preview);
     card.classList.remove("is-drag-source");
