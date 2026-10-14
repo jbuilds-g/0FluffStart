@@ -77,25 +77,25 @@ function captureGridRects() {
 }
 
 function showDropSlot(targetCard, position, key) {
+  // Reorder feedback must be an overlay, never a grid child. Adding a real
+  // child changes auto-fill placement and makes every target jump mid-drag.
+  if (position !== "root-end") return;
   if (dropSlotKey === key && dropSlot?.isConnected) return;
   removeDropSlot();
 
+  const anchor = grid.querySelector(".quick-link-add-folder");
+  if (!anchor) return;
+  const rect = anchor.getBoundingClientRect();
   const slot = document.createElement("div");
-  slot.className = "quick-link-drop-slot";
+  slot.className = "quick-link-drop-slot quick-link-drop-slot-overlay";
   slot.setAttribute("aria-hidden", "true");
-  if (dragState?.height) slot.style.height = dragState.height + "px";
-
-  if (position === "root-end") {
-    const firstAddAction = grid.querySelector(".quick-link-add-card");
-    grid.insertBefore(slot, firstAddAction);
-  } else if (targetCard && position === "before") {
-    grid.insertBefore(slot, targetCard);
-  } else if (targetCard && position === "after") {
-    grid.insertBefore(slot, targetCard.nextSibling);
-  } else {
-    return;
-  }
-
+  Object.assign(slot.style, {
+    left: rect.left + "px",
+    top: rect.top + "px",
+    width: rect.width + "px",
+    height: rect.height + "px",
+  });
+  document.body.appendChild(slot);
   dropSlot = slot;
   dropSlotKey = key;
 }
@@ -871,13 +871,15 @@ function updateDragTarget(event) {
       const rect = session.targetRects.find((entry) => entry.card === hover)?.rect || hover.getBoundingClientRect();
       const rx = (event.clientX - rect.left) / Math.max(1, rect.width);
       const ry = (event.clientY - rect.top) / Math.max(1, rect.height);
+      // Treat nearly the entire folder card as its drop target. Only a
+      // narrow outer rim is reserved for before/after reordering.
       const centralFolderDrop =
         target.isFolder &&
         target.id !== session.link.id &&
-        rx >= 0.28 &&
-        rx <= 0.72 &&
-        ry >= 0.24 &&
-        ry <= 0.76;
+        rx >= 0.16 &&
+        rx <= 0.84 &&
+        ry >= 0.16 &&
+        ry <= 0.84;
       if (centralFolderDrop) {
         position = "inside";
       } else {
@@ -915,8 +917,11 @@ function updateDragTarget(event) {
     if (hover) hover.classList.add("drag-enter-folder");
   } else {
     const key = nextTarget.id + ":" + nextTarget.position;
-    showDropSlot(hover, nextTarget.position, key);
-    if (hover && nextTarget.position !== "root-end") {
+    if (nextTarget.position === "root-end") {
+      showDropSlot(null, nextTarget.position, key);
+    } else if (hover) {
+      // The target edge is the reorder indicator. Do not insert a placeholder
+      // into the grid: the grid must remain geometrically stable while dragging.
       hover.classList.add(
         nextTarget.position === "before" ? "drop-before" : "drop-after",
       );
