@@ -276,38 +276,23 @@ export const store = {
 
     state = { ...prevState, ...nextState };
 
-    const persistenceTasks = [];
-
     if ("links" in nextState) {
-      persistenceTasks.push(
-        queuePersistence("0fluff_links", state.links),
-      );
+      queuePersistence("0fluff_links", state.links);
     }
 
     if ("settings" in nextState) {
-      persistenceTasks.push(
-        queuePersistence("0fluff_settings", state.settings),
-      );
+      queuePersistence("0fluff_settings", state.settings);
     }
 
     if ("searchHistory" in nextState) {
-      persistenceTasks.push(
-        queuePersistence("0fluff_history", state.searchHistory),
-      );
+      queuePersistence("0fluff_history", state.searchHistory);
     }
 
     if ("expandedFolderIds" in nextState) {
-      persistenceTasks.push(
-        queuePersistence(
-          "0fluff_expanded_folders",
-          state.expandedFolderIds,
-        ),
-      );
+      queuePersistence("0fluff_expanded_folders", state.expandedFolderIds);
     }
 
     listeners.forEach((listener) => listener(prevState, state));
-
-    return Promise.all(persistenceTasks);
   },
 
   /**
