@@ -250,6 +250,11 @@ body.quick-links-body .quick-links-page {
   opacity: .95;
   position: relative;
 }
+.quick-link-drop-slot-overlay {
+  position: fixed;
+  z-index: 1090;
+  margin: 0;
+}
 .quick-link-drop-slot::after {
   content: "";
   position: absolute;
