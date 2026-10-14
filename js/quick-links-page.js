@@ -824,8 +824,13 @@ function getGridTargetAtPoint(x, y) {
 
   // Use immutable pre-drag rectangles, not live hit-testing: inserting a slot
   // must not move the hit targets that decide where that slot belongs.
+  const scrollDelta = window.scrollY - (dragState?.startScrollY || 0);
   for (const entry of targets) {
-    const { rect } = entry;
+    const rect = {
+      ...entry.rect,
+      top: entry.rect.top - scrollDelta,
+      bottom: entry.rect.bottom - scrollDelta,
+    };
     if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom)
       return entry.card;
 
