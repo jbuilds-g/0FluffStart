@@ -206,6 +206,13 @@ body.quick-links-body .quick-links-page {
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 28%, transparent);
 }
 
+.quick-links-grid.quick-links-grid-drag-active .quick-link-card,
+.quick-links-grid.quick-links-grid-drag-active .quick-link-card:hover,
+.quick-links-grid.quick-links-grid-drag-active .quick-link-card.drag-enter-folder {
+  transform: none !important;
+  transition: none !important;
+}
+
 .quick-link-card.drag-enter-folder::after {
   content: "Enter folder";
   position: absolute;

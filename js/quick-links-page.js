@@ -76,28 +76,40 @@ function captureGridRects() {
   );
 }
 
-function showDropSlot(targetCard, position, key) {
-  // Reorder feedback must be an overlay, never a grid child. Adding a real
-  // child changes auto-fill placement and makes every target jump mid-drag.
-  if (position !== "root-end") return;
-  if (dropSlotKey === key && dropSlot?.isConnected) return;
-  removeDropSlot();
-
+function positionDropSlotAtAnchor() {
+  if (!dropSlot?.isConnected) return;
   const anchor = grid.querySelector(".quick-link-add-folder");
-  if (!anchor) return;
+  if (!anchor) {
+    removeDropSlot();
+    return;
+  }
   const rect = anchor.getBoundingClientRect();
-  const slot = document.createElement("div");
-  slot.className = "quick-link-drop-slot quick-link-drop-slot-overlay";
-  slot.setAttribute("aria-hidden", "true");
-  Object.assign(slot.style, {
+  Object.assign(dropSlot.style, {
     left: rect.left + "px",
     top: rect.top + "px",
     width: rect.width + "px",
     height: rect.height + "px",
   });
+}
+
+function showDropSlot(targetCard, position, key) {
+  // Reorder feedback must be an overlay, never a grid child.
+  if (position !== "root-end") return;
+  if (dropSlotKey === key && dropSlot?.isConnected) {
+    positionDropSlotAtAnchor();
+    return;
+  }
+  removeDropSlot();
+
+  const anchor = grid.querySelector(".quick-link-add-folder");
+  if (!anchor) return;
+  const slot = document.createElement("div");
+  slot.className = "quick-link-drop-slot quick-link-drop-slot-overlay";
+  slot.setAttribute("aria-hidden", "true");
   document.body.appendChild(slot);
   dropSlot = slot;
   dropSlotKey = key;
+  positionDropSlotAtAnchor();
 }
 
 function clearDropState({ removeSlot = true } = {}) {
@@ -656,6 +668,7 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
   const beginDrag = (startEvent) => {
     if (finished || session.started) return;
     session.started = true;
+    session.startScrollY = window.scrollY;
     const rect = card.getBoundingClientRect();
     session.offsetX =
       pointerType === "touch" ? rect.width / 2 : startEvent.clientX - rect.left;
@@ -680,26 +693,9 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
       }));
     const gridRect = grid.getBoundingClientRect();
     session.gridRect = { left: gridRect.left, top: gridRect.top, right: gridRect.right, bottom: gridRect.bottom };
-    session.originalStyle = {
-      position: card.style.position,
-      left: card.style.left,
-      top: card.style.top,
-      width: card.style.width,
-      height: card.style.height,
-      zIndex: card.style.zIndex,
-      margin: card.style.margin,
-      pointerEvents: card.style.pointerEvents,
-    };
+    session.preview = createDragPreview(card, rect);    grid.classList.add("quick-links-grid-drag-active");
     session.preview = createDragPreview(card, rect);
     card.classList.add("is-drag-source");
-    card.style.position = "fixed";
-    card.style.left = rect.left + "px";
-    card.style.top = rect.top + "px";
-    card.style.width = rect.width + "px";
-    card.style.height = rect.height + "px";
-    card.style.margin = "0";
-    card.style.pointerEvents = "none";
-    card.style.zIndex = "-1";
     card.classList.remove("is-long-pressing");
     window.customCursorInstance?.setCursorClass("icon-drag-grip-cursor");
     window.customCursorInstance?.setDragState(true);
@@ -738,17 +734,8 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
     clearDropState();
     statefulRemovePreview(session.preview);
     card.classList.remove("is-drag-source");
-    if (session.originalStyle) {
-      card.style.position = session.originalStyle.position;
-      card.style.left = session.originalStyle.left;
-      card.style.top = session.originalStyle.top;
-      card.style.width = session.originalStyle.width;
-      card.style.height = session.originalStyle.height;
-      card.style.zIndex = session.originalStyle.zIndex;
-      card.style.margin = session.originalStyle.margin;
-      card.style.pointerEvents = session.originalStyle.pointerEvents;
-    }
-    card.style.display = "";
+    grid.classList.remove("quick-links-grid-drag-active");
+    window.customCursorInstance?.setDragState(false);
     window.customCursorInstance?.setDragState(false);
     window.customCursorInstance?.updateCursorForElement(
       document.elementFromPoint(session.lastX, session.lastY),
@@ -756,6 +743,7 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
     window.removeEventListener("pointermove", onMove);
     window.removeEventListener("pointerup", onUp);
     window.removeEventListener("pointercancel", onCancel);
+    window.removeEventListener("scroll", onScroll);
     window.removeEventListener("blur", onCancel);
     if (dragState === session) dragState = null;
   };
@@ -806,15 +794,30 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
     if (shouldDrop) await performDrop(finalState);
   };
   const onCancel = () => cleanup();
+  const onScroll = () => {
+    if (finished || !session.started) return;
+    updateDragTarget({ clientX: session.lastX, clientY: session.lastY });
+  };
 
   window.addEventListener("pointermove", onMove, { passive: false });
   window.addEventListener("pointerup", onUp);
   window.addEventListener("pointercancel", onCancel);
+  window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("blur", onCancel);
 }
 
 function statefulRemovePreview(preview) {
   if (preview?.isConnected) preview.remove();
+}
+
+function getRectAtCurrentScroll(rect, session = dragState) {
+  const startScrollY = session?.startScrollY ?? window.scrollY;
+  const scrollDelta = window.scrollY - startScrollY;
+  return {
+    ...rect,
+    top: rect.top - scrollDelta,
+    bottom: rect.bottom - scrollDelta,
+  };
 }
 
 function getGridTargetAtPoint(x, y) {
@@ -824,13 +827,8 @@ function getGridTargetAtPoint(x, y) {
 
   // Use immutable pre-drag rectangles, not live hit-testing: inserting a slot
   // must not move the hit targets that decide where that slot belongs.
-  const scrollDelta = window.scrollY - (dragState?.startScrollY || 0);
   for (const entry of targets) {
-    const rect = {
-      ...entry.rect,
-      top: entry.rect.top - scrollDelta,
-      bottom: entry.rect.bottom - scrollDelta,
-    };
+    const rect = getRectAtCurrentScroll(entry.rect, dragState);
     if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom)
       return entry.card;
 
@@ -860,15 +858,23 @@ function updateDragTarget(event) {
   let position = null;
 
   if (!hover) {
-    const bounds = session.gridRect;
-    const insideGrid = bounds && event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom;
+    const bounds = getRectAtCurrentScroll(session.gridRect, session);
+    const insideGrid =
+      bounds &&
+      event.clientX >= bounds.left &&
+      event.clientX <= bounds.right &&
+      event.clientY >= bounds.top &&
+      event.clientY <= bounds.bottom;
     if (insideGrid && currentFolderId)
       nextTarget = { id: currentFolderId, position: "inside" };
     else if (insideGrid) nextTarget = { id: null, position: "root-end" };
   } else {
     const target = links.find((link) => link.id === hover.dataset.id);
     if (target && !isDescendant(target.id, session.link.id, links)) {
-      const rect = session.targetRects.find((entry) => entry.card === hover)?.rect || hover.getBoundingClientRect();
+      const targetRect = session.targetRects.find((entry) => entry.card === hover);
+      const rect = targetRect
+        ? getRectAtCurrentScroll(targetRect.rect, session)
+        : hover.getBoundingClientRect();
       const rx = (event.clientX - rect.left) / Math.max(1, rect.width);
       const ry = (event.clientY - rect.top) / Math.max(1, rect.height);
       // Treat nearly the entire folder card as its drop target. Only a
@@ -907,7 +913,10 @@ function updateDragTarget(event) {
     ? session.target.id + ":" + session.target.position
     : "";
   const newKey = nextTarget ? nextTarget.id + ":" + nextTarget.position : "";
-  if (oldKey === newKey) return;
+  if (oldKey === newKey) {
+    if (nextTarget?.position === "root-end") positionDropSlotAtAnchor();
+    return;
+  }
 
   clearDropState();
   session.target = nextTarget;
