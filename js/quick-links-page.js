@@ -693,7 +693,7 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
       }));
     const gridRect = grid.getBoundingClientRect();
     session.gridRect = { left: gridRect.left, top: gridRect.top, right: gridRect.right, bottom: gridRect.bottom };
-    session.preview = createDragPreview(card, rect);    grid.classList.add("quick-links-grid-drag-active");
+    grid.classList.add("quick-links-grid-drag-active");
     session.preview = createDragPreview(card, rect);
     card.classList.add("is-drag-source");
     card.classList.remove("is-long-pressing");
