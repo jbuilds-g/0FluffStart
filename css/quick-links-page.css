@@ -176,10 +176,11 @@ body.quick-links-body .quick-links-page {
   transform: translateY(-2px);
 }
 .quick-link-card.is-drag-source {
-  opacity: .24;
+  opacity: .22;
   border-color: var(--accent);
   pointer-events: none;
-  transition: none;
+  transition: none !important;
+  transform: none !important;
 }
 .quick-link-drag-preview {
   position: fixed;
