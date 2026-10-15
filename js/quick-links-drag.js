@@ -272,7 +272,7 @@ export function installQuickLinksDragEngine({
     // The final insertion point belongs immediately after the last item, not
     // on top of an add tile. This makes dragging to the end visible and precise.
     return {
-      target: { id: null, position: "after-last" },
+      target: makeEndTarget(".quick-link-add-folder"),
       feedbackCard: last.card,
     };
   }
@@ -286,10 +286,12 @@ export function installQuickLinksDragEngine({
       feedbackCard?.classList.add("drag-enter-folder");
     } else if (target.position === "before" || target.position === "after") {
       insertDropSlot(activeSession, target, feedbackCard);
-    } else if (target.position === "after-last") {
-      insertDropSlot(activeSession, { ...target, position: "after" }, feedbackCard);
     } else if (target.position === "root-end" || target.position === "append") {
-      showAppendFeedback(activeSession, target.anchorSelector);
+      if (feedbackCard) {
+        insertDropSlot(activeSession, { ...target, position: "after" }, feedbackCard);
+      } else {
+        showAppendFeedback(activeSession, target.anchorSelector);
+      }
     }
   }
 
