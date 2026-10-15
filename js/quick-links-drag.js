@@ -282,6 +282,11 @@ export function installQuickLinksDragEngine({
     removeFeedback(activeSession);
     if (!resolved?.target) return;
 
+    // Don't suggest a destination while the pointer is still at the item's
+    // starting position. The source is excluded from target resolution, so
+    // the next card can otherwise look like a new destination immediately.
+    if (!activeSession.hasPassedItem) return;
+
     const { target, feedbackCard } = resolved;
     if (target.position === "inside") {
       feedbackCard?.classList.add("drag-enter-folder");
@@ -383,6 +388,7 @@ export function installQuickLinksDragEngine({
       offsetX: event.clientX - rect.left,
       offsetY: event.clientY - rect.top,
       started: false,
+      hasPassedItem: false,
       finished: false,
       resolved: null,
       preview: null,
@@ -417,6 +423,23 @@ export function installQuickLinksDragEngine({
 
       moveEvent.preventDefault();
       updatePreview(activeSession, moveEvent);
+
+      // Activate insertion feedback only after the drag has crossed another
+      // item's center. This prevents the slot appearing beside the source
+      // immediately on pickup, while still allowing movement in any direction.
+      if (!activeSession.hasPassedItem) {
+        const otherCards = [...grid.querySelectorAll(cardSelector)]
+          .filter((other) => other !== activeSession.source && other.isConnected);
+        activeSession.hasPassedItem = otherCards.some((other) => {
+          const otherRect = other.getBoundingClientRect();
+          const crossedX = (activeSession.startX - (otherRect.left + otherRect.width / 2)) *
+            (moveEvent.clientX - (otherRect.left + otherRect.width / 2)) <= 0;
+          const crossedY = (activeSession.startY - (otherRect.top + otherRect.height / 2)) *
+            (moveEvent.clientY - (otherRect.top + otherRect.height / 2)) <= 0;
+          return crossedX || crossedY;
+        });
+      }
+
       const resolved = resolveTarget(moveEvent.clientX, moveEvent.clientY, activeSession);
       activeSession.resolved = resolved?.target || null;
       updateFeedback(activeSession, resolved);
