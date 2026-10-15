@@ -3,7 +3,7 @@ import { CustomCursorEngine } from "./cursor.js";
 import { store } from "./store.js";
 import { generateId } from "./utils.js";
 import { getFolderDepth } from "./links.js";
-import { installQuickLinksDragEngine } from "./quick-links-drag.js?v=13;
+import { installQuickLinksDragEngine } from "./quick-links-drag.js?v=13";
 
 const grid = document.getElementById("quickLinksGrid");
 const emptyState = document.getElementById("emptyState");
