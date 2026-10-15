@@ -432,11 +432,12 @@ export function installQuickLinksDragEngine({
           .filter((other) => other !== activeSession.source && other.isConnected);
         activeSession.hasPassedItem = otherCards.some((other) => {
           const otherRect = other.getBoundingClientRect();
-          const crossedX = (activeSession.startX - (otherRect.left + otherRect.width / 2)) *
-            (moveEvent.clientX - (otherRect.left + otherRect.width / 2)) <= 0;
-          const crossedY = (activeSession.startY - (otherRect.top + otherRect.height / 2)) *
-            (moveEvent.clientY - (otherRect.top + otherRect.height / 2)) <= 0;
-          return crossedX || crossedY;
+          return (
+            moveEvent.clientX >= otherRect.left &&
+            moveEvent.clientX <= otherRect.right &&
+            moveEvent.clientY >= otherRect.top &&
+            moveEvent.clientY <= otherRect.bottom
+          );
         });
       }
 
