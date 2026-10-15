@@ -183,7 +183,12 @@ export function installQuickLinksDragEngine({
         const anchorSelector = addCard.classList.contains("quick-link-add-link")
           ? ".quick-link-add-link"
           : ".quick-link-add-folder";
-        return { target: makeEndTarget(anchorSelector), feedbackCard: null };
+        // The add tiles also mean "append", but show the insertion point
+        // inline after the last existing item instead of covering the tile.
+        return {
+          target: makeEndTarget(anchorSelector),
+          feedbackCard: cards[cards.length - 1]?.card || null,
+        };
       }
     }
 
@@ -230,12 +235,8 @@ export function installQuickLinksDragEngine({
     const row = rows[rowIndex];
     const first = row.entries[0];
     const last = row.entries[row.entries.length - 1];
-    if (
-      x < first.rect.left - horizontalTolerance ||
-      x > last.rect.right + horizontalTolerance
-    ) {
-      return { target: null, feedbackCard: null };
-    }
+    // Horizontal edges are valid insertion zones too. Keep resolving the
+    // first/last insertion point even when the pointer is just outside a card.
 
     // In a row gap, prefer the next row's first item. Within a row (including
     // the gaps between cards), compare against card midpoints to resolve an
