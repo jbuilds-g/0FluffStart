@@ -406,7 +406,6 @@ export function installQuickLinksDragEngine({
       offsetX: event.clientX - rect.left,
       offsetY: event.clientY - rect.top,
       started: false,
-      hasPassedItem: false,
       finished: false,
       resolved: null,
       preview: null,
@@ -441,23 +440,6 @@ export function installQuickLinksDragEngine({
 
       moveEvent.preventDefault();
       updatePreview(activeSession, moveEvent);
-
-      // Activate insertion feedback only after the drag has crossed another
-      // item's center. This prevents the slot appearing beside the source
-      // immediately on pickup, while still allowing movement in any direction.
-      if (!activeSession.hasPassedItem) {
-        const otherCards = [...grid.querySelectorAll(cardSelector)]
-          .filter((other) => other !== activeSession.source && other.isConnected);
-        activeSession.hasPassedItem = otherCards.some((other) => {
-          const otherRect = other.getBoundingClientRect();
-          return (
-            moveEvent.clientX >= otherRect.left &&
-            moveEvent.clientX <= otherRect.right &&
-            moveEvent.clientY >= otherRect.top &&
-            moveEvent.clientY <= otherRect.bottom
-          );
-        });
-      }
 
       const resolved = resolveTarget(moveEvent.clientX, moveEvent.clientY, activeSession);
       activeSession.resolved = resolved?.target || null;
