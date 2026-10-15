@@ -176,10 +176,8 @@ body.quick-links-body .quick-links-page {
   transform: translateY(-2px);
 }
 .quick-link-card.is-drag-source {
-  /* Leave the original grid cell empty; the floating preview follows the
-     pointer and the drop slot alone communicates the destination. */
-  opacity: 0 !important;
-  visibility: hidden;
+  opacity: .22;
+  border-color: var(--accent);
   pointer-events: none;
   transition: none !important;
   transform: none !important;
