@@ -3,6 +3,7 @@ import { CustomCursorEngine } from "./cursor.js";
 import { store } from "./store.js";
 import { generateId } from "./utils.js";
 import { getFolderDepth } from "./links.js";
+import { installQuickLinksDragEngine } from "./quick-links-drag.js";
 
 const grid = document.getElementById("quickLinksGrid");
 const emptyState = document.getElementById("emptyState");
@@ -107,6 +108,13 @@ function showDropSlot(targetCard, position, key, anchorSelector) {
   dropSlot = slot;
   dropSlotKey = key;
   positionDropSlotAtAnchor();
+}
+
+function clearDropState({ removeSlot = true } = {}) {
+  grid.querySelectorAll(".quick-link-card").forEach((card) => {
+    card.classList.remove("drag-over", "drag-enter-folder", "drop-before", "drop-after");
+  });
+  if (removeSlot) removeDropSlot();
 }
 
 function animateGridReflow(beforeRects) {
@@ -339,12 +347,6 @@ function render() {
     handle.setAttribute("role", "button");
     handle.setAttribute("tabindex", "0");
     handle.setAttribute("aria-label", "Drag to reorder or move");
-    handle.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0 || event.pointerType === "touch") return;
-      event.stopPropagation();
-      startDrag(event, link, card, handle);
-    });
-
     card.append(icon, name, actions, handle);
     bindCard(card, link, handle);
     grid.appendChild(card);
@@ -1084,6 +1086,13 @@ document.addEventListener("keydown", (event) => {
     if (!editor.classList.contains("hidden")) closeEditor();
     closeMobileActionMenus();
   }
+});
+
+installQuickLinksDragEngine({
+  grid,
+  getCurrentFolderId: () => currentFolderId,
+  getLinks: () => store.getState().links || [],
+  onDrop: performDrop,
 });
 
 await store.init();
