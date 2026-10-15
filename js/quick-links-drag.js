@@ -24,8 +24,77 @@ export function installQuickLinksDragEngine({
     grid.querySelectorAll(cardSelector).forEach((card) => {
       card.classList.remove(...visualClasses);
     });
+    if (activeSession?.dropSlot) {
+      activeSession.dropSlot.remove();
+      activeSession.dropSlot = null;
+    }
     activeSession?.appendSlot?.remove();
     if (activeSession) activeSession.appendSlot = null;
+  }
+
+  function animateGridReflow(beforeRects, activeSession) {
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const animations = [];
+    grid.querySelectorAll(cardSelector).forEach((card) => {
+      if (card === activeSession.source) return;
+      const before = beforeRects.get(card);
+      if (!before || !card.isConnected) return;
+      const after = card.getBoundingClientRect();
+      const dx = before.left - after.left;
+      const dy = before.top - after.top;
+      if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+      animations.push(card.animate(
+        [
+          { transform: `translate(${dx}px, ${dy}px)` },
+          { transform: "translate(0, 0)" },
+        ],
+        { duration: 190, easing: "cubic-bezier(0.2, 0, 0, 1)" },
+      ));
+    });
+    return animations;
+  }
+
+  function captureCardRects() {
+    return new Map(
+      [...grid.querySelectorAll(cardSelector)].map((card) => [
+        card,
+        card.getBoundingClientRect(),
+      ]),
+    );
+  }
+
+  function insertDropSlot(activeSession, target, feedbackCard) {
+    if (!feedbackCard || !target || !["before", "after"].includes(target.position)) {
+      return;
+    }
+
+    const rect = feedbackCard.getBoundingClientRect();
+    const beforeRects = captureCardRects();
+    const slot = document.createElement("div");
+    slot.className = "quick-link-drop-slot quick-link-drop-slot-inline";
+    slot.setAttribute("aria-hidden", "true");
+    slot.style.width = rect.width + "px";
+    slot.style.height = rect.height + "px";
+    slot.style.minHeight = rect.height + "px";
+    slot.style.setProperty("--drop-slot-scale", "0.82");
+
+    if (target.position === "before") {
+      grid.insertBefore(slot, feedbackCard);
+    } else {
+      feedbackCard.after(slot);
+    }
+    activeSession.dropSlot = slot;
+    animateGridReflow(beforeRects, activeSession);
+
+    if (!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      slot.animate(
+        [
+          { opacity: 0, transform: "scale(0.82)" },
+          { opacity: 1, transform: "scale(1)" },
+        ],
+        { duration: 180, easing: "cubic-bezier(0.2, 0, 0, 1)" },
+      );
+    }
   }
 
   function createPreview(card, rect) {
@@ -210,10 +279,8 @@ export function installQuickLinksDragEngine({
     const { target, feedbackCard } = resolved;
     if (target.position === "inside") {
       feedbackCard?.classList.add("drag-enter-folder");
-    } else if (target.position === "before") {
-      feedbackCard?.classList.add("drop-before");
-    } else if (target.position === "after") {
-      feedbackCard?.classList.add("drop-after");
+    } else if (target.position === "before" || target.position === "after") {
+      insertDropSlot(activeSession, target, feedbackCard);
     } else if (target.position === "root-end" || target.position === "append") {
       showAppendFeedback(activeSession, target.anchorSelector);
     }
