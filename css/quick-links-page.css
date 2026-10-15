@@ -195,6 +195,21 @@ body.quick-links-body .quick-links-page {
   transition: none !important;
   will-change: left, top;
 }
+
+@media (hover: hover) and (pointer: fine) {
+  .quick-link-drag-preview {
+    border: 1px solid var(--accent);
+    border-radius: calc(var(--radius) + 4px);
+    background: color-mix(in srgb, var(--card) 94%, var(--accent));
+  }
+
+  .quick-links-grid.quick-links-grid-drag-active .quick-link-add-card,
+  .quick-links-grid.quick-links-grid-drag-active .quick-link-add-card:hover,
+  .quick-links-grid.quick-links-grid-drag-active .quick-link-add-card:active {
+    transform: none !important;
+    transition: none !important;
+  }
+}
 .quick-link-card.drag-over,
 .quick-link-card.drag-enter-folder {
   background: color-mix(in srgb, var(--accent) 14%, var(--card));

@@ -20,6 +20,7 @@ let dragState = null;
 let suppressCardClickUntil = 0;
 let dropSlot = null;
 let dropSlotKey = null;
+let dropSlotAnchorSelector = ".quick-link-add-folder";
 
 function childrenOf(parentId) {
   return (store.getState().links || []).filter(
@@ -65,20 +66,14 @@ function removeDropSlot() {
     dropSlot = null;
   }
   dropSlotKey = null;
-}
-
-function captureGridRects() {
-  return new Map(
-    [...grid.querySelectorAll(".quick-link-card")].map((card) => [
-      card.dataset.id,
-      card.getBoundingClientRect(),
-    ]),
-  );
+  dropSlotAnchorSelector = ".quick-link-add-folder";
 }
 
 function positionDropSlotAtAnchor() {
   if (!dropSlot?.isConnected) return;
-  const anchor = grid.querySelector(".quick-link-add-folder");
+  const anchor =
+    grid.querySelector(dropSlotAnchorSelector) ||
+    grid.querySelector(".quick-link-add-folder");
   if (!anchor) {
     removeDropSlot();
     return;
@@ -92,16 +87,18 @@ function positionDropSlotAtAnchor() {
   });
 }
 
-function showDropSlot(targetCard, position, key) {
-  // Reorder feedback must be an overlay, never a grid child.
-  if (position !== "root-end") return;
+function showDropSlot(targetCard, position, key, anchorSelector) {
+  // Append feedback stays over the actual add tile under the pointer.
+  if (position !== "root-end" && position !== "append") return;
+  dropSlotAnchorSelector = anchorSelector || ".quick-link-add-folder";
   if (dropSlotKey === key && dropSlot?.isConnected) {
     positionDropSlotAtAnchor();
     return;
   }
   removeDropSlot();
+  dropSlotAnchorSelector = anchorSelector || ".quick-link-add-folder";
 
-  const anchor = grid.querySelector(".quick-link-add-folder");
+  const anchor = grid.querySelector(dropSlotAnchorSelector);
   if (!anchor) return;
   const slot = document.createElement("div");
   slot.className = "quick-link-drop-slot quick-link-drop-slot-overlay";
@@ -110,18 +107,6 @@ function showDropSlot(targetCard, position, key) {
   dropSlot = slot;
   dropSlotKey = key;
   positionDropSlotAtAnchor();
-}
-
-function clearDropState({ removeSlot = true } = {}) {
-  grid.querySelectorAll(".quick-link-card").forEach((card) => {
-    card.classList.remove(
-      "drag-over",
-      "drag-enter-folder",
-      "drop-before",
-      "drop-after",
-    );
-  });
-  if (removeSlot) removeDropSlot();
 }
 
 function animateGridReflow(beforeRects) {
@@ -681,18 +666,34 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
     // Freeze the layout geometry once, before the source is lifted or a drop
     // slot is inserted. Targeting must never read geometry that our own
     // placeholder has just changed.
+    const snapshotRect = (item) => {
+      const rect = item.getBoundingClientRect();
+      return {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height,
+      };
+    };
     session.targetRects = [...grid.querySelectorAll(".quick-link-card")]
       .filter((item) => item !== card && item.style.display !== "none")
       .map((item) => ({
+        kind: "item",
         id: item.dataset.id,
         card: item,
-        rect: (() => {
-          const r = item.getBoundingClientRect();
-          return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
-        })(),
+        rect: snapshotRect(item),
       }));
-    const gridRect = grid.getBoundingClientRect();
-    session.gridRect = { left: gridRect.left, top: gridRect.top, right: gridRect.right, bottom: gridRect.bottom };
+    session.addTargetRects = [...grid.querySelectorAll(".quick-link-add-card")]
+      .map((item) => ({
+        kind: "append",
+        card: item,
+        anchorSelector: item.classList.contains("quick-link-add-link")
+          ? ".quick-link-add-link"
+          : ".quick-link-add-folder",
+        rect: snapshotRect(item),
+      }));
     grid.classList.add("quick-links-grid-drag-active");
     session.preview = createDragPreview(card, rect);
     card.classList.add("is-drag-source");
@@ -788,6 +789,7 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
 
   const onUp = async (upEvent) => {
     if (finished || upEvent.pointerId !== pointerId) return;
+    if (session.started) updateDragTarget(upEvent);
     const shouldDrop = session.started && session.target;
     const finalState = { link: session.link, target: session.target };
     cleanup();
@@ -821,27 +823,37 @@ function getRectAtCurrentScroll(rect, session = dragState) {
 }
 
 function getGridTargetAtPoint(x, y) {
-  const targets = dragState?.targetRects || [];
-  let closest = null;
-  let closestDistance = Infinity;
+  const session = dragState;
+  if (!session) return null;
 
-  // Use immutable pre-drag rectangles, not live hit-testing: inserting a slot
-  // must not move the hit targets that decide where that slot belongs.
-  for (const entry of targets) {
-    const rect = getRectAtCurrentScroll(entry.rect, dragState);
-    if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom)
-      return entry.card;
-
-    const dx = Math.max(rect.left - x, 0, x - rect.right);
-    const dy = Math.max(rect.top - y, 0, y - rect.bottom);
-    const distance = Math.hypot(dx, dy);
-    const maxDistance = Math.min(28, Math.max(12, Math.min(rect.width, rect.height) * 0.16));
-    if (distance <= maxDistance && distance < closestDistance) {
-      closest = entry;
-      closestDistance = distance;
+  // Use frozen geometry so indicators and hover styles cannot move hit targets.
+  // Gaps are intentionally invalid rather than being captured by nearby cards.
+  for (const entry of session.targetRects || []) {
+    const rect = getRectAtCurrentScroll(entry.rect, session);
+    if (
+      x >= rect.left &&
+      x <= rect.right &&
+      y >= rect.top &&
+      y <= rect.bottom
+    ) {
+      return entry;
     }
   }
-  return closest?.card || null;
+
+  // Add tiles are explicit append targets, not approximate neighbors of cards.
+  for (const entry of session.addTargetRects || []) {
+    const rect = getRectAtCurrentScroll(entry.rect, session);
+    if (
+      x >= rect.left &&
+      x <= rect.right &&
+      y >= rect.top &&
+      y <= rect.bottom
+    ) {
+      return entry;
+    }
+  }
+
+  return null;
 }
 
 function updateDragTarget(event) {
@@ -850,35 +862,29 @@ function updateDragTarget(event) {
   session.lastX = event.clientX;
   session.lastY = event.clientY;
 
-  // Resolve targets against the frozen pre-drag layout. The live grid moves
-  // when a slot is inserted, so DOM hit-testing here creates a feedback loop.
-  const hover = getGridTargetAtPoint(event.clientX, event.clientY);
+  const hit = getGridTargetAtPoint(event.clientX, event.clientY);
+  const hover = hit?.kind === "item" ? hit.card : null;
   const links = store.getState().links || [];
   let nextTarget = null;
-  let position = null;
 
-  if (!hover) {
-    const bounds = getRectAtCurrentScroll(session.gridRect, session);
-    const insideGrid =
-      bounds &&
-      event.clientX >= bounds.left &&
-      event.clientX <= bounds.right &&
-      event.clientY >= bounds.top &&
-      event.clientY <= bounds.bottom;
-    if (insideGrid && currentFolderId)
-      nextTarget = { id: currentFolderId, position: "inside" };
-    else if (insideGrid) nextTarget = { id: null, position: "root-end" };
-  } else {
+  if (hit?.kind === "append") {
+    nextTarget = currentFolderId
+      ? {
+          id: currentFolderId,
+          position: "append",
+          anchorSelector: hit.anchorSelector,
+        }
+      : {
+          id: null,
+          position: "root-end",
+          anchorSelector: hit.anchorSelector,
+        };
+  } else if (hover) {
     const target = links.find((link) => link.id === hover.dataset.id);
     if (target && !isDescendant(target.id, session.link.id, links)) {
-      const targetRect = session.targetRects.find((entry) => entry.card === hover);
-      const rect = targetRect
-        ? getRectAtCurrentScroll(targetRect.rect, session)
-        : hover.getBoundingClientRect();
+      const rect = getRectAtCurrentScroll(hit.rect, session);
       const rx = (event.clientX - rect.left) / Math.max(1, rect.width);
       const ry = (event.clientY - rect.top) / Math.max(1, rect.height);
-      // Treat nearly the entire folder card as its drop target. Only a
-      // narrow outer rim is reserved for before/after reordering.
       const centralFolderDrop =
         target.isFolder &&
         target.id !== session.link.id &&
@@ -886,10 +892,10 @@ function updateDragTarget(event) {
         rx <= 0.84 &&
         ry >= 0.16 &&
         ry <= 0.84;
+      let position;
       if (centralFolderDrop) {
         position = "inside";
       } else {
-        // Use the dominant axis of the grid item to make before/after stable.
         const dx =
           (event.clientX - (rect.left + rect.width / 2)) /
           Math.max(1, rect.width);
@@ -909,12 +915,23 @@ function updateDragTarget(event) {
     }
   }
 
-  const oldKey = session.target
-    ? session.target.id + ":" + session.target.position
-    : "";
-  const newKey = nextTarget ? nextTarget.id + ":" + nextTarget.position : "";
+  const targetKey = (target) =>
+    target
+      ? String(target.id ?? "root") +
+        ":" +
+        target.position +
+        ":" +
+        (target.anchorSelector || "")
+      : "";
+  const oldKey = targetKey(session.target);
+  const newKey = targetKey(nextTarget);
   if (oldKey === newKey) {
-    if (nextTarget?.position === "root-end") positionDropSlotAtAnchor();
+    if (
+      nextTarget?.position === "root-end" ||
+      nextTarget?.position === "append"
+    ) {
+      positionDropSlotAtAnchor();
+    }
     return;
   }
 
@@ -923,21 +940,23 @@ function updateDragTarget(event) {
   if (!nextTarget) return;
 
   if (nextTarget.position === "inside") {
-    if (hover) hover.classList.add("drag-enter-folder");
-  } else {
-    const key = nextTarget.id + ":" + nextTarget.position;
-    if (nextTarget.position === "root-end") {
-      showDropSlot(null, nextTarget.position, key);
-    } else if (hover) {
-      // The target edge is the reorder indicator. Do not insert a placeholder
-      // into the grid: the grid must remain geometrically stable while dragging.
-      hover.classList.add(
-        nextTarget.position === "before" ? "drop-before" : "drop-after",
-      );
-    }
+    hover?.classList.add("drag-enter-folder");
+  } else if (
+    nextTarget.position === "root-end" ||
+    nextTarget.position === "append"
+  ) {
+    showDropSlot(
+      null,
+      nextTarget.position,
+      newKey,
+      nextTarget.anchorSelector,
+    );
+  } else if (hover) {
+    hover.classList.add(
+      nextTarget.position === "before" ? "drop-before" : "drop-after",
+    );
   }
-  // Avoid transform-based FLIP animations here: hit-testing uses card bounds,
-  // so animated transforms feed back into target selection and cause oscillation.
+  // Avoid transforms during a drag: they can feed back into hit-testing.
 }
 
 async function performDrop(state) {
@@ -950,6 +969,10 @@ async function performDrop(state) {
   let destinationParentId = null;
   if (state.target.position === "root-end") {
     destinationParentId = null;
+  } else if (state.target.position === "append") {
+    target = links.find((link) => link.id === state.target.id);
+    if (!target?.isFolder) return;
+    destinationParentId = target.id;
   } else {
     target = links.find((link) => link.id === state.target.id);
     if (!target) return;
@@ -988,7 +1011,10 @@ async function performDrop(state) {
     dragged.parentId = null;
     links.splice(draggedIndex, 1);
     links.push(dragged);
-  } else if (state.target.position === "inside") {
+  } else if (
+    state.target.position === "inside" ||
+    state.target.position === "append"
+  ) {
     if (!destinationParentId) return;
     dragged.parentId = destinationParentId;
     links.splice(draggedIndex, 1);
