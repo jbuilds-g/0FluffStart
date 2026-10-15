@@ -282,12 +282,30 @@ export function installQuickLinksDragEngine({
     removeFeedback(activeSession);
     if (!resolved?.target) return;
 
-    // Don't suggest a destination while the pointer is still at the item's
-    // starting position. The source is excluded from target resolution, so
-    // the next card can otherwise look like a new destination immediately.
-    if (!activeSession.hasPassedItem) return;
-
     const { target, feedbackCard } = resolved;
+
+    // Resolve the proposed insertion index against the current DOM order.
+    // Since the source stays in the grid as a faded placeholder, inserting
+    // before its next sibling (or after its previous sibling) is still the
+    // original position and must not display a drop slot.
+    if (target.position === "before" || target.position === "after" ||
+        target.position === "root-end" || target.position === "append") {
+      const orderedCards = [...grid.querySelectorAll(cardSelector)]
+        .filter((card) => card.isConnected);
+      const sourceIndex = orderedCards.indexOf(activeSession.source);
+      const remainingCards = orderedCards.filter((card) => card !== activeSession.source);
+      let destinationIndex = remainingCards.length;
+
+      if (target.position === "before") {
+        const targetIndex = remainingCards.findIndex((card) => card.dataset.id === target.id);
+        if (targetIndex >= 0) destinationIndex = targetIndex;
+      } else if (target.position === "after") {
+        const targetIndex = remainingCards.findIndex((card) => card.dataset.id === target.id);
+        if (targetIndex >= 0) destinationIndex = targetIndex + 1;
+      }
+
+      if (sourceIndex >= 0 && destinationIndex === sourceIndex) return;
+    }
     if (target.position === "inside") {
       feedbackCard?.classList.add("drag-enter-folder");
     } else if (target.position === "before" || target.position === "after") {
