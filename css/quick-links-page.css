@@ -369,6 +369,10 @@ body.quick-links-body .quick-links-page {
   cursor: pointer;
 }
 .quick-link-actions button:hover { color: var(--accent); border-color: var(--accent); }
+.quick-link-actions .quick-link-move-to { color: var(--accent); }
+.quick-link-card .link-icon-circle { cursor: grab; }
+.quick-link-card .link-icon-circle:active { cursor: grabbing; }
+.quick-link-card.is-drag-source .link-icon-circle { cursor: grabbing; }
 .quick-link-drag-preview .quick-link-actions {
   display: none;
 }
