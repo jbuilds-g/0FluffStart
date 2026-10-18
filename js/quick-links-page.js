@@ -3,7 +3,7 @@ import { CustomCursorEngine } from "./cursor.js";
 import { store } from "./store.js";
 import { generateId } from "./utils.js";
 import { getFolderDepth } from "./links.js";
-import { installQuickLinksDragEngine } from "./quick-links-drag.js?v=13";
+import { installQuickLinksDragEngine } from "./quick-links-drag.js?v=14";
 
 const grid = document.getElementById("quickLinksGrid");
 const emptyState = document.getElementById("emptyState");
@@ -265,7 +265,19 @@ function render() {
       }
     });
 
-    actions.append(edit, remove);
+    const moveTo = document.createElement("button");
+    moveTo.type = "button";
+    moveTo.className = "quick-link-move-to";
+    moveTo.title = "Move to…";
+    moveTo.setAttribute("aria-label", `Move ${link.name} to another location`);
+    moveTo.innerHTML =
+      '<span class="icon-mask icon-folder" aria-hidden="true"></span>';
+    moveTo.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openMoveToPicker(link.id);
+    });
+
+    actions.append(moveTo, edit, remove);
 
     const mobileMenu = document.createElement("button");
     mobileMenu.type = "button";
