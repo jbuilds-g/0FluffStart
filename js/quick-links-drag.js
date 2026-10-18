@@ -390,15 +390,17 @@ export function installQuickLinksDragEngine({
 
   function onPointerDown(event) {
     if (session || event.button !== 0 || event.pointerType === "touch") return;
-    const handle = event.target.closest?.(".quick-link-drag-handle");
-    const card = handle?.closest(cardSelector);
-    if (!handle || !card || !grid.contains(card)) return;
+    // The icon itself is the drag target: no tiny corner handle to hunt for.
+    // Keep buttons and the card's other interactive controls out of this path.
+    const icon = event.target.closest?.(".link-icon-circle");
+    const card = icon?.closest(cardSelector);
+    if (!icon || !card || !grid.contains(card)) return;
 
     const rect = card.getBoundingClientRect();
     const activeSession = {
       source: card,
       pointerId: event.pointerId,
-      captureTarget: handle,
+      captureTarget: icon,
       startX: event.clientX,
       startY: event.clientY,
       lastX: event.clientX,
@@ -415,7 +417,7 @@ export function installQuickLinksDragEngine({
     session = activeSession;
 
     try {
-      handle.setPointerCapture?.(event.pointerId);
+      icon.setPointerCapture?.(event.pointerId);
     } catch {
       // Window-level listeners still receive normal pointer events.
     }
