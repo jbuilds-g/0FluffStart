@@ -503,3 +503,62 @@ body.quick-links-body .quick-links-page {
  .quick-link-card .link-icon-circle { width:48px; height:48px; }
 }
 @media (prefers-reduced-motion:reduce) { .quick-link-card,.quick-link-add-card { transition:none; } }
+
+
+/* Tap-based Move To picker */
+.quick-links-move-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  background: rgba(0, 0, 0, .62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.quick-links-move-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(440px, 100%);
+  max-height: min(720px, 100%);
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+}
+.quick-links-move-panel h2 { margin: 0; font-size: 1.25rem; overflow-wrap: anywhere; }
+.quick-links-move-description { margin: 8px 0 14px; color: var(--dim); font-size: var(--font-size-sm); line-height: 1.45; }
+.quick-links-move-list { display: grid; gap: 6px; overflow: auto; overscroll-behavior: contain; }
+.quick-links-move-choice,.quick-links-move-back,.quick-links-move-footer button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 46px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--card) 82%, var(--text));
+  color: var(--text);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.quick-links-move-choice:hover,.quick-links-move-choice:focus-visible,.quick-links-move-back:focus-visible,.quick-links-move-footer button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.quick-links-move-back { background: transparent; border-style: dashed; }
+.quick-links-move-notice { margin: 8px 0; color: var(--dim); line-height: 1.5; }
+.quick-links-move-footer { display: flex; justify-content: flex-end; padding-top: 14px; }
+.quick-links-move-footer button { width: auto; min-width: 100px; justify-content: center; }
+@media (max-width: 700px) {
+  .quick-links-move-overlay { align-items: end; padding: 12px 12px max(12px, env(safe-area-inset-bottom)); }
+  .quick-links-move-panel { width: 100%; max-height: min(78dvh, 720px); border-radius: 22px; padding: 18px 16px max(14px, env(safe-area-inset-bottom)); }
+}
