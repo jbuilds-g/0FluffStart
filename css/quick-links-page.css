@@ -517,9 +517,7 @@ body.quick-links-body .quick-links-page {
   display: grid;
   place-items: center;
   padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
-  background: rgba(0, 0, 0, .62);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, .78);
 }
 .quick-links-move-panel {
   display: flex;
