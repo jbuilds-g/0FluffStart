@@ -1039,6 +1039,11 @@ async function performDrop(state) {
   }
 
   await store.setState({ links });
+  // Make a successful folder drop immediately visible instead of leaving the
+  // moved item hidden inside a folder that is still closed.
+  if (state.target.position === "inside" && destinationParentId) {
+    currentFolderId = destinationParentId;
+  }
   render();
 }
 document
