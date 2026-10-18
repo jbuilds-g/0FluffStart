@@ -294,6 +294,7 @@ function render() {
         else if (action === "up") await moveSibling(link.id, -1);
         else if (action === "down") await moveSibling(link.id, 1);
         else if (action === "move") await moveOut(link.id);
+        else if (action === "move-to") openMoveToPicker(link.id);
         else if (action === "delete") await deleteItem(link.id);
       });
       actionMenu.appendChild(button);
@@ -305,6 +306,7 @@ function render() {
     if (siblingIndex >= 0 && siblingIndex < siblings.length - 1)
       addMenuAction("Move down", "down");
     if (link.parentId) addMenuAction("Move to parent", "move");
+    addMenuAction("Move to…", "move-to");
     addMenuAction("Delete", "delete");
 
     mobileMenu.addEventListener("click", (event) => {
@@ -548,6 +550,81 @@ async function moveSibling(id, direction) {
   render();
 }
 
+function openMoveToPicker(itemId) {
+  const initialLinks = store.getState().links || [];
+  const item = initialLinks.find((link) => link.id === itemId);
+  if (!item) return;
+  const overlay = document.createElement("div");
+  overlay.className = "quick-links-move-overlay";
+  const panel = document.createElement("section");
+  panel.className = "quick-links-move-panel";
+  panel.setAttribute("role", "dialog");
+  panel.setAttribute("aria-modal", "true");
+  const title = document.createElement("h2");
+  title.textContent = "Move “" + item.name + "”";
+  panel.appendChild(title);
+  const description = document.createElement("p");
+  description.className = "quick-links-move-description";
+  description.textContent = "Choose a destination, then choose where to place it.";
+  panel.appendChild(description);
+  const list = document.createElement("div");
+  list.className = "quick-links-move-list";
+  panel.appendChild(list);
+  const footer = document.createElement("div");
+  footer.className = "quick-links-move-footer";
+  const cancel = document.createElement("button");
+  cancel.type = "button"; cancel.textContent = "Cancel";
+  cancel.addEventListener("click", close);
+  footer.appendChild(cancel); panel.appendChild(footer); overlay.appendChild(panel);
+  document.body.appendChild(overlay);
+  function close() { overlay.remove(); }
+  function choice(label, parentId) {
+    const button = document.createElement("button");
+    button.type = "button"; button.className = "quick-links-move-choice"; button.textContent = label;
+    button.addEventListener("click", () => showPositions(parentId, label)); list.appendChild(button);
+  }
+  function notice(message) { const p = document.createElement("p"); p.className = "quick-links-move-notice"; p.textContent = message; list.appendChild(p); }
+  function showDestinations() {
+    list.replaceChildren(); description.textContent = "Choose a destination folder or the dashboard.";
+    choice("Dashboard", null);
+    const links = store.getState().links || [];
+    links.filter((link) => link.isFolder && link.id !== itemId && !isDescendant(link.id, itemId, links))
+      .forEach((folder) => choice(folder.name, folder.id));
+  }
+  function showPositions(parentId, destinationName) {
+    list.replaceChildren(); description.textContent = "Choose where to place it in " + destinationName + ".";
+    const back = document.createElement("button"); back.type = "button"; back.className = "quick-links-move-back";
+    back.textContent = "← Choose another destination"; back.addEventListener("click", showDestinations); list.appendChild(back);
+    const links = store.getState().links || [];
+    if (parentId && isDescendant(parentId, itemId, links)) return notice("A folder cannot be moved into itself or one of its subfolders.");
+    const destinationDepth = parentId ? getFolderDepth(parentId, links) : 0;
+    const subtreeDepth = item.isFolder ? getSubtreeFolderDepth(itemId, links) : 0;
+    if (destinationDepth + subtreeDepth > 3) return notice("This destination would exceed the maximum folder depth of 3.");
+    const siblings = links.filter((link) => (link.parentId || null) === parentId && link.id !== itemId);
+    const end = document.createElement("button"); end.type = "button"; end.className = "quick-links-move-choice"; end.textContent = "Move to end";
+    end.addEventListener("click", () => commitMove(parentId, null, "end")); list.appendChild(end);
+    siblings.forEach((sibling) => {
+      const before = document.createElement("button"); before.type = "button"; before.className = "quick-links-move-choice"; before.textContent = "Place before “" + sibling.name + "”";
+      before.addEventListener("click", () => commitMove(parentId, sibling.id, "before")); list.appendChild(before);
+      const after = document.createElement("button"); after.type = "button"; after.className = "quick-links-move-choice"; after.textContent = "Place after “" + sibling.name + "”";
+      after.addEventListener("click", () => commitMove(parentId, sibling.id, "after")); list.appendChild(after);
+    });
+  }
+  async function commitMove(parentId, anchorId, placement) {
+    const links = [...(store.getState().links || [])]; const index = links.findIndex((link) => link.id === itemId); if (index < 0) return close();
+    const moving = links[index];
+    if (parentId && isDescendant(parentId, moving.id, links)) return showToast("A folder cannot be moved into itself or one of its subfolders.", "error");
+    const depth = parentId ? getFolderDepth(parentId, links) : 0; const subtree = moving.isFolder ? getSubtreeFolderDepth(moving.id, links) : 0;
+    if (depth + subtree > 3) return showToast("Folder depth limit reached (max 3 levels).", "error");
+    moving.parentId = parentId; links.splice(index, 1);
+    let insertIndex = links.length;
+    if (anchorId) { const anchorIndex = links.findIndex((link) => link.id === anchorId); if (anchorIndex >= 0) insertIndex = anchorIndex + (placement === "after" ? 1 : 0); }
+    else { let last = -1; links.forEach((link, i) => { if ((link.parentId || null) === parentId) last = i; }); insertIndex = last >= 0 ? last + 1 : links.length; }
+    links.splice(insertIndex, 0, moving); await store.setState({ links }); currentFolderId = parentId; close(); render(); showToast("Moved successfully", "success");
+  }
+  overlay.addEventListener("click", (event) => { if (event.target === overlay) close(); });
+  showDestinations(); list.querySelector("button")?.focus();
+}
 function createDragPreview(card, rect) {
   const preview = card.cloneNode(true);
   preview.classList.remove(
