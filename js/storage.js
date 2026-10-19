@@ -118,7 +118,10 @@ function normalizeImportedLinks(links) {
       const name = typeof item.name === "string" ? item.name.trim() : "";
       const isFolder = item.isFolder === true;
       const url = typeof item.url === "string" ? item.url.trim() : "";
-      const parentId = typeof item.parentId === "string" && item.parentId ? item.parentId : null;
+      const parentId =
+        typeof item.parentId === "string" && item.parentId
+          ? item.parentId
+          : null;
       if (!name || !item.id || typeof item.id !== "string") return null;
       if (!isFolder && !url) return null;
       return {
@@ -147,8 +150,14 @@ function normalizeImportedData(data) {
     typeof bgMediaData.base64 === "string" &&
     /^[A-Za-z0-9+/]*={0,2}$/.test(bgMediaData.base64)
       ? {
-          type: typeof bgMediaData.type === "string" ? bgMediaData.type : "application/octet-stream",
-          name: typeof bgMediaData.name === "string" ? bgMediaData.name : "background",
+          type:
+            typeof bgMediaData.type === "string"
+              ? bgMediaData.type
+              : "application/octet-stream",
+          name:
+            typeof bgMediaData.name === "string"
+              ? bgMediaData.name
+              : "background",
           base64: bgMediaData.base64,
         }
       : null;

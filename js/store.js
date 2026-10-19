@@ -279,9 +279,7 @@ export const store = {
     const persistenceTasks = [];
 
     if ("links" in nextState) {
-      persistenceTasks.push(
-        queuePersistence("0fluff_links", state.links),
-      );
+      persistenceTasks.push(queuePersistence("0fluff_links", state.links));
     }
 
     if ("settings" in nextState) {
@@ -298,10 +296,7 @@ export const store = {
 
     if ("expandedFolderIds" in nextState) {
       persistenceTasks.push(
-        queuePersistence(
-          "0fluff_expanded_folders",
-          state.expandedFolderIds,
-        ),
+        queuePersistence("0fluff_expanded_folders", state.expandedFolderIds),
       );
     }
 

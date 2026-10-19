@@ -134,11 +134,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const previewImage = document.getElementById("bgPreviewImage");
     const previewVideo = document.getElementById("bgPreviewVideo");
-    const activeMedia = previewImage && !previewImage.classList.contains("hidden")
-      ? previewImage
-      : previewVideo && !previewVideo.classList.contains("hidden")
-        ? previewVideo
-        : null;
+    const activeMedia =
+      previewImage && !previewImage.classList.contains("hidden")
+        ? previewImage
+        : previewVideo && !previewVideo.classList.contains("hidden")
+          ? previewVideo
+          : null;
 
     if (!activeMedia?.src) return;
 
@@ -246,28 +247,28 @@ document.addEventListener("DOMContentLoaded", async () => {
       engineListScrollIntent = false;
     });
 
-    engineSelectionList.addEventListener("wheel", (event) => {
-      if (
-        engineListScrollIntent ||
-        event.ctrlKey ||
-        event.deltaY === 0
-      ) {
-        return;
-      }
+    engineSelectionList.addEventListener(
+      "wheel",
+      (event) => {
+        if (engineListScrollIntent || event.ctrlKey || event.deltaY === 0) {
+          return;
+        }
 
-      const deltaMultiplier =
-        event.deltaMode === WheelEvent.DOM_DELTA_LINE
-          ? 16
-          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
-            ? window.innerHeight
-            : 1;
+        const deltaMultiplier =
+          event.deltaMode === WheelEvent.DOM_DELTA_LINE
+            ? 16
+            : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+              ? window.innerHeight
+              : 1;
 
-      event.preventDefault();
-      window.scrollBy({
-        top: event.deltaY * deltaMultiplier,
-        behavior: "auto",
-      });
-    }, { passive: false });
+        event.preventDefault();
+        window.scrollBy({
+          top: event.deltaY * deltaMultiplier,
+          behavior: "auto",
+        });
+      },
+      { passive: false },
+    );
   }
 
   const syncScrollbarTheme = () => {

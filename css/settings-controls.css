@@ -164,7 +164,10 @@
    Visual pickers must keep their transparent track instead of becoming a
    large rounded background panel. Theme labels also remain visible. */
 body.material-you .settings-page-shell .clock-style-picker .select-dropdown,
-body.material-you .settings-page-shell .clock-style-picker .select-dropdown.hidden {
+body.material-you
+  .settings-page-shell
+  .clock-style-picker
+  .select-dropdown.hidden {
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;

@@ -83,8 +83,7 @@ function buildSearchIndex(content) {
     .map((node) => {
       if (seen.has(node)) return null;
 
-      const parentRow =
-        node.closest(".setting-row, .setting-option") || node;
+      const parentRow = node.closest(".setting-row, .setting-option") || node;
       const isOption = node.classList.contains("select-option");
       const isEngine = node.classList.contains("engine-list-item");
 
@@ -94,10 +93,10 @@ function buildSearchIndex(content) {
           ? node.querySelector(".engine-item-name")?.textContent.trim()
           : "") ||
         parentRow.querySelector(".setting-header h3")?.textContent.trim() ||
+        parentRow.querySelector(".setting-option-title")?.textContent.trim() ||
         parentRow
-          .querySelector(".setting-option-title")?.textContent.trim() ||
-        parentRow
-          .querySelector(".settings-picker-label-block")?.textContent.trim() ||
+          .querySelector(".settings-picker-label-block")
+          ?.textContent.trim() ||
         parentRow.querySelector("label")?.textContent.trim() ||
         (node.matches("label") ? node.textContent.trim() : "");
 
@@ -263,8 +262,7 @@ export function initSettingsPageSearch() {
       .filter((item) => item.score > 0)
       .sort(
         (a, b) =>
-          b.score - a.score ||
-          a.entry.title.localeCompare(b.entry.title),
+          b.score - a.score || a.entry.title.localeCompare(b.entry.title),
       )
       .slice(0, MAX_RESULTS);
 
@@ -333,9 +331,7 @@ export function initSettingsPageSearch() {
   const revealTarget = (target) => {
     if (!target) return target;
 
-    target
-      .closest("details")
-      ?.toggleAttribute("open", true);
+    target.closest("details")?.toggleAttribute("open", true);
 
     const collapsible = target.closest(
       ".sub-collapsible-content, .settings-subcollapsible-content",
@@ -361,7 +357,10 @@ export function initSettingsPageSearch() {
     }
 
     const customSelect = target.closest(".custom-select");
-    if (customSelect && !customSelect.classList.contains("clock-style-picker")) {
+    if (
+      customSelect &&
+      !customSelect.classList.contains("clock-style-picker")
+    ) {
       const dropdown = customSelect.querySelector(".select-dropdown");
       const trigger = customSelect.querySelector(".select-trigger");
       customSelect.classList.add("open");
@@ -459,8 +458,7 @@ export function initSettingsPageSearch() {
   const moveActive = (direction) => {
     if (!activeResults.length) return;
     const wrapper =
-      activeWrapper ||
-      (mobile.classList.contains("active") ? mobile : desktop);
+      activeWrapper || (mobile.classList.contains("active") ? mobile : desktop);
     const next =
       activeIndex < 0
         ? direction > 0

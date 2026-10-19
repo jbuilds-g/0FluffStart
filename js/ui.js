@@ -36,7 +36,9 @@ function isVideoMedia(media) {
 function getRemoteBackgroundName(url) {
   try {
     const parsed = new URL(url);
-    const name = decodeURIComponent(parsed.pathname.split("/").pop() || "").trim();
+    const name = decodeURIComponent(
+      parsed.pathname.split("/").pop() || "",
+    ).trim();
     return name || parsed.hostname;
   } catch {
     return "Remote media";
@@ -49,7 +51,8 @@ function normalizeBackgroundUrl(value) {
 
   try {
     const parsed = new URL(safeUrl, window.location.href);
-    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:")
+      return null;
     return parsed.href;
   } catch {
     return null;
@@ -64,7 +67,10 @@ function setCustomBackgroundPreviewAspect(card, width, height) {
 async function createCompressedImagePreview(file) {
   const bitmap = await createImageBitmap(file);
   const maxDimension = 1280;
-  const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+  const scale = Math.min(
+    1,
+    maxDimension / Math.max(bitmap.width, bitmap.height),
+  );
   const width = Math.max(1, Math.round(bitmap.width * scale));
   const height = Math.max(1, Math.round(bitmap.height * scale));
   const canvas = document.createElement("canvas");
@@ -82,7 +88,8 @@ async function createCompressedImagePreview(file) {
 
   const blob = await new Promise((resolve, reject) => {
     canvas.toBlob(
-      (result) => (result ? resolve(result) : reject(new Error("Preview encoding failed"))),
+      (result) =>
+        result ? resolve(result) : reject(new Error("Preview encoding failed")),
       "image/webp",
       0.72,
     );
@@ -220,7 +227,6 @@ export function initCustomSelects() {
     const trigger = cs.querySelector(".select-trigger");
     const dropdown = cs.querySelector(".select-dropdown");
     const options = cs.querySelectorAll(".select-option");
-
 
     if (trigger) {
       trigger.setAttribute("role", "combobox");
@@ -617,7 +623,9 @@ export async function updateBackgroundMedia(sourceType, data) {
           bgVideo.src = objectUrl;
           bgVideo.classList.remove("hidden");
           bgVideo.classList.add("active");
-          bgVideo.play().catch((err) => console.warn("Playback prevented:", err));
+          bgVideo
+            .play()
+            .catch((err) => console.warn("Playback prevented:", err));
         }
       } else {
         if (bgVideo) {
@@ -663,7 +671,9 @@ export async function updateBackgroundMedia(sourceType, data) {
           bgVideo.src = url;
           bgVideo.classList.remove("hidden");
           bgVideo.classList.add("active");
-          bgVideo.play().catch((err) => console.warn("Playback prevented:", err));
+          bgVideo
+            .play()
+            .catch((err) => console.warn("Playback prevented:", err));
         }
       } else {
         if (bgVideo) {
@@ -683,7 +693,10 @@ export async function updateBackgroundMedia(sourceType, data) {
       renderCustomBackgroundPreview(url);
       if (resetBtn) resetBtn.classList.remove("hidden");
       if (overlay) overlay.classList.add("bg-overlay-active");
-      materialYouEngine.triggerMaterialYou(store.getState().settings, getBgFromDB);
+      materialYouEngine.triggerMaterialYou(
+        store.getState().settings,
+        getBgFromDB,
+      );
       return true;
     } catch (e) {
       console.error("Failed to apply background URL", e);
@@ -1029,7 +1042,10 @@ export async function loadSettings() {
     } catch (e) {
       console.error("Background load fail:", e);
     }
-  } else if (typeof settings.backgroundImage === "string" && settings.backgroundImage.startsWith("http")) {
+  } else if (
+    typeof settings.backgroundImage === "string" &&
+    settings.backgroundImage.startsWith("http")
+  ) {
     const url = settings.backgroundImage;
     const isVideo = isVideoMedia(url);
     materialYouEngine.revokeActiveObjectUrl();

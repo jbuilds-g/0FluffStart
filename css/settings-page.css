@@ -311,7 +311,6 @@ body > .bg-video {
   }
 }
 
-
 .bg-preview-card {
   cursor: pointer;
 }
@@ -1190,7 +1189,10 @@ body > .bg-video {
     padding-inline: 6px;
   }
 
-  #linkManagerContent .link-manager-item > .link-actions > button:not(.delete-btn):not(.secondary),
+  #linkManagerContent
+    .link-manager-item
+    > .link-actions
+    > button:not(.delete-btn):not(.secondary),
   #linkManagerContent .link-manager-item > .link-actions > .move-out-btn {
     grid-column: 4;
     grid-row: 1;
@@ -1283,7 +1285,6 @@ body > .bg-video {
   }
 }
 
-
 /* Pass 4: concise, setting-specific helper copy and consistent control hierarchy. */
 .settings-page-shell .setting-option {
   display: grid;
@@ -1341,7 +1342,6 @@ body > .bg-video {
   }
 }
 
-
 /* Pass 5: keep all Settings helper copy inside the same contextual help card. */
 .settings-page-shell .setting-option-help {
   display: grid;
@@ -1377,7 +1377,6 @@ body > .bg-video {
     padding: 12px;
   }
 }
-
 
 .quick-link-manager-launch {
   display: flex;

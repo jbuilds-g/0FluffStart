@@ -10,25 +10,46 @@
   <body class="dark quick-links-body">
     <div id="bgOverlay" class="bg-overlay"></div>
     <div id="bgImage" class="bg-image hidden"></div>
-    <video id="bgVideo" class="bg-video hidden" loop muted autoplay playsinline></video>
+    <video
+      id="bgVideo"
+      class="bg-video hidden"
+      loop
+      muted
+      autoplay
+      playsinline
+    ></video>
 
     <main class="quick-links-page">
       <header class="quick-links-header">
         <div>
-          <a class="quick-links-back" href="./settings.html#links-dashboard">← Settings</a>
+          <a class="quick-links-back" href="./settings.html#links-dashboard"
+            >← Settings</a
+          >
           <h1>Quick Links</h1>
           <p>Organize your dashboard links and folders.</p>
         </div>
       </header>
 
       <div class="quick-links-toolbar">
-        <button id="rootBtn" class="quick-links-breadcrumb" type="button">Dashboard</button>
-        <span id="breadcrumbSeparator" class="quick-links-breadcrumb-separator hidden">/</span>
+        <button id="rootBtn" class="quick-links-breadcrumb" type="button">
+          Dashboard
+        </button>
+        <span
+          id="breadcrumbSeparator"
+          class="quick-links-breadcrumb-separator hidden"
+          >/</span
+        >
         <div id="breadcrumbs" class="quick-links-breadcrumbs"></div>
       </div>
 
-      <section id="quickLinksGrid" class="quick-links-grid" aria-label="Quick links"></section>
-      <p id="emptyState" class="quick-links-empty hidden">No links or folders here yet.</p>
+      <section
+        id="quickLinksGrid"
+        class="quick-links-grid"
+        aria-label="Quick links"
+      ></section>
+      <p id="emptyState" class="quick-links-empty hidden">
+        No links or folders here yet.
+      </p>
     </main>
 
     <div id="customCursorEngine" class="custom-cursor" aria-hidden="true">
@@ -38,16 +59,28 @@
     <div id="toastContainer" class="toast-container"></div>
     <div class="modal" id="customDialogModal">
       <div class="modal-content custom-dialog-content">
-        <h3 id="customDialogTitle" class="custom-dialog-title">Are you sure?</h3>
+        <h3 id="customDialogTitle" class="custom-dialog-title">
+          Are you sure?
+        </h3>
         <p id="customDialogMessage" class="custom-dialog-message"></p>
         <div class="action-btn-row">
-          <button id="customDialogCancelBtn" class="secondary" type="button">Cancel</button>
-          <button id="customDialogConfirmBtn" class="save-btn" type="button">Confirm</button>
+          <button id="customDialogCancelBtn" class="secondary" type="button">
+            Cancel
+          </button>
+          <button id="customDialogConfirmBtn" class="save-btn" type="button">
+            Confirm
+          </button>
         </div>
       </div>
     </div>
 
-    <div id="linkEditorModal" class="quick-links-editor hidden" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+    <div
+      id="linkEditorModal"
+      class="quick-links-editor hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="editorTitle"
+    >
       <div class="quick-links-editor-card">
         <h2 id="editorTitle">Add Link</h2>
         <label>
@@ -56,10 +89,17 @@
         </label>
         <label id="editUrlRow">
           URL
-          <input id="editUrl" type="url" autocomplete="url" placeholder="https://example.com" />
+          <input
+            id="editUrl"
+            type="url"
+            autocomplete="url"
+            placeholder="https://example.com"
+          />
         </label>
         <div class="quick-links-editor-actions">
-          <button id="cancelEditBtn" class="secondary" type="button">Cancel</button>
+          <button id="cancelEditBtn" class="secondary" type="button">
+            Cancel
+          </button>
           <button id="saveLinkBtn" class="save-btn" type="button">Save</button>
         </div>
       </div>

@@ -76,13 +76,25 @@ export class CustomCursorEngine {
   }
 
   bindEvents() {
-    window.addEventListener("pointermove", this.onPointerMove, { passive: true });
-    window.addEventListener("pointerdown", this.onPointerDown, { passive: true });
+    window.addEventListener("pointermove", this.onPointerMove, {
+      passive: true,
+    });
+    window.addEventListener("pointerdown", this.onPointerDown, {
+      passive: true,
+    });
     window.addEventListener("pointerup", this.onPointerUp, { passive: true });
-    document.body.addEventListener("pointerover", this.onPointerOver, { passive: true });
-    document.body.addEventListener("pointerout", this.onPointerOut, { passive: true });
-    document.documentElement.addEventListener("mouseleave", this.onLeave, { passive: true });
-    document.documentElement.addEventListener("mouseenter", this.onEnter, { passive: true });
+    document.body.addEventListener("pointerover", this.onPointerOver, {
+      passive: true,
+    });
+    document.body.addEventListener("pointerout", this.onPointerOut, {
+      passive: true,
+    });
+    document.documentElement.addEventListener("mouseleave", this.onLeave, {
+      passive: true,
+    });
+    document.documentElement.addEventListener("mouseenter", this.onEnter, {
+      passive: true,
+    });
     window.addEventListener("blur", this.onLeave, { passive: true });
   }
 
@@ -124,21 +136,39 @@ export class CustomCursorEngine {
 
   updateCursorForElement(element) {
     if (!element || !this.iconEl || this.isDragging) return;
-    const textInput = element.closest("input[type='text'], input[type='url'], input[type='number'], textarea, [contenteditable='true']");
+    const textInput = element.closest(
+      "input[type='text'], input[type='url'], input[type='number'], textarea, [contenteditable='true']",
+    );
     const dragHandle = element.closest(".drag-handle, .quick-link-drag-handle");
-    const interactive = element.closest("a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .suggestion-item, .suggestions-container *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content, .floating-btn, .back-btn, .back-pill, .back-icon-circle, .modal-close, [role='button']");
-    const isTextElement = element.closest("p, h1, h2, h3, h4, h5, h6, .link-grid .link-name, .greeting, .clock, code, .help-text");
-    const computedStyle = isTextElement ? window.getComputedStyle(isTextElement) : null;
-    const isSelectableText = isTextElement && computedStyle && computedStyle.userSelect !== "none" && isTextElement.textContent.trim().length > 0;
+    const interactive = element.closest(
+      "a, button, select, label, summary, input[type='checkbox'], input[type='radio'], input[type='range'], .link-item, .icon-btn, .custom-select, .select-trigger, .select-option, .engine-btn, .engine-dropdown, .engine-dropdown *, .suggestion-item, .suggestions-container *, .radio-option, .is-folder-item, .folder-toggle, .sub-collapsible-content, .floating-btn, .back-btn, .back-pill, .back-icon-circle, .modal-close, [role='button']",
+    );
+    const isTextElement = element.closest(
+      "p, h1, h2, h3, h4, h5, h6, .link-grid .link-name, .greeting, .clock, code, .help-text",
+    );
+    const computedStyle = isTextElement
+      ? window.getComputedStyle(isTextElement)
+      : null;
+    const isSelectableText =
+      isTextElement &&
+      computedStyle &&
+      computedStyle.userSelect !== "none" &&
+      isTextElement.textContent.trim().length > 0;
 
-    if (textInput || isSelectableText) this.setCursorClass("icon-text-i-beam-cursor");
+    if (textInput || isSelectableText)
+      this.setCursorClass("icon-text-i-beam-cursor");
     else if (dragHandle) this.setCursorClass("icon-drag-grip-cursor");
-    else if (interactive) this.setCursorClass("icon-interactive-hover-ring-target");
+    else if (interactive)
+      this.setCursorClass("icon-interactive-hover-ring-target");
     else this.setCursorClass("icon-default-mouse-pointer");
   }
 
-  onLeave() { this.setVisible(false); }
-  onEnter() { this.setVisible(true); }
+  onLeave() {
+    this.setVisible(false);
+  }
+  onEnter() {
+    this.setVisible(true);
+  }
 
   setVisible(visible) {
     this.isVisible = visible;
@@ -149,7 +179,8 @@ export class CustomCursorEngine {
       this.container.classList.remove("is-visible");
       this.container.setAttribute("aria-hidden", "true");
     }
-    if (this.isEnabled) document.documentElement.setAttribute("data-custom-cursor", "active");
+    if (this.isEnabled)
+      document.documentElement.setAttribute("data-custom-cursor", "active");
     else document.documentElement.removeAttribute("data-custom-cursor");
   }
 
@@ -158,8 +189,12 @@ export class CustomCursorEngine {
     this.toggleEnabled(false);
   }
 
-  setCursorClass(className) { this.iconEl.className = `custom-cursor-icon ${className}`; }
-  setDragState(dragging) { this.isDragging = dragging; }
+  setCursorClass(className) {
+    this.iconEl.className = `custom-cursor-icon ${className}`;
+  }
+  setDragState(dragging) {
+    this.isDragging = dragging;
+  }
 
   startLoop() {
     if (this.rafId !== null) return;

@@ -42,11 +42,20 @@ export class CustomScrollbarManager {
 
   bindEvents() {
     window.addEventListener("resize", this.onWindowResize, { passive: true });
-    window.addEventListener("scroll", this.onScroll, { passive: true, capture: true });
-    document.addEventListener("pointerdown", this.onPointerDown, { passive: false });
-    window.addEventListener("pointermove", this.onPointerMove, { passive: false });
+    window.addEventListener("scroll", this.onScroll, {
+      passive: true,
+      capture: true,
+    });
+    document.addEventListener("pointerdown", this.onPointerDown, {
+      passive: false,
+    });
+    window.addEventListener("pointermove", this.onPointerMove, {
+      passive: false,
+    });
     window.addEventListener("pointerup", this.onPointerUp, { passive: true });
-    window.addEventListener("pointercancel", this.onPointerUp, { passive: true });
+    window.addEventListener("pointercancel", this.onPointerUp, {
+      passive: true,
+    });
   }
 
   unbindEvents() {
@@ -58,8 +67,12 @@ export class CustomScrollbarManager {
     window.removeEventListener("pointercancel", this.onPointerUp);
   }
 
-  onWindowResize() { this.scheduleRefresh(); }
-  onScroll() { this.scheduleUpdate(); }
+  onWindowResize() {
+    this.scheduleRefresh();
+  }
+  onScroll() {
+    this.scheduleUpdate();
+  }
 
   scheduleRefresh() {
     if (this.rafId !== null) return;
@@ -123,12 +136,25 @@ export class CustomScrollbarManager {
   getMetrics(host) {
     const isRoot = host === document.scrollingElement;
     const rect = isRoot
-      ? { top: 0, left: 0, right: window.innerWidth, bottom: window.innerHeight, width: window.innerWidth, height: window.innerHeight }
+      ? {
+          top: 0,
+          left: 0,
+          right: window.innerWidth,
+          bottom: window.innerHeight,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        }
       : host.getBoundingClientRect();
 
     if (isRoot) {
-      const contentWidth = Math.max(document.documentElement.scrollWidth, document.body?.scrollWidth || 0);
-      const contentHeight = Math.max(document.documentElement.scrollHeight, document.body?.scrollHeight || 0);
+      const contentWidth = Math.max(
+        document.documentElement.scrollWidth,
+        document.body?.scrollWidth || 0,
+      );
+      const contentHeight = Math.max(
+        document.documentElement.scrollHeight,
+        document.body?.scrollHeight || 0,
+      );
       return {
         isRoot: true,
         rect,
@@ -171,11 +197,39 @@ export class CustomScrollbarManager {
     const inset = isRoot ? 4 : 2;
     const thickness = 8;
 
-    this.positionTrack(entry.vertical, rect.right - thickness - inset, rect.top + inset, thickness, Math.max(0, rect.height - inset * 2), metrics.vertical);
-    this.positionTrack(entry.horizontal, rect.left + inset, rect.bottom - thickness - inset, Math.max(0, rect.width - inset * 2), thickness, metrics.horizontal);
+    this.positionTrack(
+      entry.vertical,
+      rect.right - thickness - inset,
+      rect.top + inset,
+      thickness,
+      Math.max(0, rect.height - inset * 2),
+      metrics.vertical,
+    );
+    this.positionTrack(
+      entry.horizontal,
+      rect.left + inset,
+      rect.bottom - thickness - inset,
+      Math.max(0, rect.width - inset * 2),
+      thickness,
+      metrics.horizontal,
+    );
 
-    this.updateThumb(host, entry.vertical, entry.verticalThumb, "vertical", metrics.vertical, isRoot);
-    this.updateThumb(host, entry.horizontal, entry.horizontalThumb, "horizontal", metrics.horizontal, isRoot);
+    this.updateThumb(
+      host,
+      entry.vertical,
+      entry.verticalThumb,
+      "vertical",
+      metrics.vertical,
+      isRoot,
+    );
+    this.updateThumb(
+      host,
+      entry.horizontal,
+      entry.horizontalThumb,
+      "horizontal",
+      metrics.horizontal,
+      isRoot,
+    );
   }
 
   positionTrack(track, left, top, width, height, visible) {
@@ -189,30 +243,62 @@ export class CustomScrollbarManager {
 
   getScrollState(host, axis, isRoot) {
     if (isRoot) {
-      const contentWidth = Math.max(document.documentElement.scrollWidth, document.body?.scrollWidth || 0);
-      const contentHeight = Math.max(document.documentElement.scrollHeight, document.body?.scrollHeight || 0);
+      const contentWidth = Math.max(
+        document.documentElement.scrollWidth,
+        document.body?.scrollWidth || 0,
+      );
+      const contentHeight = Math.max(
+        document.documentElement.scrollHeight,
+        document.body?.scrollHeight || 0,
+      );
       return axis === "vertical"
-        ? { viewport: window.innerHeight, content: contentHeight, scroll: window.scrollY }
-        : { viewport: window.innerWidth, content: contentWidth, scroll: window.scrollX };
+        ? {
+            viewport: window.innerHeight,
+            content: contentHeight,
+            scroll: window.scrollY,
+          }
+        : {
+            viewport: window.innerWidth,
+            content: contentWidth,
+            scroll: window.scrollX,
+          };
     }
 
     return axis === "vertical"
-      ? { viewport: host.clientHeight, content: host.scrollHeight, scroll: host.scrollTop }
-      : { viewport: host.clientWidth, content: host.scrollWidth, scroll: host.scrollLeft };
+      ? {
+          viewport: host.clientHeight,
+          content: host.scrollHeight,
+          scroll: host.scrollTop,
+        }
+      : {
+          viewport: host.clientWidth,
+          content: host.scrollWidth,
+          scroll: host.scrollLeft,
+        };
   }
 
   updateThumb(host, track, thumb, axis, visible, isRoot) {
     if (!visible) return;
 
     const vertical = axis === "vertical";
-    const { viewport, content, scroll } = this.getScrollState(host, axis, isRoot);
+    const { viewport, content, scroll } = this.getScrollState(
+      host,
+      axis,
+      isRoot,
+    );
     const trackSize = vertical ? track.clientHeight : track.clientWidth;
     if (trackSize <= 0 || content <= viewport) return;
 
-    const thumbSize = Math.max(28, Math.round((viewport / content) * trackSize));
+    const thumbSize = Math.max(
+      28,
+      Math.round((viewport / content) * trackSize),
+    );
     const maxOffset = Math.max(0, trackSize - thumbSize);
     const maxScroll = Math.max(1, content - viewport);
-    const offset = Math.min(maxOffset, Math.max(0, (scroll / maxScroll) * maxOffset));
+    const offset = Math.min(
+      maxOffset,
+      Math.max(0, (scroll / maxScroll) * maxOffset),
+    );
 
     if (vertical) {
       thumb.style.height = `${thumbSize}px`;
@@ -229,8 +315,20 @@ export class CustomScrollbarManager {
     const element = target.closest?.(".custom-scrollbar");
     if (!element) return null;
     for (const entry of this.entries.values()) {
-      if (entry.vertical === element) return { entry, axis: "vertical", track: entry.vertical, thumb: entry.verticalThumb };
-      if (entry.horizontal === element) return { entry, axis: "horizontal", track: entry.horizontal, thumb: entry.horizontalThumb };
+      if (entry.vertical === element)
+        return {
+          entry,
+          axis: "vertical",
+          track: entry.vertical,
+          thumb: entry.verticalThumb,
+        };
+      if (entry.horizontal === element)
+        return {
+          entry,
+          axis: "horizontal",
+          track: entry.horizontal,
+          thumb: entry.horizontalThumb,
+        };
     }
     return null;
   }
@@ -261,14 +359,21 @@ export class CustomScrollbarManager {
     const pointer = isVertical ? event.clientY : event.clientX;
     const thumbStart = isVertical ? thumbRect.top : thumbRect.left;
     const thumbSize = isVertical ? thumbRect.height : thumbRect.width;
-    const { viewport, content, scroll } = this.getScrollState(host, axis, isRoot);
+    const { viewport, content, scroll } = this.getScrollState(
+      host,
+      axis,
+      isRoot,
+    );
     const maxScroll = Math.max(0, content - viewport);
 
     if (event.target !== thumb) {
       const trackStart = isVertical ? trackRect.top : trackRect.left;
       const trackSize = isVertical ? trackRect.height : trackRect.width;
       const usable = Math.max(1, trackSize - thumbSize);
-      const position = Math.min(1, Math.max(0, (pointer - trackStart - thumbSize / 2) / usable));
+      const position = Math.min(
+        1,
+        Math.max(0, (pointer - trackStart - thumbSize / 2) / usable),
+      );
       this.setHostScroll(host, axis, position * maxScroll);
       this.scheduleUpdate();
       event.preventDefault();
@@ -299,10 +404,22 @@ export class CustomScrollbarManager {
   onPointerMove(event) {
     if (!this.drag || event.pointerId !== this.drag.pointerId) return;
 
-    const { axis, trackStart, trackSize, thumbSize, maxScroll, host, isRoot, grabOffset } = this.drag;
+    const {
+      axis,
+      trackStart,
+      trackSize,
+      thumbSize,
+      maxScroll,
+      host,
+      isRoot,
+      grabOffset,
+    } = this.drag;
     const pointer = axis === "vertical" ? event.clientY : event.clientX;
     const usable = Math.max(1, trackSize - thumbSize);
-    const thumbPosition = Math.min(usable, Math.max(0, pointer - trackStart - grabOffset));
+    const thumbPosition = Math.min(
+      usable,
+      Math.max(0, pointer - trackStart - grabOffset),
+    );
     const scroll = maxScroll > 0 ? (thumbPosition / usable) * maxScroll : 0;
 
     this.setHostScroll(host, axis, scroll);

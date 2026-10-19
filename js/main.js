@@ -655,10 +655,11 @@ function bindStaticEvents() {
 
   const bgUrlInput = document.getElementById("bgUrlInput");
   if (bgUrlInput) {
-    let lastAppliedUrl =
-      store.getState().settings?.backgroundImage?.startsWith("http")
-        ? store.getState().settings.backgroundImage
-        : "";
+    let lastAppliedUrl = store
+      .getState()
+      .settings?.backgroundImage?.startsWith("http")
+      ? store.getState().settings.backgroundImage
+      : "";
 
     const applyBackgroundUrl = async () => {
       const value = bgUrlInput.value.trim();

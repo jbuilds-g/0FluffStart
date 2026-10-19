@@ -18,7 +18,12 @@ export function installQuickLinksDragEngine({
 
   const cardSelector = ".quick-link-card";
   const addSelector = ".quick-link-add-card";
-  const visualClasses = ["drag-over", "drag-enter-folder", "drop-before", "drop-after"];
+  const visualClasses = [
+    "drag-over",
+    "drag-enter-folder",
+    "drop-before",
+    "drop-after",
+  ];
 
   function removeFeedback(activeSession = session) {
     grid.querySelectorAll(cardSelector).forEach((card) => {
@@ -43,13 +48,15 @@ export function installQuickLinksDragEngine({
       const dx = before.left - after.left;
       const dy = before.top - after.top;
       if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
-      animations.push(card.animate(
-        [
-          { transform: `translate(${dx}px, ${dy}px)` },
-          { transform: "translate(0, 0)" },
-        ],
-        { duration: 190, easing: "cubic-bezier(0.2, 0, 0, 1)" },
-      ));
+      animations.push(
+        card.animate(
+          [
+            { transform: `translate(${dx}px, ${dy}px)` },
+            { transform: "translate(0, 0)" },
+          ],
+          { duration: 190, easing: "cubic-bezier(0.2, 0, 0, 1)" },
+        ),
+      );
     });
     return animations;
   }
@@ -64,7 +71,11 @@ export function installQuickLinksDragEngine({
   }
 
   function insertDropSlot(activeSession, target, feedbackCard) {
-    if (!feedbackCard || !target || !["before", "after"].includes(target.position)) {
+    if (
+      !feedbackCard ||
+      !target ||
+      !["before", "after"].includes(target.position)
+    ) {
       return;
     }
 
@@ -155,7 +166,9 @@ export function installQuickLinksDragEngine({
   function makeRows(cards) {
     const rows = [];
     cards.forEach((entry) => {
-      let row = rows.find((candidate) => Math.abs(candidate.top - entry.rect.top) <= 3);
+      let row = rows.find(
+        (candidate) => Math.abs(candidate.top - entry.rect.top) <= 3,
+      );
       if (!row) {
         row = { top: entry.rect.top, bottom: entry.rect.bottom, entries: [] };
         rows.push(row);
@@ -165,21 +178,32 @@ export function installQuickLinksDragEngine({
       row.entries.push(entry);
     });
     rows.sort((a, b) => a.top - b.top);
-    rows.forEach((row) => row.entries.sort((a, b) => a.rect.left - b.rect.left));
+    rows.forEach((row) =>
+      row.entries.sort((a, b) => a.rect.left - b.rect.left),
+    );
     return rows;
   }
 
   function resolveTarget(x, y, activeSession) {
     const cards = [...grid.querySelectorAll(cardSelector)]
       .filter((card) => card !== activeSession.source && card.isConnected)
-      .map((card) => ({ card, id: card.dataset.id, rect: card.getBoundingClientRect() }))
+      .map((card) => ({
+        card,
+        id: card.dataset.id,
+        rect: card.getBoundingClientRect(),
+      }))
       .filter((entry) => entry.rect.width > 0 && entry.rect.height > 0);
 
     // Add tiles are explicit append targets. The screen outside actual drop
     // zones is never treated as an implicit destination.
     for (const addCard of grid.querySelectorAll(addSelector)) {
       const rect = addCard.getBoundingClientRect();
-      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+      if (
+        x >= rect.left &&
+        x <= rect.right &&
+        y >= rect.top &&
+        y <= rect.bottom
+      ) {
         const anchorSelector = addCard.classList.contains("quick-link-add-link")
           ? ".quick-link-add-link"
           : ".quick-link-add-folder";
@@ -193,8 +217,9 @@ export function installQuickLinksDragEngine({
     }
 
     // Dropping in the middle of a folder means move into that folder.
-    const hovered = cards.find(({ rect }) =>
-      x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom,
+    const hovered = cards.find(
+      ({ rect }) =>
+        x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom,
     );
     if (hovered) {
       const link = (getLinks() || []).find((item) => item.id === hovered.id);
@@ -222,7 +247,8 @@ export function installQuickLinksDragEngine({
     let rowIndex = -1;
     let rowDistance = Infinity;
     rows.forEach((row, index) => {
-      const distance = y < row.top ? row.top - y : y > row.bottom ? y - row.bottom : 0;
+      const distance =
+        y < row.top ? row.top - y : y > row.bottom ? y - row.bottom : 0;
       if (distance < rowDistance) {
         rowDistance = distance;
         rowIndex = index;
@@ -242,11 +268,7 @@ export function installQuickLinksDragEngine({
     // the gaps between cards), compare against card midpoints to resolve an
     // insertion point rather than requiring a hit on a card itself.
     const nextRow = rows[rowIndex + 1];
-    if (
-      nextRow &&
-      y > row.bottom &&
-      y >= (row.bottom + nextRow.top) / 2
-    ) {
+    if (nextRow && y > row.bottom && y >= (row.bottom + nextRow.top) / 2) {
       const nextFirst = nextRow.entries[0];
       return {
         target: { id: nextFirst.id, position: "before" },
@@ -254,7 +276,9 @@ export function installQuickLinksDragEngine({
       };
     }
 
-    const next = row.entries.find((entry) => x < entry.rect.left + entry.rect.width / 2);
+    const next = row.entries.find(
+      (entry) => x < entry.rect.left + entry.rect.width / 2,
+    );
     if (next) {
       return {
         target: { id: next.id, position: "before" },
@@ -288,19 +312,30 @@ export function installQuickLinksDragEngine({
     // Since the source stays in the grid as a faded placeholder, inserting
     // before its next sibling (or after its previous sibling) is still the
     // original position and must not display a drop slot.
-    if (target.position === "before" || target.position === "after" ||
-        target.position === "root-end" || target.position === "append") {
-      const orderedCards = [...grid.querySelectorAll(cardSelector)]
-        .filter((card) => card.isConnected);
+    if (
+      target.position === "before" ||
+      target.position === "after" ||
+      target.position === "root-end" ||
+      target.position === "append"
+    ) {
+      const orderedCards = [...grid.querySelectorAll(cardSelector)].filter(
+        (card) => card.isConnected,
+      );
       const sourceIndex = orderedCards.indexOf(activeSession.source);
-      const remainingCards = orderedCards.filter((card) => card !== activeSession.source);
+      const remainingCards = orderedCards.filter(
+        (card) => card !== activeSession.source,
+      );
       let destinationIndex = remainingCards.length;
 
       if (target.position === "before") {
-        const targetIndex = remainingCards.findIndex((card) => card.dataset.id === target.id);
+        const targetIndex = remainingCards.findIndex(
+          (card) => card.dataset.id === target.id,
+        );
         if (targetIndex >= 0) destinationIndex = targetIndex;
       } else if (target.position === "after") {
-        const targetIndex = remainingCards.findIndex((card) => card.dataset.id === target.id);
+        const targetIndex = remainingCards.findIndex(
+          (card) => card.dataset.id === target.id,
+        );
         if (targetIndex >= 0) destinationIndex = targetIndex + 1;
       }
 
@@ -312,7 +347,11 @@ export function installQuickLinksDragEngine({
       insertDropSlot(activeSession, target, feedbackCard);
     } else if (target.position === "root-end" || target.position === "append") {
       if (feedbackCard) {
-        insertDropSlot(activeSession, { ...target, position: "after" }, feedbackCard);
+        insertDropSlot(
+          activeSession,
+          { ...target, position: "after" },
+          feedbackCard,
+        );
       } else {
         showAppendFeedback(activeSession, target.anchorSelector);
       }
@@ -321,8 +360,10 @@ export function installQuickLinksDragEngine({
 
   function updatePreview(activeSession, event) {
     if (!activeSession.preview) return;
-    activeSession.preview.style.left = event.clientX - activeSession.offsetX + "px";
-    activeSession.preview.style.top = event.clientY - activeSession.offsetY + "px";
+    activeSession.preview.style.left =
+      event.clientX - activeSession.offsetX + "px";
+    activeSession.preview.style.top =
+      event.clientY - activeSession.offsetY + "px";
   }
 
   function updateAutoScroll(activeSession) {
@@ -335,7 +376,9 @@ export function installQuickLinksDragEngine({
       let step = 0;
       if (y < edge) step = -Math.ceil(Math.min(1, (edge - y) / edge) * 10);
       else if (y > window.innerHeight - edge) {
-        step = Math.ceil(Math.min(1, (y - (window.innerHeight - edge)) / edge) * 10);
+        step = Math.ceil(
+          Math.min(1, (y - (window.innerHeight - edge)) / edge) * 10,
+        );
       }
 
       if (step) {
@@ -344,7 +387,11 @@ export function installQuickLinksDragEngine({
           clientX: activeSession.lastX,
           clientY: activeSession.lastY,
         });
-        const resolved = resolveTarget(activeSession.lastX, activeSession.lastY, activeSession);
+        const resolved = resolveTarget(
+          activeSession.lastX,
+          activeSession.lastY,
+          activeSession,
+        );
         activeSession.resolved = resolved?.target || null;
         updateFeedback(activeSession, resolved);
         activeSession.autoScrollFrame = requestAnimationFrame(tick);
@@ -359,7 +406,8 @@ export function installQuickLinksDragEngine({
   function cleanup(activeSession, { suppressClick = false } = {}) {
     if (!activeSession || activeSession.finished) return;
     activeSession.finished = true;
-    if (activeSession.autoScrollFrame) cancelAnimationFrame(activeSession.autoScrollFrame);
+    if (activeSession.autoScrollFrame)
+      cancelAnimationFrame(activeSession.autoScrollFrame);
 
     window.removeEventListener("pointermove", activeSession.onMove);
     window.removeEventListener("pointerup", activeSession.onUp);
@@ -368,8 +416,12 @@ export function installQuickLinksDragEngine({
     window.removeEventListener("scroll", activeSession.onScroll, true);
 
     try {
-      if (activeSession.captureTarget.hasPointerCapture?.(activeSession.pointerId)) {
-        activeSession.captureTarget.releasePointerCapture(activeSession.pointerId);
+      if (
+        activeSession.captureTarget.hasPointerCapture?.(activeSession.pointerId)
+      ) {
+        activeSession.captureTarget.releasePointerCapture(
+          activeSession.pointerId,
+        );
       }
     } catch {
       // The browser may already have released capture after pointerup/cancel.
@@ -423,7 +475,12 @@ export function installQuickLinksDragEngine({
     }
 
     activeSession.onMove = (moveEvent) => {
-      if (session !== activeSession || activeSession.finished || moveEvent.pointerId !== activeSession.pointerId) return;
+      if (
+        session !== activeSession ||
+        activeSession.finished ||
+        moveEvent.pointerId !== activeSession.pointerId
+      )
+        return;
       activeSession.lastX = moveEvent.clientX;
       activeSession.lastY = moveEvent.clientY;
 
@@ -443,18 +500,31 @@ export function installQuickLinksDragEngine({
       moveEvent.preventDefault();
       updatePreview(activeSession, moveEvent);
 
-      const resolved = resolveTarget(moveEvent.clientX, moveEvent.clientY, activeSession);
+      const resolved = resolveTarget(
+        moveEvent.clientX,
+        moveEvent.clientY,
+        activeSession,
+      );
       activeSession.resolved = resolved?.target || null;
       updateFeedback(activeSession, resolved);
       updateAutoScroll(activeSession);
     };
 
     activeSession.onUp = async (upEvent) => {
-      if (session !== activeSession || activeSession.finished || upEvent.pointerId !== activeSession.pointerId) return;
+      if (
+        session !== activeSession ||
+        activeSession.finished ||
+        upEvent.pointerId !== activeSession.pointerId
+      )
+        return;
 
       let target = null;
       if (activeSession.started) {
-        const resolved = resolveTarget(upEvent.clientX, upEvent.clientY, activeSession);
+        const resolved = resolveTarget(
+          upEvent.clientX,
+          upEvent.clientY,
+          activeSession,
+        );
         target = resolved?.target || null;
       }
       const draggedId = card.dataset.id;
@@ -470,15 +540,22 @@ export function installQuickLinksDragEngine({
       }
     };
 
-    activeSession.onCancel = () => cleanup(activeSession, { suppressClick: activeSession.started });
+    activeSession.onCancel = () =>
+      cleanup(activeSession, { suppressClick: activeSession.started });
     activeSession.onScroll = () => {
       if (session !== activeSession || !activeSession.started) return;
-      const resolved = resolveTarget(activeSession.lastX, activeSession.lastY, activeSession);
+      const resolved = resolveTarget(
+        activeSession.lastX,
+        activeSession.lastY,
+        activeSession,
+      );
       activeSession.resolved = resolved?.target || null;
       updateFeedback(activeSession, resolved);
     };
 
-    window.addEventListener("pointermove", activeSession.onMove, { passive: false });
+    window.addEventListener("pointermove", activeSession.onMove, {
+      passive: false,
+    });
     window.addEventListener("pointerup", activeSession.onUp);
     window.addEventListener("pointercancel", activeSession.onCancel);
     window.addEventListener("blur", activeSession.onCancel);
