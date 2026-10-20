@@ -433,16 +433,17 @@ body.quick-links-body .quick-links-page {
 }
 .quick-link-desktop-action-menu {
   position: absolute;
-  top: 32px;
+  top: 34px;
   right: 0;
   z-index: 1200;
   display: grid;
-  gap: 3px;
-  width: 184px;
+  gap: 5px;
+  width: 214px;
+  max-width: calc(100vw - 24px);
   box-sizing: border-box;
-  padding: 5px;
+  padding: 8px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: calc(var(--radius) + 4px);
   background: var(--card);
   color: var(--text);
   box-shadow: var(--shadow-lg);
@@ -451,24 +452,53 @@ body.quick-links-body .quick-links-page {
   display: none;
 }
 .quick-link-desktop-action-menu button {
-  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  box-sizing: border-box;
   padding: 7px 10px;
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--card) 92%, var(--text));
   color: var(--text);
   text-align: left;
   font: inherit;
   font-size: var(--font-size-sm);
+  line-height: 1.25;
+  white-space: nowrap;
   cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+.quick-link-desktop-action-menu button .icon-mask {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  background-color: currentColor;
+}
+.quick-link-desktop-action-menu button .quick-link-action-label {
+  min-width: 0;
+  white-space: nowrap;
 }
 .quick-link-desktop-action-menu button:hover,
 .quick-link-desktop-action-menu button:focus-visible {
   background: color-mix(in srgb, var(--accent) 12%, var(--card));
+  border-color: var(--accent);
+  color: var(--accent);
   outline: none;
 }
 .quick-link-desktop-action-menu button[data-action="delete"] {
   color: var(--delete);
+}
+.quick-link-desktop-action-menu button[data-action="delete"]:hover,
+.quick-link-desktop-action-menu button[data-action="delete"]:focus-visible {
+  border-color: var(--delete);
+  background: color-mix(in srgb, var(--delete) 10%, var(--card));
 }
 
 .quick-link-drag-handle {
