@@ -866,6 +866,11 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
     scrolling: false,
   };
   const session = dragState;
+  const preventNativeTouchUI = (nativeEvent) => {
+    if (session.started || card.classList.contains("is-long-pressing")) {
+      nativeEvent.preventDefault();
+    }
+  };
   const captureTarget = event.currentTarget || handle;
   try {
     captureTarget.setPointerCapture?.(pointerId);
@@ -880,6 +885,8 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
     card.removeEventListener("click", suppressClickAfterDrag, true);
   };
   card.addEventListener("click", suppressClickAfterDrag, true);
+  document.addEventListener("contextmenu", preventNativeTouchUI, true);
+  document.addEventListener("selectstart", preventNativeTouchUI, true);
 
   const beginDrag = (startEvent) => {
     if (finished || session.started) return;
@@ -973,6 +980,8 @@ function startDrag(event, link, card, handle, { longPress = false } = {}) {
     window.customCursorInstance?.updateCursorForElement(
       document.elementFromPoint(session.lastX, session.lastY),
     );
+    document.removeEventListener("contextmenu", preventNativeTouchUI, true);
+    document.removeEventListener("selectstart", preventNativeTouchUI, true);
     window.removeEventListener("pointermove", onMove);
     window.removeEventListener("pointerup", onUp);
     window.removeEventListener("pointercancel", onCancel);
