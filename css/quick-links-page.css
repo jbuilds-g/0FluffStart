@@ -367,6 +367,7 @@ body.quick-links-body .quick-links-page {
   position: absolute;
   top: 2px;
   right: 2px;
+  z-index: 6;
   display: flex;
   gap: 3px;
   opacity: 0;
@@ -420,6 +421,53 @@ body.quick-links-body .quick-links-page {
 }
 .quick-link-actions .move-out {
   color: var(--accent);
+}
+.quick-link-actions .quick-link-desktop-menu-button {
+  width: 30px;
+  height: 30px;
+  font-size: 23px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -1px;
+}
+.quick-link-desktop-action-menu {
+  position: absolute;
+  top: 32px;
+  right: 0;
+  z-index: 1200;
+  display: grid;
+  gap: 3px;
+  width: 184px;
+  box-sizing: border-box;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+}
+.quick-link-desktop-action-menu[hidden] {
+  display: none;
+}
+.quick-link-desktop-action-menu button {
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  font: inherit;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+.quick-link-desktop-action-menu button:hover,
+.quick-link-desktop-action-menu button:focus-visible {
+  background: color-mix(in srgb, var(--accent) 12%, var(--card));
+  outline: none;
+}
+.quick-link-desktop-action-menu button[data-action="delete"] {
+  color: var(--delete);
 }
 
 .quick-link-drag-handle {
