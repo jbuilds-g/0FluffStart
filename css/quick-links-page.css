@@ -377,7 +377,8 @@ body.quick-links-body .quick-links-page {
     transform 0.15s ease;
 }
 .quick-link-card:hover .quick-link-actions,
-.quick-link-card:focus-within .quick-link-actions {
+.quick-link-card:focus-within .quick-link-actions,
+.quick-link-card.desktop-menu-open .quick-link-actions {
   opacity: 1;
   transform: translateY(0);
 }
