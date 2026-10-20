@@ -290,6 +290,7 @@ function render() {
       closeMobileActionMenus();
       if (opening) {
         desktopActionMenu.hidden = false;
+        card.classList.add("desktop-menu-open");
         desktopMenuButton.setAttribute("aria-expanded", "true");
       }
     });
@@ -1240,6 +1241,7 @@ editor.addEventListener("click", (event) => {
 function closeDesktopActionMenus() {
   document.querySelectorAll(".quick-link-desktop-action-menu").forEach((menu) => {
     menu.hidden = true;
+    menu.closest(".quick-link-card")?.classList.remove("desktop-menu-open");
     menu.closest(".quick-link-actions")
       ?.querySelector(".quick-link-desktop-menu-button")
       ?.setAttribute("aria-expanded", "false");
