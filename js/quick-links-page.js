@@ -254,18 +254,25 @@ function render() {
     desktopActionMenu.setAttribute("role", "menu");
     desktopActionMenu.hidden = true;
 
-    const addDesktopMenuAction = (label, action) => {
+    const addDesktopMenuAction = (label, action, iconClass, iconStyle = "") => {
       const button = document.createElement("button");
       button.type = "button";
       button.setAttribute("role", "menuitem");
       button.dataset.action = action;
-      button.textContent = label;
+      const icon = document.createElement("span");
+      icon.className = `icon-mask ${iconClass}`;
+      icon.setAttribute("aria-hidden", "true");
+      if (iconStyle) icon.style.cssText = iconStyle;
+      const text = document.createElement("span");
+      text.className = "quick-link-action-label";
+      text.textContent = label;
+      button.append(icon, text);
       button.addEventListener("click", async (event) => {
         event.stopPropagation();
         closeDesktopActionMenus();
         if (action === "edit") openEditor(link.id);
-        else if (action === "up") await moveSibling(link.id, -1);
-        else if (action === "down") await moveSibling(link.id, 1);
+        else if (action === "left") await moveSibling(link.id, -1);
+        else if (action === "right") await moveSibling(link.id, 1);
         else if (action === "move") await moveOut(link.id);
         else if (action === "move-to") openMoveToPicker(link.id);
         else if (action === "delete") await deleteItem(link.id);
@@ -273,15 +280,16 @@ function render() {
       desktopActionMenu.appendChild(button);
     };
 
-    addDesktopMenuAction("Edit", "edit");
+    addDesktopMenuAction("Edit", "edit", "icon-edit");
     const desktopSiblings = childrenOf(link.parentId || null);
     const desktopSiblingIndex = desktopSiblings.findIndex((item) => item.id === link.id);
-    if (desktopSiblingIndex > 0) addDesktopMenuAction("Move up", "up");
+    if (desktopSiblingIndex > 0)
+      addDesktopMenuAction("Move left", "left", "icon-arrow-up", "transform:rotate(-90deg)");
     if (desktopSiblingIndex >= 0 && desktopSiblingIndex < desktopSiblings.length - 1)
-      addDesktopMenuAction("Move down", "down");
-    if (link.parentId) addDesktopMenuAction("Move to parent", "move");
-    addDesktopMenuAction("Move to…", "move-to");
-    addDesktopMenuAction("Delete", "delete");
+      addDesktopMenuAction("Move right", "right", "icon-arrow-up", "transform:rotate(90deg)");
+    if (link.parentId) addDesktopMenuAction("Move to parent", "move", "icon-back");
+    addDesktopMenuAction("Move to…", "move-to", "icon-folder");
+    addDesktopMenuAction("Delete", "delete", "icon-delete");
 
     desktopMenuButton.addEventListener("click", (event) => {
       event.stopPropagation();
