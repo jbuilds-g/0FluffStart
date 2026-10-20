@@ -441,6 +441,9 @@ body.quick-links-body .quick-links-page {
   gap: 5px;
   width: 214px;
   max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   box-sizing: border-box;
   padding: 8px;
   border: 1px solid var(--border);
