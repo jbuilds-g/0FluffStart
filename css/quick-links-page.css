@@ -432,9 +432,10 @@ body.quick-links-body .quick-links-page {
   letter-spacing: -1px;
 }
 .quick-link-desktop-action-menu {
-  position: absolute;
-  top: 34px;
-  right: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: auto;
   z-index: 1200;
   display: grid;
   gap: 5px;
