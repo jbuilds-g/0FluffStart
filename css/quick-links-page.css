@@ -414,9 +414,6 @@ body.quick-links-body .quick-links-page {
 .quick-link-drag-preview .quick-link-actions {
   display: none;
 }
-.quick-link-drag-preview .quick-link-drag-handle {
-  opacity: 0.65;
-}
 .quick-link-actions .remove {
   color: var(--delete);
 }
@@ -505,24 +502,11 @@ body.quick-links-body .quick-links-page {
   background: color-mix(in srgb, var(--delete) 10%, var(--card));
 }
 
+/* Dragging starts directly from the icon/card, so the old visual
+   drag handle is intentionally hidden. Keep its element for existing
+   drag-state and touch interaction compatibility. */
 .quick-link-drag-handle {
-  position: absolute;
-  left: 3px;
-  top: 6px;
-  color: var(--dim);
-  opacity: 0;
-  font-size: 12px;
-  letter-spacing: -2px;
-  cursor: grab;
-  touch-action: none;
-}
-.quick-link-card:hover .quick-link-drag-handle {
-  opacity: 0.8;
-}
-.quick-link-drag-handle:focus-visible {
-  opacity: 1;
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  display: none !important;
 }
 .quick-link-card.drop-before,
 .quick-link-card.drop-after {
