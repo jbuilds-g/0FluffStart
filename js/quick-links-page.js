@@ -300,6 +300,32 @@ function render() {
         desktopActionMenu.hidden = false;
         card.classList.add("desktop-menu-open");
         desktopMenuButton.setAttribute("aria-expanded", "true");
+
+        // Position the desktop menu above its trigger when possible, keeping
+        // the full action list inside the viewport. Fall back below if needed.
+        desktopActionMenu.style.position = "fixed";
+        desktopActionMenu.style.right = "auto";
+        desktopActionMenu.style.bottom = "auto";
+        desktopActionMenu.style.left = "0px";
+        desktopActionMenu.style.top = "0px";
+        const triggerRect = desktopMenuButton.getBoundingClientRect();
+        const menuRect = desktopActionMenu.getBoundingClientRect();
+        const gap = 8;
+        const viewportPadding = 8;
+        const spaceAbove = triggerRect.top - viewportPadding;
+        const spaceBelow = window.innerHeight - triggerRect.bottom - viewportPadding;
+        const openAbove = spaceAbove >= menuRect.height + gap || spaceAbove >= spaceBelow;
+        const desiredTop = openAbove
+          ? triggerRect.top - menuRect.height - gap
+          : triggerRect.bottom + gap;
+        const maxTop = Math.max(viewportPadding, window.innerHeight - menuRect.height - viewportPadding);
+        const top = Math.min(Math.max(viewportPadding, desiredTop), maxTop);
+        const left = Math.min(
+          Math.max(viewportPadding, triggerRect.right - menuRect.width),
+          Math.max(viewportPadding, window.innerWidth - menuRect.width - viewportPadding),
+        );
+        desktopActionMenu.style.top = top + "px";
+        desktopActionMenu.style.left = left + "px";
       }
     });
     desktopActionMenu.addEventListener("click", (event) => event.stopPropagation());
