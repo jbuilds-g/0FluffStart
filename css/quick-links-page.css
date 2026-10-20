@@ -63,6 +63,16 @@ body.quick-links-body .quick-links-page {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
+
+/* On desktop, keep the breadcrumb surface sized to its contents instead of
+   stretching it across the entire page. Mobile retains its existing layout. */
+@media (min-width: 701px) {
+  .quick-links-toolbar {
+    width: fit-content;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
 .quick-links-breadcrumb {
   border: 0;
   background: transparent;
@@ -462,7 +472,7 @@ body.quick-links-body .quick-links-page {
   box-sizing: border-box;
   padding: 7px 10px;
   border: 1px solid var(--border);
-  border-radius: 9px;
+  border-radius: var(--radius);
   background: color-mix(in srgb, var(--card) 92%, var(--text));
   color: var(--text);
   text-align: left;
