@@ -312,13 +312,13 @@ function render() {
         const menuRect = desktopActionMenu.getBoundingClientRect();
         const gap = 8;
         const viewportPadding = 8;
-        const spaceAbove = triggerRect.top - viewportPadding;
-        const spaceBelow = window.innerHeight - triggerRect.bottom - viewportPadding;
-        const openAbove = spaceAbove >= menuRect.height + gap || spaceAbove >= spaceBelow;
-        const desiredTop = openAbove
-          ? triggerRect.top - menuRect.height - gap
-          : triggerRect.bottom + gap;
-        const maxTop = Math.max(viewportPadding, window.innerHeight - menuRect.height - viewportPadding);
+        const desiredTop = triggerRect.top - menuRect.height - gap;
+        const maxTop = Math.max(
+          viewportPadding,
+          window.innerHeight - menuRect.height - viewportPadding,
+        );
+        // Prefer opening upward; clamp to the viewport top if the trigger is
+        // too close to the top to fit the full menu above it.
         const top = Math.min(Math.max(viewportPadding, desiredTop), maxTop);
         const left = Math.min(
           Math.max(viewportPadding, triggerRect.right - menuRect.width),
