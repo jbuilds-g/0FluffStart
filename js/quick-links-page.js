@@ -240,49 +240,61 @@ function render() {
     const actions = document.createElement("div");
     actions.className = "quick-link-actions";
 
-    const edit = document.createElement("button");
-    edit.type = "button";
-    edit.title = "Edit";
-    edit.innerHTML =
-      '<span class="icon-mask icon-edit" aria-hidden="true"></span>';
-    edit.addEventListener("click", (event) => {
-      event.stopPropagation();
-      openEditor(link.id);
-    });
+    const desktopMenuButton = document.createElement("button");
+    desktopMenuButton.type = "button";
+    desktopMenuButton.className = "quick-link-desktop-menu-button";
+    desktopMenuButton.textContent = "⋯";
+    desktopMenuButton.title = "Link actions";
+    desktopMenuButton.setAttribute("aria-label", `Actions for ${link.name}`);
+    desktopMenuButton.setAttribute("aria-haspopup", "menu");
+    desktopMenuButton.setAttribute("aria-expanded", "false");
 
-    const remove = document.createElement("button");
-    remove.type = "button";
-    remove.className = link.parentId ? "move-out" : "remove";
-    remove.title = link.parentId ? "Move to parent folder" : "Delete";
-    remove.setAttribute(
-      "aria-label",
-      link.parentId ? "Move to parent folder" : "Delete",
-    );
-    remove.innerHTML = link.parentId
-      ? '<span class="icon-mask icon-back" style="transform:rotate(90deg)" aria-hidden="true"></span>'
-      : '<span class="icon-mask icon-close" aria-hidden="true"></span>';
-    remove.addEventListener("click", async (event) => {
+    const desktopActionMenu = document.createElement("div");
+    desktopActionMenu.className = "quick-link-desktop-action-menu";
+    desktopActionMenu.setAttribute("role", "menu");
+    desktopActionMenu.hidden = true;
+
+    const addDesktopMenuAction = (label, action) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.setAttribute("role", "menuitem");
+      button.dataset.action = action;
+      button.textContent = label;
+      button.addEventListener("click", async (event) => {
+        event.stopPropagation();
+        closeDesktopActionMenus();
+        if (action === "edit") openEditor(link.id);
+        else if (action === "up") await moveSibling(link.id, -1);
+        else if (action === "down") await moveSibling(link.id, 1);
+        else if (action === "move") await moveOut(link.id);
+        else if (action === "move-to") openMoveToPicker(link.id);
+        else if (action === "delete") await deleteItem(link.id);
+      });
+      desktopActionMenu.appendChild(button);
+    };
+
+    addDesktopMenuAction("Edit", "edit");
+    const desktopSiblings = childrenOf(link.parentId || null);
+    const desktopSiblingIndex = desktopSiblings.findIndex((item) => item.id === link.id);
+    if (desktopSiblingIndex > 0) addDesktopMenuAction("Move up", "up");
+    if (desktopSiblingIndex >= 0 && desktopSiblingIndex < desktopSiblings.length - 1)
+      addDesktopMenuAction("Move down", "down");
+    if (link.parentId) addDesktopMenuAction("Move to parent", "move");
+    addDesktopMenuAction("Move to…", "move-to");
+    addDesktopMenuAction("Delete", "delete");
+
+    desktopMenuButton.addEventListener("click", (event) => {
       event.stopPropagation();
-      if (link.parentId) {
-        await moveOut(link.id);
-      } else {
-        await deleteItem(link.id);
+      const opening = desktopActionMenu.hidden;
+      closeDesktopActionMenus();
+      closeMobileActionMenus();
+      if (opening) {
+        desktopActionMenu.hidden = false;
+        desktopMenuButton.setAttribute("aria-expanded", "true");
       }
     });
-
-    const moveTo = document.createElement("button");
-    moveTo.type = "button";
-    moveTo.className = "quick-link-move-to";
-    moveTo.title = "Move to…";
-    moveTo.setAttribute("aria-label", `Move ${link.name} to another location`);
-    moveTo.innerHTML =
-      '<span class="icon-mask icon-folder" aria-hidden="true"></span>';
-    moveTo.addEventListener("click", (event) => {
-      event.stopPropagation();
-      openMoveToPicker(link.id);
-    });
-
-    actions.append(moveTo, edit, remove);
+    desktopActionMenu.addEventListener("click", (event) => event.stopPropagation());
+    actions.append(desktopMenuButton, desktopActionMenu);
 
     const mobileMenu = document.createElement("button");
     mobileMenu.type = "button";
@@ -1225,6 +1237,14 @@ document.getElementById("saveLinkBtn").addEventListener("click", saveEditor);
 editor.addEventListener("click", (event) => {
   if (event.target === editor) closeEditor();
 });
+function closeDesktopActionMenus() {
+  document.querySelectorAll(".quick-link-desktop-action-menu").forEach((menu) => {
+    menu.hidden = true;
+    menu.closest(".quick-link-actions")
+      ?.querySelector(".quick-link-desktop-menu-button")
+      ?.setAttribute("aria-expanded", "false");
+  });
+}
 function closeMobileActionMenus() {
   document.querySelectorAll(".quick-link-action-menu").forEach((menu) => {
     menu.hidden = true;
@@ -1252,15 +1272,20 @@ document.addEventListener(
       !event.target.closest(".quick-link-mobile-menu, .quick-link-action-menu")
     )
       closeMobileActionMenus();
+    if (!event.target.closest(".quick-link-desktop-menu-button, .quick-link-desktop-action-menu"))
+      closeDesktopActionMenus();
   },
   true,
 );
 window.addEventListener("resize", closeMobileActionMenus);
+window.addEventListener("resize", closeDesktopActionMenus);
 window.addEventListener("scroll", closeMobileActionMenus, true);
+window.addEventListener("scroll", closeDesktopActionMenus, true);
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     if (!editor.classList.contains("hidden")) closeEditor();
     closeMobileActionMenus();
+    closeDesktopActionMenus();
   }
 });
 
