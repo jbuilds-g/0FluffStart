@@ -793,15 +793,6 @@ document.addEventListener(
   "click",
   (event) => {
     if (
-      Date.now() < suppressCardClickUntil &&
-      event.target.closest(".quick-link-card")
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
-      return;
-    }
-    if (
       !event.target.closest(".quick-link-mobile-menu, .quick-link-action-menu")
     )
       closeMobileActionMenus();
