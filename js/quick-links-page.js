@@ -181,6 +181,7 @@ function renderBreadcrumbs() {
 }
 
 function render() {
+  closeDesktopActionMenus();
   const links = childrenOf(currentFolderId);
   grid.innerHTML = "";
   renderBreadcrumbs();
@@ -297,12 +298,17 @@ function render() {
       closeDesktopActionMenus();
       closeMobileActionMenus();
       if (opening) {
+        // Move the menu out of the card before measuring/positioning it.
+        // A transformed ancestor can otherwise become the containing block
+        // for position: fixed and make the menu appear in the wrong place.
+        desktopActionMenu._ownerCard = card;
+        desktopActionMenu._ownerActions = actions;
+        desktopActionMenu._triggerButton = desktopMenuButton;
+        document.body.appendChild(desktopActionMenu);
         desktopActionMenu.hidden = false;
         card.classList.add("desktop-menu-open");
         desktopMenuButton.setAttribute("aria-expanded", "true");
 
-        // Position the desktop menu above its trigger when possible, keeping
-        // the full action list inside the viewport. Fall back below if needed.
         desktopActionMenu.style.position = "fixed";
         desktopActionMenu.style.right = "auto";
         desktopActionMenu.style.bottom = "auto";
@@ -1275,10 +1281,13 @@ editor.addEventListener("click", (event) => {
 function closeDesktopActionMenus() {
   document.querySelectorAll(".quick-link-desktop-action-menu").forEach((menu) => {
     menu.hidden = true;
-    menu.closest(".quick-link-card")?.classList.remove("desktop-menu-open");
-    menu.closest(".quick-link-actions")
-      ?.querySelector(".quick-link-desktop-menu-button")
-      ?.setAttribute("aria-expanded", "false");
+    const card = menu._ownerCard || menu.closest(".quick-link-card");
+    const trigger = menu._triggerButton ||
+      menu.closest(".quick-link-actions")?.querySelector(".quick-link-desktop-menu-button");
+    card?.classList.remove("desktop-menu-open");
+    trigger?.setAttribute("aria-expanded", "false");
+    const ownerActions = menu._ownerActions || card?.querySelector(".quick-link-actions");
+    if (ownerActions && menu.parentElement !== ownerActions) ownerActions.appendChild(menu);
   });
 }
 function closeMobileActionMenus() {
