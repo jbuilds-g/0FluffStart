@@ -643,6 +643,16 @@ body.quick-links-body .quick-links-page {
     -webkit-tap-highlight-color: transparent;
     touch-action: none;
   }
+  .quick-link-card,
+  .quick-link-card * {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .quick-link-card.is-drag-source {
+    /* Keep its grid slot, but don't show a second card beneath the preview. */
+    opacity: 0 !important;
+  }
   .quick-link-card:active {
     transform: scale(0.98);
   }
@@ -767,8 +777,10 @@ body.quick-links-body .quick-links-page {
     display: flex !important;
     opacity: 0.98;
     border: 2px solid var(--accent);
-    background: #151518;
-    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
+    border-radius: calc(var(--radius) + 4px);
+    background: color-mix(in srgb, var(--card) 94%, var(--accent));
+    color: var(--text);
+    box-shadow: var(--shadow-lg);
     transform: none;
     transition: none !important;
     will-change: left, top;
