@@ -213,6 +213,7 @@ function render() {
 
     const icon = document.createElement("div");
     icon.className = "link-icon-circle";
+    icon.title = link.name;
     if (link.isFolder) {
       icon.innerHTML =
         '<span class="icon-mask icon-folder" style="width:26px;height:26px"></span>';
