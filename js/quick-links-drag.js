@@ -408,6 +408,8 @@ export function installQuickLinksDragEngine({
     activeSession.finished = true;
     if (activeSession.autoScrollFrame)
       cancelAnimationFrame(activeSession.autoScrollFrame);
+    if (activeSession.longPressTimer) clearTimeout(activeSession.longPressTimer);
+    activeSession.source.classList.remove("is-long-pressing");
 
     window.removeEventListener("pointermove", activeSession.onMove);
     window.removeEventListener("pointerup", activeSession.onUp);
@@ -441,9 +443,8 @@ export function installQuickLinksDragEngine({
   }
 
   function onPointerDown(event) {
-    if (session || event.button !== 0 || event.pointerType === "touch") return;
-    // The icon itself is the drag target: no tiny corner handle to hunt for.
-    // Keep buttons and the card's other interactive controls out of this path.
+    if (session || event.button !== 0) return;
+    const isTouch = event.pointerType === "touch";
     const icon = event.target.closest?.(".link-icon-circle");
     const card = icon?.closest(cardSelector);
     if (!icon || !card || !grid.contains(card)) return;
@@ -452,21 +453,36 @@ export function installQuickLinksDragEngine({
     const activeSession = {
       source: card,
       pointerId: event.pointerId,
+      pointerType: event.pointerType,
       captureTarget: icon,
       startX: event.clientX,
       startY: event.clientY,
       lastX: event.clientX,
       lastY: event.clientY,
-      offsetX: event.clientX - rect.left,
-      offsetY: event.clientY - rect.top,
+      offsetX: isTouch ? rect.width / 2 : event.clientX - rect.left,
+      offsetY: isTouch ? Math.min(24, rect.height / 3) : event.clientY - rect.top,
       started: false,
+      scrolling: false,
       finished: false,
       resolved: null,
       preview: null,
       appendSlot: null,
       autoScrollFrame: 0,
+      longPressTimer: 0,
     };
     session = activeSession;
+
+    const startDrag = () => {
+      if (session !== activeSession || activeSession.finished || activeSession.started || activeSession.scrolling) return;
+      activeSession.longPressTimer = 0;
+      activeSession.started = true;
+      grid.classList.add("quick-links-grid-drag-active");
+      activeSession.preview = createPreview(card, rect);
+      card.classList.add("is-drag-source");
+      card.classList.remove("is-long-pressing");
+      window.customCursorInstance?.setDragState(true);
+      updatePreview(activeSession, { clientX: activeSession.lastX, clientY: activeSession.lastY });
+    };
 
     try {
       icon.setPointerCapture?.(event.pointerId);
@@ -475,62 +491,50 @@ export function installQuickLinksDragEngine({
     }
 
     activeSession.onMove = (moveEvent) => {
-      if (
-        session !== activeSession ||
-        activeSession.finished ||
-        moveEvent.pointerId !== activeSession.pointerId
-      )
-        return;
+      if (session !== activeSession || activeSession.finished || moveEvent.pointerId !== activeSession.pointerId) return;
+      const previousY = activeSession.lastY;
       activeSession.lastX = moveEvent.clientX;
       activeSession.lastY = moveEvent.clientY;
+      const distance = Math.hypot(moveEvent.clientX - activeSession.startX, moveEvent.clientY - activeSession.startY);
 
-      const distance = Math.hypot(
-        moveEvent.clientX - activeSession.startX,
-        moveEvent.clientY - activeSession.startY,
-      );
-      if (!activeSession.started && distance < 5) return;
+      if (isTouch && !activeSession.started && distance > 10) {
+        if (activeSession.longPressTimer) clearTimeout(activeSession.longPressTimer);
+        activeSession.longPressTimer = 0;
+        activeSession.scrolling = true;
+        card.classList.remove("is-long-pressing");
+      }
+
+      if (activeSession.scrolling) {
+        const deltaY = previousY - moveEvent.clientY;
+        if (deltaY) window.scrollBy(0, deltaY);
+        moveEvent.preventDefault();
+        return;
+      }
 
       if (!activeSession.started) {
-        activeSession.started = true;
-        grid.classList.add("quick-links-grid-drag-active");
-        activeSession.preview = createPreview(card, rect);
-        card.classList.add("is-drag-source");
+        if (isTouch || distance < 5) return;
+        startDrag();
       }
+      if (!activeSession.started) return;
 
       moveEvent.preventDefault();
       updatePreview(activeSession, moveEvent);
-
-      const resolved = resolveTarget(
-        moveEvent.clientX,
-        moveEvent.clientY,
-        activeSession,
-      );
+      const resolved = resolveTarget(moveEvent.clientX, moveEvent.clientY, activeSession);
       activeSession.resolved = resolved?.target || null;
       updateFeedback(activeSession, resolved);
       updateAutoScroll(activeSession);
     };
 
     activeSession.onUp = async (upEvent) => {
-      if (
-        session !== activeSession ||
-        activeSession.finished ||
-        upEvent.pointerId !== activeSession.pointerId
-      )
-        return;
-
+      if (session !== activeSession || activeSession.finished || upEvent.pointerId !== activeSession.pointerId) return;
       let target = null;
       if (activeSession.started) {
-        const resolved = resolveTarget(
-          upEvent.clientX,
-          upEvent.clientY,
-          activeSession,
-        );
+        const resolved = resolveTarget(upEvent.clientX, upEvent.clientY, activeSession);
         target = resolved?.target || null;
       }
       const draggedId = card.dataset.id;
       const shouldDrop = activeSession.started && target;
       cleanup(activeSession, { suppressClick: activeSession.started });
-
       if (shouldDrop) {
         try {
           await onDrop({ link: { id: draggedId }, target });
@@ -540,26 +544,24 @@ export function installQuickLinksDragEngine({
       }
     };
 
-    activeSession.onCancel = () =>
-      cleanup(activeSession, { suppressClick: activeSession.started });
+    activeSession.onCancel = () => cleanup(activeSession, { suppressClick: activeSession.started });
     activeSession.onScroll = () => {
       if (session !== activeSession || !activeSession.started) return;
-      const resolved = resolveTarget(
-        activeSession.lastX,
-        activeSession.lastY,
-        activeSession,
-      );
+      const resolved = resolveTarget(activeSession.lastX, activeSession.lastY, activeSession);
       activeSession.resolved = resolved?.target || null;
       updateFeedback(activeSession, resolved);
     };
 
-    window.addEventListener("pointermove", activeSession.onMove, {
-      passive: false,
-    });
+    window.addEventListener("pointermove", activeSession.onMove, { passive: false });
     window.addEventListener("pointerup", activeSession.onUp);
     window.addEventListener("pointercancel", activeSession.onCancel);
     window.addEventListener("blur", activeSession.onCancel);
     window.addEventListener("scroll", activeSession.onScroll, true);
+
+    if (isTouch) {
+      card.classList.add("is-long-pressing");
+      activeSession.longPressTimer = window.setTimeout(startDrag, 420);
+    }
   }
 
   grid.addEventListener("pointerdown", onPointerDown);
