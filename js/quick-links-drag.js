@@ -398,33 +398,9 @@ export function installQuickLinksDragEngine({
   }
 
   function updateMobileFeedback(activeSession, resolved) {
-    removeFeedback(activeSession);
-    if (!resolved?.target) return;
-
-    const { target, feedbackCard } = resolved;
-    if (target.position === "inside") {
-      feedbackCard?.classList.add("drag-enter-folder");
-      return;
-    }
-
-    // An overlay indicates the destination without changing grid geometry.
-    if (!feedbackCard) {
-      showAppendFeedback(activeSession, target.anchorSelector);
-      return;
-    }
-    const rect = feedbackCard.getBoundingClientRect();
-    if (!activeSession.appendSlot) {
-      activeSession.appendSlot = document.createElement("div");
-      activeSession.appendSlot.className = "quick-link-drop-slot quick-link-drop-slot-overlay";
-      activeSession.appendSlot.setAttribute("aria-hidden", "true");
-      document.body.appendChild(activeSession.appendSlot);
-    }
-    Object.assign(activeSession.appendSlot.style, {
-      left: rect.left + "px",
-      top: rect.top + "px",
-      width: rect.width + "px",
-      height: rect.height + "px",
-    });
+    // Use the same real in-flow insertion slot as desktop. The grid must make
+    // room for the destination; an overlay would incorrectly cover a card.
+    updateFeedback(activeSession, resolved);
   }
 
   function updateFeedback(activeSession, resolved) {
