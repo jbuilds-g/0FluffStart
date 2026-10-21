@@ -650,8 +650,8 @@ body.quick-links-body .quick-links-page {
     -webkit-touch-callout: none;
   }
   .quick-link-card.is-drag-source {
-    /* Keep its grid slot, but don't show a second card beneath the preview. */
-    opacity: 0 !important;
+    /* Keep the source visible as a dimmed reference beneath the preview. */
+    opacity: 0.22 !important;
   }
   .quick-link-card:active {
     transform: scale(0.98);
