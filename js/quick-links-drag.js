@@ -1,9 +1,9 @@
 /**
- * Desktop Quick Links drag engine.
+ * Quick Links drag engine.
  *
- * Uses live layout geometry on every move, a fixed pointer-following preview,
- * and a single cleanup path. The touch/long-press interaction remains owned by
- * quick-links-page.js while its mobile behavior is intentionally out of scope.
+ * Desktop keeps its existing insertion-slot behavior. Touch dragging uses a
+ * separate row-aware resolver and overlay feedback so the mobile grid does not
+ * reflow while the pointer is being measured.
  */
 
 export function installQuickLinksDragEngine({
@@ -306,14 +306,17 @@ export function installQuickLinksDragEngine({
   // Mobile uses row-major grid ordering and never inserts a live placeholder
   // into the grid while measuring targets. This keeps touch targeting stable.
   function resolveMobileTarget(x, y, activeSession) {
-    const cards = [...grid.querySelectorAll(cardSelector)]
-      .filter((card) => card !== activeSession.source && card.isConnected)
+    // Keep the source in the geometry as an empty grid cell. Excluding it
+    // would collapse a two-column row to one entry and misread horizontal drags.
+    const allCards = [...grid.querySelectorAll(cardSelector)]
+      .filter((card) => card.isConnected)
       .map((card) => ({
         card,
         id: card.dataset.id,
         rect: card.getBoundingClientRect(),
       }))
       .filter((entry) => entry.rect.width > 0 && entry.rect.height > 0);
+    const cards = allCards.filter((entry) => entry.card !== activeSession.source);
 
     for (const addCard of grid.querySelectorAll(addSelector)) {
       const rect = addCard.getBoundingClientRect();
@@ -333,7 +336,7 @@ export function installQuickLinksDragEngine({
     );
     if (hovered) {
       const link = (getLinks() || []).find((item) => item.id === hovered.id);
-      if (link?.isFolder && hovered.id !== activeSession.source.dataset.id) {
+      if (link?.isFolder) {
         const rx = (x - hovered.rect.left) / Math.max(1, hovered.rect.width);
         const ry = (y - hovered.rect.top) / Math.max(1, hovered.rect.height);
         if (rx >= 0.2 && rx <= 0.8 && ry >= 0.2 && ry <= 0.8) {
@@ -342,9 +345,9 @@ export function installQuickLinksDragEngine({
       }
     }
 
-    if (!cards.length) return { target: makeEndTarget(".quick-link-add-folder"), feedbackCard: null };
+    if (!allCards.length) return { target: makeEndTarget(".quick-link-add-folder"), feedbackCard: null };
 
-    const rows = makeRows(cards);
+    const rows = makeRows(allCards);
     // Pick the row nearest the finger vertically. In the gap between rows,
     // use the next row as the destination so vertical drags feel predictable.
     let rowIndex = 0;
@@ -361,25 +364,36 @@ export function installQuickLinksDragEngine({
     const row = rows[rowIndex];
     const nextRow = rows[rowIndex + 1];
     if (nextRow && y > row.bottom && y >= (row.bottom + nextRow.top) / 2) {
-      const first = nextRow.entries[0];
-      return { target: { id: first.id, position: "before" }, feedbackCard: first.card };
+      const first = nextRow.entries.find((entry) => entry.card !== activeSession.source);
+      if (first) return { target: { id: first.id, position: "before" }, feedbackCard: first.card };
     }
 
-    const first = row.entries[0];
-    const second = row.entries[1];
-    if (x < first.rect.left + first.rect.width / 2) {
-      return { target: { id: first.id, position: "before" }, feedbackCard: first.card };
+    const next = row.entries.find(
+      (entry) => x < entry.rect.left + entry.rect.width / 2,
+    );
+    if (next) {
+      if (next.card !== activeSession.source) {
+        return { target: { id: next.id, position: "before" }, feedbackCard: next.card };
+      }
+      // The source's cell is still part of the grid. Resolve it to the next
+      // real item in DOM order, or to the end if the source was last.
+      const sourceIndex = allCards.findIndex((entry) => entry.card === activeSession.source);
+      const following = allCards.slice(sourceIndex + 1).find(
+        (entry) => entry.card !== activeSession.source,
+      );
+      if (following) {
+        return { target: { id: following.id, position: "before" }, feedbackCard: following.card };
+      }
+      return { target: makeEndTarget(".quick-link-add-folder"), feedbackCard: cards[cards.length - 1]?.card || null };
     }
-    if (second && x < second.rect.left + second.rect.width / 2) {
-      return { target: { id: second.id, position: "before" }, feedbackCard: second.card };
-    }
+
     if (nextRow) {
-      const nextFirst = nextRow.entries[0];
-      return { target: { id: nextFirst.id, position: "before" }, feedbackCard: nextFirst.card };
+      const nextFirst = nextRow.entries.find((entry) => entry.card !== activeSession.source);
+      if (nextFirst) return { target: { id: nextFirst.id, position: "before" }, feedbackCard: nextFirst.card };
     }
     return {
       target: makeEndTarget(".quick-link-add-folder"),
-      feedbackCard: row.entries[row.entries.length - 1].card,
+      feedbackCard: cards[cards.length - 1]?.card || null,
     };
   }
 
