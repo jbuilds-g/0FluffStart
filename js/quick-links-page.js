@@ -522,8 +522,12 @@ function openMoveToPicker(itemId) {
       }
       const links = [...(store.getState().links || [])];
       const parentId = item.parentId || null;
-      if (parentId && getFolderDepth(parentId, links) >= 3) {
-        notice("Folder depth limit reached (max 3 levels).");
+      const destinationDepth = parentId ? getFolderDepth(parentId, links) : 0;
+      const movingSubtreeDepth = item.isFolder
+        ? getSubtreeFolderDepth(itemId, links)
+        : 0;
+      if (destinationDepth + 1 + movingSubtreeDepth > 3) {
+        notice("This folder would exceed the maximum folder depth of 3.");
         return;
       }
       const folder = {
