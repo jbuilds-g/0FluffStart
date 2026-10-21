@@ -1038,6 +1038,175 @@ body.quick-links-body .quick-links-page {
   width: auto;
   min-width: 104px;
 }
+/* Match the app's existing theme shape families, not just its palette. */
+.quick-links-move-panel,
+.quick-links-move-choice,
+.quick-links-move-back,
+.quick-links-move-create-trigger,
+.quick-links-move-create-form,
+.quick-links-move-create-form input,
+.quick-links-move-create-actions button,
+.quick-links-move-footer button,
+.quick-links-move-notice {
+  border-radius: var(--radius, 12px);
+}
+
+/* Sharp / terminal / paper themes use square geometry and crisp outlines. */
+body.retro .quick-links-move-panel,
+body.cyberpunk .quick-links-move-panel,
+body.paper .quick-links-move-panel,
+body.slate .quick-links-move-panel,
+body.toxic-tide .quick-links-move-panel,
+body.heatwave .quick-links-move-panel {
+  border-width: 1px;
+  box-shadow: var(--shadow);
+}
+body.retro .quick-links-move-choice,
+body.retro .quick-links-move-back,
+body.retro .quick-links-move-create-trigger,
+body.retro .quick-links-move-create-form,
+body.retro .quick-links-move-create-form input,
+body.retro .quick-links-move-create-actions button,
+body.retro .quick-links-move-footer button,
+body.cyberpunk .quick-links-move-choice,
+body.cyberpunk .quick-links-move-back,
+body.cyberpunk .quick-links-move-create-trigger,
+body.cyberpunk .quick-links-move-create-form,
+body.cyberpunk .quick-links-move-create-form input,
+body.cyberpunk .quick-links-move-create-actions button,
+body.cyberpunk .quick-links-move-footer button,
+body.paper .quick-links-move-choice,
+body.paper .quick-links-move-back,
+body.paper .quick-links-move-create-trigger,
+body.paper .quick-links-move-create-form,
+body.paper .quick-links-move-create-form input,
+body.paper .quick-links-move-create-actions button,
+body.paper .quick-links-move-footer button,
+body.slate .quick-links-move-choice,
+body.slate .quick-links-move-back,
+body.slate .quick-links-move-create-trigger,
+body.slate .quick-links-move-create-form,
+body.slate .quick-links-move-create-form input,
+body.slate .quick-links-move-create-actions button,
+body.slate .quick-links-move-footer button,
+body.toxic-tide .quick-links-move-choice,
+body.toxic-tide .quick-links-move-back,
+body.toxic-tide .quick-links-move-create-trigger,
+body.toxic-tide .quick-links-move-create-form,
+body.toxic-tide .quick-links-move-create-form input,
+body.toxic-tide .quick-links-move-create-actions button,
+body.toxic-tide .quick-links-move-footer button,
+body.heatwave .quick-links-move-choice,
+body.heatwave .quick-links-move-back,
+body.heatwave .quick-links-move-create-trigger,
+body.heatwave .quick-links-move-create-form,
+body.heatwave .quick-links-move-create-form input,
+body.heatwave .quick-links-move-create-actions button,
+body.heatwave .quick-links-move-footer button {
+  border-radius: var(--radius, 0px);
+}
+body.retro .quick-links-move-choice,
+body.retro .quick-links-move-create-trigger,
+body.cyberpunk .quick-links-move-choice,
+body.cyberpunk .quick-links-move-create-trigger {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* Squircle themes follow the same softer geometry as link icons. */
+body.forest .quick-links-move-panel,
+body.rose .quick-links-move-panel,
+body.luminous .quick-links-move-panel,
+body.light .quick-links-move-panel {
+  border-radius: 28px;
+}
+body.forest .quick-links-move-choice,
+body.forest .quick-links-move-back,
+body.forest .quick-links-move-create-trigger,
+body.forest .quick-links-move-create-form,
+body.forest .quick-links-move-create-form input,
+body.forest .quick-links-move-create-actions button,
+body.forest .quick-links-move-footer button,
+body.rose .quick-links-move-choice,
+body.rose .quick-links-move-back,
+body.rose .quick-links-move-create-trigger,
+body.rose .quick-links-move-create-form,
+body.rose .quick-links-move-create-form input,
+body.rose .quick-links-move-create-actions button,
+body.rose .quick-links-move-footer button,
+body.luminous .quick-links-move-choice,
+body.luminous .quick-links-move-back,
+body.luminous .quick-links-move-create-trigger,
+body.luminous .quick-links-move-create-form,
+body.luminous .quick-links-move-create-form input,
+body.luminous .quick-links-move-create-actions button,
+body.luminous .quick-links-move-footer button,
+body.light .quick-links-move-choice,
+body.light .quick-links-move-back,
+body.light .quick-links-move-create-trigger,
+body.light .quick-links-move-create-form,
+body.light .quick-links-move-create-form input,
+body.light .quick-links-move-create-actions button,
+body.light .quick-links-move-footer button {
+  border-radius: 16px;
+}
+
+/* Circular themes echo their round icon surfaces. */
+body.evergreen-archive .quick-links-move-choice,
+body.evergreen-archive .quick-links-move-back,
+body.evergreen-archive .quick-links-move-create-trigger,
+body.evergreen-archive .quick-links-move-create-form,
+body.evergreen-archive .quick-links-move-create-form input,
+body.evergreen-archive .quick-links-move-create-actions button,
+body.evergreen-archive .quick-links-move-footer button,
+body.nord .quick-links-move-choice,
+body.nord .quick-links-move-back,
+body.nord .quick-links-move-create-trigger,
+body.nord .quick-links-move-create-form,
+body.nord .quick-links-move-create-form input,
+body.nord .quick-links-move-create-actions button,
+body.nord .quick-links-move-footer button,
+body.sunset .quick-links-move-choice,
+body.sunset .quick-links-move-back,
+body.sunset .quick-links-move-create-trigger,
+body.sunset .quick-links-move-create-form,
+body.sunset .quick-links-move-create-form input,
+body.sunset .quick-links-move-create-actions button,
+body.sunset .quick-links-move-footer button,
+body.night-glow .quick-links-move-choice,
+body.night-glow .quick-links-move-back,
+body.night-glow .quick-links-move-create-trigger,
+body.night-glow .quick-links-move-create-form,
+body.night-glow .quick-links-move-create-form input,
+body.night-glow .quick-links-move-create-actions button,
+body.night-glow .quick-links-move-footer button {
+  border-radius: 50px;
+}
+body.evergreen-archive .quick-links-move-panel,
+body.nord .quick-links-move-panel,
+body.sunset .quick-links-move-panel,
+body.night-glow .quick-links-move-panel {
+  border-radius: 28px;
+}
+body.night-glow .quick-links-move-panel {
+  box-shadow: 0 0 15px var(--shadow-color);
+}
+body.night-glow .quick-links-move-choice,
+body.night-glow .quick-links-move-back,
+body.night-glow .quick-links-move-create-trigger,
+body.night-glow .quick-links-move-create-form,
+body.night-glow .quick-links-move-create-form input,
+body.night-glow .quick-links-move-create-actions button,
+body.night-glow .quick-links-move-footer button {
+  box-shadow: 0 0 10px var(--shadow-color);
+}
+body.amoled .quick-links-move-overlay {
+  background: var(--overlay-backdrop-color, rgba(0, 0, 0, 0.8));
+}
+body.amoled .quick-links-move-panel {
+  box-shadow: var(--shadow);
+}
+
 @media (max-width: 700px) {
   .quick-links-move-overlay {
     align-items: end;
