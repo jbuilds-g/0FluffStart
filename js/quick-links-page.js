@@ -491,10 +491,65 @@ function openMoveToPicker(itemId) {
     p.textContent = message;
     list.appendChild(p);
   }
+  function showCreateFolderForm() {
+    const form = document.createElement("form");
+    form.className = "quick-links-move-create-form";
+    const input = document.createElement("input");
+    input.type = "text";
+    input.maxLength = 50;
+    input.autocomplete = "off";
+    input.placeholder = "Folder name";
+    input.setAttribute("aria-label", "New folder name");
+    const actions = document.createElement("div");
+    actions.className = "quick-links-move-create-actions";
+    const cancelCreate = document.createElement("button");
+    cancelCreate.type = "button";
+    cancelCreate.className = "quick-links-move-secondary";
+    cancelCreate.textContent = "Cancel";
+    cancelCreate.addEventListener("click", showDestinations);
+    const create = document.createElement("button");
+    create.type = "submit";
+    create.className = "quick-links-move-primary";
+    create.textContent = "Create folder";
+    actions.append(cancelCreate, create);
+    form.append(input, actions);
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const name = input.value.trim().slice(0, 50);
+      if (!name) {
+        input.focus();
+        return;
+      }
+      const links = [...(store.getState().links || [])];
+      const parentId = item.parentId || null;
+      if (parentId && getFolderDepth(parentId, links) >= 3) {
+        notice("Folder depth limit reached (max 3 levels).");
+        return;
+      }
+      const folder = {
+        id: generateId(),
+        name,
+        isFolder: true,
+        parentId,
+      };
+      links.push(folder);
+      await store.setState({ links });
+      showDestinations();
+      showPositions(folder.id, folder.name);
+    });
+    list.appendChild(form);
+    input.focus();
+  }
   function showDestinations() {
     list.replaceChildren();
     description.textContent = "Choose a destination folder or the dashboard.";
     choice("Dashboard", null);
+    const createFolder = document.createElement("button");
+    createFolder.type = "button";
+    createFolder.className = "quick-links-move-create-trigger";
+    createFolder.textContent = "+  New folder";
+    createFolder.addEventListener("click", showCreateFolderForm);
+    list.appendChild(createFolder);
     const links = store.getState().links || [];
     links
       .filter(
