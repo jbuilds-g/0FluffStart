@@ -602,14 +602,24 @@ body.quick-links-body .quick-links-page {
     line-height: 1.5;
   }
   .quick-links-toolbar {
-    position: sticky;
-    top: max(8px, env(safe-area-inset-top));
-    z-index: 20;
+    position: static;
+    z-index: auto;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 0;
     min-width: 0;
-    margin-bottom: 18px;
-    padding: 8px;
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    margin: 0 0 16px;
+    padding: 2px 4px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .quick-links-breadcrumb {
+    padding: 2px 4px;
+    font-size: var(--font-size-sm);
   }
   .quick-links-breadcrumbs {
     flex: 1;
@@ -686,7 +696,23 @@ body.quick-links-body .quick-links-page {
     -webkit-line-clamp: 2;
   }
   .quick-link-card .quick-link-actions {
-    display: none !important;
+    display: flex !important;
+    top: 6px;
+    right: 6px;
+    gap: 0;
+    opacity: 1;
+    transform: none;
+    z-index: 6;
+  }
+  .quick-link-card .quick-link-actions .quick-link-desktop-menu-button {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 22px;
+    letter-spacing: 0;
+    background: var(--card);
+    touch-action: manipulation;
   }
   .quick-link-card .quick-link-drag-handle {
     display: none !important;
