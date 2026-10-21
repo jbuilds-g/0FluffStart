@@ -545,16 +545,22 @@ export function installQuickLinksDragEngine({
   function onPointerDown(event) {
     if (session || event.button !== 0) return;
     const isTouch = event.pointerType === "touch";
-    const icon = event.target.closest?.(".link-icon-circle");
-    const card = icon?.closest(cardSelector);
-    if (!icon || !card || !grid.contains(card)) return;
+    const card = event.target.closest?.(cardSelector);
+    // Mobile can begin a long-press anywhere on the card, except the actions
+    // button/menu, which must remain tappable. Desktop still starts on the icon.
+    if (!card || !grid.contains(card)) return;
+    if (isTouch) {
+      if (event.target.closest?.(".quick-link-desktop-menu-button, .quick-link-desktop-action-menu")) return;
+    } else if (!event.target.closest?.(".link-icon-circle")) {
+      return;
+    }
 
     const rect = card.getBoundingClientRect();
     const activeSession = {
       source: card,
       pointerId: event.pointerId,
       pointerType: event.pointerType,
-      captureTarget: icon,
+      captureTarget: card,
       startX: event.clientX,
       startY: event.clientY,
       lastX: event.clientX,
@@ -585,7 +591,7 @@ export function installQuickLinksDragEngine({
     };
 
     try {
-      icon.setPointerCapture?.(event.pointerId);
+      card.setPointerCapture?.(event.pointerId);
     } catch {
       // Window-level listeners still receive normal pointer events.
     }
