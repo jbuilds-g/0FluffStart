@@ -1,7 +1,7 @@
 /* External capture bridge for the 0FluffStart companion. */
 const ALLOWED_COMPANION_IDS = new Set([
-  "0fluff-capture@jbuilds.local", // Firefox companion ID
-  // Add the Chrome companion ID after it is known.
+  "f4a3f4e104253c9c0b3cd6a7f69946309c3de803@temporary-addon", // Firefox temporary companion ID
+  "oljegcknngplpdpejgaomlpanhfjfecd", // Chromium companion ID
 ]);
 
 const LINKS_KEY = "0fluff_links";
