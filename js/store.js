@@ -209,6 +209,7 @@ let state = {
 };
 
 let initializationPromise = null;
+let hasInitialized = false;
 const listeners = new Set();
 
 /**
@@ -240,6 +241,49 @@ function queuePersistence(key, data) {
   return next;
 }
 
+
+// Keep an open dashboard in sync when the companion bridge updates extension storage.
+// Incoming changes update memory only, avoiding a write-back loop.
+if (isExtensionContext && chrome.storage.onChanged) {
+  const storageStateKeys = {
+    "0fluff_links": "links",
+    "0fluff_settings": "settings",
+    "0fluff_history": "searchHistory",
+    "0fluff_expanded_folders": "expandedFolderIds",
+  };
+
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== "local" || !hasInitialized) return;
+
+    const updates = {};
+    for (const [storageKey, stateKey] of Object.entries(storageStateKeys)) {
+      if (!Object.prototype.hasOwnProperty.call(changes, storageKey)) continue;
+
+      const raw = changes[storageKey].newValue;
+      let value = raw;
+      if (typeof raw === "string") {
+        try {
+          value = JSON.parse(raw);
+        } catch {
+          continue;
+        }
+      }
+      if (value === undefined || value === null) continue;
+
+      const currentValue = state[stateKey];
+      if (JSON.stringify(currentValue) !== JSON.stringify(value)) {
+        updates[stateKey] = value;
+      }
+    }
+
+    if (Object.keys(updates).length === 0) return;
+
+    const previousState = state;
+    state = { ...state, ...updates };
+    listeners.forEach((listener) => listener(previousState, state));
+  });
+}
+
 export const store = {
   /**
    * Initializes store state from storage sources asynchronously.
@@ -249,6 +293,7 @@ export const store = {
       initializationPromise = loadInitialState()
         .then((nextState) => {
           state = nextState;
+          hasInitialized = true;
           return state;
         })
         .catch((error) => {
