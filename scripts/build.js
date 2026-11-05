@@ -66,6 +66,7 @@ function buildPackage(target, manifestSrc, zipName) {
   }
 
   console.log(`Created ${zipName}`);
+  console.log(`Unpacked extension folder: dist/${target}`);
 }
 
 const baseManifest = JSON.parse(
@@ -80,5 +81,4 @@ buildPackage(
   `0fluffstart-firefox-v${version}.zip`,
 );
 
-// Clean up build directory
-fs.rmSync(path.join(ROOT_DIR, "dist"), { recursive: true, force: true });
+// Keep dist/chrome and dist/firefox available for unpacked extension testing.
