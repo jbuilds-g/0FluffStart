@@ -24,10 +24,5 @@
     "128": "icon.png",
     "192": "icon.png",
     "512": "icon.png"
-  },
-  "background": {
-    "scripts": [
-      "background.js"
-    ]
   }
 }
