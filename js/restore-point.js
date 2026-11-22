@@ -91,6 +91,10 @@ export async function saveRestorePoint() {
   await writePoint(await captureCurrent());
 }
 
+if (typeof window !== "undefined") {
+  window.saveRestorePointBeforeReset = saveRestorePoint;
+}
+
 export async function restorePrevious() {
   const point = await readPoint();
   if (!point) return false;
@@ -166,29 +170,6 @@ async function init() {
   const button = document.getElementById("restorePreviousBtn");
   const status = document.getElementById("restorePointStatus");
   const resetButton = document.getElementById("resetSettingsBtn");
-
-  if (resetButton) {
-    let resetInProgress = false;
-    resetButton.addEventListener(
-      "click",
-      async (event) => {
-        if (resetInProgress) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        try {
-          await saveRestorePoint();
-          resetInProgress = true;
-          resetButton.click();
-        } catch (error) {
-          console.error(
-            "Failed saving restore point before factory reset:",
-            error,
-          );
-        }
-      },
-      true,
-    );
-  }
 
   if (!button) return;
   await updateButton(button, status);

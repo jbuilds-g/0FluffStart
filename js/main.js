@@ -876,6 +876,19 @@ function bindStaticEvents() {
         "Reset Everything?",
       );
       if (confirmed) {
+        if (typeof window.saveRestorePointBeforeReset === "function") {
+          try {
+            await window.saveRestorePointBeforeReset();
+          } catch (error) {
+            console.error("Failed saving restore point before factory reset:", error);
+            showToast(
+              "Factory reset canceled because a restore point could not be saved.",
+              "error",
+            );
+            return;
+          }
+        }
+
         localStorage.clear();
         sessionStorage.clear();
         await clearBgFromDB();

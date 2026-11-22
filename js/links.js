@@ -914,12 +914,30 @@ export async function deleteLink(id, e) {
     "Delete Item?",
   );
   if (confirmed) {
-    const updatedLinks = store
-      .getState()
-      .links.filter((l) => l.id !== id && l.parentId !== id);
-    await store.setState({ links: updatedLinks });
+    const links = store.getState().links || [];
+    const idsToDelete = new Set([id]);
+    let changed = true;
+    while (changed) {
+      changed = false;
+      links.forEach((link) => {
+        if (
+          link.parentId &&
+          idsToDelete.has(link.parentId) &&
+          !idsToDelete.has(link.id)
+        ) {
+          idsToDelete.add(link.id);
+          changed = true;
+        }
+      });
+    }
 
-    if (store.getState().currentFolderId === id) navigateToFolder(null);
+    await store.setState({
+      links: links.filter((link) => !idsToDelete.has(link.id)),
+    });
+
+    const currentFolderId = store.getState().currentFolderId;
+    if (currentFolderId && idsToDelete.has(currentFolderId))
+      navigateToFolder(null);
     renderLinks();
     renderLinkManager();
     showToast("Item deleted", "info");

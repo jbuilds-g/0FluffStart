@@ -234,9 +234,9 @@ export function selectSuggestion(suggestion) {
       }
     }
   } else {
-    const { query: val, targetEngine } = resolveSearchQueryAndEngine(
-      suggestion.name,
-    );
+    const taggedQuery = inputEl?.value ?? suggestion.name;
+    const { query: val, targetEngine } =
+      resolveSearchQueryAndEngine(taggedQuery);
     executeSearch(val, targetEngine);
   }
 }

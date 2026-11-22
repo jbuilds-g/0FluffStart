@@ -34,7 +34,10 @@ export function installQuickLinksDragEngine({
       activeSession.dropSlot = null;
     }
     activeSession?.appendSlot?.remove();
-    if (activeSession) activeSession.appendSlot = null;
+    if (activeSession) {
+      activeSession.appendSlot = null;
+      activeSession.renderedFeedbackTarget = null;
+    }
   }
 
   function animateGridReflow(beforeRects, activeSession) {
@@ -459,6 +462,37 @@ export function installQuickLinksDragEngine({
     }
   }
 
+  function targetsMatch(first, second) {
+    if (first === second) return true;
+    if (!first || !second) return false;
+    return (
+      first.id === second.id &&
+      first.position === second.position &&
+      (first.anchorSelector || null) === (second.anchorSelector || null)
+    );
+  }
+
+  function updateFeedbackIfChanged(activeSession, resolved, mobile = false) {
+    const target = resolved?.target || null;
+    if (targetsMatch(activeSession.renderedFeedbackTarget, target)) return;
+
+    if (mobile) updateMobileFeedback(activeSession, resolved);
+    else updateFeedback(activeSession, resolved);
+
+    activeSession.renderedFeedbackTarget = target ? { ...target } : null;
+  }
+
+  function refreshAppendFeedback(activeSession) {
+    const target = activeSession.renderedFeedbackTarget;
+    if (
+      activeSession.appendSlot &&
+      target &&
+      (target.position === "root-end" || target.position === "append")
+    ) {
+      showAppendFeedback(activeSession, target.anchorSelector);
+    }
+  }
+
   function updatePreview(activeSession, event) {
     if (!activeSession.preview) return;
     activeSession.preview.style.left =
@@ -492,8 +526,12 @@ export function installQuickLinksDragEngine({
           ? resolveMobileTarget(activeSession.lastX, activeSession.lastY, activeSession)
           : resolveTarget(activeSession.lastX, activeSession.lastY, activeSession);
         activeSession.resolved = resolved?.target || null;
-        if (activeSession.pointerType === "touch") updateMobileFeedback(activeSession, resolved);
-        else updateFeedback(activeSession, resolved);
+        updateFeedbackIfChanged(
+          activeSession,
+          resolved,
+          activeSession.pointerType === "touch",
+        );
+        refreshAppendFeedback(activeSession);
         activeSession.autoScrollFrame = requestAnimationFrame(tick);
       } else {
         activeSession.autoScrollFrame = 0;
@@ -571,6 +609,7 @@ export function installQuickLinksDragEngine({
       scrolling: false,
       finished: false,
       resolved: null,
+      renderedFeedbackTarget: null,
       preview: null,
       appendSlot: null,
       autoScrollFrame: 0,
@@ -629,8 +668,7 @@ export function installQuickLinksDragEngine({
         ? resolveMobileTarget(moveEvent.clientX, moveEvent.clientY, activeSession)
         : resolveTarget(moveEvent.clientX, moveEvent.clientY, activeSession);
       activeSession.resolved = resolved?.target || null;
-      if (isTouch) updateMobileFeedback(activeSession, resolved);
-      else updateFeedback(activeSession, resolved);
+      updateFeedbackIfChanged(activeSession, resolved, isTouch);
       updateAutoScroll(activeSession);
     };
 
@@ -662,8 +700,8 @@ export function installQuickLinksDragEngine({
         ? resolveMobileTarget(activeSession.lastX, activeSession.lastY, activeSession)
         : resolveTarget(activeSession.lastX, activeSession.lastY, activeSession);
       activeSession.resolved = resolved?.target || null;
-      if (isTouch) updateMobileFeedback(activeSession, resolved);
-      else updateFeedback(activeSession, resolved);
+      updateFeedbackIfChanged(activeSession, resolved, isTouch);
+      refreshAppendFeedback(activeSession);
     };
 
     window.addEventListener("pointermove", activeSession.onMove, { passive: false });

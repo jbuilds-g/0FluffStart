@@ -25,6 +25,8 @@ export class CustomCursorEngine {
     this.onPointerMove = this.onPointerMove.bind(this);
     this.onPointerDown = this.onPointerDown.bind(this);
     this.onPointerUp = this.onPointerUp.bind(this);
+    this.onPointerCancel = this.onPointerCancel.bind(this);
+    this.onWindowBlur = this.onWindowBlur.bind(this);
     this.onPointerOver = this.onPointerOver.bind(this);
     this.onPointerOut = this.onPointerOut.bind(this);
     this.onLeave = this.onLeave.bind(this);
@@ -60,6 +62,7 @@ export class CustomCursorEngine {
       this.stopLoop();
       this.unbindEvents();
       this.isDragging = false;
+      this.pointerDirty = false;
       this.setVisible(false);
     }
   }
@@ -68,11 +71,12 @@ export class CustomCursorEngine {
     window.removeEventListener("pointermove", this.onPointerMove);
     window.removeEventListener("pointerdown", this.onPointerDown);
     window.removeEventListener("pointerup", this.onPointerUp);
+    window.removeEventListener("pointercancel", this.onPointerCancel);
     document.body.removeEventListener("pointerover", this.onPointerOver);
     document.body.removeEventListener("pointerout", this.onPointerOut);
     document.documentElement.removeEventListener("mouseleave", this.onLeave);
     document.documentElement.removeEventListener("mouseenter", this.onEnter);
-    window.removeEventListener("blur", this.onLeave);
+    window.removeEventListener("blur", this.onWindowBlur);
   }
 
   bindEvents() {
@@ -83,6 +87,9 @@ export class CustomCursorEngine {
       passive: true,
     });
     window.addEventListener("pointerup", this.onPointerUp, { passive: true });
+    window.addEventListener("pointercancel", this.onPointerCancel, {
+      passive: true,
+    });
     document.body.addEventListener("pointerover", this.onPointerOver, {
       passive: true,
     });
@@ -95,7 +102,7 @@ export class CustomCursorEngine {
     document.documentElement.addEventListener("mouseenter", this.onEnter, {
       passive: true,
     });
-    window.addEventListener("blur", this.onLeave, { passive: true });
+    window.addEventListener("blur", this.onWindowBlur, { passive: true });
   }
 
   onPointerMove(e) {
@@ -112,6 +119,7 @@ export class CustomCursorEngine {
     this.targetY = e.clientY;
     this.pointerDirty = true;
     if (!this.isVisible) this.setVisible(true);
+    this.startLoop();
   }
 
   onPointerDown(e) {
@@ -121,6 +129,15 @@ export class CustomCursorEngine {
 
   onPointerUp() {
     this.isDragging = false;
+  }
+
+  onPointerCancel() {
+    this.isDragging = false;
+  }
+
+  onWindowBlur() {
+    this.isDragging = false;
+    this.onLeave();
   }
 
   onPointerOver(e) {
@@ -170,6 +187,7 @@ export class CustomCursorEngine {
   }
   onEnter() {
     this.setVisible(true);
+    this.startLoop();
   }
 
   setVisible(visible) {
@@ -199,12 +217,15 @@ export class CustomCursorEngine {
   }
 
   startLoop() {
-    if (this.rafId !== null) return;
-    const renderFrame = () => {
-      this.rafId = requestAnimationFrame(renderFrame);
-      this.render();
-    };
-    this.rafId = requestAnimationFrame(renderFrame);
+    if (
+      this.rafId !== null ||
+      !this.pointerDirty ||
+      !this.isVisible ||
+      !this.isEnabled
+    ) {
+      return;
+    }
+    this.rafId = requestAnimationFrame(this.render);
   }
 
   stopLoop() {
@@ -214,10 +235,22 @@ export class CustomCursorEngine {
   }
 
   render() {
+    this.rafId = null;
     if (!this.pointerDirty || !this.isVisible || !this.isEnabled) return;
+
     this.currentX += (this.targetX - this.currentX) * 0.35;
     this.currentY += (this.targetY - this.currentY) * 0.35;
+
+    const settled =
+      Math.abs(this.targetX - this.currentX) < 0.5 &&
+      Math.abs(this.targetY - this.currentY) < 0.5;
+    if (settled) {
+      this.currentX = this.targetX;
+      this.currentY = this.targetY;
+      this.pointerDirty = false;
+    }
+
     this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
-    this.pointerDirty = false;
+    if (!settled) this.startLoop();
   }
 }

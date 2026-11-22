@@ -558,7 +558,8 @@ export function initSettingsPageSearch() {
     if (!mobile.classList.contains("active")) return;
     if (
       event.target.closest(".settings-search-mobile") ||
-      event.target.closest(".settings-search-mobile-trigger")
+      event.target.closest(".settings-search-mobile-trigger") ||
+      event.target.closest(".settings-search-nav")
     ) {
       return;
     }

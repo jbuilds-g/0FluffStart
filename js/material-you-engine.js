@@ -64,9 +64,19 @@ export class MaterialYouEngine {
 
   _getAverageColor(imgElement) {
     if (!this._offscreenCanvasCtx) return { r: 0, g: 0, b: 0 };
-    this._offscreenCanvasCtx.drawImage(imgElement, 0, 0, 1, 1);
-    const [r, g, b] = this._offscreenCanvasCtx.getImageData(0, 0, 1, 1).data;
-    return { r, g, b };
+    try {
+      this._offscreenCanvasCtx.drawImage(imgElement, 0, 0, 1, 1);
+      const [r, g, b] = this._offscreenCanvasCtx.getImageData(
+        0,
+        0,
+        1,
+        1,
+      ).data;
+      return { r, g, b };
+    } catch (error) {
+      console.warn("Unable to extract color from background image:", error);
+      return { r: 0, g: 0, b: 0 };
+    }
   }
 
   _rgbToHue(r, g, b) {
@@ -211,10 +221,16 @@ export class MaterialYouEngine {
     this._colorLoadedHandler = () => {
       if (generation !== this._extractionGeneration) return;
       if (this._sharedColorVideo) {
-        this._sharedColorVideo.currentTime = Math.min(
-          1,
-          this._sharedColorVideo.duration / 2,
-        );
+        const duration = this._sharedColorVideo.duration;
+        const seekTime =
+          Number.isFinite(duration) && duration > 0
+            ? Math.min(1, duration / 2)
+            : 0;
+        try {
+          this._sharedColorVideo.currentTime = seekTime;
+        } catch (error) {
+          console.warn("Unable to seek background video for color extraction:", error);
+        }
       }
     };
 
@@ -225,14 +241,18 @@ export class MaterialYouEngine {
       this._extractionTimer = setTimeout(() => {
         if (generation !== this._extractionGeneration) return;
         if (!this._offscreenCanvasCtx || !this._sharedColorVideo) return;
-        this._offscreenCanvasCtx.drawImage(this._sharedColorVideo, 0, 0, 1, 1);
-        const [r, g, b] = this._offscreenCanvasCtx.getImageData(
-          0,
-          0,
-          1,
-          1,
-        ).data;
-        this._applyTheme(this._rgbToHue(r, g, b), generation);
+        try {
+          this._offscreenCanvasCtx.drawImage(this._sharedColorVideo, 0, 0, 1, 1);
+          const [r, g, b] = this._offscreenCanvasCtx.getImageData(
+            0,
+            0,
+            1,
+            1,
+          ).data;
+          this._applyTheme(this._rgbToHue(r, g, b), generation);
+        } catch (error) {
+          console.warn("Unable to extract color from background video:", error);
+        }
       }, VIDEO_SEEK_DEBOUNCE_MS);
     };
 
@@ -246,14 +266,18 @@ export class MaterialYouEngine {
       this._sharedColorVideo.src = url;
     } else if (this._sharedColorVideo.readyState >= 2) {
       if (this._offscreenCanvasCtx) {
-        this._offscreenCanvasCtx.drawImage(this._sharedColorVideo, 0, 0, 1, 1);
-        const [r, g, b] = this._offscreenCanvasCtx.getImageData(
-          0,
-          0,
-          1,
-          1,
-        ).data;
-        this._applyTheme(this._rgbToHue(r, g, b), generation);
+        try {
+          this._offscreenCanvasCtx.drawImage(this._sharedColorVideo, 0, 0, 1, 1);
+          const [r, g, b] = this._offscreenCanvasCtx.getImageData(
+            0,
+            0,
+            1,
+            1,
+          ).data;
+          this._applyTheme(this._rgbToHue(r, g, b), generation);
+        } catch (error) {
+          console.warn("Unable to extract color from background video:", error);
+        }
       }
     }
   }

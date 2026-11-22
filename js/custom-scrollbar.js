@@ -336,13 +336,19 @@ export class CustomScrollbarManager {
   setHostScroll(host, axis, value) {
     const entry = this.entries.get(host);
     const isRoot = entry?.host === document.scrollingElement;
-    if (isRoot) {
-      if (axis === "vertical") window.scrollTo(window.scrollX, value);
-      else window.scrollTo(value, window.scrollY);
-      return;
+    const scrollHost = isRoot ? document.scrollingElement : host;
+    const left =
+      axis === "horizontal" ? value : isRoot ? window.scrollX : host.scrollLeft;
+    const top =
+      axis === "vertical" ? value : isRoot ? window.scrollY : host.scrollTop;
+
+    try {
+      if (isRoot) window.scrollTo({ left, top, behavior: "instant" });
+      else host.scrollTo({ left, top, behavior: "instant" });
+    } catch {
+      if (axis === "vertical") scrollHost.scrollTop = value;
+      else scrollHost.scrollLeft = value;
     }
-    if (axis === "vertical") host.scrollTop = value;
-    else host.scrollLeft = value;
   }
 
   onPointerDown(event) {
