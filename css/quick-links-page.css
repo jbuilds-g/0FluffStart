@@ -1219,3 +1219,22 @@ body.amoled .quick-links-move-panel {
     border-radius: var(--radius);
   }
 }
+
+
+/* Briefly identify the item opened from the dashboard context menu. */
+.quick-link-card.context-target-highlight {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  animation: context-target-pulse 1.8s ease-out both;
+}
+
+@keyframes context-target-pulse {
+  0%, 100% {
+    outline-color: var(--accent);
+    box-shadow: 0 0 0 0 transparent;
+  }
+  35% {
+    outline-color: var(--accent);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+}
