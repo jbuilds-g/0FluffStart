@@ -812,8 +812,13 @@ new CustomCursorEngine();
 await new Promise((resolve) => requestAnimationFrame(resolve));
 render();
 
-const focusId = new URLSearchParams(window.location.search).get("focus");
+const focusUrl = new URL(window.location.href);
+const focusId = focusUrl.searchParams.get("focus");
 if (focusId) {
+  // Consume the handoff so refreshing the manager does not reapply the highlight.
+  focusUrl.searchParams.delete("focus");
+  window.history.replaceState({}, "", focusUrl);
+
   const targetLink = (store.getState().links || []).find(
     (link) => link.id === focusId,
   );
@@ -827,6 +832,18 @@ if (focusId) {
     if (targetCard) {
       targetCard.classList.add("context-target-highlight");
       targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      const clearHighlight = () => {
+        targetCard.classList.remove("context-target-highlight");
+        document.removeEventListener("pointerdown", handleOutsidePointerDown, true);
+      };
+      const handleOutsidePointerDown = (event) => {
+        if (!targetCard.contains(event.target)) clearHighlight();
+      };
+
+      document.addEventListener("pointerdown", handleOutsidePointerDown, true);
+      window.setTimeout(clearHighlight, 1800);
+
       requestAnimationFrame(() => {
         targetCard
           .querySelector(".quick-link-desktop-menu-button")
