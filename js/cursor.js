@@ -10,6 +10,10 @@ export class CustomCursorEngine {
     this.scrollbarManager = new CustomScrollbarManager();
 
     this.iconEl = this.container.querySelector(".custom-cursor-icon");
+    this.currentCursorClass =
+      [...(this.iconEl?.classList || [])].find((name) =>
+        name.startsWith("icon-"),
+      ) || null;
     this.targetX = 0;
     this.targetY = 0;
     this.currentX = 0;
@@ -229,7 +233,16 @@ export class CustomCursorEngine {
   }
 
   setCursorClass(className) {
-    this.iconEl.className = `custom-cursor-icon ${className}`;
+    if (!this.iconEl || this.currentCursorClass === className) return;
+    this.iconEl.classList.remove(
+      "icon-default-mouse-pointer",
+      "icon-interactive-hover-ring-target",
+      "icon-text-i-beam-cursor",
+      "icon-multidirectional-drag-handle",
+      "icon-drag-grip-cursor",
+    );
+    this.iconEl.classList.add(className);
+    this.currentCursorClass = className;
   }
   setDragState(dragging) {
     this.isDragging = dragging;
