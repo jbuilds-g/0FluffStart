@@ -24,9 +24,6 @@ export class CustomCursorEngine {
     this.isDragging = false;
     this.isFirstMove = true;
     this.rafId = null;
-    this.pointerDirty = false;
-    this.lastFrameTime = null;
-    this.lastPointerTime = null;
     this.lastHoverTarget = null;
 
     this.onPointerMove = this.onPointerMove.bind(this);
@@ -67,8 +64,7 @@ export class CustomCursorEngine {
       this.stopLoop();
       this.unbindEvents();
       this.isDragging = false;
-      this.pointerDirty = false;
-      this.setVisible(false);
+        this.setVisible(false);
     }
   }
 
@@ -120,16 +116,12 @@ export class CustomCursorEngine {
       this.currentX = e.clientX;
       this.currentY = e.clientY;
       this.isFirstMove = false;
-      this.lastFrameTime = null;
-      this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+        this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
     }
     this.targetX = e.clientX;
     this.targetY = e.clientY;
-    this.lastPointerTime = performance.now();
-    this.pointerDirty =
-      this.currentX !== this.targetX || this.currentY !== this.targetY;
     if (!this.isVisible) this.setVisible(true);
-    this.startLoop();
+
   }
 
   onPointerDown(e) {
@@ -182,10 +174,6 @@ export class CustomCursorEngine {
   }
 
   onLeave() {
-    this.stopLoop();
-    this.pointerDirty = false;
-    this.lastFrameTime = null;
-    this.lastPointerTime = null;
     this.lastHoverTarget = null;
     this.setVisible(false);
   }
@@ -194,10 +182,7 @@ export class CustomCursorEngine {
       this.currentX = this.targetX = e.clientX;
       this.currentY = this.targetY = e.clientY;
       this.isFirstMove = false;
-      this.pointerDirty = false;
-      this.lastFrameTime = null;
-      this.lastPointerTime = performance.now();
-      this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+          this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
       const target = document.elementFromPoint(e.clientX, e.clientY);
       if (target) {
         this.lastHoverTarget = target;
@@ -252,60 +237,29 @@ export class CustomCursorEngine {
   }
 
   startLoop() {
-    if (
-      this.rafId !== null ||
-      !this.pointerDirty ||
-      !this.isVisible ||
-      !this.isEnabled
-    ) {
-      return;
-    }
+    if (this.isTracking) return;
+    this.isTracking = true;
     this.rafId = requestAnimationFrame(this.render);
   }
 
   stopLoop() {
+    if (!this.isTracking) return;
+    this.isTracking = false;
     if (this.rafId !== null) {
       cancelAnimationFrame(this.rafId);
       this.rafId = null;
     }
-    this.lastFrameTime = null;
   }
 
-  render(timestamp = performance.now()) {
-    this.rafId = null;
-    if (!this.pointerDirty || !this.isVisible || !this.isEnabled) {
-      this.lastFrameTime = null;
-      return;
-    }
+  render() {
+    if (!this.isTracking) return;
+    this.currentX += (this.targetX - this.currentX) * 0.45;
+    this.currentY += (this.targetY - this.currentY) * 0.45;
 
-    const elapsed = this.lastFrameTime === null
-      ? 1000 / 60
-      : Math.max(1, timestamp - this.lastFrameTime);
-    this.lastFrameTime = timestamp;
+    const x = Math.round(this.currentX * 100) / 100;
+    const y = Math.round(this.currentY * 100) / 100;
 
-    if (
-      elapsed > 120 ||
-      (this.lastPointerTime !== null && timestamp - this.lastPointerTime > 120)
-    ) {
-      this.currentX = this.targetX;
-      this.currentY = this.targetY;
-    } else {
-      const smoothing = 1 - Math.pow(0.65, elapsed / (1000 / 60));
-      this.currentX += (this.targetX - this.currentX) * smoothing;
-      this.currentY += (this.targetY - this.currentY) * smoothing;
-    }
-
-    const settled =
-      Math.abs(this.targetX - this.currentX) < 0.5 &&
-      Math.abs(this.targetY - this.currentY) < 0.5;
-    if (settled) {
-      this.currentX = this.targetX;
-      this.currentY = this.targetY;
-      this.pointerDirty = false;
-      this.lastFrameTime = null;
-    }
-
-    this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
-    if (!settled) this.startLoop();
+    this.container.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    this.rafId = requestAnimationFrame(this.render);
   }
 }
