@@ -6,8 +6,14 @@
     <title>Settings — 0FluffStart</title>
     <link rel="stylesheet" href="css/core.css" />
     <link rel="stylesheet" href="css/settings-page.css?v=19" />
+    <link rel="stylesheet" href="css/page-navigation.css" />
   </head>
   <body class="dark">
+    <nav class="page-navigation" aria-label="Main navigation">
+      <a href="./index.html">Dashboard</a>
+      <a href="./quick-links.html">Quick Links</a>
+      <a href="./settings.html" aria-current="page">Settings</a>
+    </nav>
     <div id="bgOverlay" class="bg-overlay"></div>
     <div id="bgImage" class="bg-image hidden"></div>
     <video
@@ -22,12 +28,6 @@
     <main class="settings-page-shell">
       <header class="settings-page-header">
         <div>
-          <a
-            class="settings-back-link"
-            href="./index.html"
-            aria-label="Back to dashboard"
-            >← Back</a
-          >
           <h1>Settings</h1>
           <p>Configure how 0FluffStart looks and behaves.</p>
         </div>
