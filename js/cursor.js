@@ -21,6 +21,7 @@ export class CustomCursorEngine {
     this.isFirstMove = true;
     this.rafId = null;
     this.pointerDirty = false;
+    this.lastFrameTime = null;
 
     this.onPointerMove = this.onPointerMove.bind(this);
     this.onPointerDown = this.onPointerDown.bind(this);
@@ -110,14 +111,18 @@ export class CustomCursorEngine {
       this.deactivateTouch();
       return;
     }
-    if (this.isFirstMove) {
+    const wasIdle = this.rafId === null && !this.pointerDirty;
+    if (this.isFirstMove || wasIdle) {
       this.currentX = e.clientX;
       this.currentY = e.clientY;
       this.isFirstMove = false;
+      this.lastFrameTime = null;
+      this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
     }
     this.targetX = e.clientX;
     this.targetY = e.clientY;
-    this.pointerDirty = true;
+    this.pointerDirty =
+      this.currentX !== this.targetX || this.currentY !== this.targetY;
     if (!this.isVisible) this.setVisible(true);
     this.startLoop();
   }
@@ -183,9 +188,20 @@ export class CustomCursorEngine {
   }
 
   onLeave() {
+    this.stopLoop();
+    this.pointerDirty = false;
+    this.lastFrameTime = null;
     this.setVisible(false);
   }
-  onEnter() {
+  onEnter(e) {
+    if (Number.isFinite(e?.clientX) && Number.isFinite(e?.clientY)) {
+      this.currentX = this.targetX = e.clientX;
+      this.currentY = this.targetY = e.clientY;
+      this.isFirstMove = false;
+      this.pointerDirty = false;
+      this.lastFrameTime = null;
+      this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+    }
     this.setVisible(true);
     this.startLoop();
   }
@@ -229,17 +245,33 @@ export class CustomCursorEngine {
   }
 
   stopLoop() {
-    if (this.rafId === null) return;
-    cancelAnimationFrame(this.rafId);
-    this.rafId = null;
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+    this.lastFrameTime = null;
   }
 
-  render() {
+  render(timestamp = performance.now()) {
     this.rafId = null;
-    if (!this.pointerDirty || !this.isVisible || !this.isEnabled) return;
+    if (!this.pointerDirty || !this.isVisible || !this.isEnabled) {
+      this.lastFrameTime = null;
+      return;
+    }
 
-    this.currentX += (this.targetX - this.currentX) * 0.35;
-    this.currentY += (this.targetY - this.currentY) * 0.35;
+    const elapsed = this.lastFrameTime === null
+      ? 1000 / 60
+      : Math.max(1, timestamp - this.lastFrameTime);
+    this.lastFrameTime = timestamp;
+
+    if (elapsed > 120) {
+      this.currentX = this.targetX;
+      this.currentY = this.targetY;
+    } else {
+      const smoothing = 1 - Math.pow(0.65, elapsed / (1000 / 60));
+      this.currentX += (this.targetX - this.currentX) * smoothing;
+      this.currentY += (this.targetY - this.currentY) * smoothing;
+    }
 
     const settled =
       Math.abs(this.targetX - this.currentX) < 0.5 &&
@@ -248,6 +280,7 @@ export class CustomCursorEngine {
       this.currentX = this.targetX;
       this.currentY = this.targetY;
       this.pointerDirty = false;
+      this.lastFrameTime = null;
     }
 
     this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
