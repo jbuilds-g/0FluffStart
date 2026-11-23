@@ -72,9 +72,6 @@
 }
 
 /* Reserve space so the fixed navigation never covers page content. */
-.container {
-  padding-top: 96px;
-}
 .quick-links-page {
   padding-top: 96px;
 }
