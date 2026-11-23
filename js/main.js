@@ -990,7 +990,7 @@ function bindStaticEvents() {
       const link = links.find((l) => l.id === id);
       if (!link) return;
 
-      window.location.href = "settings.html#links-dashboard";
+      window.location.href = `quick-links.html?focus=${encodeURIComponent(id)}`;
     });
   }
 }
