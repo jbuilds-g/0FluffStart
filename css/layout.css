@@ -141,3 +141,117 @@ h1 {
 }
 
 /* Mobile touch & header overrides managed in mobile.css */
+
+
+/* --- EXPANDING DASHBOARD PAGE NAVIGATION --- */
+.floating-settings {
+  pointer-events: auto;
+  display: block;
+  width: 36px;
+  height: 36px;
+}
+.floating-settings > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.floating-settings > summary::-webkit-details-marker {
+  display: none;
+}
+.floating-settings > summary::marker {
+  content: "";
+}
+.dashboard-navigation {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--card) 94%, transparent);
+  box-shadow: var(--shadow-md, var(--shadow));
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms ease;
+}
+.floating-settings:hover .dashboard-navigation,
+.floating-settings:focus-within .dashboard-navigation,
+.floating-settings[open] .dashboard-navigation {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.dashboard-navigation a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: max(6px, calc(var(--radius) * 0.65));
+  color: var(--dim);
+  text-decoration: none;
+  white-space: nowrap;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+.dashboard-navigation a:hover,
+.dashboard-navigation a:focus-visible {
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 10%, var(--card));
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  outline: none;
+}
+.dashboard-navigation a[aria-current="page"] {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--card));
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--border));
+}
+
+@media (max-width: 850px) and (pointer: coarse) {
+  body:not(.force-desktop-mode) .floating-settings {
+    width: 40px;
+    height: 40px;
+  }
+  body:not(.force-desktop-mode) .dashboard-navigation {
+    top: auto;
+    right: 0;
+    bottom: calc(100% + 10px);
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 148px;
+    transform: translateY(6px);
+  }
+  body:not(.force-desktop-mode) .floating-settings:hover .dashboard-navigation,
+  body:not(.force-desktop-mode) .floating-settings:focus-within .dashboard-navigation,
+  body:not(.force-desktop-mode) .floating-settings[open] .dashboard-navigation {
+    transform: translateY(0);
+  }
+  body:not(.force-desktop-mode) .dashboard-navigation a {
+    justify-content: flex-start;
+    min-height: 40px;
+    padding-inline: 12px;
+    font-size: 0.82rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-navigation,
+  .dashboard-navigation a {
+    transition: none;
+  }
+}
