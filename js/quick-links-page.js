@@ -811,3 +811,27 @@ document.body.classList.add("quick-links-body");
 new CustomCursorEngine();
 await new Promise((resolve) => requestAnimationFrame(resolve));
 render();
+
+const focusId = new URLSearchParams(window.location.search).get("focus");
+if (focusId) {
+  const targetLink = (store.getState().links || []).find(
+    (link) => link.id === focusId,
+  );
+  if (targetLink) {
+    currentFolderId = targetLink.parentId || null;
+    render();
+
+    const targetCard = [...grid.querySelectorAll(".quick-link-card")].find(
+      (card) => card.dataset.id === focusId,
+    );
+    if (targetCard) {
+      targetCard.classList.add("context-target-highlight");
+      targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+      requestAnimationFrame(() => {
+        targetCard
+          .querySelector(".quick-link-desktop-menu-button")
+          ?.click();
+      });
+    }
+  }
+}
