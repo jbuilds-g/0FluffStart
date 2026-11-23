@@ -192,6 +192,7 @@ export class CustomCursorEngine {
     this.stopLoop();
     this.pointerDirty = false;
     this.lastFrameTime = null;
+    this.lastPointerTime = null;
     this.setVisible(false);
   }
   onEnter(e) {
@@ -201,6 +202,7 @@ export class CustomCursorEngine {
       this.isFirstMove = false;
       this.pointerDirty = false;
       this.lastFrameTime = null;
+      this.lastPointerTime = performance.now();
       this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
     }
     this.setVisible(true);
