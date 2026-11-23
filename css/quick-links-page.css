@@ -1225,7 +1225,7 @@ body.amoled .quick-links-move-panel {
 .quick-link-card.context-target-highlight {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
-  animation: context-target-pulse 1.8s ease-out both;
+  animation: context-target-pulse 1.8s ease-out;
 }
 
 @keyframes context-target-pulse {
