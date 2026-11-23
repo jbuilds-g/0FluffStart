@@ -160,22 +160,16 @@ h1 {
   background: var(--bg);
   box-shadow: var(--shadow-md);
   transition:
-    width 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    height 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    background-color 180ms ease,
-    border-radius 180ms ease;
+    width 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 200ms ease,
+    background-color 180ms ease;
 }
-.floating-settings > summary {
+.floating-settings > #settingsToggleBtn {
   order: 2;
   flex: 0 0 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 34px;
   height: 34px;
   box-sizing: border-box;
-  list-style: none;
-  cursor: pointer;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -185,39 +179,33 @@ h1 {
     opacity 140ms ease,
     transform 180ms ease;
 }
-.floating-settings > summary::-webkit-details-marker {
-  display: none;
-}
-.floating-settings > summary::marker {
-  content: "";
-}
 .dashboard-navigation {
   order: 1;
-  display: flex;
+  display: flex !important;
+  flex: 0 0 auto;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
   gap: 3px;
-  flex: 0 1 auto;
+  width: max-content;
   max-width: 0;
   overflow: hidden;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transition:
-    max-width 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 140ms ease 40ms;
+    max-width 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 140ms ease 50ms,
+    visibility 140ms ease;
 }
 .floating-settings:hover,
-.floating-settings:focus-within,
-.floating-settings[open] {
-  width: 292px;
+.floating-settings:focus-within {
+  width: 320px;
   height: 46px;
   padding: 4px;
   background: color-mix(in srgb, var(--card) 94%, transparent);
 }
-.floating-settings:hover > summary,
-.floating-settings:focus-within > summary,
-.floating-settings[open] > summary {
+.floating-settings:hover > #settingsToggleBtn,
+.floating-settings:focus-within > #settingsToggleBtn {
   flex-basis: 0;
   width: 0;
   opacity: 0;
@@ -225,10 +213,10 @@ h1 {
   pointer-events: none;
 }
 .floating-settings:hover .dashboard-navigation,
-.floating-settings:focus-within .dashboard-navigation,
-.floating-settings[open] .dashboard-navigation {
-  max-width: 260px;
+.floating-settings:focus-within .dashboard-navigation {
+  max-width: 282px;
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 .dashboard-navigation a {
@@ -264,66 +252,40 @@ h1 {
   border-color: color-mix(in srgb, var(--accent) 28%, var(--border));
 }
 
-/* Desktop interaction is hover/focus only; touch devices use the summary toggle. */
-@media (hover: hover) and (pointer: fine) {
-  .floating-settings > summary {
-    pointer-events: none;
-  }
-}
-
+/* Touch devices keep the original single Settings shortcut. */
 @media (max-width: 850px) and (pointer: coarse) {
   body:not(.force-desktop-mode) .floating-settings {
+    display: block;
     width: 40px;
     height: 40px;
-    flex-direction: column;
-    justify-content: flex-end;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transition: none;
+  }
+  body:not(.force-desktop-mode) .floating-settings > #settingsToggleBtn {
+    display: flex;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    border: 1px solid var(--border);
     border-radius: var(--radius);
-  }
-  body:not(.force-desktop-mode) .floating-settings[open] {
-    width: 156px;
-    height: 156px;
-    padding: 6px;
-  }
-  body:not(.force-desktop-mode) .floating-settings > summary {
-    order: 2;
-    flex: 0 0 38px;
-    width: 38px;
-    height: 38px;
-  }
-  body:not(.force-desktop-mode) .floating-settings[open] > summary {
-    flex-basis: 0;
-    width: 0;
-    height: 0;
+    background: var(--bg);
+    box-shadow: var(--shadow-md);
   }
   body:not(.force-desktop-mode) .dashboard-navigation {
-    order: 1;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
-    width: 100%;
-    max-width: none;
-    max-height: 0;
-    gap: 3px;
-    opacity: 0;
-    transition:
-      max-height 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-      opacity 140ms ease 40ms;
-  }
-  body:not(.force-desktop-mode) .floating-settings[open] .dashboard-navigation {
-    max-height: 144px;
-    opacity: 1;
-    pointer-events: auto;
-  }
-  body:not(.force-desktop-mode) .dashboard-navigation a {
-    justify-content: center;
-    min-height: 40px;
-    padding-inline: 12px;
-    font-size: 0.82rem;
+    display: none !important;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .floating-settings,
-  .floating-settings > summary,
+  .floating-settings > #settingsToggleBtn,
   .dashboard-navigation,
   .dashboard-navigation a {
     transition: none;
