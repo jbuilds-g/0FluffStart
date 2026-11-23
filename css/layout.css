@@ -151,6 +151,8 @@ h1 {
   height: 36px;
 }
 .floating-settings > summary {
+  position: relative;
+  z-index: 1;
   list-style: none;
   cursor: pointer;
 }
@@ -162,9 +164,10 @@ h1 {
 }
 .dashboard-navigation {
   position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
+  top: 0;
+  right: calc(100% + 8px);
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 3px;
   padding: 5px;
@@ -177,11 +180,12 @@ h1 {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateY(-6px);
+  transform: translateX(8px);
+  transform-origin: right center;
   transition:
-    opacity 160ms ease,
-    transform 160ms ease,
-    visibility 160ms ease;
+    opacity 180ms ease,
+    transform 180ms ease,
+    visibility 180ms ease;
 }
 .floating-settings:hover .dashboard-navigation,
 .floating-settings:focus-within .dashboard-navigation,
@@ -189,7 +193,7 @@ h1 {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translateY(0);
+  transform: translateX(0);
 }
 .dashboard-navigation a {
   display: inline-flex;
@@ -235,10 +239,9 @@ h1 {
     flex-direction: column;
     align-items: stretch;
     min-width: 148px;
-    transform: translateY(6px);
+    transform: translateY(8px);
+    transform-origin: bottom right;
   }
-  body:not(.force-desktop-mode) .floating-settings:hover .dashboard-navigation,
-  body:not(.force-desktop-mode) .floating-settings:focus-within .dashboard-navigation,
   body:not(.force-desktop-mode) .floating-settings[open] .dashboard-navigation {
     transform: translateY(0);
   }
