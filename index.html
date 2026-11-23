@@ -134,20 +134,23 @@
       <div id="linkGrid" class="link-grid"></div>
       <div id="navPillContainer" class="nav-pill-container hidden"></div>
 
-      <div class="floating-settings">
-        <a
-          id="settingsToggleBtn"
+      <details class="floating-settings" aria-label="Page navigation">
+        <summary
           class="icon-btn floating-btn"
-          href="settings.html"
-          title="Settings"
-          aria-label="Settings"
+          title="Page navigation"
+          aria-label="Open page navigation"
         >
           <span
             class="icon-mask icon-settings"
             style="width: 18px; height: 18px"
           ></span>
-        </a>
-      </div>
+        </summary>
+        <nav class="dashboard-navigation" aria-label="Main navigation">
+          <a href="./index.html" aria-current="page">Dashboard</a>
+          <a href="./quick-links.html">Quick Links</a>
+          <a href="./settings.html">Settings</a>
+        </nav>
+      </details>
     </div>
     <div id="customCursorEngine" class="custom-cursor" aria-hidden="true">
       <span class="custom-cursor-icon icon-default-mouse-pointer"></span>
