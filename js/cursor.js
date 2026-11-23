@@ -22,6 +22,7 @@ export class CustomCursorEngine {
     this.rafId = null;
     this.pointerDirty = false;
     this.lastFrameTime = null;
+    this.lastPointerTime = null;
 
     this.onPointerMove = this.onPointerMove.bind(this);
     this.onPointerDown = this.onPointerDown.bind(this);
@@ -111,8 +112,7 @@ export class CustomCursorEngine {
       this.deactivateTouch();
       return;
     }
-    const wasIdle = this.rafId === null && !this.pointerDirty;
-    if (this.isFirstMove || wasIdle) {
+    if (this.isFirstMove) {
       this.currentX = e.clientX;
       this.currentY = e.clientY;
       this.isFirstMove = false;
@@ -121,6 +121,7 @@ export class CustomCursorEngine {
     }
     this.targetX = e.clientX;
     this.targetY = e.clientY;
+    this.lastPointerTime = performance.now();
     this.pointerDirty =
       this.currentX !== this.targetX || this.currentY !== this.targetY;
     if (!this.isVisible) this.setVisible(true);
@@ -264,7 +265,10 @@ export class CustomCursorEngine {
       : Math.max(1, timestamp - this.lastFrameTime);
     this.lastFrameTime = timestamp;
 
-    if (elapsed > 120) {
+    if (
+      elapsed > 120 ||
+      (this.lastPointerTime !== null && timestamp - this.lastPointerTime > 120)
+    ) {
       this.currentX = this.targetX;
       this.currentY = this.targetY;
     } else {
