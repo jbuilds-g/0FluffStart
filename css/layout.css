@@ -152,7 +152,8 @@ h1 {
   justify-content: flex-end;
   gap: 0;
   box-sizing: border-box;
-  width: 36px;
+  width: max-content;
+  max-width: 36px;
   height: 36px;
   overflow: hidden;
   border: 1px solid var(--border);
@@ -160,13 +161,14 @@ h1 {
   background: var(--bg);
   box-shadow: var(--shadow-md);
   transition:
-    width 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    max-width 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
     height 200ms ease,
     background-color 180ms ease;
 }
 .floating-settings > #settingsToggleBtn {
   order: 2;
   flex: 0 0 34px;
+  min-width: 0;
   width: 34px;
   height: 34px;
   box-sizing: border-box;
@@ -199,15 +201,19 @@ h1 {
 }
 .floating-settings:hover,
 .floating-settings:focus-within {
-  width: 320px;
+  max-width: min(320px, calc(100vw - 32px));
   height: 46px;
   padding: 4px;
   background: color-mix(in srgb, var(--card) 94%, transparent);
 }
 .floating-settings:hover > #settingsToggleBtn,
 .floating-settings:focus-within > #settingsToggleBtn {
-  flex-basis: 0;
+  flex: 0 0 0;
+  min-width: 0;
   width: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
   opacity: 0;
   transform: scale(0.7);
   pointer-events: none;
