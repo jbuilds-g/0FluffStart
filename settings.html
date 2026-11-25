@@ -233,14 +233,20 @@
                     </div>
                   </div>
                   <div class="setting-slider-row">
-                    <input
-                      type="range"
-                      id="shadowSlider"
-                      min="0"
-                      max="200"
-                      value="100"
-                      class="theme-slider"
-                    /><input
+                    <div class="slider" id="shadowSliderControl" style="--v: 50%">
+                      <span class="slider-track-active" aria-hidden="true"></span>
+                      <span class="slider-track-inactive" aria-hidden="true"></span>
+                      <span class="slider-thumb" aria-hidden="true"></span>
+                      <input
+                        type="range"
+                        id="shadowSlider"
+                        min="0"
+                        max="200"
+                        value="100"
+                        class="theme-slider"
+                        aria-label="Shadow depth"
+                      />
+                    </div><input
                       type="number"
                       id="shadowInputNumber"
                       min="0"
