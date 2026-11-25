@@ -88,11 +88,15 @@
                     default greeting.
                   </div>
                 </div>
-                <input
-                  type="text"
-                  id="userNameInput"
-                  placeholder="Name for greeting..."
-                />
+                <div class="field">
+                  <input
+                    type="text"
+                    id="userNameInput"
+                    placeholder=" "
+                    autocomplete="name"
+                  />
+                  <label for="userNameInput">Name for greeting</label>
+                </div>
               </div>
 
               <div class="setting-row setting-row-input">
@@ -273,8 +277,8 @@
                       mobile-specific sizing and navigation behavior.
                     </div>
                   </div>
-                  <label class="radio-option"
-                    ><input type="checkbox" id="forceDesktopToggle" /> Force
+                  <label class="radio-option switch"
+                    ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input type="checkbox" id="forceDesktopToggle" /> Force
                     Desktop Layout</label
                   >
                 </div>
@@ -305,8 +309,8 @@
                       standard system pointer.
                     </div>
                   </div>
-                  <label class="radio-option"
-                    ><input type="checkbox" id="customCursorToggle" checked />
+                  <label class="radio-option switch"
+                    ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input type="checkbox" id="customCursorToggle" checked />
                     Enable Custom Cursor</label
                   >
                 </div>
@@ -391,8 +395,8 @@
                     </div>
                   </div>
                   <div class="setting-option">
-                    <label class="radio-option"
-                      ><input
+                    <label class="radio-option switch"
+                      ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input
                         type="checkbox"
                         id="showAllSearchControlsToggle"
                         checked
@@ -413,8 +417,8 @@
                     class="settings-subgroup"
                   >
                     <div class="setting-option">
-                      <label class="radio-option"
-                        ><input
+                      <label class="radio-option switch"
+                        ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input
                           type="checkbox"
                           id="showEngineDropdownToggle"
                           checked
@@ -431,8 +435,8 @@
                       </div>
                     </div>
                     <div class="setting-option">
-                      <label class="radio-option"
-                        ><input
+                      <label class="radio-option switch"
+                        ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input
                           type="checkbox"
                           id="showQuickSuggestToggle"
                           checked
@@ -450,8 +454,8 @@
                       </div>
                     </div>
                     <div class="setting-option">
-                      <label class="radio-option"
-                        ><input
+                      <label class="radio-option switch"
+                        ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input
                           type="checkbox"
                           id="showSearchSubmitToggle"
                           checked
@@ -526,14 +530,17 @@
                         No media selected.
                       </p>
                       <div class="custom-background-url-row">
-                        <input
-                          type="url"
-                          id="bgUrlInput"
-                          class="bg-url-input"
-                          placeholder="Paste an image or video URL..."
-                          autocomplete="off"
-                          spellcheck="false"
-                        />
+                        <div class="field">
+                          <input
+                            type="url"
+                            id="bgUrlInput"
+                            class="bg-url-input"
+                            placeholder=" "
+                            autocomplete="off"
+                            spellcheck="false"
+                          />
+                          <label for="bgUrlInput">Media URL</label>
+                        </div>
                       </div>
                       <div class="radio-row bg-radio-row">
                         <input
@@ -649,8 +656,8 @@
                     </div>
                   </div>
                   <div class="setting-option">
-                    <label class="radio-option clock-format-toggle"
-                      ><span id="clockFormatValue">24-Hour</span
+                    <label class="radio-option clock-format-toggle switch"
+                      ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><span id="clockFormatValue">24-Hour</span
                       ><input
                         type="checkbox"
                         id="clockFormatToggle"
@@ -666,8 +673,8 @@
                     </div>
                   </div>
                   <div class="setting-option">
-                    <label class="radio-option"
-                      ><input type="checkbox" id="showSecondsToggle" checked />
+                    <label class="radio-option switch"
+                      ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input type="checkbox" id="showSecondsToggle" checked />
                       Display Live Seconds</label
                     >
                     <div class="setting-option-help">
@@ -726,8 +733,8 @@
                       behavior.
                     </div>
                   </div>
-                  <label class="radio-option"
-                    ><input type="checkbox" id="externalSuggestToggle" /> Enable
+                  <label class="radio-option switch"
+                    ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input type="checkbox" id="externalSuggestToggle" /> Enable
                     Live Suggestions</label
                   >
                   <div
@@ -735,12 +742,15 @@
                     class="setting-option settings-inline-control"
                   >
                     <div class="setting-option-title">Custom Proxy</div>
-                    <input
-                      type="url"
-                      id="customProxyInput"
-                      placeholder="Custom Proxy, e.g., https://my-proxy.com/?"
-                      class="custom-proxy-input"
-                    />
+                    <div class="field">
+                      <input
+                        type="url"
+                        id="customProxyInput"
+                        placeholder=" "
+                        class="custom-proxy-input"
+                      />
+                      <label for="customProxyInput">Custom proxy URL</label>
+                    </div>
                     <div class="setting-option-help">
                       <span
                         class="icon-mask icon-help"
@@ -752,8 +762,8 @@
                     </div>
                   </div>
                   <div class="setting-option settings-inline-control">
-                    <label class="radio-option"
-                      ><input type="checkbox" id="cacheSuggestToggle" checked />
+                    <label class="radio-option switch"
+                      ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input type="checkbox" id="cacheSuggestToggle" checked />
                       Cache Search Suggestions</label
                     >
                     <div class="setting-option-help">
@@ -856,19 +866,18 @@
                     </button>
                     <div id="customEngineEditor" class="link-editor-box hidden">
                       <h4 class="editor-title">Add Custom Engine</h4>
-                      <input
-                        type="text"
-                        id="customEngineName"
-                        placeholder="Title, e.g. Phind"
-                      /><input
-                        type="text"
-                        id="customEngineTag"
-                        placeholder="Tag, e.g. ?pd"
-                      /><input
-                        type="url"
-                        id="customEngineUrl"
-                        placeholder="Search URL, e.g. https://phind.com/search?q="
-                      />
+                      <div class="field">
+                        <input type="text" id="customEngineName" placeholder=" " />
+                        <label for="customEngineName">Engine title</label>
+                      </div>
+                      <div class="field">
+                        <input type="text" id="customEngineTag" placeholder=" " />
+                        <label for="customEngineTag">Search tag</label>
+                      </div>
+                      <div class="field">
+                        <input type="url" id="customEngineUrl" placeholder=" " />
+                        <label for="customEngineUrl">Search URL</label>
+                      </div>
                       <div class="editor-btn-row">
                         <button
                           id="addCustomEngineBtn"
@@ -918,8 +927,8 @@
                       search history and suggestions.
                     </div>
                   </div>
-                  <label class="radio-option"
-                    ><input type="checkbox" id="historyEnabledToggle" checked />
+                  <label class="radio-option switch"
+                    ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input type="checkbox" id="historyEnabledToggle" checked />
                     Enable Search History</label
                   >
                 </div>
@@ -975,8 +984,8 @@
                   <div
                     class="setting-option desktop-only-setting settings-inline-control"
                   >
-                    <label class="radio-option radio-option-no-margin"
-                      ><input type="checkbox" id="showTitlesToggle" /> Show
+                    <label class="radio-option radio-option-no-margin switch"
+                      ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input type="checkbox" id="showTitlesToggle" /> Show
                       Quick Link Titles</label
                     >
                     <div class="setting-option-help">
@@ -990,8 +999,8 @@
                     </div>
                   </div>
                   <div class="setting-option settings-inline-control">
-                    <label class="radio-option radio-option-no-margin"
-                      ><input type="checkbox" id="openNewTabToggle" /> Open
+                    <label class="radio-option radio-option-no-margin switch"
+                      ><span class="switch-track" aria-hidden="true"><span class="switch-thumb"><span class="icon-mask icon-check"></span></span></span><input type="checkbox" id="openNewTabToggle" /> Open
                       Links in New Tab</label
                     >
                     <div class="setting-option-help">
