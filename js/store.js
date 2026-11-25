@@ -159,9 +159,6 @@ async function loadInitialState() {
     searchHistory,
     currentFolderId: null,
     folderStack: [],
-    isSelectionMode: false,
-    selectedLinkIds: [],
-    activeFolderId: null,
     editorTargetFolderId: null,
     isEditingId: null,
     expandedFolderIds,
@@ -184,9 +181,6 @@ async function loadInitialState() {
  * @property {Object} settings
  * @property {string[]} searchHistory
  * @property {string|null} currentFolderId
- * @property {boolean} isSelectionMode
- * @property {string[]} selectedLinkIds
- * @property {string|null} activeFolderId
  * @property {string|null} editorTargetFolderId
  * @property {string|null} isEditingId
  * @property {string[]} expandedFolderIds
@@ -199,9 +193,6 @@ let state = {
   searchHistory: [],
   currentFolderId: null,
   folderStack: [],
-  isSelectionMode: false,
-  selectedLinkIds: [],
-  activeFolderId: null,
   editorTargetFolderId: null,
   isEditingId: null,
   expandedFolderIds: [],
