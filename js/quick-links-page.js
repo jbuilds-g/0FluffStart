@@ -494,12 +494,18 @@ function openMoveToPicker(itemId) {
   function showCreateFolderForm() {
     const form = document.createElement("form");
     form.className = "quick-links-move-create-form";
+    const field = document.createElement("div");
+    field.className = "field";
     const input = document.createElement("input");
     input.type = "text";
+    input.id = "moveFolderName";
     input.maxLength = 50;
     input.autocomplete = "off";
-    input.placeholder = "Folder name";
-    input.setAttribute("aria-label", "New folder name");
+    input.placeholder = " ";
+    const label = document.createElement("label");
+    label.htmlFor = input.id;
+    label.textContent = "New folder name";
+    field.append(input, label);
     const actions = document.createElement("div");
     actions.className = "quick-links-move-create-actions";
     const cancelCreate = document.createElement("button");
@@ -512,7 +518,7 @@ function openMoveToPicker(itemId) {
     create.className = "quick-links-move-primary";
     create.textContent = "Create folder";
     actions.append(cancelCreate, create);
-    form.append(input, actions);
+    form.append(field, actions);
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       const name = input.value.trim().slice(0, 50);
