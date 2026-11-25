@@ -1515,3 +1515,10 @@ body > .bg-video {
     transition: none !important;
   }
 }
+
+.settings-page-shell .engine-item-actions .switch {
+  width: 52px;
+  min-height: 32px;
+  flex: 0 0 52px;
+  gap: 0;
+}
