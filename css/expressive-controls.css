@@ -13,15 +13,19 @@
   display: inline-flex;
   align-items: center;
   flex-direction: row-reverse;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 10px;
+  width: 100%;
   min-height: 40px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 .switch input[type="checkbox"] {
   position: absolute !important;
-  inset: 0 0 auto auto !important;
+  top: 50% !important;
+  right: 0 !important;
+  left: auto !important;
+  transform: translateY(-50%);
   z-index: 2;
   width: 52px !important;
   min-width: 52px !important;
@@ -118,7 +122,10 @@ body.material-you .switch input[type="checkbox"] {
   appearance: none !important;
   -webkit-appearance: none !important;
   position: absolute !important;
-  inset: 0 0 auto auto !important;
+  top: 50% !important;
+  right: 0 !important;
+  left: auto !important;
+  transform: translateY(-50%);
   width: 52px !important;
   min-width: 52px !important;
   height: 32px !important;
