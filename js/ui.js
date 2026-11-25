@@ -1210,6 +1210,12 @@ export function renderEngineSelectionList() {
     checkbox.checked = showDropdown
       ? enabledNames.includes(engine.name)
       : (settings.searchEngine || "Google") === engine.name;
+    checkbox.setAttribute(
+      "aria-label",
+      showDropdown
+        ? `Enable ${engine.name}`
+        : `Set ${engine.name} as the default search engine`,
+    );
 
     checkbox.addEventListener("change", () => {
       if (!showDropdown) {
@@ -1241,7 +1247,23 @@ export function renderEngineSelectionList() {
       renderEngineDropdown();
     });
 
-    actions.appendChild(checkbox);
+    if (showDropdown) {
+      const switchLabel = document.createElement("label");
+      switchLabel.className = "switch";
+      const track = document.createElement("span");
+      track.className = "switch-track";
+      track.setAttribute("aria-hidden", "true");
+      const thumb = document.createElement("span");
+      thumb.className = "switch-thumb";
+      const check = document.createElement("span");
+      check.className = "icon-mask icon-check";
+      thumb.appendChild(check);
+      track.appendChild(thumb);
+      switchLabel.append(checkbox, track);
+      actions.appendChild(switchLabel);
+    } else {
+      actions.appendChild(checkbox);
+    }
     item.appendChild(left);
     item.appendChild(actions);
     container.appendChild(item);
