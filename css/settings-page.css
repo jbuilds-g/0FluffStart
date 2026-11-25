@@ -1479,7 +1479,17 @@ body > .bg-video {
   gap: 10px;
   width: 100%;
   min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text);
   cursor: pointer;
+}
+.settings-page-shell .switch:hover {
+  border-color: transparent;
+  background: transparent;
 }
 .settings-page-shell .switch input[type="checkbox"] {
   position: absolute !important;
