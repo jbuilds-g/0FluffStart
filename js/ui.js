@@ -1206,6 +1206,7 @@ export function renderEngineSelectionList() {
     const showDropdown = settings.showEngineDropdown !== false;
     const checkbox = document.createElement("input");
     checkbox.type = showDropdown ? "checkbox" : "radio";
+    if (showDropdown) checkbox.setAttribute("role", "switch");
     if (!showDropdown) checkbox.name = "defaultEngineRadio";
     checkbox.checked = showDropdown
       ? enabledNames.includes(engine.name)
