@@ -30,7 +30,6 @@ import {
   saveLink,
   editLink,
   deleteLink,
-  toggleSelection,
   navigateToFolder,
   addFolder,
 } from "./links.js";
@@ -398,45 +397,6 @@ function bindStaticEvents() {
 
   const cancelEditBtn = document.getElementById("cancelEditBtn");
   if (cancelEditBtn) cancelEditBtn.addEventListener("click", cancelEdit);
-
-  document
-    .getElementById("cancelSelectionBtn")
-    ?.addEventListener("click", () => {
-      store.setState({
-        isSelectionMode: false,
-        selectedLinkIds: [],
-        activeFolderId: null,
-      });
-      renderLinkManager();
-    });
-
-  document
-    .getElementById("confirmSelectionBtn")
-    ?.addEventListener("click", () => {
-      const state = store.getState();
-      const selectedLinkIds = state.selectedLinkIds || [];
-      const activeFolderId = state.activeFolderId;
-
-      if (selectedLinkIds.length === 0) {
-        return showToast("Please select at least one link.", "error");
-      }
-
-      const updatedLinks = state.links.map((link) => {
-        if (selectedLinkIds.includes(link.id)) {
-          return { ...link, parentId: activeFolderId };
-        }
-        return link;
-      });
-
-      store.setState({
-        links: updatedLinks,
-        isSelectionMode: false,
-        selectedLinkIds: [],
-        activeFolderId: null,
-      });
-
-      renderLinkManager();
-    });
 
   const debouncedSaveUsername = debounce(() => autoSaveSettings(), 400);
   const debouncedSaveProxy = debounce(() => autoSaveSettings(), 400);
@@ -930,9 +890,6 @@ function bindStaticEvents() {
           searchHistory: [],
           expandedFolderIds: [],
           currentFolderId: null,
-          activeFolderId: null,
-          isSelectionMode: false,
-          selectedLinkIds: [],
         });
 
         showToast("App completely reset to factory defaults", "success");
