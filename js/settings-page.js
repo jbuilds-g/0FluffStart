@@ -584,9 +584,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (
       prevState.links !== currentState.links ||
-      prevState.isSelectionMode !== currentState.isSelectionMode ||
-      prevState.selectedLinkIds !== currentState.selectedLinkIds ||
-      prevState.activeFolderId !== currentState.activeFolderId ||
       prevState.expandedFolderIds !== currentState.expandedFolderIds
     ) {
       renderLinkManager();
