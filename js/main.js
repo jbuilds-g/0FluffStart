@@ -35,6 +35,25 @@ import {
 } from "./links.js";
 import { CustomCursorEngine } from "./cursor.js";
 
+function syncExpressiveSlider(input) {
+  const container = input.closest(".slider");
+  if (!container) return;
+  const min = input.min === "" ? 0 : Number(input.min);
+  const max = input.max === "" ? 100 : Number(input.max);
+  const value = Number(input.value);
+  const percent = max > min ? ((value - min) / (max - min)) * 100 : 0;
+  container.style.setProperty("--v", `${Math.max(0, Math.min(100, percent))}%`);
+}
+
+function initializeExpressiveSliders() {
+  document.querySelectorAll(".slider input[type='range']").forEach((input) => {
+    const update = () => syncExpressiveSlider(input);
+    update();
+    input.addEventListener("input", update);
+    input.addEventListener("change", update);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const storedVersion = localStorage.getItem("0fluff_app_version");
 
@@ -95,6 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initCustomSelects();
   bindStaticEvents();
   await loadSettings();
+  initializeExpressiveSliders();
 
   if (!localStorage.getItem("0fluff_has_opened_engine_dropdown")) {
     showToast("Welcome to 0FluffStart! Click ⚙️ to customize.", "info", 5000);
@@ -444,16 +464,6 @@ function bindStaticEvents() {
       autoSaveSettings();
     }, 300);
 
-    const updateSliderVisual = () => {
-      const min = Number(shadowSlider.min) || 0;
-      const max = Number(shadowSlider.max) || 100;
-      const range = max - min;
-      const value = Number(shadowSlider.value);
-      const percent = range > 0 ? ((value - min) / range) * 100 : 0;
-      shadowSlider.closest(".slider")?.style.setProperty("--v", `${percent}%`);
-    };
-    updateSliderVisual();
-
     const applyShadowValue = (value) => {
       const val = Math.max(0, Math.min(200, Number(value)));
 
@@ -462,13 +472,12 @@ function bindStaticEvents() {
 
       shadowSlider.value = val;
       shadowInputNumber.value = val;
-      updateSliderVisual();
+      syncExpressiveSlider(shadowSlider);
 
       persistShadowSettings();
     };
 
     shadowSlider.addEventListener("input", () => {
-      updateSliderVisual();
       applyShadowValue(shadowSlider.value);
     });
 
