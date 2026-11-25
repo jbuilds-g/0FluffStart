@@ -78,3 +78,58 @@
 .settings-page-shell {
   padding-top: 96px;
 }
+
+
+/* Connected navigation segments, using the active theme's own shape and palette. */
+.page-navigation {
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--control-nav-radius, var(--radius));
+  background: var(--card);
+}
+.page-navigation a {
+  min-height: 38px;
+  border: 1px solid transparent;
+  border-radius: var(--control-nav-radius, max(6px, calc(var(--radius) * 0.65)));
+  transition:
+    border-radius 280ms cubic-bezier(0.2, 0, 0, 1),
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+.page-navigation a[aria-current="page"] {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, var(--card));
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+}
+.page-navigation a:active {
+  transform: scale(0.97);
+}
+.page-navigation a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+body.cyberpunk .page-navigation,
+body.retro .page-navigation,
+body.paper .page-navigation,
+body.slate .page-navigation {
+  border-radius: 0;
+  box-shadow: none;
+}
+body.cyberpunk .page-navigation a[aria-current="page"],
+body.retro .page-navigation a[aria-current="page"] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+body.night-glow .page-navigation {
+  box-shadow: 0 0 14px var(--shadow-color);
+}
+body.night-glow .page-navigation a[aria-current="page"] {
+  box-shadow: 0 0 9px var(--shadow-color);
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-navigation a {
+    transition: none;
+  }
+}
