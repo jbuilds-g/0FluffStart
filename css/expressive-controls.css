@@ -19,7 +19,7 @@
 }
 .switch input[type="checkbox"] {
   position: absolute !important;
-  inset: 0 auto auto 0 !important;
+  inset: 0 0 auto auto !important;
   z-index: 2;
   width: 52px !important;
   min-width: 52px !important;
@@ -66,7 +66,7 @@
 .switch-thumb .icon-check {
   width: 14px;
   height: 14px;
-  background: currentColor;
+  background: var(--text);
   opacity: 0;
   transform: scale(0.65);
   transition:
@@ -116,7 +116,7 @@ body.material-you .switch input[type="checkbox"] {
   appearance: none !important;
   -webkit-appearance: none !important;
   position: absolute !important;
-  inset: 0 auto auto 0 !important;
+  inset: 0 0 auto auto !important;
   width: 52px !important;
   min-width: 52px !important;
   height: 32px !important;
@@ -382,4 +382,38 @@ body .slider input[type="range"]::-moz-range-thumb {
   .slider-thumb {
     transition: none !important;
   }
+}
+
+/* Dashboard navigation keeps its existing morphing container behavior. */
+.dashboard-navigation { gap: 2px; }
+.dashboard-navigation a {
+  --segment-inset: 8px;
+  min-height: 38px;
+  padding-inline: 13px;
+  border: 0;
+  border-radius:
+    var(--segment-left, var(--segment-inset))
+    var(--segment-right, var(--segment-inset))
+    var(--segment-right, var(--segment-inset))
+    var(--segment-left, var(--segment-inset));
+  background: var(--expressive-track);
+  color: var(--dim);
+  transition:
+    border-radius 400ms var(--expressive-motion),
+    background-color 200ms ease,
+    color 200ms ease;
+}
+.dashboard-navigation a:first-child { --segment-left: 24px; }
+.dashboard-navigation a:last-child { --segment-right: 24px; }
+.dashboard-navigation a[aria-current="page"] {
+  --segment-inset: 24px;
+  background: var(--expressive-primary);
+  color: var(--expressive-on-primary);
+}
+.dashboard-navigation a:active { --segment-inset: 4px; }
+.dashboard-navigation a:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 3px solid var(--expressive-primary);
+  outline-offset: 2px;
 }
