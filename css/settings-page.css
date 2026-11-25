@@ -1475,14 +1475,18 @@ body > .bg-video {
   display: inline-flex;
   align-items: center;
   flex-direction: row-reverse;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 10px;
+  width: 100%;
   min-height: 40px;
   cursor: pointer;
 }
 .settings-page-shell .switch input[type="checkbox"] {
   position: absolute !important;
-  inset: 0 0 auto auto !important;
+  top: 50% !important;
+  right: 0 !important;
+  left: auto !important;
+  transform: translateY(-50%);
   width: 52px !important;
   min-width: 52px !important;
   height: 32px !important;
