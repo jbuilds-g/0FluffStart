@@ -1471,9 +1471,11 @@ body > .bg-video {
   pointer-events: none;
 }
 .settings-page-shell .field:focus-within::after { scale: 1; }
-.settings-page-shell .switch {
+ .settings-page-shell .switch {
   display: inline-flex;
   align-items: center;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
   gap: 10px;
   min-height: 40px;
   cursor: pointer;
