@@ -1404,8 +1404,8 @@ body > .bg-video {
   }
 }
 
-body.material-you /* Expressive filled fields and switch wrappers on the standalone Settings page. */
-.settings-page-shell .field {
+/* Expressive filled fields and switch wrappers on the standalone Settings page. */
+body.material-you .settings-page-shell .field {
   width: 100%;
   min-width: 0;
   border-radius: 4px 4px 0 0;
