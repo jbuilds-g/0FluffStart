@@ -1517,3 +1517,106 @@ body.material-you .settings-page-shell .engine-item-actions .switch {
   flex: 0 0 52px;
   gap: 0;
 }
+
+
+/* Shared expressive field and switch geometry on the standalone Settings page.
+   Keep theme-specific colors, radii and borders supplied by the active theme. */
+body:not(.material-you) .settings-page-shell .field {
+  width: 100%;
+  min-width: 0;
+  border-radius: var(--control-field-radius, var(--radius));
+  background: var(--control-field-bg, var(--card-hover));
+}
+body:not(.material-you) .settings-page-shell .field > input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 56px;
+  height: 56px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 24px 16px 8px;
+  border: 0;
+  border-radius: inherit;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+}
+body:not(.material-you) .settings-page-shell .field > input::placeholder {
+  color: transparent;
+  opacity: 0;
+}
+body:not(.material-you) .settings-page-shell .field > label {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  z-index: 1;
+  max-width: calc(100% - 32px);
+  overflow: hidden;
+  margin: 0;
+  color: var(--dim);
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: translate 200ms ease, font-size 200ms ease, color 200ms ease;
+}
+body:not(.material-you) .settings-page-shell .field:focus-within > label,
+body:not(.material-you) .settings-page-shell .field:has(> input:not(:placeholder-shown)) > label {
+  translate: 0 -10px;
+  font-size: 0.7rem;
+}
+body:not(.material-you) .settings-page-shell .field:focus-within > label {
+  color: var(--accent);
+}
+body:not(.material-you) .settings-page-shell .field::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 2;
+  height: 2px;
+  background: var(--accent);
+  scale: 0 1;
+  transform-origin: center;
+  transition: scale 240ms ease;
+  pointer-events: none;
+}
+body:not(.material-you) .settings-page-shell .field:focus-within::after {
+  scale: 1;
+}
+body:not(.material-you) .settings-page-shell .switch {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text);
+  cursor: pointer;
+}
+body:not(.material-you) .settings-page-shell .switch:hover {
+  border-color: transparent;
+  background: transparent;
+}
+body:not(.material-you) .settings-page-shell .engine-item-actions .switch {
+  width: 46px;
+  min-height: 26px;
+  flex: 0 0 46px;
+  gap: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  body:not(.material-you) .settings-page-shell .field > label,
+  body:not(.material-you) .settings-page-shell .field::after {
+    transition: none !important;
+  }
+}
