@@ -1,0 +1,385 @@
+/* Reusable Material 3 Expressive controls. Colors follow the active theme. */
+:root {
+  --expressive-primary: var(--accent);
+  --expressive-on-primary: var(--bg);
+  --expressive-track: var(--md-sys-color-surface-container-highest, var(--card-hover));
+  --expressive-outline: var(--dim);
+  --expressive-motion: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Accessible switch: the native checkbox remains the interactive control. */
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.switch input[type="checkbox"] {
+  position: absolute !important;
+  inset: 0 auto auto 0 !important;
+  z-index: 2;
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  cursor: pointer;
+}
+.switch-track {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 52px;
+  width: 52px;
+  height: 32px;
+  box-sizing: border-box;
+  align-items: center;
+  border: 2px solid var(--expressive-outline);
+  border-radius: 9999px;
+  background: transparent;
+  transition:
+    background-color 220ms var(--expressive-motion),
+    border-color 220ms ease;
+}
+.switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  display: grid;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  place-items: center;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: var(--expressive-outline);
+  color: var(--expressive-on-primary);
+  transition:
+    width 260ms var(--expressive-motion),
+    height 260ms var(--expressive-motion),
+    left 260ms var(--expressive-motion),
+    background-color 220ms ease;
+}
+.switch-thumb .icon-check {
+  width: 14px;
+  height: 14px;
+  background: currentColor;
+  opacity: 0;
+  transform: scale(0.65);
+  transition:
+    opacity 120ms ease,
+    transform 220ms var(--expressive-motion);
+}
+.switch:has(input:checked) .switch-track {
+  border-color: transparent;
+  background: var(--expressive-primary);
+}
+.switch:has(input:checked) .switch-thumb {
+  top: 50%;
+  left: 24px;
+  width: 24px;
+  height: 24px;
+  background: var(--expressive-on-primary);
+}
+.switch:has(input:checked) .switch-thumb .icon-check {
+  opacity: 1;
+  transform: scale(1);
+}
+.switch:active .switch-thumb {
+  left: 2px;
+  width: 28px;
+  height: 28px;
+}
+.switch:has(input:checked):active .switch-thumb {
+  left: 22px;
+}
+.switch:has(input:focus-visible) .switch-track {
+  outline: 3px solid var(--expressive-primary);
+  outline-offset: 3px;
+}
+.switch:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+.switch:has(input:disabled) .switch-track {
+  cursor: not-allowed;
+}
+.switch input[type="checkbox"]::before,
+.switch input[type="checkbox"]::after {
+  content: none !important;
+  display: none !important;
+}
+body.material-you .switch input[type="checkbox"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  position: absolute !important;
+  inset: 0 auto auto 0 !important;
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+}
+body.material-you .switch input[type="checkbox"]::before,
+body.material-you .switch input[type="checkbox"]::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Native range input stays above the decorative track for pointer and keyboard input. */
+.slider {
+  --v: 50%;
+  position: relative;
+  width: 100%;
+  height: 44px;
+  min-width: 0;
+  isolation: isolate;
+}
+.slider-track-active,
+.slider-track-inactive {
+  position: absolute;
+  top: 14px;
+  height: 16px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.slider-track-active {
+  left: 0;
+  width: max(0px, calc(var(--v) - 6px));
+  border-radius: 8px 2px 2px 8px;
+  background: var(--expressive-primary);
+}
+.slider-track-inactive {
+  left: calc(var(--v) + 6px);
+  right: 0;
+  border-radius: 2px 8px 8px 2px;
+  background-color: var(--expressive-track);
+  background-image: radial-gradient(
+    circle at calc(100% - 8px) 50%,
+    var(--expressive-primary) 2px,
+    transparent 2.5px
+  );
+}
+.slider-thumb {
+  position: absolute;
+  top: 0;
+  left: var(--v);
+  width: 4px;
+  height: 44px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: var(--expressive-primary);
+  pointer-events: none;
+  transition: width 150ms ease;
+}
+.slider:has(input:active) .slider-thumb {
+  width: 2px;
+}
+.slider:has(input:focus-visible) .slider-thumb {
+  outline: 3px solid color-mix(in srgb, var(--expressive-primary) 45%, transparent);
+  outline-offset: 3px;
+}
+body .slider input[type="range"] {
+  position: absolute !important;
+  z-index: 1;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 44px;
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent !important;
+  outline: none;
+}
+body .slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 44px;
+  background: transparent;
+}
+body .slider input[type="range"]::-webkit-slider-thumb {
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  box-shadow: none;
+}
+body .slider input[type="range"]::-moz-range-track {
+  height: 44px;
+  background: transparent;
+}
+body .slider input[type="range"]::-moz-range-thumb {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Connected page navigation. Links remain links for browser semantics. */
+.page-navigation {
+  gap: 2px;
+  padding: 4px;
+  border-radius: 9999px;
+}
+.page-navigation a {
+  --segment-inset: 8px;
+  min-height: 40px;
+  padding-inline: 16px;
+  border: 0;
+  border-radius:
+    var(--segment-left, var(--segment-inset))
+    var(--segment-right, var(--segment-inset))
+    var(--segment-right, var(--segment-inset))
+    var(--segment-left, var(--segment-inset));
+  color: var(--dim);
+  background: var(--expressive-track);
+  transition:
+    border-radius 400ms var(--expressive-motion),
+    background-color 200ms ease,
+    color 200ms ease;
+}
+.page-navigation a:first-child { --segment-left: 24px; }
+.page-navigation a:last-child { --segment-right: 24px; }
+.page-navigation a[aria-current="page"] {
+  --segment-inset: 24px;
+  color: var(--expressive-on-primary);
+  background: var(--expressive-primary);
+  border-color: transparent;
+}
+.page-navigation a:active { --segment-inset: 4px; }
+.page-navigation a:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 3px solid var(--expressive-primary);
+  outline-offset: 2px;
+}
+@media (max-width: 520px) {
+  .page-navigation a {
+    min-height: 38px;
+    padding-inline: 12px;
+    font-size: 0.76rem;
+  }
+}
+
+/* Filled floating-label text and URL fields. */
+.field {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 4px 4px 0 0;
+  background: color-mix(in srgb, var(--card-hover) 82%, var(--bg));
+  box-shadow: inset 0 -1px 0 var(--dim);
+}
+.field > input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 56px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 24px 16px 8px;
+  border: 0;
+  border-radius: inherit;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+}
+.field > input::placeholder { color: transparent; }
+.field > label {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  z-index: 1;
+  max-width: calc(100% - 32px);
+  overflow: hidden;
+  color: var(--dim);
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  transform-origin: left top;
+  transition:
+    translate 200ms ease,
+    font-size 200ms ease,
+    color 200ms ease;
+}
+.field:focus-within > label,
+.field:has(> input:not(:placeholder-shown)) > label {
+  translate: 0 -10px;
+  font-size: 0.7rem;
+}
+.field:focus-within > label { color: var(--accent); }
+.field::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 2;
+  height: 2px;
+  background: var(--accent);
+  scale: 0 1;
+  transform-origin: center;
+  transition: scale 250ms ease;
+  pointer-events: none;
+}
+.field:focus-within::after { scale: 1; }
+.field:has(> input:disabled) { opacity: 0.55; }
+.field > input:focus-visible { outline: none; }
+.field > input:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  transition: background-color 9999s ease-out;
+}
+.custom-background-url-row .field { flex: 1.4; min-width: 0; }
+.custom-background-url-row .field > input,
+.field > input.bg-url-input,
+.field > input.custom-proxy-input {
+  width: 100%;
+  min-height: 56px;
+  height: 56px;
+  margin: 0;
+  padding: 24px 16px 8px;
+  border: 0;
+  border-radius: 4px 4px 0 0;
+  background: transparent;
+  box-shadow: none;
+}
+.quick-links-editor-card .field {
+  margin-bottom: 14px;
+}
+.quick-links-editor-card .field > label {
+  display: block;
+  gap: 0;
+  margin: 0;
+}
+.quick-links-editor-card .field > input {
+  margin: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .switch-track,
+  .switch-thumb,
+  .switch-thumb .icon-check,
+  .page-navigation a,
+  .field > label,
+  .field::after,
+  .slider-thumb {
+    transition: none !important;
+  }
+}
