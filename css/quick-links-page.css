@@ -1244,8 +1244,9 @@ body.amoled .quick-links-move-panel {
   width: 100%;
   min-width: 0;
 }
-.quick-links-move-create-form .field > input {
+ .quick-links-move-create-form .field > input {
   min-height: 56px;
+  outline: none;
   padding: 24px 16px 8px;
   border: 0;
   border-radius: 4px 4px 0 0;
