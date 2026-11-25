@@ -280,10 +280,9 @@ export function renderLinkManager() {
    * Creates a manager item DOM node.
    * @param {import("./store.js").Link} link
    * @param {number} level
-   * @param {boolean} isSelectable
    * @returns {HTMLElement}
    */
-  function createManagerItem(link, level = 0, isSelectable = false) {
+  function createManagerItem(link, level = 0) {
     const item = document.createElement("div");
     item.className = "link-manager-item";
     item.dataset.id = link.id;
@@ -676,6 +675,8 @@ export function renderLinkManager() {
         }
         addNewFolderBtn.onclick = (e) => addFolder(addNewFolderBtn, link.id);
 
+        actionRow.appendChild(addNewLinkBtn);
+        actionRow.appendChild(addNewFolderBtn);
         subContainer.appendChild(actionRow);
 
         containerFragment.appendChild(subContainer);
