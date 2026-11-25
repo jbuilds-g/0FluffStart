@@ -17,6 +17,12 @@
   gap: 10px;
   width: 100%;
   min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -78,6 +84,10 @@
   transition:
     opacity 120ms ease,
     transform 220ms var(--expressive-motion);
+}
+ .switch:hover {
+  border-color: transparent;
+  background: transparent;
 }
 .switch:has(input:checked) .switch-track {
   border-color: transparent;
@@ -414,6 +424,11 @@ body .slider input[type="range"]::-moz-range-thumb {
 }
 .dashboard-navigation a:first-child { --segment-left: 24px; }
 .dashboard-navigation a:last-child { --segment-right: 24px; }
+ .dashboard-navigation a:hover {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--expressive-primary) 10%, var(--card));
+  color: var(--text);
+}
 .dashboard-navigation a[aria-current="page"] {
   --segment-inset: 24px;
   background: var(--expressive-primary);
