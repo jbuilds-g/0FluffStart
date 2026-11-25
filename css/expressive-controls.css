@@ -1,4 +1,4 @@
-/* Reusable Material 3 Expressive controls. Colors follow the active theme. */
+body.material-you /* Reusable Material 3 Expressive controls. Colors follow the active theme. */
 :root {
   --expressive-primary: var(--accent);
   --expressive-on-primary: var(--bg);
@@ -7,7 +7,7 @@
   --expressive-motion: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Accessible switch: the native checkbox remains the interactive control. */
+body.material-you /* Accessible switch: the native checkbox remains the interactive control. */
 .switch {
   position: relative;
   display: inline-flex;
@@ -26,7 +26,7 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-.switch input[type="checkbox"] {
+body.material-you .switch input[type="checkbox"] {
   position: absolute !important;
   top: 50% !important;
   right: 0 !important;
@@ -41,7 +41,7 @@
   opacity: 0 !important;
   cursor: pointer;
 }
-.switch-track {
+body.material-you .switch-track {
   position: relative;
   display: inline-flex;
   flex: 0 0 52px;
@@ -56,7 +56,7 @@
     background-color 220ms var(--expressive-motion),
     border-color 220ms ease;
 }
-.switch-thumb {
+body.material-you .switch-thumb {
   position: absolute;
   top: 50%;
   left: 5px;
@@ -75,7 +75,7 @@
     left 260ms var(--expressive-motion),
     background-color 220ms ease;
 }
-.switch-thumb .icon-check {
+body.material-you .switch-thumb .icon-check {
   width: 14px;
   height: 14px;
   background: var(--text);
@@ -85,46 +85,45 @@
     opacity 120ms ease,
     transform 220ms var(--expressive-motion);
 }
- .switch:hover {
+ body.material-you .switch:hover {
   border-color: transparent;
   background: transparent;
 }
-.switch:has(input:checked) .switch-track {
+body.material-you .switch:has(input:checked) .switch-track {
   border-color: transparent;
   background: var(--expressive-primary);
 }
-.switch:has(input:checked) .switch-thumb {
+body.material-you .switch:has(input:checked) .switch-thumb {
   top: 50%;
   left: 24px;
   width: 24px;
   height: 24px;
   background: var(--expressive-on-primary);
 }
-.switch:has(input:checked) .switch-thumb .icon-check {
+body.material-you .switch:has(input:checked) .switch-thumb .icon-check {
   opacity: 1;
   transform: scale(1);
 }
-.switch:active .switch-thumb {
+body.material-you .switch:active .switch-thumb {
   left: 2px;
   width: 28px;
   height: 28px;
 }
-.switch:has(input:checked):active .switch-thumb {
+body.material-you .switch:has(input:checked):active .switch-thumb {
   left: 22px;
 }
-.switch:has(input:focus-visible) .switch-track {
+body.material-you .switch:has(input:focus-visible) .switch-track {
   outline: 3px solid var(--expressive-primary);
   outline-offset: 3px;
 }
-.switch:has(input:disabled) {
+body.material-you .switch:has(input:disabled) {
   cursor: not-allowed;
   opacity: 0.48;
 }
-.switch:has(input:disabled) .switch-track {
+body.material-you .switch:has(input:disabled) .switch-track {
   cursor: not-allowed;
 }
-.switch input[type="checkbox"]::before,
-.switch input[type="checkbox"]::after {
+body.material-you .switch input[type="checkbox"]::before, body.material-you .switch input[type="checkbox"]::after {
   content: none !important;
   display: none !important;
 }
@@ -147,13 +146,12 @@ body.material-you .switch input[type="checkbox"] {
   box-shadow: none !important;
   opacity: 0 !important;
 }
-body.material-you .switch input[type="checkbox"]::before,
-body.material-you .switch input[type="checkbox"]::after {
+body.material-you .switch input[type="checkbox"]::before, body.material-you .switch input[type="checkbox"]::after {
   content: none !important;
   display: none !important;
 }
 
-/* Native range input stays above the decorative track for pointer and keyboard input. */
+body.material-you /* Native range input stays above the decorative track for pointer and keyboard input. */
 .slider {
   --v: 50%;
   position: relative;
@@ -162,21 +160,20 @@ body.material-you .switch input[type="checkbox"]::after {
   min-width: 0;
   isolation: isolate;
 }
-.slider-track-active,
-.slider-track-inactive {
+body.material-you .slider-track-active, body.material-you .slider-track-inactive {
   position: absolute;
   top: 14px;
   height: 16px;
   box-sizing: border-box;
   pointer-events: none;
 }
-.slider-track-active {
+body.material-you .slider-track-active {
   left: 0;
   width: max(0px, calc(var(--v) - 6px));
   border-radius: 8px 2px 2px 8px;
   background: var(--expressive-primary);
 }
-.slider-track-inactive {
+body.material-you .slider-track-inactive {
   left: calc(var(--v) + 6px);
   right: 0;
   border-radius: 2px 8px 8px 2px;
@@ -187,7 +184,7 @@ body.material-you .switch input[type="checkbox"]::after {
     transparent 2.5px
   );
 }
-.slider-thumb {
+body.material-you .slider-thumb {
   position: absolute;
   top: 0;
   left: var(--v);
@@ -199,14 +196,14 @@ body.material-you .switch input[type="checkbox"]::after {
   pointer-events: none;
   transition: width 150ms ease;
 }
-.slider:has(input:active) .slider-thumb {
+body.material-you .slider:has(input:active) .slider-thumb {
   width: 2px;
 }
-.slider:has(input:focus-visible) .slider-thumb {
+body.material-you .slider:has(input:focus-visible) .slider-thumb {
   outline: 3px solid color-mix(in srgb, var(--expressive-primary) 45%, transparent);
   outline-offset: 3px;
 }
-body .slider input[type="range"] {
+body.material-you .slider input[type="range"] {
   position: absolute !important;
   z-index: 1;
   inset: 0;
@@ -223,11 +220,11 @@ body .slider input[type="range"] {
   background: transparent !important;
   outline: none;
 }
-body .slider input[type="range"]::-webkit-slider-runnable-track {
+body.material-you .slider input[type="range"]::-webkit-slider-runnable-track {
   height: 44px;
   background: transparent;
 }
-body .slider input[type="range"]::-webkit-slider-thumb {
+body.material-you .slider input[type="range"]::-webkit-slider-thumb {
   width: 44px;
   height: 44px;
   margin: 0;
@@ -236,11 +233,11 @@ body .slider input[type="range"]::-webkit-slider-thumb {
   background: transparent;
   box-shadow: none;
 }
-body .slider input[type="range"]::-moz-range-track {
+body.material-you .slider input[type="range"]::-moz-range-track {
   height: 44px;
   background: transparent;
 }
-body .slider input[type="range"]::-moz-range-thumb {
+body.material-you .slider input[type="range"]::-moz-range-thumb {
   width: 44px;
   height: 44px;
   border: 0;
@@ -248,13 +245,13 @@ body .slider input[type="range"]::-moz-range-thumb {
   box-shadow: none;
 }
 
-/* Connected page navigation. Links remain links for browser semantics. */
+body.material-you /* Connected page navigation. Links remain links for browser semantics. */
 .page-navigation {
   gap: 2px;
   padding: 4px;
   border-radius: 9999px;
 }
-.page-navigation a {
+body.material-you .page-navigation a {
   --segment-inset: 8px;
   min-height: 40px;
   padding-inline: 16px;
@@ -271,30 +268,30 @@ body .slider input[type="range"]::-moz-range-thumb {
     background-color 200ms ease,
     color 200ms ease;
 }
-.page-navigation a:first-child { --segment-left: 24px; }
-.page-navigation a:last-child { --segment-right: 24px; }
-.page-navigation a[aria-current="page"] {
+body.material-you .page-navigation a:first-child { --segment-left: 24px; }
+body.material-you .page-navigation a:last-child { --segment-right: 24px; }
+body.material-you .page-navigation a[aria-current="page"] {
   --segment-inset: 24px;
   color: var(--expressive-on-primary);
   background: var(--expressive-primary);
   border-color: transparent;
 }
-.page-navigation a:active { --segment-inset: 4px; }
-.page-navigation a:focus-visible {
+body.material-you .page-navigation a:active { --segment-inset: 4px; }
+body.material-you .page-navigation a:focus-visible {
   position: relative;
   z-index: 1;
   outline: 3px solid var(--expressive-primary);
   outline-offset: 2px;
 }
 @media (max-width: 520px) {
-  .page-navigation a {
+  body.material-you .page-navigation a {
     min-height: 38px;
     padding-inline: 12px;
     font-size: 0.76rem;
   }
 }
 
-/* Filled floating-label text and URL fields. */
+body.material-you /* Filled floating-label text and URL fields. */
 .field {
   position: relative;
   min-width: 0;
@@ -304,7 +301,7 @@ body .slider input[type="range"]::-moz-range-thumb {
   background: color-mix(in srgb, var(--card-hover) 82%, var(--bg));
   box-shadow: inset 0 -1px 0 var(--dim);
 }
-.field > input {
+body.material-you .field > input {
   display: block;
   width: 100%;
   min-width: 0;
@@ -321,8 +318,8 @@ body .slider input[type="range"]::-moz-range-thumb {
   font: inherit;
   font-size: 0.9rem;
 }
-.field > input::placeholder { color: transparent; }
-.field > label {
+body.material-you .field > input::placeholder { color: transparent; }
+body.material-you .field > label {
   position: absolute;
   top: 18px;
   left: 16px;
@@ -341,13 +338,12 @@ body .slider input[type="range"]::-moz-range-thumb {
     font-size 200ms ease,
     color 200ms ease;
 }
-.field:focus-within > label,
-.field:has(> input:not(:placeholder-shown)) > label {
+body.material-you .field:focus-within > label, body.material-you .field:has(> input:not(:placeholder-shown)) > label {
   translate: 0 -10px;
   font-size: 0.7rem;
 }
-.field:focus-within > label { color: var(--accent); }
-.field::after {
+body.material-you .field:focus-within > label { color: var(--accent); }
+body.material-you .field::after {
   content: "";
   position: absolute;
   inset: auto 0 0;
@@ -359,17 +355,15 @@ body .slider input[type="range"]::-moz-range-thumb {
   transition: scale 250ms ease;
   pointer-events: none;
 }
-.field:focus-within::after { scale: 1; }
-.field:has(> input:disabled) { opacity: 0.55; }
-.field > input:focus-visible { outline: none; }
-.field > input:-webkit-autofill {
+body.material-you .field:focus-within::after { scale: 1; }
+body.material-you .field:has(> input:disabled) { opacity: 0.55; }
+body.material-you .field > input:focus-visible { outline: none; }
+body.material-you .field > input:-webkit-autofill {
   -webkit-text-fill-color: var(--text);
   transition: background-color 9999s ease-out;
 }
-.custom-background-url-row .field { flex: 1.4; min-width: 0; }
-.custom-background-url-row .field > input,
-.field > input.bg-url-input,
-.field > input.custom-proxy-input {
+body.material-you .custom-background-url-row .field { flex: 1.4; min-width: 0; }
+body.material-you .custom-background-url-row .field > input, body.material-you .field > input.bg-url-input, body.material-you .field > input.custom-proxy-input {
   width: 100%;
   min-height: 56px;
   height: 56px;
@@ -380,32 +374,26 @@ body .slider input[type="range"]::-moz-range-thumb {
   background: transparent;
   box-shadow: none;
 }
-.quick-links-editor-card .field {
+body.material-you .quick-links-editor-card .field {
   margin-bottom: 14px;
 }
-.quick-links-editor-card .field > label {
+body.material-you .quick-links-editor-card .field > label {
   display: block;
   gap: 0;
   margin: 0;
 }
-.quick-links-editor-card .field > input {
+body.material-you .quick-links-editor-card .field > input {
   margin: 0;
 }
 @media (prefers-reduced-motion: reduce) {
-  .switch-track,
-  .switch-thumb,
-  .switch-thumb .icon-check,
-  .page-navigation a,
-  .field > label,
-  .field::after,
-  .slider-thumb {
+  body.material-you .switch-track, body.material-you .switch-thumb, body.material-you .switch-thumb .icon-check, body.material-you .page-navigation a, body.material-you .field > label, body.material-you .field::after, body.material-you .slider-thumb {
     transition: none !important;
   }
 }
 
-/* Dashboard navigation keeps its existing morphing container behavior. */
+body.material-you /* Dashboard navigation keeps its existing morphing container behavior. */
 .dashboard-navigation { gap: 2px; }
-.dashboard-navigation a {
+body.material-you .dashboard-navigation a {
   --segment-inset: 8px;
   min-height: 38px;
   padding-inline: 13px;
@@ -422,20 +410,20 @@ body .slider input[type="range"]::-moz-range-thumb {
     background-color 200ms ease,
     color 200ms ease;
 }
-.dashboard-navigation a:first-child { --segment-left: 24px; }
-.dashboard-navigation a:last-child { --segment-right: 24px; }
- .dashboard-navigation a:hover {
+body.material-you .dashboard-navigation a:first-child { --segment-left: 24px; }
+body.material-you .dashboard-navigation a:last-child { --segment-right: 24px; }
+ body.material-you .dashboard-navigation a:hover {
   border-color: transparent;
   background: color-mix(in srgb, var(--expressive-primary) 10%, var(--card));
   color: var(--text);
 }
-.dashboard-navigation a[aria-current="page"] {
+body.material-you .dashboard-navigation a[aria-current="page"] {
   --segment-inset: 24px;
   background: var(--expressive-primary);
   color: var(--expressive-on-primary);
 }
-.dashboard-navigation a:active { --segment-inset: 4px; }
-.dashboard-navigation a:focus-visible {
+body.material-you .dashboard-navigation a:active { --segment-inset: 4px; }
+body.material-you .dashboard-navigation a:focus-visible {
   position: relative;
   z-index: 1;
   outline: 3px solid var(--expressive-primary);
