@@ -1404,7 +1404,7 @@ body > .bg-video {
   }
 }
 
-/* Expressive filled fields and switch wrappers on the standalone Settings page. */
+body.material-you /* Expressive filled fields and switch wrappers on the standalone Settings page. */
 .settings-page-shell .field {
   width: 100%;
   min-width: 0;
@@ -1412,9 +1412,7 @@ body > .bg-video {
   background: color-mix(in srgb, var(--card-hover) 82%, var(--bg));
   box-shadow: inset 0 -1px 0 var(--dim);
 }
-.settings-page-shell .field > input,
-.settings-page-shell .field > input.bg-url-input,
-.settings-page-shell .field > input.custom-proxy-input {
+body.material-you .settings-page-shell .field > input, body.material-you .settings-page-shell .field > input.bg-url-input, body.material-you .settings-page-shell .field > input.custom-proxy-input {
   display: block;
   width: 100%;
   min-width: 0;
@@ -1432,7 +1430,7 @@ body > .bg-video {
   font: inherit;
   font-size: 0.9rem;
 }
-.settings-page-shell .field > label {
+body.material-you .settings-page-shell .field > label {
   position: absolute;
   top: 18px;
   left: 16px;
@@ -1452,13 +1450,12 @@ body > .bg-video {
     font-size 200ms ease,
     color 200ms ease;
 }
-.settings-page-shell .field:focus-within > label,
-.settings-page-shell .field:has(> input:not(:placeholder-shown)) > label {
+body.material-you .settings-page-shell .field:focus-within > label, body.material-you .settings-page-shell .field:has(> input:not(:placeholder-shown)) > label {
   translate: 0 -10px;
   font-size: 0.7rem;
 }
-.settings-page-shell .field:focus-within > label { color: var(--accent); }
-.settings-page-shell .field::after {
+body.material-you .settings-page-shell .field:focus-within > label { color: var(--accent); }
+body.material-you .settings-page-shell .field::after {
   content: "";
   position: absolute;
   inset: auto 0 0;
@@ -1470,8 +1467,8 @@ body > .bg-video {
   transition: scale 250ms ease;
   pointer-events: none;
 }
-.settings-page-shell .field:focus-within::after { scale: 1; }
- .settings-page-shell .switch {
+body.material-you .settings-page-shell .field:focus-within::after { scale: 1; }
+ body.material-you .settings-page-shell .switch {
   display: inline-flex;
   align-items: center;
   flex-direction: row-reverse;
@@ -1487,11 +1484,11 @@ body > .bg-video {
   color: var(--text);
   cursor: pointer;
 }
-.settings-page-shell .switch:hover {
+body.material-you .settings-page-shell .switch:hover {
   border-color: transparent;
   background: transparent;
 }
-.settings-page-shell .switch input[type="checkbox"] {
+body.material-you .settings-page-shell .switch input[type="checkbox"] {
   position: absolute !important;
   top: 50% !important;
   right: 0 !important;
@@ -1504,19 +1501,17 @@ body > .bg-video {
   padding: 0 !important;
   opacity: 0 !important;
 }
-.settings-page-shell .switch input[type="checkbox"]::before,
-.settings-page-shell .switch input[type="checkbox"]::after {
+body.material-you .settings-page-shell .switch input[type="checkbox"]::before, body.material-you .settings-page-shell .switch input[type="checkbox"]::after {
   content: none !important;
   display: none !important;
 }
 @media (prefers-reduced-motion: reduce) {
-  .settings-page-shell .field > label,
-  .settings-page-shell .field::after {
+  body.material-you .settings-page-shell .field > label, body.material-you .settings-page-shell .field::after {
     transition: none !important;
   }
 }
 
-.settings-page-shell .engine-item-actions .switch {
+body.material-you .settings-page-shell .engine-item-actions .switch {
   width: 52px;
   min-height: 32px;
   flex: 0 0 52px;
