@@ -1,5 +1,5 @@
-body.material-you /* Reusable Material 3 Expressive controls. Colors follow the active theme. */
-:root {
+/* Reusable Material 3 Expressive controls. Colors follow the active theme. */
+body.material-you {
   --expressive-primary: var(--accent);
   --expressive-on-primary: var(--bg);
   --expressive-track: var(--md-sys-color-surface-container-highest, var(--card-hover));
@@ -7,8 +7,8 @@ body.material-you /* Reusable Material 3 Expressive controls. Colors follow the 
   --expressive-motion: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-body.material-you /* Accessible switch: the native checkbox remains the interactive control. */
-.switch {
+/* Accessible switch: the native checkbox remains the interactive control. */
+body.material-you .switch {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -151,8 +151,8 @@ body.material-you .switch input[type="checkbox"]::before, body.material-you .swi
   display: none !important;
 }
 
-body.material-you /* Native range input stays above the decorative track for pointer and keyboard input. */
-.slider {
+/* Native range input stays above the decorative track for pointer and keyboard input. */
+body.material-you .slider {
   --v: 50%;
   position: relative;
   width: 100%;
@@ -245,8 +245,8 @@ body.material-you .slider input[type="range"]::-moz-range-thumb {
   box-shadow: none;
 }
 
-body.material-you /* Connected page navigation. Links remain links for browser semantics. */
-.page-navigation {
+/* Connected page navigation. Links remain links for browser semantics. */
+body.material-you .page-navigation {
   gap: 2px;
   padding: 4px;
   border-radius: 9999px;
@@ -291,8 +291,8 @@ body.material-you .page-navigation a:focus-visible {
   }
 }
 
-body.material-you /* Filled floating-label text and URL fields. */
-.field {
+/* Filled floating-label text and URL fields. */
+body.material-you .field {
   position: relative;
   min-width: 0;
   width: 100%;
@@ -391,8 +391,8 @@ body.material-you .quick-links-editor-card .field > input {
   }
 }
 
-body.material-you /* Dashboard navigation keeps its existing morphing container behavior. */
-.dashboard-navigation { gap: 2px; }
+/* Dashboard navigation keeps its existing morphing container behavior. */
+body.material-you .dashboard-navigation { gap: 2px; }
 body.material-you .dashboard-navigation a {
   --segment-inset: 8px;
   min-height: 38px;
