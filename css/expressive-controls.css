@@ -432,8 +432,8 @@ body.material-you .dashboard-navigation a:focus-visible {
 
 
 
-/* Shared dotted range slider and floating-label fields.
-   The Material You switch and navigation treatments above remain exclusive. */
+/* Shared compact dotted slider. Keep the existing XS-scale geometry:
+   16px track, 4x44px handle and a 44px interaction target. */
 body .slider,
 body.material-you .slider {
   --v: 50%;
@@ -448,31 +448,31 @@ body .slider-track-inactive,
 body.material-you .slider-track-active,
 body.material-you .slider-track-inactive {
   position: absolute;
-  top: 7px;
-  height: 30px;
+  top: 14px;
+  height: 16px;
   box-sizing: border-box;
   pointer-events: none;
 }
 body .slider-track-active,
 body.material-you .slider-track-active {
   left: 0;
-  width: var(--v);
-  border-radius: 9999px 0 0 9999px;
-  background-color: color-mix(in srgb, var(--accent) 30%, var(--card));
+  width: max(0px, calc(var(--v) - 6px));
+  border-radius: 8px 2px 2px 8px;
+  background-color: var(--accent);
   background-image: radial-gradient(circle, var(--dim) 2px, transparent 2.5px);
-  background-size: 32px 100%;
-  background-position: 16px center;
+  background-size: 20px 100%;
+  background-position: 10px center;
   background-repeat: repeat-x;
 }
 body .slider-track-inactive,
 body.material-you .slider-track-inactive {
-  left: var(--v);
+  left: calc(var(--v) + 6px);
   right: 0;
-  border-radius: 0 9999px 9999px 0;
-  background-color: color-mix(in srgb, var(--dim) 45%, var(--card));
+  border-radius: 2px 8px 8px 2px;
+  background-color: var(--card-hover);
   background-image: radial-gradient(circle, var(--text) 2px, transparent 2.5px);
-  background-size: 32px 100%;
-  background-position: 16px center;
+  background-size: 20px 100%;
+  background-position: 10px center;
   background-repeat: repeat-x;
 }
 body .slider-thumb,
@@ -492,7 +492,7 @@ body.material-you .slider-thumb {
 }
 body .slider:has(input:active) .slider-thumb,
 body.material-you .slider:has(input:active) .slider-thumb {
-  width: 7px;
+  width: 2px;
 }
 body .slider:has(input:focus-visible) .slider-thumb,
 body.material-you .slider:has(input:focus-visible) .slider-thumb {
@@ -546,6 +546,11 @@ body.material-you .slider input[type="range"]::-moz-range-thumb {
   box-shadow: none;
 }
 
+/* The check glyph belongs only to the Material You expressive switch. */
+body:not(.material-you) .switch-thumb .icon-check {
+  display: none !important;
+  opacity: 0 !important;
+}
 /* One floating-label field design across themes; theme tokens supply color. */
 body .field {
   position: relative;
