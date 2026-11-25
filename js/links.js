@@ -253,21 +253,6 @@ export function renderLinks() {
   }
 }
 
-export function toggleSelection(id) {
-  const state = store.getState();
-  const selectedLinkIds = [...(state.selectedLinkIds || [])];
-  const index = selectedLinkIds.indexOf(id);
-
-  if (index > -1) {
-    selectedLinkIds.splice(index, 1);
-  } else {
-    selectedLinkIds.push(id);
-  }
-
-  store.setState({ selectedLinkIds });
-  renderLinkManager();
-}
-
 /**
  * Renders the link manager UI using targeted DOM updates.
  */
@@ -277,23 +262,7 @@ export function renderLinkManager() {
 
   const state = store.getState();
   const links = state.links || [];
-  const isSelectionMode = state.isSelectionMode;
-  const selectedLinkIds = state.selectedLinkIds || [];
-  const activeFolderId = state.activeFolderId;
   const expandedFolderIds = new Set(state.expandedFolderIds || []);
-
-  const standardBtns = document.getElementById("standardActionBtns");
-  const selectionToolbar = document.getElementById("selectionToolbar");
-
-  if (isSelectionMode) {
-    if (standardBtns) standardBtns.classList.add("hidden");
-    if (selectionToolbar) selectionToolbar.classList.remove("hidden");
-    const countSpan = document.getElementById("selectionCount");
-    if (countSpan) countSpan.innerText = `${selectedLinkIds.length} Selected`;
-  } else {
-    if (standardBtns) standardBtns.classList.remove("hidden");
-    if (selectionToolbar) selectionToolbar.classList.add("hidden");
-  }
 
   if (links.length === 0) {
     linkManagerContent.innerHTML =
@@ -343,317 +312,293 @@ export function renderLinkManager() {
     const textNode = document.createTextNode(link.name);
     nameSpan.appendChild(textNode);
 
-    if (isSelectable) {
-      const leftContainer = document.createElement("div");
-      leftContainer.className = "manager-item-left";
+    const actionsDiv = document.createElement("div");
+    actionsDiv.className = "link-actions";
 
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = selectedLinkIds.includes(link.id);
-      checkbox.className = "manager-checkbox";
+    if (level > 0) {
+      const moveOutBtn = document.createElement("button");
+      moveOutBtn.className = "icon-btn";
+      moveOutBtn.title = "Move out of folder";
+      moveOutBtn.innerHTML = moveOutIconSVG;
 
-      checkbox.onclick = (e) => {
+      moveOutBtn.addEventListener("click", async (e) => {
         e.stopPropagation();
-      };
-
-      checkbox.onchange = () => {
-        toggleSelection(link.id);
-      };
-
-      leftContainer.appendChild(checkbox);
-      leftContainer.appendChild(nameSpan);
-
-      item.appendChild(leftContainer);
-      item.classList.add("is-folder-item");
-    } else {
-      const actionsDiv = document.createElement("div");
-      actionsDiv.className = "link-actions";
-
-      if (level > 0) {
-        const moveOutBtn = document.createElement("button");
-        moveOutBtn.className = "icon-btn";
-        moveOutBtn.title = "Move out of folder";
-        moveOutBtn.innerHTML = moveOutIconSVG;
-
-        moveOutBtn.addEventListener("click", async (e) => {
-          e.stopPropagation();
-          if (
-            await customConfirm(
-              `Move "${link.name}" back to the main dashboard?`,
-              "Move Item?",
-            )
-          ) {
-            const currentLinks = [...store.getState().links];
-            const idx = currentLinks.findIndex((l) => l.id === link.id);
-            if (idx > -1) {
-              const [movedItem] = currentLinks.splice(idx, 1);
-              movedItem.parentId = null;
-              currentLinks.push(movedItem);
-              store.setState({ links: currentLinks });
-              renderLinks();
-              renderLinkManager();
-            }
-          }
-        });
-        actionsDiv.appendChild(moveOutBtn);
-      }
-
-      const dragHandle = document.createElement("span");
-      dragHandle.className = "drag-handle";
-      dragHandle.title = "Drag to reorder or move into folder";
-      dragHandle.textContent = "::";
-
-      dragHandle.onpointerdown = (pointerEvent) => {
-        if (pointerEvent.button !== 0) return;
-        pointerEvent.stopPropagation();
-
-        const activePointerId = pointerEvent.pointerId;
-        const startX = pointerEvent.clientX;
-        const startY = pointerEvent.clientY;
-        let isDraggingStarted = false;
-        let ghostEl = null;
-        let activeTarget = null;
-        let dropPosition = "below";
-        let animFrameId = null;
-
-        const container =
-          document
-            .getElementById("linkManagerContent")
-            ?.closest(".modal-content") ||
-          document.getElementById("linkManagerContent");
-
-        const isDescendantOf = (candidateId, parentCheckId) => {
-          let curr = candidateId;
-          while (curr) {
-            if (curr === parentCheckId) return true;
-            const node = links.find((l) => l.id === curr);
-            curr = node ? node.parentId : null;
-          }
-          return false;
-        };
-
-        const startDragSession = () => {
-          isDraggingStarted = true;
-          item.classList.add("is-dragging");
-          if (window.customCursorInstance) {
-            window.customCursorInstance.setDragState(true);
-          }
-          ghostEl = item.cloneNode(true);
-          ghostEl.className = "drag-ghost";
-          ghostEl.style.width = `${item.offsetWidth}px`;
-          ghostEl.style.left = `${startX}px`;
-          ghostEl.style.top = `${startY}px`;
-          document.body.appendChild(ghostEl);
-        };
-
-        const scrollContainer =
-          item.closest(".modal-content") ||
-          document.getElementById("linkManagerContent");
-        let lastClientY = startY;
-
-        const runAutoScrollLoop = () => {
-          if (!isDraggingStarted || !scrollContainer) return;
-          const rect = scrollContainer.getBoundingClientRect();
-          const modalHeader = scrollContainer.querySelector(".modal-header");
-          const topOffset = modalHeader ? modalHeader.offsetHeight : 0;
-          const threshold = 60;
-          const speed = 15;
-
-          if (lastClientY < rect.top + topOffset + threshold) {
-            scrollContainer.scrollTop -= speed;
-          } else if (
-            lastClientY > rect.bottom - threshold ||
-            lastClientY > window.innerHeight - threshold
-          ) {
-            scrollContainer.scrollTop += speed;
-          }
-
-          animFrameId = requestAnimationFrame(runAutoScrollLoop);
-        };
-
-        const updateDragVisuals = (pe) => {
-          const touchOffsetY = pe.pointerType === "touch" ? 40 : 0;
-          const targetY = pe.clientY - touchOffsetY;
-          lastClientY = targetY;
-
-          if (!animFrameId) {
-            animFrameId = requestAnimationFrame(runAutoScrollLoop);
-          }
-
-          if (ghostEl) {
-            ghostEl.style.left = `${pe.clientX}px`;
-            ghostEl.style.top = `${targetY}px`;
-          }
-
-          document.querySelectorAll(".link-manager-item").forEach((el) => {
-            el.classList.remove("shift-down", "shift-up", "drag-over-folder");
-          });
-
-          const hoverEl = document
-            .elementFromPoint(pe.clientX, targetY)
-            ?.closest(".link-manager-item");
-
-          if (hoverEl && hoverEl !== item) {
-            const targetId = hoverEl.dataset.id;
-            if (isDescendantOf(targetId, link.id)) {
-              activeTarget = null;
-              return;
-            }
-
-            activeTarget = hoverEl;
-            const targetLink = links.find((l) => l.id === targetId);
-            const rect = hoverEl.getBoundingClientRect();
-            const ratio = Math.max(
-              0,
-              Math.min(1, (pe.clientY - rect.top) / rect.height),
-            );
-
-            const subContainer = hoverEl.nextElementSibling;
-            const isFolderExpanded =
-              subContainer &&
-              subContainer.classList.contains("folder-sub-container") &&
-              subContainer.style.display !== "none";
-
-            if (targetLink?.isFolder && isFolderExpanded) {
-              if (ratio < 0.25) {
-                dropPosition = "above";
-                hoverEl.classList.add("shift-down");
-              } else if (ratio > 0.75) {
-                dropPosition = "below";
-                hoverEl.classList.add("shift-up");
-              } else {
-                dropPosition = "inside";
-                hoverEl.classList.add("drag-over-folder");
-              }
-            } else {
-              if (ratio < 0.5) {
-                dropPosition = "above";
-                hoverEl.classList.add("shift-down");
-              } else {
-                dropPosition = "below";
-                hoverEl.classList.add("shift-up");
-              }
-            }
-          } else {
-            activeTarget = null;
-          }
-        };
-
-        const handleDrop = async () => {
-          if (!isDraggingStarted || !activeTarget) return;
-
-          const targetId = activeTarget.dataset.id;
+        if (
+          await customConfirm(
+            `Move "${link.name}" back to the main dashboard?`,
+            "Move Item?",
+          )
+        ) {
           const currentLinks = [...store.getState().links];
-          const draggedIdx = currentLinks.findIndex((l) => l.id === link.id);
-          const targetIdx = currentLinks.findIndex((l) => l.id === targetId);
-
-          if (draggedIdx === -1 || targetIdx === -1) return;
-
-          const targetLink = currentLinks[targetIdx];
-          const destinationParentId =
-            dropPosition === "inside" && targetLink.isFolder
-              ? targetLink.id
-              : targetLink.parentId || null;
-
-          if (destinationParentId) {
-            const destinationDepth = getFolderDepth(
-              destinationParentId,
-              currentLinks,
-            );
-            const potentialDepth = destinationDepth + (link.isFolder ? 1 : 0);
-            if (potentialDepth > 3) {
-              showToast("Folder depth limit reached (max 3 levels).", "error");
-              return;
-            }
-          }
-
-          const [movedItem] = currentLinks.splice(draggedIdx, 1);
-
-          if (dropPosition === "inside" && targetLink.isFolder) {
-            movedItem.parentId = targetLink.id;
+          const idx = currentLinks.findIndex((l) => l.id === link.id);
+          if (idx > -1) {
+            const [movedItem] = currentLinks.splice(idx, 1);
+            movedItem.parentId = null;
             currentLinks.push(movedItem);
-          } else {
-            movedItem.parentId = targetLink.parentId || null;
-            const newTargetIdx = currentLinks.findIndex(
-              (l) => l.id === targetId,
-            );
-            const insertIdx =
-              dropPosition === "above" ? newTargetIdx : newTargetIdx + 1;
-            currentLinks.splice(insertIdx, 0, movedItem);
+            store.setState({ links: currentLinks });
+            renderLinks();
+            renderLinkManager();
           }
+        }
+      });
+      actionsDiv.appendChild(moveOutBtn);
+    }
 
-          await store.setState({ links: currentLinks });
-          renderLinks();
-          renderLinkManager();
-        };
+    const dragHandle = document.createElement("span");
+    dragHandle.className = "drag-handle";
+    dragHandle.title = "Drag to reorder or move into folder";
+    dragHandle.textContent = "::";
 
-        const cleanupDragSession = () => {
-          if (animFrameId) cancelAnimationFrame(animFrameId);
-          window.removeEventListener("pointermove", onPointerMove);
-          window.removeEventListener("pointerup", onPointerUp);
-          window.removeEventListener("pointercancel", cleanupDragSession);
+    dragHandle.onpointerdown = (pointerEvent) => {
+      if (pointerEvent.button !== 0) return;
+      pointerEvent.stopPropagation();
 
-          if (window.customCursorInstance) {
-            window.customCursorInstance.setDragState(false);
-          }
+      const activePointerId = pointerEvent.pointerId;
+      const startX = pointerEvent.clientX;
+      const startY = pointerEvent.clientY;
+      let isDraggingStarted = false;
+      let ghostEl = null;
+      let activeTarget = null;
+      let dropPosition = "below";
+      let animFrameId = null;
 
-          if (ghostEl) {
-            ghostEl.remove();
-            ghostEl = null;
-          }
+      const container =
+        document
+          .getElementById("linkManagerContent")
+          ?.closest(".modal-content") ||
+        document.getElementById("linkManagerContent");
 
-          item.classList.remove("is-dragging");
-          document.querySelectorAll(".link-manager-item").forEach((el) => {
-            el.classList.remove("shift-down", "shift-up", "drag-over-folder");
-          });
-        };
-
-        const onPointerMove = (pe) => {
-          if (pe.pointerId !== activePointerId) return;
-          pe.preventDefault();
-
-          if (!isDraggingStarted) {
-            const dist = Math.hypot(pe.clientX - startX, pe.clientY - startY);
-            if (dist < 8) return;
-            startDragSession();
-          }
-
-          updateDragVisuals(pe);
-        };
-
-        const onPointerUp = async (pe) => {
-          if (pe.pointerId !== activePointerId) return;
-          const shouldDrop = isDraggingStarted && activeTarget;
-          cleanupDragSession();
-          if (shouldDrop) {
-            await handleDrop();
-          }
-        };
-
-        window.addEventListener("pointermove", onPointerMove);
-        window.addEventListener("pointerup", onPointerUp);
-        window.addEventListener("pointercancel", cleanupDragSession);
+      const isDescendantOf = (candidateId, parentCheckId) => {
+        let curr = candidateId;
+        while (curr) {
+          if (curr === parentCheckId) return true;
+          const node = links.find((l) => l.id === curr);
+          curr = node ? node.parentId : null;
+        }
+        return false;
       };
 
-      const editBtn = document.createElement("button");
-      editBtn.className = "icon-btn secondary";
-      editBtn.title = "Edit";
-      editBtn.innerHTML = editIconSVG;
-      editBtn.addEventListener("click", (e) => editLink(link.id, e));
+      const startDragSession = () => {
+        isDraggingStarted = true;
+        item.classList.add("is-dragging");
+        if (window.customCursorInstance) {
+          window.customCursorInstance.setDragState(true);
+        }
+        ghostEl = item.cloneNode(true);
+        ghostEl.className = "drag-ghost";
+        ghostEl.style.width = `${item.offsetWidth}px`;
+        ghostEl.style.left = `${startX}px`;
+        ghostEl.style.top = `${startY}px`;
+        document.body.appendChild(ghostEl);
+      };
 
-      const deleteBtn = document.createElement("button");
-      deleteBtn.className = "icon-btn delete-btn";
-      deleteBtn.title = "Delete";
-      deleteBtn.innerHTML = deleteIconSVG;
-      deleteBtn.addEventListener("click", (e) => deleteLink(link.id, e));
+      const scrollContainer =
+        item.closest(".modal-content") ||
+        document.getElementById("linkManagerContent");
+      let lastClientY = startY;
 
-      actionsDiv.appendChild(dragHandle);
-      actionsDiv.appendChild(editBtn);
-      actionsDiv.appendChild(deleteBtn);
+      const runAutoScrollLoop = () => {
+        if (!isDraggingStarted || !scrollContainer) return;
+        const rect = scrollContainer.getBoundingClientRect();
+        const modalHeader = scrollContainer.querySelector(".modal-header");
+        const topOffset = modalHeader ? modalHeader.offsetHeight : 0;
+        const threshold = 60;
+        const speed = 15;
 
-      item.appendChild(nameSpan);
-      item.appendChild(actionsDiv);
-    }
+        if (lastClientY < rect.top + topOffset + threshold) {
+          scrollContainer.scrollTop -= speed;
+        } else if (
+          lastClientY > rect.bottom - threshold ||
+          lastClientY > window.innerHeight - threshold
+        ) {
+          scrollContainer.scrollTop += speed;
+        }
+
+        animFrameId = requestAnimationFrame(runAutoScrollLoop);
+      };
+
+      const updateDragVisuals = (pe) => {
+        const touchOffsetY = pe.pointerType === "touch" ? 40 : 0;
+        const targetY = pe.clientY - touchOffsetY;
+        lastClientY = targetY;
+
+        if (!animFrameId) {
+          animFrameId = requestAnimationFrame(runAutoScrollLoop);
+        }
+
+        if (ghostEl) {
+          ghostEl.style.left = `${pe.clientX}px`;
+          ghostEl.style.top = `${targetY}px`;
+        }
+
+        document.querySelectorAll(".link-manager-item").forEach((el) => {
+          el.classList.remove("shift-down", "shift-up", "drag-over-folder");
+        });
+
+        const hoverEl = document
+          .elementFromPoint(pe.clientX, targetY)
+          ?.closest(".link-manager-item");
+
+        if (hoverEl && hoverEl !== item) {
+          const targetId = hoverEl.dataset.id;
+          if (isDescendantOf(targetId, link.id)) {
+            activeTarget = null;
+            return;
+          }
+
+          activeTarget = hoverEl;
+          const targetLink = links.find((l) => l.id === targetId);
+          const rect = hoverEl.getBoundingClientRect();
+          const ratio = Math.max(
+            0,
+            Math.min(1, (pe.clientY - rect.top) / rect.height),
+          );
+
+          const subContainer = hoverEl.nextElementSibling;
+          const isFolderExpanded =
+            subContainer &&
+            subContainer.classList.contains("folder-sub-container") &&
+            subContainer.style.display !== "none";
+
+          if (targetLink?.isFolder && isFolderExpanded) {
+            if (ratio < 0.25) {
+              dropPosition = "above";
+              hoverEl.classList.add("shift-down");
+            } else if (ratio > 0.75) {
+              dropPosition = "below";
+              hoverEl.classList.add("shift-up");
+            } else {
+              dropPosition = "inside";
+              hoverEl.classList.add("drag-over-folder");
+            }
+          } else {
+            if (ratio < 0.5) {
+              dropPosition = "above";
+              hoverEl.classList.add("shift-down");
+            } else {
+              dropPosition = "below";
+              hoverEl.classList.add("shift-up");
+            }
+          }
+        } else {
+          activeTarget = null;
+        }
+      };
+
+      const handleDrop = async () => {
+        if (!isDraggingStarted || !activeTarget) return;
+
+        const targetId = activeTarget.dataset.id;
+        const currentLinks = [...store.getState().links];
+        const draggedIdx = currentLinks.findIndex((l) => l.id === link.id);
+        const targetIdx = currentLinks.findIndex((l) => l.id === targetId);
+
+        if (draggedIdx === -1 || targetIdx === -1) return;
+
+        const targetLink = currentLinks[targetIdx];
+        const destinationParentId =
+          dropPosition === "inside" && targetLink.isFolder
+            ? targetLink.id
+            : targetLink.parentId || null;
+
+        if (destinationParentId) {
+          const destinationDepth = getFolderDepth(
+            destinationParentId,
+            currentLinks,
+          );
+          const potentialDepth = destinationDepth + (link.isFolder ? 1 : 0);
+          if (potentialDepth > 3) {
+            showToast("Folder depth limit reached (max 3 levels).", "error");
+            return;
+          }
+        }
+
+        const [movedItem] = currentLinks.splice(draggedIdx, 1);
+
+        if (dropPosition === "inside" && targetLink.isFolder) {
+          movedItem.parentId = targetLink.id;
+          currentLinks.push(movedItem);
+        } else {
+          movedItem.parentId = targetLink.parentId || null;
+          const newTargetIdx = currentLinks.findIndex(
+            (l) => l.id === targetId,
+          );
+          const insertIdx =
+            dropPosition === "above" ? newTargetIdx : newTargetIdx + 1;
+          currentLinks.splice(insertIdx, 0, movedItem);
+        }
+
+        await store.setState({ links: currentLinks });
+        renderLinks();
+        renderLinkManager();
+      };
+
+      const cleanupDragSession = () => {
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerup", onPointerUp);
+        window.removeEventListener("pointercancel", cleanupDragSession);
+
+        if (window.customCursorInstance) {
+          window.customCursorInstance.setDragState(false);
+        }
+
+        if (ghostEl) {
+          ghostEl.remove();
+          ghostEl = null;
+        }
+
+        item.classList.remove("is-dragging");
+        document.querySelectorAll(".link-manager-item").forEach((el) => {
+          el.classList.remove("shift-down", "shift-up", "drag-over-folder");
+        });
+      };
+
+      const onPointerMove = (pe) => {
+        if (pe.pointerId !== activePointerId) return;
+        pe.preventDefault();
+
+        if (!isDraggingStarted) {
+          const dist = Math.hypot(pe.clientX - startX, pe.clientY - startY);
+          if (dist < 8) return;
+          startDragSession();
+        }
+
+        updateDragVisuals(pe);
+      };
+
+      const onPointerUp = async (pe) => {
+        if (pe.pointerId !== activePointerId) return;
+        const shouldDrop = isDraggingStarted && activeTarget;
+        cleanupDragSession();
+        if (shouldDrop) {
+          await handleDrop();
+        }
+      };
+
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", cleanupDragSession);
+    };
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "icon-btn secondary";
+    editBtn.title = "Edit";
+    editBtn.innerHTML = editIconSVG;
+    editBtn.addEventListener("click", (e) => editLink(link.id, e));
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "icon-btn delete-btn";
+    deleteBtn.title = "Delete";
+    deleteBtn.innerHTML = deleteIconSVG;
+    deleteBtn.addEventListener("click", (e) => deleteLink(link.id, e));
+
+    actionsDiv.appendChild(dragHandle);
+    actionsDiv.appendChild(editBtn);
+    actionsDiv.appendChild(deleteBtn);
+
+    item.appendChild(nameSpan);
+    item.appendChild(actionsDiv);
 
     return item;
   }
@@ -669,9 +614,7 @@ export function renderLinkManager() {
     const childLinks = links.filter((l) => (l.parentId || null) === parentId);
 
     childLinks.forEach((link) => {
-      if (isSelectionMode && link.id === activeFolderId) return;
-
-      const row = createManagerItem(link, level, isSelectionMode);
+      const row = createManagerItem(link, level);
       containerFragment.appendChild(row);
 
       if (link.isFolder) {
@@ -705,56 +648,35 @@ export function renderLinkManager() {
           };
 
           row.onclick = (e) => {
-            if (
-              e.target.closest(".link-actions") ||
-              e.target.closest(".manager-checkbox")
-            )
-              return;
+            if (e.target.closest(".link-actions")) return;
             handleToggle(e);
           };
         }
 
         subContainer.appendChild(buildFolderNodes(link.id, level + 1));
 
-        if (!isSelectionMode) {
-          const actionRow = document.createElement("div");
-          actionRow.className = "folder-action-row";
-          actionRow.style.marginLeft = `${(level + 1) * 28}px`;
-          actionRow.style.width = `calc(100% - ${(level + 1) * 28}px)`;
+        const actionRow = document.createElement("div");
+        actionRow.className = "folder-action-row";
+        actionRow.style.marginLeft = `${(level + 1) * 28}px`;
+        actionRow.style.width = `calc(100% - ${(level + 1) * 28}px)`;
 
-          const addNewLinkBtn = document.createElement("button");
-          addNewLinkBtn.className = "add-link-btn";
-          addNewLinkBtn.innerHTML = `+ New Link`;
-          addNewLinkBtn.onclick = () => openEditor(null, link.id);
+        const addNewLinkBtn = document.createElement("button");
+        addNewLinkBtn.className = "add-link-btn";
+        addNewLinkBtn.innerHTML = `+ New Link`;
+        addNewLinkBtn.onclick = () => openEditor(null, link.id);
 
-          const currentFolderDepth = getFolderDepth(link.id, links);
-          const isAtMaxDepth = currentFolderDepth >= 3;
+        const currentFolderDepth = getFolderDepth(link.id, links);
+        const isAtMaxDepth = currentFolderDepth >= 3;
 
-          const addNewFolderBtn = document.createElement("button");
-          addNewFolderBtn.className = `add-link-btn ${isAtMaxDepth ? "btn-disabled" : ""}`;
-          addNewFolderBtn.innerHTML = `+ New Folder`;
-          if (isAtMaxDepth) {
-            addNewFolderBtn.title = "Folder depth limit reached (max 3 levels)";
-          }
-          addNewFolderBtn.onclick = (e) => addFolder(addNewFolderBtn, link.id);
-
-          const addExistingBtn = document.createElement("button");
-          addExistingBtn.className = "add-link-btn btn-secondary-bg";
-          addExistingBtn.innerHTML = `+ Existing`;
-          addExistingBtn.onclick = () => {
-            store.setState({
-              isSelectionMode: true,
-              activeFolderId: link.id,
-              selectedLinkIds: [],
-            });
-            renderLinkManager();
-          };
-
-          actionRow.appendChild(addNewLinkBtn);
-          actionRow.appendChild(addNewFolderBtn);
-          actionRow.appendChild(addExistingBtn);
-          subContainer.appendChild(actionRow);
+        const addNewFolderBtn = document.createElement("button");
+        addNewFolderBtn.className = `add-link-btn ${isAtMaxDepth ? "btn-disabled" : ""}`;
+        addNewFolderBtn.innerHTML = `+ New Folder`;
+        if (isAtMaxDepth) {
+          addNewFolderBtn.title = "Folder depth limit reached (max 3 levels)";
         }
+        addNewFolderBtn.onclick = (e) => addFolder(addNewFolderBtn, link.id);
+
+        subContainer.appendChild(actionRow);
 
         containerFragment.appendChild(subContainer);
       }
@@ -765,12 +687,6 @@ export function renderLinkManager() {
 
   const newFragment = buildFolderNodes(null, 0);
 
-  if (isSelectionMode && newFragment.children.length === 0) {
-    const emptyMsg = document.createElement("div");
-    emptyMsg.innerText = "No other links or folders available.";
-    emptyMsg.className = "empty-manager-msg";
-    newFragment.appendChild(emptyMsg);
-  }
 
   linkManagerContent.innerHTML = "";
   linkManagerContent.appendChild(newFragment);
