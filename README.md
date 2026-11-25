@@ -80,9 +80,9 @@
 | :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **3-Level Nested Folders**   | Create, edit, and recursively nest shortcut links inside custom folders up to 3 levels max (`Dashboard > Folder > Subfolder > Nested Subfolder`). |
 | **Non-Destructive Guarding** | Strict drag-and-drop rejection prevents illegal Level 4+ nesting attempts with zero state corruption or file unlinking.                           |
-| **In-Folder Item Creation**  | Direct `+ New Link`, `+ New Folder`, and `+ Existing` action rows embedded inside expanded folder views.                                          |
+| **In-Folder Item Creation**  | Direct `+ New Link` and `+ New Folder` action rows embedded inside expanded folder views.                                                          |
 | **Spatial Drag-and-Drop**    | Native pointer-events reordering engine with edge boundary auto-scrolling (`requestAnimationFrame`) and sticky-header offset calculations.        |
-| **Multi-Select Toolbar**     | Batch selection mode to move, reorganize, or delete multiple shortcut links simultaneously.                                                       |
+
 | **Icon Title Visibility**    | Toggle shortcut titles to display strictly on hover or remain permanently visible on the dashboard grid.                                          |
 | **Floating Exit Dock**       | Decoupled viewport navigation controls (`[ ← Dashboard ]` and `[ ← ]`) anchored with backdrop blur and dynamic shadow inheritance.                |
 
