@@ -86,19 +86,19 @@
     >
       <div class="quick-links-editor-card">
         <h2 id="editorTitle">Add Link</h2>
-        <label>
-          Name
-          <input id="editName" type="text" maxlength="50" autocomplete="off" />
-        </label>
-        <label id="editUrlRow">
-          URL
+        <div class="field">
+          <input id="editName" type="text" maxlength="50" autocomplete="off" placeholder=" " />
+          <label for="editName">Name</label>
+        </div>
+        <div id="editUrlRow" class="field">
           <input
             id="editUrl"
             type="url"
             autocomplete="url"
-            placeholder="https://example.com"
+            placeholder=" "
           />
-        </label>
+          <label for="editUrl">URL</label>
+        </div>
         <div class="quick-links-editor-actions">
           <button id="cancelEditBtn" class="secondary" type="button">
             Cancel
