@@ -444,6 +444,16 @@ function bindStaticEvents() {
       autoSaveSettings();
     }, 300);
 
+    const updateSliderVisual = () => {
+      const min = Number(shadowSlider.min) || 0;
+      const max = Number(shadowSlider.max) || 100;
+      const range = max - min;
+      const value = Number(shadowSlider.value);
+      const percent = range > 0 ? ((value - min) / range) * 100 : 0;
+      shadowSlider.closest(".slider")?.style.setProperty("--v", `${percent}%`);
+    };
+    updateSliderVisual();
+
     const applyShadowValue = (value) => {
       const val = Math.max(0, Math.min(200, Number(value)));
 
@@ -452,11 +462,13 @@ function bindStaticEvents() {
 
       shadowSlider.value = val;
       shadowInputNumber.value = val;
+      updateSliderVisual();
 
       persistShadowSettings();
     };
 
     shadowSlider.addEventListener("input", () => {
+      updateSliderVisual();
       applyShadowValue(shadowSlider.value);
     });
 
