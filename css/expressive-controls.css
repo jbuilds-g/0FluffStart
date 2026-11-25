@@ -429,3 +429,390 @@ body.material-you .dashboard-navigation a:focus-visible {
   outline: 3px solid var(--expressive-primary);
   outline-offset: 2px;
 }
+
+
+/* Shared expressive controls for every theme. Theme tokens below only alter
+   the visual treatment; native inputs remain the source of truth. */
+body:not(.material-you) {
+  --control-motion: cubic-bezier(0.2, 0, 0, 1);
+  --control-switch-width: 46px;
+  --control-switch-height: 26px;
+  --control-switch-thumb: 16px;
+  --control-switch-inset: 4px;
+  --control-switch-radius: 9999px;
+  --control-switch-thumb-radius: 50%;
+  --control-field-radius: min(var(--radius, 12px), 14px);
+  --control-field-bg: color-mix(in srgb, var(--card-hover) 78%, var(--bg));
+  --control-slider-radius: 9999px;
+  --control-nav-radius: max(6px, calc(var(--radius, 12px) * 0.7));
+}
+
+/* Switches: keep the checkbox keyboard-operable and visually hide only its
+   native painting. The visible track/thumb are decorative siblings. */
+body:not(.material-you) .switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+body:not(.material-you) .switch:hover {
+  border-color: transparent;
+  background: transparent;
+}
+body:not(.material-you) .switch input[type="checkbox"] {
+  position: absolute !important;
+  top: 50% !important;
+  right: 0 !important;
+  left: auto !important;
+  z-index: 2;
+  width: var(--control-switch-width) !important;
+  min-width: var(--control-switch-width) !important;
+  height: var(--control-switch-height) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: translateY(-50%);
+  opacity: 0 !important;
+  cursor: pointer;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+body:not(.material-you) .switch input[type="checkbox"]::before,
+body:not(.material-you) .switch input[type="checkbox"]::after {
+  content: none !important;
+  display: none !important;
+}
+body:not(.material-you) .switch-track {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 var(--control-switch-width);
+  width: var(--control-switch-width);
+  height: var(--control-switch-height);
+  box-sizing: border-box;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--control-switch-radius);
+  background: var(--card-hover);
+  transition:
+    background-color 200ms var(--control-motion),
+    border-color 200ms ease;
+}
+body:not(.material-you) .switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: var(--control-switch-inset);
+  display: grid;
+  width: var(--control-switch-thumb);
+  height: var(--control-switch-thumb);
+  box-sizing: border-box;
+  place-items: center;
+  transform: translateY(-50%);
+  border-radius: var(--control-switch-thumb-radius);
+  background: var(--dim);
+  color: var(--bg);
+  transition:
+    width 220ms var(--control-motion),
+    height 220ms var(--control-motion),
+    left 220ms var(--control-motion),
+    background-color 180ms ease;
+}
+body:not(.material-you) .switch-thumb .icon-check {
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transform: scale(0.7);
+  transition:
+    opacity 120ms ease,
+    transform 180ms var(--control-motion);
+}
+body:not(.material-you) .switch:has(input:checked) .switch-track {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+body:not(.material-you) .switch:has(input:checked) .switch-thumb {
+  left: calc(var(--control-switch-width) - var(--control-switch-thumb) - var(--control-switch-inset) - 2px);
+  background: var(--bg);
+}
+body:not(.material-you) .switch:has(input:checked) .switch-thumb .icon-check {
+  opacity: 1;
+  transform: scale(1);
+}
+body:not(.material-you) .switch:active .switch-thumb {
+  width: calc(var(--control-switch-thumb) + 5px);
+}
+body:not(.material-you) .switch:has(input:checked):active .switch-thumb {
+  left: calc(var(--control-switch-width) - var(--control-switch-thumb) - var(--control-switch-inset) - 7px);
+}
+body:not(.material-you) .switch:has(input:focus-visible) .switch-track {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+body:not(.material-you) .switch:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+/* Reusable segmented range control. The native range input retains pointer,
+   touch, keyboard, min/max and step behavior. */
+body:not(.material-you) .slider {
+  --v: 50%;
+  position: relative;
+  width: 100%;
+  height: 44px;
+  min-width: 0;
+  isolation: isolate;
+}
+body:not(.material-you) .slider-track-active,
+body:not(.material-you) .slider-track-inactive {
+  position: absolute;
+  top: 17px;
+  height: 10px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+body:not(.material-you) .slider-track-active {
+  left: 0;
+  width: max(0px, var(--v));
+  border-radius: var(--control-slider-radius) 0 0 var(--control-slider-radius);
+  background: var(--accent);
+}
+body:not(.material-you) .slider-track-inactive {
+  left: var(--v);
+  right: 0;
+  border-radius: 0 var(--control-slider-radius) var(--control-slider-radius) 0;
+  background: var(--card-hover);
+  background-image: radial-gradient(circle, var(--border) 1.5px, transparent 2px);
+  background-size: 16px 100%;
+  background-repeat: repeat-x;
+}
+body:not(.material-you) .slider-thumb {
+  position: absolute;
+  top: 9px;
+  left: var(--v);
+  width: 4px;
+  height: 26px;
+  transform: translateX(-50%);
+  border-radius: var(--control-slider-radius);
+  background: var(--accent);
+  box-shadow: var(--shadow-sm);
+  pointer-events: none;
+  transition: width 140ms ease;
+}
+body:not(.material-you) .slider:has(input:active) .slider-thumb {
+  width: 7px;
+}
+body:not(.material-you) .slider:has(input:focus-visible) .slider-thumb {
+  outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: 3px;
+}
+body:not(.material-you) .slider input[type="range"] {
+  position: absolute !important;
+  z-index: 1;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 44px;
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent !important;
+  outline: none;
+}
+body:not(.material-you) .slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 44px;
+  background: transparent;
+}
+body:not(.material-you) .slider input[type="range"]::-webkit-slider-thumb {
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  box-shadow: none;
+}
+body:not(.material-you) .slider input[type="range"]::-moz-range-track {
+  height: 44px;
+  background: transparent;
+}
+body:not(.material-you) .slider input[type="range"]::-moz-range-thumb {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Theme-specific shape personalities. */
+body.cyberpunk,
+body.retro,
+body.paper,
+body.slate {
+  --control-switch-radius: 2px;
+  --control-switch-thumb-radius: 0px;
+  --control-slider-radius: 0px;
+  --control-field-radius: 0px;
+  --control-field-bg: var(--card);
+  --control-nav-radius: 0px;
+}
+body.cyberpunk .switch-track,
+body.retro .switch-track,
+body.slate .switch-track {
+  border-width: 1px;
+}
+body.cyberpunk .switch:has(input:checked) .switch-track,
+body.retro .switch:has(input:checked) .switch-track {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 25%, transparent);
+}
+body.paper .field {
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+body.paper .field:focus-within {
+  border-color: var(--accent);
+}
+body.heatwave,
+body.toxic-tide {
+  --control-switch-radius: 7px;
+  --control-switch-thumb-radius: 3px;
+  --control-slider-radius: 6px;
+  --control-field-radius: 8px;
+  --control-nav-radius: 8px;
+}
+body.sunset,
+body.forest,
+body.light,
+body.luminous,
+body.nord,
+body.dracula,
+body.rose,
+body.evergreen-archive,
+body.night-glow,
+body.amoled {
+  --control-switch-radius: 9999px;
+  --control-switch-thumb-radius: 50%;
+  --control-slider-radius: 9999px;
+  --control-field-radius: min(var(--radius, 16px), 18px);
+  --control-nav-radius: 9999px;
+}
+body.night-glow .switch-track,
+body.night-glow .slider-thumb,
+body.night-glow .field {
+  box-shadow: 0 0 10px var(--shadow-color);
+}
+body.night-glow .switch:has(input:checked) .switch-track {
+  box-shadow: 0 0 12px var(--shadow-color);
+}
+
+/* Shared floating labels for labeled fields. The main dashboard search input
+   is not inside .field and is intentionally unaffected. */
+body:not(.material-you) .field {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--control-field-radius);
+  background: var(--control-field-bg);
+  box-shadow: inset 0 -1px 0 var(--dim);
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+body:not(.material-you) .field > input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 56px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 24px 16px 8px;
+  border: 0;
+  border-radius: inherit;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+}
+body:not(.material-you) .field > input::placeholder {
+  color: transparent;
+  opacity: 0;
+}
+body:not(.material-you) .field > label {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  z-index: 1;
+  max-width: calc(100% - 32px);
+  overflow: hidden;
+  margin: 0;
+  color: var(--dim);
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  transform-origin: left top;
+  transition:
+    translate 200ms ease,
+    font-size 200ms ease,
+    color 200ms ease;
+}
+body:not(.material-you) .field:focus-within > label,
+body:not(.material-you) .field:has(> input:not(:placeholder-shown)) > label {
+  translate: 0 -10px;
+  font-size: 0.7rem;
+}
+body:not(.material-you) .field:focus-within > label {
+  color: var(--accent);
+}
+body:not(.material-you) .field::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 2;
+  height: 2px;
+  border-radius: var(--control-slider-radius);
+  background: var(--accent);
+  scale: 0 1;
+  transform-origin: center;
+  transition: scale 240ms ease;
+  pointer-events: none;
+}
+body:not(.material-you) .field:focus-within::after {
+  scale: 1;
+}
+body:not(.material-you) .field:has(> input:disabled) {
+  opacity: 0.55;
+}
+body:not(.material-you) .field > input:focus-visible {
+  outline: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  body:not(.material-you) .switch-track,
+  body:not(.material-you) .switch-thumb,
+  body:not(.material-you) .switch-thumb .icon-check,
+  body:not(.material-you) .slider-thumb,
+  body:not(.material-you) .field,
+  body:not(.material-you) .field > label,
+  body:not(.material-you) .field::after {
+    transition: none !important;
+  }
+}
