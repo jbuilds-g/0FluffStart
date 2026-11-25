@@ -153,7 +153,7 @@ body.material-you select option {
 }
 
 /* MD3 Expressive Checkbox Toggle Switch Overrides */
-body.material-you input[type="checkbox"]:not(.manager-checkbox) {
+body.material-you input[type="checkbox"] {
   appearance: none !important;
   -webkit-appearance: none !important;
   width: 52px !important;
@@ -174,7 +174,7 @@ body.material-you input[type="checkbox"]:not(.manager-checkbox) {
 }
 
 /* Base Thumb Geometry & Background */
-body.material-you input[type="checkbox"]:not(.manager-checkbox)::after {
+body.material-you input[type="checkbox"]::after {
   content: "" !important;
   position: absolute !important;
   top: 2px !important;
@@ -190,7 +190,7 @@ body.material-you input[type="checkbox"]:not(.manager-checkbox)::after {
 }
 
 /* Masked Vector Icon (Off State: X) */
-body.material-you input[type="checkbox"]:not(.manager-checkbox)::before {
+body.material-you input[type="checkbox"]::before {
   content: "" !important;
   position: absolute !important;
   top: 8px !important;
@@ -212,19 +212,19 @@ body.material-you input[type="checkbox"]:not(.manager-checkbox)::before {
     background-color 200ms cubic-bezier(0.2, 0, 0, 1) !important;
 }
 
-body.material-you input[type="checkbox"]:not(.manager-checkbox):checked {
+body.material-you input[type="checkbox"]:checked {
   background-color: var(--accent) !important;
   border-color: var(--accent) !important;
 }
 
-body.material-you input[type="checkbox"]:not(.manager-checkbox):checked::after {
+body.material-you input[type="checkbox"]:checked::after {
   transform: translateX(20px) !important;
   background-color: var(--bg) !important;
 }
 
 /* Masked Vector Icon (On State: Checkmark) */
 body.material-you
-  input[type="checkbox"]:not(.manager-checkbox):checked::before {
+  input[type="checkbox"]:checked::before {
   transform: translateX(20px) !important;
   background-color: var(--accent) !important;
   -webkit-mask-image: url("../assets/icons/check.svg") !important;
@@ -799,7 +799,7 @@ select:hover {
   margin: 0;
 }
 
-body:not(.material-you) input[type="checkbox"]:not(.manager-checkbox) {
+body:not(.material-you) input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
   width: 38px;
@@ -816,7 +816,7 @@ body:not(.material-you) input[type="checkbox"]:not(.manager-checkbox) {
     border-color 0.2s ease;
 }
 
-body:not(.material-you) input[type="checkbox"]:not(.manager-checkbox)::after {
+body:not(.material-you) input[type="checkbox"]::after {
   content: "";
   position: absolute;
   top: 2px;
@@ -830,32 +830,17 @@ body:not(.material-you) input[type="checkbox"]:not(.manager-checkbox)::after {
     background 0.2s ease;
 }
 
-body:not(.material-you) input[type="checkbox"]:not(.manager-checkbox):checked {
+body:not(.material-you) input[type="checkbox"]:checked {
   background: var(--card-hover);
   border-color: var(--accent);
 }
 
 body:not(.material-you)
-  input[type="checkbox"]:not(.manager-checkbox):checked::after {
+  input[type="checkbox"]:checked::after {
   transform: translateX(18px);
   background: var(--accent);
 }
 
-/* Maintain standard checkbox appearance for manager selection mode */
-input[type="checkbox"].manager-checkbox {
-  appearance: auto;
-  -webkit-appearance: checkbox;
-  width: auto;
-  height: auto;
-  background: initial;
-  border: initial;
-  position: static;
-}
-
-input[type="checkbox"].manager-checkbox::after {
-  content: none;
-  display: none;
-}
 
 /* --- BUTTON VARIANTS --- */
 .save-btn {
@@ -1209,22 +1194,6 @@ input[type="checkbox"].manager-checkbox::after {
   background: var(--card-hover);
 }
 
-.manager-item-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.manager-checkbox {
-  cursor: pointer;
-  accent-color: var(--accent);
-}
-
-.empty-manager-msg {
-  padding: 15px;
-  color: var(--dim);
-  text-align: center;
-}
 
 /* --- SETTINGS COMPONENT LAYOUTS --- */
 .header-actions {
@@ -1273,42 +1242,6 @@ input[type="checkbox"].manager-checkbox::after {
   background: var(--card-hover);
 }
 
-.selection-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  padding: 6px 12px;
-  background: var(--card-hover);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-}
-
-.selection-count {
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--accent);
-}
-
-.selection-actions {
-  display: flex;
-  gap: 6px;
-}
-
-.selection-btn-cancel {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 6px 12px;
-  font-size: 0.82rem;
-  width: auto;
-}
-
-.selection-btn-confirm {
-  margin: 0;
-  padding: 6px 12px;
-  font-size: 0.82rem;
-  width: auto;
-}
 
 .link-editor-box {
   background: var(--card-hover);
