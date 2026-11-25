@@ -1238,3 +1238,55 @@ body.amoled .quick-links-move-panel {
     box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent);
   }
 }
+
+/* Floating-label treatment for the dynamically-created move-folder field. */
+.quick-links-move-create-form .field {
+  width: 100%;
+  min-width: 0;
+}
+.quick-links-move-create-form .field > input {
+  min-height: 56px;
+  padding: 24px 16px 8px;
+  border: 0;
+  border-radius: 4px 4px 0 0;
+  background: transparent;
+  box-shadow: none;
+}
+.quick-links-move-create-form .field > label {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  display: block;
+  margin: 0;
+  color: var(--dim);
+  font-size: 0.9rem;
+  pointer-events: none;
+  transition:
+    translate 200ms ease,
+    font-size 200ms ease,
+    color 200ms ease;
+}
+.quick-links-move-create-form .field:focus-within > label,
+.quick-links-move-create-form .field:has(> input:not(:placeholder-shown)) > label {
+  translate: 0 -10px;
+  font-size: 0.7rem;
+}
+.quick-links-move-create-form .field:focus-within > label { color: var(--accent); }
+.quick-links-move-create-form .field::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: var(--accent);
+  scale: 0 1;
+  transform-origin: center;
+  transition: scale 250ms ease;
+  pointer-events: none;
+}
+.quick-links-move-create-form .field:focus-within::after { scale: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .quick-links-move-create-form .field > label,
+  .quick-links-move-create-form .field::after {
+    transition: none !important;
+  }
+}
