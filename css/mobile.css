@@ -216,7 +216,7 @@
 
   /* --- MOBILE SETTINGS TOGGLE PLACEMENT --- */
   @media (max-width: 850px) and (pointer: coarse) {
-    .radio-option:has(input[type="checkbox"]:not(.manager-checkbox)) {
+    .radio-option:has(input[type="checkbox"]) {
       justify-content: space-between;
     }
   }
