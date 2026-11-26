@@ -1,5 +1,5 @@
 import { store } from "./store.js";
-import { generateId, sanitizeUrl } from "./utils.js";
+import { generateId } from "./utils.js";
 import { customConfirm, showToast } from "./ui.js";
 
 const folderTemplate = document.createElement("div");
