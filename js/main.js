@@ -1,4 +1,4 @@
-import { store, DEFAULT_LINKS } from "./store.js";
+import { store, DEFAULT_LINKS, DEFAULT_SETTINGS } from "./store.js";
 import { debounce, sanitizeUrl } from "./utils.js";
 import { backupData, restoreData, clearBgFromDB } from "./storage.js";
 import {
@@ -899,7 +899,7 @@ function bindStaticEvents() {
             historyEnabled: true,
             showTitles: false,
             forceDesktop: false,
-            customCursorEnabled: false,
+            customCursorEnabled: DEFAULT_SETTINGS.customCursorEnabled,
             backgroundImage: null,
             shadowIntensity: 100,
             showAllSearchControls: true,
