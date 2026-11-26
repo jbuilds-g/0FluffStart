@@ -77,7 +77,12 @@
         try {
           const savedTheme = localStorage.getItem("theme") || "dark";
           document.documentElement.classList.add(savedTheme);
-          document.body.classList.add(savedTheme);
+          // Applying directly to document.body is still problematic if the body tag
+          // has styles that apply immediately. Using an opacity fade-in is safer.
+          document.documentElement.style.visibility = 'hidden';
+          window.addEventListener('DOMContentLoaded', () => {
+             document.documentElement.style.visibility = 'visible';
+          });
         } catch (e) {}
       })();
     </script>
