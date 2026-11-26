@@ -71,6 +71,12 @@
     />
 
     <link rel="stylesheet" href="css/core.css?v=4" />
+    <script>
+      try {
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        document.documentElement.classList.add(savedTheme);
+      } catch (e) {}
+    </script>
   </head>
   <body class="dark">
     <div class="search-backdrop"></div>
