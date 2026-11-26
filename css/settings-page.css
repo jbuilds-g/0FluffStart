@@ -500,9 +500,9 @@ body > .bg-video {
   font-size: 0.76rem;
   line-height: 1.5;
 }
-.settings-page-shell input[type="text"],
-.settings-page-shell input[type="url"],
-.settings-page-shell input[type="number"],
+.settings-page-shell input[type="text"]:not(.field > input),
+.settings-page-shell input[type="url"]:not(.field > input),
+.settings-page-shell input[type="number"]:not(.field > input),
 .settings-page-shell .select-trigger {
   width: 100%;
   min-width: 0;
@@ -528,15 +528,15 @@ body > .bg-video {
   color: var(--dim);
   opacity: 0.9;
 }
-.settings-page-shell input[type="text"]:hover,
-.settings-page-shell input[type="url"]:hover,
-.settings-page-shell input[type="number"]:hover,
+.settings-page-shell input[type="text"]:not(.field > input):hover,
+.settings-page-shell input[type="url"]:not(.field > input):hover,
+.settings-page-shell input[type="number"]:not(.field > input):hover,
 .settings-page-shell .select-trigger:hover {
   border-color: var(--accent);
 }
-.settings-page-shell input[type="text"]:focus,
-.settings-page-shell input[type="url"]:focus,
-.settings-page-shell input[type="number"]:focus,
+.settings-page-shell input[type="text"]:not(.field > input):focus,
+.settings-page-shell input[type="url"]:not(.field > input):focus,
+.settings-page-shell input[type="number"]:not(.field > input):focus,
 .settings-page-shell .select-trigger:focus-visible {
   border-color: var(--accent);
   box-shadow:
