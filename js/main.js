@@ -24,12 +24,9 @@ import {
 import { handleSearch, selectSuggestion } from "./search.js";
 import {
   renderLinks,
-  renderLinkManager,
   openEditor,
   cancelEdit,
   saveLink,
-  editLink,
-  deleteLink,
   navigateToFolder,
   addFolder,
 } from "./links.js";
