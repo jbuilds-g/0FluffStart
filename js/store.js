@@ -19,7 +19,7 @@ export const DEFAULT_SETTINGS = {
   historyEnabled: true,
   showTitles: false,
   forceDesktop: false,
-  customCursorEnabled: true,
+  customCursorEnabled: false,
   backgroundImage: null,
   shadowIntensity: 100,
 };
