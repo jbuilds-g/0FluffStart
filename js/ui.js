@@ -867,7 +867,7 @@ export async function autoSaveSettings(updates = null) {
 
   if (window.customCursorInstance) {
     window.customCursorInstance.toggleEnabled(
-      newSettings.customCursorEnabled !== false,
+      newSettings.customCursorEnabled === true,
     );
   }
 }
@@ -1104,7 +1104,7 @@ export async function loadSettings() {
 
   if (window.customCursorInstance) {
     window.customCursorInstance.toggleEnabled(
-      settings.customCursorEnabled !== false,
+      settings.customCursorEnabled === true,
     );
   }
 }
