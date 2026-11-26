@@ -8,7 +8,7 @@ import { APP_VERSION } from "./version.js";
 document.addEventListener("DOMContentLoaded", async () => {
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
-  controlStyles.href = "css/settings-controls.css?v=9";
+  controlStyles.href = "css/settings-controls.css?v=10";
   document.head.appendChild(controlStyles);
 
   document.documentElement.classList.add("settings-page");
