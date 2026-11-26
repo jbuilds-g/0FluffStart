@@ -28,20 +28,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     !isMobileDevice,
   );
 
-  const footer = document.querySelector(".settings-page-footer");
-  if (footer) {
-    footer.innerHTML = `
-      <div class="footer-row footer-row-primary">
-        <span class="footer-brand">0FluffStart</span>
-        <a href="https://github.com/jbuilds-g/0FluffStart" target="_blank" rel="noopener noreferrer" class="footer-version" title="View Source on GitHub" data-version>v${APP_VERSION}</a>
-      </div>
-      <div class="footer-row footer-row-secondary">
-        <span class="footer-copy">© 2026 • <a href="https://github.com/jbuilds-g/0FluffStart/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">AGPL-3.0</a></span>
-        <a href="https://jbuilds-g.github.io/0fluffstart-privacy-policy/" target="_blank" rel="noopener noreferrer" class="footer-link">Privacy Policy</a>
-        <span class="footer-credit">Made with ♥️ • <a href="https://github.com/jbuilds-g" target="_blank" rel="noopener noreferrer">jbuilds-g</a></span>
-      </div>
-    `;
-  }
+  const footerVersion = document.querySelector(".settings-page-footer [data-version]");
+  if (footerVersion) footerVersion.textContent = `v${APP_VERSION}`;
 
   const scrollAnchor = document.createElement("button");
   scrollAnchor.type = "button";
