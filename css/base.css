@@ -11,6 +11,16 @@
   outline-offset: 2px;
 }
 
+/* Keep the page hidden until its authoritative saved theme is applied. */
+html.theme-pending {
+  background-color: #000000;
+}
+
+html.theme-pending body {
+  visibility: hidden !important;
+  transition: none !important;
+}
+
 body {
   font-family: var(--font-main);
   margin: 0;
