@@ -892,3 +892,14 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
   padding: 0;
   justify-content: center;
 }
+
+
+/* Toggle rows with contextual help share the available width evenly. */
+.settings-page-shell
+  .setting-option:has(> .radio-option.switch):has(> .setting-option-help)
+  > .radio-option.switch {
+  width: 100% !important;
+  max-width: 100%;
+  min-width: 0;
+  justify-self: stretch !important;
+}
