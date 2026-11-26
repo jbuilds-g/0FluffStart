@@ -141,7 +141,7 @@
   border-radius: min(var(--radius), 11px);
   font-size: 0.7rem;
   box-sizing: border-box;
-  box-shadow: var(--shadow-sm);
+  box-shadow: none; /* Changed from var(--shadow-sm) to none to remove shadow artifacts */
   cursor: pointer;
 }
 .settings-page-shell .clock-style-picker .select-option::before {
