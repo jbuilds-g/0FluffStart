@@ -891,6 +891,10 @@ body .switch-thumb .icon-check {
     opacity 120ms ease,
     transform 220ms var(--control-motion);
 }
+/* Keep the shared checked-state glyph enabled outside Material You too. */
+body .switch-thumb .icon-check {
+  display: block !important;
+}
 body .switch:has(input:checked) .switch-track {
   border-color: var(--accent);
   background: var(--accent);
@@ -952,13 +956,6 @@ body .engine-item-actions .switch {
   min-height: 32px;
   flex: 0 0 52px;
   gap: 0;
-}
-body.material-you .switch,
-body.material-you .switch-track,
-body.material-you .switch-thumb,
-body.material-you .switch-thumb .icon-check,
-body.material-you .switch input[type="checkbox"] {
-  /* Equal-specificity overrides keep Material You on the shared behavior. */
 }
 body.material-you .switch-track {
   border-color: var(--border);
