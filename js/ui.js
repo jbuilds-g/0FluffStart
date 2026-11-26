@@ -2,7 +2,6 @@ import { store } from "./store.js";
 import { sanitizeUrl } from "./utils.js";
 import { saveBgToDB, getBgFromDB, clearBgFromDB } from "./storage.js";
 import { MaterialYouEngine } from "./material-you-engine.js";
-import { cancelEdit, openEditor, renderLinkManager } from "./links.js";
 import { APP_VERSION } from "./version.js";
 import {
   searchEngines,
