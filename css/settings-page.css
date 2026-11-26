@@ -1463,3 +1463,62 @@ body.material-you .settings-page-shell .engine-item-actions .switch {
   flex: 0 0 52px;
   gap: 0;
 }
+
+
+/* Shared switch presentation overrides legacy checkbox styling. */
+body .settings-page-shell .switch {
+  display: inline-flex;
+  width: 100%;
+  min-height: 40px;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: 10px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+body .settings-page-shell .switch:hover {
+  border-color: transparent;
+  background: transparent;
+}
+body .settings-page-shell .switch input[type="checkbox"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  position: absolute !important;
+  top: 50% !important;
+  right: 0 !important;
+  left: auto !important;
+  z-index: 2;
+  transform: translateY(-50%);
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+}
+body .settings-page-shell .switch input[type="checkbox"]::before,
+body .settings-page-shell .switch input[type="checkbox"]::after {
+  content: none !important;
+  display: none !important;
+}
+body .settings-page-shell .engine-item-actions .switch {
+  width: 52px;
+  min-height: 32px;
+  flex: 0 0 52px;
+  gap: 0;
+}
+body .settings-page-shell .setting-slider-row .slider-number-field {
+  width: 68px;
+}
+@media (max-width: 520px) {
+  body .settings-page-shell .setting-slider-row .slider-number-field {
+    width: 58px;
+  }
+}
