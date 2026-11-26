@@ -49,7 +49,7 @@ export class CustomCursorEngine {
     this.startLoop();
 
     const settings = store.getState().settings || {};
-    this.toggleEnabled(settings.customCursorEnabled !== false);
+    this.toggleEnabled(settings.customCursorEnabled === true);
   }
 
   toggleEnabled(enabled) {
