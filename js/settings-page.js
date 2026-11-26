@@ -6,11 +6,6 @@ import { searchEngines } from "./search.js";
 import { APP_VERSION } from "./version.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const pageStyles = document.querySelector(
-    'link[href^="css/settings-page.css"]',
-  );
-  if (pageStyles) pageStyles.href = "css/settings-page.css?v=22";
-
   const controlStyles = document.createElement("link");
   controlStyles.rel = "stylesheet";
   controlStyles.href = "css/settings-controls.css?v=9";
@@ -61,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   scrollAnchorStyle.textContent = `
     html.settings-page .settings-modal-scroll-anchor {
       position:fixed !important;
-      right:24px !important;
+      right:calc(36px + env(safe-area-inset-right)) !important;
       bottom:96px !important;
       z-index:90 !important;
       display:inline-flex !important;
@@ -81,7 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     @media (max-width:900px) {
       html.settings-page.settings-mobile-context .settings-modal-scroll-anchor {
-        right:16px !important;
+        right:calc(28px + env(safe-area-inset-right)) !important;
         bottom:calc(118px + env(safe-area-inset-bottom)) !important;
       }
     }
