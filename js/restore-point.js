@@ -1,75 +1,26 @@
 import { store } from "./store.js";
+import { getDBValue, putDBValue, deleteDBValue } from "./indexed-db.js";
 
-const DB_NAME = "0FluffDB";
-const DB_VERSION = 1;
-const STORE_NAME = "assets";
 const KEY = "restorePoint";
 
-let dbPromise;
-
-function openRestoreDB() {
-  if (dbPromise) return dbPromise;
-  dbPromise = new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(STORE_NAME))
-        db.createObjectStore(STORE_NAME);
-    };
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-  return dbPromise;
-}
-
 async function readPoint() {
-  const db = await openRestoreDB();
-  return new Promise((resolve, reject) => {
-    const request = db
-      .transaction(STORE_NAME, "readonly")
-      .objectStore(STORE_NAME)
-      .get(KEY);
-    request.onsuccess = () => resolve(request.result || null);
-    request.onerror = () => reject(request.error);
-  });
+  return (await getDBValue(KEY)) || null;
 }
 
 async function writePoint(point) {
-  const db = await openRestoreDB();
-  return new Promise((resolve, reject) => {
-    const request = db
-      .transaction(STORE_NAME, "readwrite")
-      .objectStore(STORE_NAME)
-      .put(point, KEY);
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error);
-  });
+  await putDBValue(KEY, point);
 }
 
 async function getBackground() {
-  const db = await openRestoreDB();
-  return new Promise((resolve, reject) => {
-    const request = db
-      .transaction(STORE_NAME, "readonly")
-      .objectStore(STORE_NAME)
-      .get("backgroundImage");
-    request.onsuccess = () => resolve(request.result || null);
-    request.onerror = () => reject(request.error);
-  });
+  return (await getDBValue("backgroundImage")) || null;
 }
 
 async function setBackground(background) {
-  const db = await openRestoreDB();
-  return new Promise((resolve, reject) => {
-    const objectStore = db
-      .transaction(STORE_NAME, "readwrite")
-      .objectStore(STORE_NAME);
-    const request = background
-      ? objectStore.put(background, "backgroundImage")
-      : objectStore.delete("backgroundImage");
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error);
-  });
+  if (background) {
+    await putDBValue("backgroundImage", background);
+  } else {
+    await deleteDBValue("backgroundImage");
+  }
 }
 
 async function captureCurrent() {
