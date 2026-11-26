@@ -35,6 +35,14 @@ import {
 } from "./links.js";
 import { CustomCursorEngine } from "./cursor.js";
 
+// --- THEME INITIALIZATION (Synchronous to prevent FOUC) ---
+(function() {
+  try {
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    document.documentElement.classList.add(savedTheme);
+  } catch (e) {}
+})();
+
 function syncExpressiveSlider(input) {
   const container = input.closest(".slider");
   if (!container) return;
@@ -397,7 +405,7 @@ function bindStaticEvents() {
     searchBackdrop.addEventListener("click", () => {
       searchBarContainer.classList.remove("mobile-expanded");
       searchBackdrop.classList.remove("active");
-      mobileSearchPill.classList.remove("hidden");
+      mobileSearchPill.classList.add("hidden");
       document.getElementById("searchInput")?.blur();
     });
   }
