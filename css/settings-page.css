@@ -1,13 +1,14 @@
 /* Standalone settings workspace. */
 html {
   scroll-behavior: smooth;
-  scrollbar-color: var(--settings-scrollbar-thumb) transparent;
-  scrollbar-width: thin;
 }
 html.settings-page {
   width: 100%;
   max-width: 100%;
   overflow-x: clip;
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--settings-scrollbar-thumb) transparent;
+  scrollbar-width: thin;
 }
 body {
   display: block;
@@ -25,29 +26,36 @@ body {
 }
 
 /* --- THEMED SCROLLBARS --- */
-html,
-body,
-.settings-page-shell * {
+html.settings-page .settings-page-shell .engine-selection-list,
+html.settings-page .settings-page-shell .link-manager-list,
+html.settings-page .settings-page-shell .select-dropdown,
+html.settings-page .modal-content {
   scrollbar-color: var(--settings-scrollbar-thumb) transparent;
   scrollbar-width: thin;
 }
 
-html::-webkit-scrollbar,
-body::-webkit-scrollbar,
-.settings-page-shell *::-webkit-scrollbar {
+html.settings-page::-webkit-scrollbar,
+.settings-page-shell .engine-selection-list::-webkit-scrollbar,
+.settings-page-shell .link-manager-list::-webkit-scrollbar,
+.settings-page-shell .select-dropdown::-webkit-scrollbar,
+.settings-page .modal-content::-webkit-scrollbar {
   width: 9px;
   height: 9px;
 }
 
-html::-webkit-scrollbar-track,
-body::-webkit-scrollbar-track,
-.settings-page-shell *::-webkit-scrollbar-track {
+html.settings-page::-webkit-scrollbar-track,
+.settings-page-shell .engine-selection-list::-webkit-scrollbar-track,
+.settings-page-shell .link-manager-list::-webkit-scrollbar-track,
+.settings-page-shell .select-dropdown::-webkit-scrollbar-track,
+.settings-page .modal-content::-webkit-scrollbar-track {
   background: transparent;
 }
 
-html::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb,
-.settings-page-shell *::-webkit-scrollbar-thumb {
+html.settings-page::-webkit-scrollbar-thumb,
+.settings-page-shell .engine-selection-list::-webkit-scrollbar-thumb,
+.settings-page-shell .link-manager-list::-webkit-scrollbar-thumb,
+.settings-page-shell .select-dropdown::-webkit-scrollbar-thumb,
+.settings-page .modal-content::-webkit-scrollbar-thumb {
   min-height: 34px;
   background: var(--settings-scrollbar-thumb);
   border: 2px solid transparent;
@@ -55,16 +63,20 @@ body::-webkit-scrollbar-thumb,
   background-clip: padding-box;
 }
 
-html::-webkit-scrollbar-thumb:hover,
-body::-webkit-scrollbar-thumb:hover,
-.settings-page-shell *::-webkit-scrollbar-thumb:hover {
+html.settings-page::-webkit-scrollbar-thumb:hover,
+.settings-page-shell .engine-selection-list::-webkit-scrollbar-thumb:hover,
+.settings-page-shell .link-manager-list::-webkit-scrollbar-thumb:hover,
+.settings-page-shell .select-dropdown::-webkit-scrollbar-thumb:hover,
+.settings-page .modal-content::-webkit-scrollbar-thumb:hover {
   background: var(--settings-scrollbar-thumb-hover);
   border-width: 1px;
 }
 
-html::-webkit-scrollbar-corner,
-body::-webkit-scrollbar-corner,
-.settings-page-shell *::-webkit-scrollbar-corner {
+html.settings-page::-webkit-scrollbar-corner,
+.settings-page-shell .engine-selection-list::-webkit-scrollbar-corner,
+.settings-page-shell .link-manager-list::-webkit-scrollbar-corner,
+.settings-page-shell .select-dropdown::-webkit-scrollbar-corner,
+.settings-page .modal-content::-webkit-scrollbar-corner {
   background: transparent;
 }
 
@@ -1018,9 +1030,6 @@ body > .bg-video {
   overflow-y: auto;
   overscroll-behavior-y: auto;
   scrollbar-width: thin;
-}
-
-.engine-selection-list {
   scrollbar-gutter: stable;
 }
 .settings-page-shell .engine-item,
@@ -1284,65 +1293,21 @@ body > .bg-video {
   }
 }
 
-/* Pass 4: concise, setting-specific helper copy and consistent control hierarchy. */
+/* Keep setting-specific help beside toggles and above every other control. */
 .settings-page-shell .setting-option {
   display: grid;
   gap: 10px;
   min-width: 0;
 }
 
+.settings-page-shell .setting-option > .setting-option-title,
+.settings-page-shell .setting-option > .settings-picker-label-block,
+.settings-page-shell .setting-option > .setting-control-label {
+  order: -2;
+}
+
 .settings-page-shell .setting-option-help {
-  order: 99;
-  margin: 0;
-  padding-left: 54px;
-  color: var(--dim);
-  font-size: 0.72rem;
-  line-height: 1.45;
-}
-
-.settings-page-shell .setting-control-label {
-  margin: 0 0 3px;
-  color: var(--text);
-  font-size: 0.78rem;
-  font-weight: 600;
-}
-
-.settings-page-shell .settings-subgroup .setting-option {
-  gap: 8px;
-}
-
-.settings-page-shell .settings-subgroup .setting-option-help {
-  padding-left: 54px;
-  max-width: 620px;
-}
-
-.settings-page-shell .settings-inline-control.setting-option {
-  width: 100%;
-}
-
-.settings-page-shell .settings-inline-control.setting-option .radio-option {
-  width: max-content;
-  max-width: 100%;
-}
-
-@media (max-width: 900px) {
-  .settings-page-shell .setting-option-help,
-  .settings-page-shell .settings-subgroup .setting-option-help {
-    padding-left: 0;
-  }
-
-  .settings-page-shell .settings-inline-control.setting-option {
-    width: 100%;
-  }
-
-  .settings-page-shell .settings-inline-control.setting-option .radio-option {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-/* Pass 5: keep all Settings helper copy inside the same contextual help card. */
-.settings-page-shell .setting-option-help {
+  order: -1;
   display: grid;
   gap: 8px;
   width: 100%;
@@ -1366,17 +1331,67 @@ body > .bg-video {
   opacity: 0.9;
 }
 
+.settings-page-shell
+  .setting-option:has(> .radio-option.switch):has(> .setting-option-help) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 0;
+}
+
+.settings-page-shell
+  .setting-option:has(> .radio-option.switch):has(> .setting-option-help)
+  > .radio-option.switch {
+  grid-column: 1;
+  grid-row: 1;
+  order: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  justify-self: stretch;
+}
+
+.settings-page-shell
+  .setting-option:has(> .radio-option.switch):has(> .setting-option-help)
+  > .setting-option-help {
+  grid-column: 2;
+  grid-row: 1;
+  order: 0;
+  align-self: center;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 12px;
+}
+
+.settings-page-shell .settings-subgroup .setting-option {
+  gap: 8px;
+}
+
 .settings-page-shell .settings-subgroup .setting-option-help {
-  max-width: 680px;
+  max-width: none;
+  padding: 12px;
+}
+
+.settings-page-shell .settings-inline-control.setting-option {
+  width: 100%;
+}
+
+.settings-page-shell .settings-inline-control.setting-option .radio-option {
+  width: max-content;
+  max-width: 100%;
 }
 
 @media (max-width: 900px) {
-  .settings-page-shell .setting-option-help,
-  .settings-page-shell .settings-subgroup .setting-option-help {
-    padding: 12px;
+  .settings-page-shell .settings-inline-control.setting-option {
+    width: 100%;
+  }
+
+  .settings-page-shell .settings-inline-control.setting-option .radio-option {
+    width: 100%;
+    max-width: none;
   }
 }
-
 .quick-link-manager-launch {
   display: flex;
   align-items: center;
