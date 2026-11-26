@@ -1,4 +1,4 @@
-import { store } from "./store.js";
+import { DEFAULT_SETTINGS, store } from "./store.js";
 import { sanitizeUrl } from "./utils.js";
 import { saveBgToDB, getBgFromDB, clearBgFromDB } from "./storage.js";
 import { MaterialYouEngine } from "./material-you-engine.js";
@@ -549,7 +549,7 @@ const SETTINGS_MAP = [
     key: "customCursorEnabled",
     id: "customCursorToggle",
     type: "checkbox",
-    defaultVal: false,
+    defaultVal: DEFAULT_SETTINGS.customCursorEnabled,
   },
   {
     key: "openInNewTab",
