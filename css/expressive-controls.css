@@ -552,6 +552,18 @@ body:not(.material-you) .switch-thumb .icon-check {
   opacity: 0 !important;
 }
 /* One floating-label field design across themes; theme tokens supply color. */
+/* Keep the shared filled-field surface borderless even when legacy input
+   selectors target URL/text inputs by type or utility class. */
+body .field > input[type="text"],
+body .field > input[type="url"],
+body .field > input.bg-url-input,
+body .field > input.custom-proxy-input {
+  border: 0 !important;
+  outline: none;
+  box-shadow: none !important;
+  background: transparent;
+}
+
 body .field {
   position: relative;
   min-width: 0;
