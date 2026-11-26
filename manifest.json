@@ -6,12 +6,15 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": ["storage", "search"],
+  "permissions": [
+    "storage",
+    "search"
+  ],
   "host_permissions": [
     "https://0fluffstart-suggest-proxy.jbuilds.workers.dev/*"
   ],
   "content_security_policy": {
-    "extension_pages": "script-src 'self' 'unsafe-inline'; object-src 'self';"
+    "extension_pages": "script-src 'self'; object-src 'self';"
   },
   "icons": {
     "16": "icon.png",
