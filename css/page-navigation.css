@@ -2,7 +2,7 @@
 .page-navigation {
   position: fixed;
   top: max(16px, env(safe-area-inset-top));
-  right: max(16px, env(safe-area-inset-right));
+  right: calc(max(16px, env(safe-area-inset-right)) + 12px);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -51,7 +51,7 @@
 @media (max-width: 520px) {
   .page-navigation {
     top: max(10px, env(safe-area-inset-top));
-    right: max(10px, env(safe-area-inset-right));
+    right: calc(max(10px, env(safe-area-inset-right)) + 12px);
     left: max(10px, env(safe-area-inset-left));
     justify-content: center;
     width: max-content;
