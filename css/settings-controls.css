@@ -894,12 +894,14 @@ html.settings-page.settings-desktop-context .mobile-only-setting {
 }
 
 
-/* Toggle rows with contextual help share the available width evenly. */
+/* Keep toggle labels compact beside their contextual help. */
 .settings-page-shell
   .setting-option:has(> .radio-option.switch):has(> .setting-option-help)
   > .radio-option.switch {
-  width: 100% !important;
+  width: max-content !important;
   max-width: 100%;
   min-width: 0;
-  justify-self: stretch !important;
+  justify-self: end !important;
+  justify-content: flex-start;
+  gap: 12px;
 }
