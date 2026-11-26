@@ -1,73 +1,23 @@
 import { store } from "./store.js";
+import { putDBValue, getDBValue, deleteDBValue } from "./indexed-db.js";
 import "./restore-point.js";
 
-const DB_CONFIG = { name: "0FluffDB", version: 1, store: "assets" };
-let cachedDBPromise = null;
 let cachedBgData = null;
-
-export function openDB() {
-  if (cachedDBPromise) return cachedDBPromise;
-  cachedDBPromise = new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_CONFIG.name, DB_CONFIG.version);
-    req.onupgradeneeded = (e) => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains(DB_CONFIG.store))
-        db.createObjectStore(DB_CONFIG.store);
-    };
-    req.onsuccess = (e) => {
-      const db = e.target.result;
-      db.onclose = () => {
-        cachedDBPromise = null;
-      };
-      db.onerror = () => {
-        cachedDBPromise = null;
-      };
-      resolve(db);
-    };
-    req.onerror = (e) => {
-      cachedDBPromise = null;
-      reject(e.target.error);
-    };
-  });
-  return cachedDBPromise;
-}
 
 export async function saveBgToDB(data) {
   cachedBgData = data;
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(DB_CONFIG.store, "readwrite");
-    const req = tx.objectStore(DB_CONFIG.store).put(data, "backgroundImage");
-    req.onsuccess = () => resolve();
-    req.onerror = () => reject(req.error);
-  });
+  await putDBValue("backgroundImage", data);
 }
 
 export async function getBgFromDB() {
   if (cachedBgData) return cachedBgData;
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const req = db
-      .transaction(DB_CONFIG.store, "readonly")
-      .objectStore(DB_CONFIG.store)
-      .get("backgroundImage");
-    req.onsuccess = () => {
-      cachedBgData = req.result;
-      resolve(req.result);
-    };
-    req.onerror = () => reject(req.error);
-  });
+  cachedBgData = await getDBValue("backgroundImage");
+  return cachedBgData;
 }
 
 export async function clearBgFromDB() {
   cachedBgData = null;
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(DB_CONFIG.store, "readwrite");
-    tx.objectStore(DB_CONFIG.store).delete("backgroundImage");
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
+  await deleteDBValue("backgroundImage");
 }
 
 export async function backupData() {
