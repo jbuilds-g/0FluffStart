@@ -704,8 +704,7 @@ body > .bg-video {
   background: var(--accent);
   border-color: var(--accent);
 }
-.settings-page-shell
-  input[type="checkbox"]:checked::after {
+.settings-page-shell input[type="checkbox"]:checked::after {
   transform: translateX(18px);
   background: var(--bg);
 }
@@ -1403,7 +1402,6 @@ body > .bg-video {
     flex-direction: column;
   }
 }
-
 
 /* Shared floating-label fields on the standalone Settings page. */
 body .settings-page-shell .field {

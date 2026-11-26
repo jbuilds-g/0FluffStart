@@ -519,9 +519,7 @@ export function renderLinkManager() {
           currentLinks.push(movedItem);
         } else {
           movedItem.parentId = targetLink.parentId || null;
-          const newTargetIdx = currentLinks.findIndex(
-            (l) => l.id === targetId,
-          );
+          const newTargetIdx = currentLinks.findIndex((l) => l.id === targetId);
           const insertIdx =
             dropPosition === "above" ? newTargetIdx : newTargetIdx + 1;
           currentLinks.splice(insertIdx, 0, movedItem);
@@ -687,7 +685,6 @@ export function renderLinkManager() {
   }
 
   const newFragment = buildFolderNodes(null, 0);
-
 
   linkManagerContent.innerHTML = "";
   linkManagerContent.appendChild(newFragment);

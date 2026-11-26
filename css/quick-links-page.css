@@ -944,7 +944,10 @@ body.quick-links-body .quick-links-page {
   text-align: left;
   font: inherit;
   cursor: pointer;
-  transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    transform 140ms ease;
 }
 .quick-links-move-choice:hover,
 .quick-links-move-choice:focus-visible,
@@ -1220,7 +1223,6 @@ body.amoled .quick-links-move-panel {
   }
 }
 
-
 /* Briefly identify the item opened from the dashboard context menu. */
 .quick-link-card.context-target-highlight {
   outline: 2px solid var(--accent);
@@ -1229,7 +1231,8 @@ body.amoled .quick-links-move-panel {
 }
 
 @keyframes context-target-pulse {
-  0%, 100% {
+  0%,
+  100% {
     outline-color: var(--accent);
     box-shadow: 0 0 0 0 transparent;
   }
@@ -1244,7 +1247,7 @@ body.amoled .quick-links-move-panel {
   width: 100%;
   min-width: 0;
 }
- .quick-links-move-create-form .field > input {
+.quick-links-move-create-form .field > input {
   min-height: 56px;
   outline: none;
   padding: 24px 16px 8px;
@@ -1268,11 +1271,15 @@ body.amoled .quick-links-move-panel {
     color 200ms ease;
 }
 .quick-links-move-create-form .field:focus-within > label,
-.quick-links-move-create-form .field:has(> input:not(:placeholder-shown)) > label {
+.quick-links-move-create-form
+  .field:has(> input:not(:placeholder-shown))
+  > label {
   translate: 0 -10px;
   font-size: 0.7rem;
 }
-.quick-links-move-create-form .field:focus-within > label { color: var(--accent); }
+.quick-links-move-create-form .field:focus-within > label {
+  color: var(--accent);
+}
 .quick-links-move-create-form .field::after {
   content: "";
   position: absolute;
@@ -1284,7 +1291,9 @@ body.amoled .quick-links-move-panel {
   transition: scale 250ms ease;
   pointer-events: none;
 }
-.quick-links-move-create-form .field:focus-within::after { scale: 1; }
+.quick-links-move-create-form .field:focus-within::after {
+  scale: 1;
+}
 @media (prefers-reduced-motion: reduce) {
   .quick-links-move-create-form .field > label,
   .quick-links-move-create-form .field::after {

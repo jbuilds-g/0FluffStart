@@ -195,12 +195,28 @@ function render() {
 
     addDesktopMenuAction("Edit", "edit", "icon-edit");
     const desktopSiblings = childrenOf(link.parentId || null);
-    const desktopSiblingIndex = desktopSiblings.findIndex((item) => item.id === link.id);
+    const desktopSiblingIndex = desktopSiblings.findIndex(
+      (item) => item.id === link.id,
+    );
     if (desktopSiblingIndex > 0)
-      addDesktopMenuAction("Move left", "left", "icon-arrow-up", "transform:rotate(-90deg)");
-    if (desktopSiblingIndex >= 0 && desktopSiblingIndex < desktopSiblings.length - 1)
-      addDesktopMenuAction("Move right", "right", "icon-arrow-up", "transform:rotate(90deg)");
-    if (link.parentId) addDesktopMenuAction("Move to parent", "move", "icon-back");
+      addDesktopMenuAction(
+        "Move left",
+        "left",
+        "icon-arrow-up",
+        "transform:rotate(-90deg)",
+      );
+    if (
+      desktopSiblingIndex >= 0 &&
+      desktopSiblingIndex < desktopSiblings.length - 1
+    )
+      addDesktopMenuAction(
+        "Move right",
+        "right",
+        "icon-arrow-up",
+        "transform:rotate(90deg)",
+      );
+    if (link.parentId)
+      addDesktopMenuAction("Move to parent", "move", "icon-back");
     addDesktopMenuAction("Move to…", "move-to", "icon-folder");
     addDesktopMenuAction("Delete", "delete", "icon-delete");
 
@@ -240,13 +256,18 @@ function render() {
         const top = Math.min(Math.max(viewportPadding, desiredTop), maxTop);
         const left = Math.min(
           Math.max(viewportPadding, triggerRect.right - menuRect.width),
-          Math.max(viewportPadding, window.innerWidth - menuRect.width - viewportPadding),
+          Math.max(
+            viewportPadding,
+            window.innerWidth - menuRect.width - viewportPadding,
+          ),
         );
         desktopActionMenu.style.top = top + "px";
         desktopActionMenu.style.left = left + "px";
       }
     });
-    desktopActionMenu.addEventListener("click", (event) => event.stopPropagation());
+    desktopActionMenu.addEventListener("click", (event) =>
+      event.stopPropagation(),
+    );
     actions.append(desktopMenuButton, desktopActionMenu);
 
     const handle = document.createElement("span");
@@ -758,16 +779,23 @@ editor.addEventListener("click", (event) => {
   if (event.target === editor) closeEditor();
 });
 function closeDesktopActionMenus() {
-  document.querySelectorAll(".quick-link-desktop-action-menu").forEach((menu) => {
-    menu.hidden = true;
-    const card = menu._ownerCard || menu.closest(".quick-link-card");
-    const trigger = menu._triggerButton ||
-      menu.closest(".quick-link-actions")?.querySelector(".quick-link-desktop-menu-button");
-    card?.classList.remove("desktop-menu-open");
-    trigger?.setAttribute("aria-expanded", "false");
-    const ownerActions = menu._ownerActions || card?.querySelector(".quick-link-actions");
-    if (ownerActions && menu.parentElement !== ownerActions) ownerActions.appendChild(menu);
-  });
+  document
+    .querySelectorAll(".quick-link-desktop-action-menu")
+    .forEach((menu) => {
+      menu.hidden = true;
+      const card = menu._ownerCard || menu.closest(".quick-link-card");
+      const trigger =
+        menu._triggerButton ||
+        menu
+          .closest(".quick-link-actions")
+          ?.querySelector(".quick-link-desktop-menu-button");
+      card?.classList.remove("desktop-menu-open");
+      trigger?.setAttribute("aria-expanded", "false");
+      const ownerActions =
+        menu._ownerActions || card?.querySelector(".quick-link-actions");
+      if (ownerActions && menu.parentElement !== ownerActions)
+        ownerActions.appendChild(menu);
+    });
 }
 function closeMobileActionMenus() {
   document.querySelectorAll(".quick-link-action-menu").forEach((menu) => {
@@ -787,7 +815,11 @@ document.addEventListener(
       !event.target.closest(".quick-link-mobile-menu, .quick-link-action-menu")
     )
       closeMobileActionMenus();
-    if (!event.target.closest(".quick-link-desktop-menu-button, .quick-link-desktop-action-menu"))
+    if (
+      !event.target.closest(
+        ".quick-link-desktop-menu-button, .quick-link-desktop-action-menu",
+      )
+    )
       closeDesktopActionMenus();
   },
   true,
@@ -841,7 +873,11 @@ if (focusId) {
 
       const clearHighlight = () => {
         targetCard.classList.remove("context-target-highlight");
-        document.removeEventListener("pointerdown", handleOutsidePointerDown, true);
+        document.removeEventListener(
+          "pointerdown",
+          handleOutsidePointerDown,
+          true,
+        );
       };
       const handleOutsidePointerDown = (event) => {
         if (!targetCard.contains(event.target)) clearHighlight();
@@ -851,9 +887,7 @@ if (focusId) {
       window.setTimeout(clearHighlight, 1800);
 
       requestAnimationFrame(() => {
-        targetCard
-          .querySelector(".quick-link-desktop-menu-button")
-          ?.click();
+        targetCard.querySelector(".quick-link-desktop-menu-button")?.click();
       });
     }
   }

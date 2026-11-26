@@ -232,8 +232,6 @@ function queuePersistence(key, data) {
   return next;
 }
 
-
-
 export const store = {
   /**
    * Initializes store state from storage sources asynchronously.

@@ -223,8 +223,7 @@ body.material-you input[type="checkbox"]:checked::after {
 }
 
 /* Masked Vector Icon (On State: Checkmark) */
-body.material-you
-  input[type="checkbox"]:checked::before {
+body.material-you input[type="checkbox"]:checked::before {
   transform: translateX(20px) !important;
   background-color: var(--accent) !important;
   -webkit-mask-image: url("../assets/icons/check.svg") !important;
@@ -835,12 +834,10 @@ body:not(.material-you) input[type="checkbox"]:checked {
   border-color: var(--accent);
 }
 
-body:not(.material-you)
-  input[type="checkbox"]:checked::after {
+body:not(.material-you) input[type="checkbox"]:checked::after {
   transform: translateX(18px);
   background: var(--accent);
 }
-
 
 /* --- BUTTON VARIANTS --- */
 .save-btn {
@@ -1194,7 +1191,6 @@ body:not(.material-you)
   background: var(--card-hover);
 }
 
-
 /* --- SETTINGS COMPONENT LAYOUTS --- */
 .header-actions {
   display: flex;
@@ -1241,7 +1237,6 @@ body:not(.material-you)
 .action-btn-row .btn-secondary-bg {
   background: var(--card-hover);
 }
-
 
 .link-editor-box {
   background: var(--card-hover);

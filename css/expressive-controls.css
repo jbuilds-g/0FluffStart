@@ -2,7 +2,10 @@
 body.material-you {
   --expressive-primary: var(--accent);
   --expressive-on-primary: var(--bg);
-  --expressive-track: var(--md-sys-color-surface-container-highest, var(--card-hover));
+  --expressive-track: var(
+    --md-sys-color-surface-container-highest,
+    var(--card-hover)
+  );
   --expressive-outline: var(--dim);
   --expressive-motion: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -85,7 +88,7 @@ body.material-you .switch-thumb .icon-check {
     opacity 120ms ease,
     transform 220ms var(--expressive-motion);
 }
- body.material-you .switch:hover {
+body.material-you .switch:hover {
   border-color: transparent;
   background: transparent;
 }
@@ -123,7 +126,8 @@ body.material-you .switch:has(input:disabled) {
 body.material-you .switch:has(input:disabled) .switch-track {
   cursor: not-allowed;
 }
-body.material-you .switch input[type="checkbox"]::before, body.material-you .switch input[type="checkbox"]::after {
+body.material-you .switch input[type="checkbox"]::before,
+body.material-you .switch input[type="checkbox"]::after {
   content: none !important;
   display: none !important;
 }
@@ -146,7 +150,8 @@ body.material-you .switch input[type="checkbox"] {
   box-shadow: none !important;
   opacity: 0 !important;
 }
-body.material-you .switch input[type="checkbox"]::before, body.material-you .switch input[type="checkbox"]::after {
+body.material-you .switch input[type="checkbox"]::before,
+body.material-you .switch input[type="checkbox"]::after {
   content: none !important;
   display: none !important;
 }
@@ -160,7 +165,8 @@ body.material-you .slider {
   min-width: 0;
   isolation: isolate;
 }
-body.material-you .slider-track-active, body.material-you .slider-track-inactive {
+body.material-you .slider-track-active,
+body.material-you .slider-track-inactive {
   position: absolute;
   top: 14px;
   height: 16px;
@@ -200,7 +206,8 @@ body.material-you .slider:has(input:active) .slider-thumb {
   width: 2px;
 }
 body.material-you .slider:has(input:focus-visible) .slider-thumb {
-  outline: 3px solid color-mix(in srgb, var(--expressive-primary) 45%, transparent);
+  outline: 3px solid
+    color-mix(in srgb, var(--expressive-primary) 45%, transparent);
   outline-offset: 3px;
 }
 body.material-you .slider input[type="range"] {
@@ -256,8 +263,7 @@ body.material-you .page-navigation a {
   min-height: 40px;
   padding-inline: 16px;
   border: 0;
-  border-radius:
-    var(--segment-left, var(--segment-inset))
+  border-radius: var(--segment-left, var(--segment-inset))
     var(--segment-right, var(--segment-inset))
     var(--segment-right, var(--segment-inset))
     var(--segment-left, var(--segment-inset));
@@ -268,15 +274,21 @@ body.material-you .page-navigation a {
     background-color 200ms ease,
     color 200ms ease;
 }
-body.material-you .page-navigation a:first-child { --segment-left: 24px; }
-body.material-you .page-navigation a:last-child { --segment-right: 24px; }
+body.material-you .page-navigation a:first-child {
+  --segment-left: 24px;
+}
+body.material-you .page-navigation a:last-child {
+  --segment-right: 24px;
+}
 body.material-you .page-navigation a[aria-current="page"] {
   --segment-inset: 24px;
   color: var(--expressive-on-primary);
   background: var(--expressive-primary);
   border-color: transparent;
 }
-body.material-you .page-navigation a:active { --segment-inset: 4px; }
+body.material-you .page-navigation a:active {
+  --segment-inset: 4px;
+}
 body.material-you .page-navigation a:focus-visible {
   position: relative;
   z-index: 1;
@@ -318,7 +330,9 @@ body.material-you .field > input {
   font: inherit;
   font-size: 0.9rem;
 }
-body.material-you .field > input::placeholder { color: transparent; }
+body.material-you .field > input::placeholder {
+  color: transparent;
+}
 body.material-you .field > label {
   position: absolute;
   top: 18px;
@@ -338,11 +352,14 @@ body.material-you .field > label {
     font-size 200ms ease,
     color 200ms ease;
 }
-body.material-you .field:focus-within > label, body.material-you .field:has(> input:not(:placeholder-shown)) > label {
+body.material-you .field:focus-within > label,
+body.material-you .field:has(> input:not(:placeholder-shown)) > label {
   translate: 0 -10px;
   font-size: 0.7rem;
 }
-body.material-you .field:focus-within > label { color: var(--accent); }
+body.material-you .field:focus-within > label {
+  color: var(--accent);
+}
 body.material-you .field::after {
   content: "";
   position: absolute;
@@ -355,15 +372,26 @@ body.material-you .field::after {
   transition: scale 250ms ease;
   pointer-events: none;
 }
-body.material-you .field:focus-within::after { scale: 1; }
-body.material-you .field:has(> input:disabled) { opacity: 0.55; }
-body.material-you .field > input:focus-visible { outline: none; }
+body.material-you .field:focus-within::after {
+  scale: 1;
+}
+body.material-you .field:has(> input:disabled) {
+  opacity: 0.55;
+}
+body.material-you .field > input:focus-visible {
+  outline: none;
+}
 body.material-you .field > input:-webkit-autofill {
   -webkit-text-fill-color: var(--text);
   transition: background-color 9999s ease-out;
 }
-body.material-you .custom-background-url-row .field { flex: 1.4; min-width: 0; }
-body.material-you .custom-background-url-row .field > input, body.material-you .field > input.bg-url-input, body.material-you .field > input.custom-proxy-input {
+body.material-you .custom-background-url-row .field {
+  flex: 1.4;
+  min-width: 0;
+}
+body.material-you .custom-background-url-row .field > input,
+body.material-you .field > input.bg-url-input,
+body.material-you .field > input.custom-proxy-input {
   width: 100%;
   min-height: 56px;
   height: 56px;
@@ -386,20 +414,27 @@ body.material-you .quick-links-editor-card .field > input {
   margin: 0;
 }
 @media (prefers-reduced-motion: reduce) {
-  body.material-you .switch-track, body.material-you .switch-thumb, body.material-you .switch-thumb .icon-check, body.material-you .page-navigation a, body.material-you .field > label, body.material-you .field::after, body.material-you .slider-thumb {
+  body.material-you .switch-track,
+  body.material-you .switch-thumb,
+  body.material-you .switch-thumb .icon-check,
+  body.material-you .page-navigation a,
+  body.material-you .field > label,
+  body.material-you .field::after,
+  body.material-you .slider-thumb {
     transition: none !important;
   }
 }
 
 /* Dashboard navigation keeps its existing morphing container behavior. */
-body.material-you .dashboard-navigation { gap: 2px; }
+body.material-you .dashboard-navigation {
+  gap: 2px;
+}
 body.material-you .dashboard-navigation a {
   --segment-inset: 8px;
   min-height: 38px;
   padding-inline: 13px;
   border: 0;
-  border-radius:
-    var(--segment-left, var(--segment-inset))
+  border-radius: var(--segment-left, var(--segment-inset))
     var(--segment-right, var(--segment-inset))
     var(--segment-right, var(--segment-inset))
     var(--segment-left, var(--segment-inset));
@@ -410,9 +445,13 @@ body.material-you .dashboard-navigation a {
     background-color 200ms ease,
     color 200ms ease;
 }
-body.material-you .dashboard-navigation a:first-child { --segment-left: 24px; }
-body.material-you .dashboard-navigation a:last-child { --segment-right: 24px; }
- body.material-you .dashboard-navigation a:hover {
+body.material-you .dashboard-navigation a:first-child {
+  --segment-left: 24px;
+}
+body.material-you .dashboard-navigation a:last-child {
+  --segment-right: 24px;
+}
+body.material-you .dashboard-navigation a:hover {
   border-color: transparent;
   background: color-mix(in srgb, var(--expressive-primary) 10%, var(--card));
   color: var(--text);
@@ -422,15 +461,15 @@ body.material-you .dashboard-navigation a[aria-current="page"] {
   background: var(--expressive-primary);
   color: var(--expressive-on-primary);
 }
-body.material-you .dashboard-navigation a:active { --segment-inset: 4px; }
+body.material-you .dashboard-navigation a:active {
+  --segment-inset: 4px;
+}
 body.material-you .dashboard-navigation a:focus-visible {
   position: relative;
   z-index: 1;
   outline: 3px solid var(--expressive-primary);
   outline-offset: 2px;
 }
-
-
 
 /* Shared compact expressive slider, restored from the original Material You
    implementation. The track stays solid with a single end-stop indicator. */
@@ -594,7 +633,10 @@ body .field > label {
   white-space: nowrap;
   pointer-events: none;
   transform-origin: left top;
-  transition: translate 200ms ease, font-size 200ms ease, color 200ms ease;
+  transition:
+    translate 200ms ease,
+    font-size 200ms ease,
+    color 200ms ease;
 }
 body .field:focus-within > label,
 body .field:has(> input:not(:placeholder-shown)) > label {

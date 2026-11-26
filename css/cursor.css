@@ -29,9 +29,7 @@
   }
 
   /* Keep native control cursors hidden while the custom cursor is active. */
-  html[data-custom-cursor="active"]
-    body.material-you
-    input[type="checkbox"] {
+  html[data-custom-cursor="active"] body.material-you input[type="checkbox"] {
     cursor: none !important;
   }
 

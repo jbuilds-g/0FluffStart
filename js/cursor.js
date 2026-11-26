@@ -64,7 +64,7 @@ export class CustomCursorEngine {
       this.stopLoop();
       this.unbindEvents();
       this.isDragging = false;
-        this.setVisible(false);
+      this.setVisible(false);
     }
   }
 
@@ -104,9 +104,8 @@ export class CustomCursorEngine {
       return;
     }
     if (!this.isDragging) {
-      const target = e.target instanceof Element
-        ? e.target
-        : e.target?.parentElement;
+      const target =
+        e.target instanceof Element ? e.target : e.target?.parentElement;
       if (target && target !== this.lastHoverTarget) {
         this.lastHoverTarget = target;
         this.updateCursorForElement(target);
@@ -116,12 +115,11 @@ export class CustomCursorEngine {
       this.currentX = e.clientX;
       this.currentY = e.clientY;
       this.isFirstMove = false;
-        this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+      this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
     }
     this.targetX = e.clientX;
     this.targetY = e.clientY;
     if (!this.isVisible) this.setVisible(true);
-
   }
 
   onPointerDown(e) {
@@ -182,7 +180,7 @@ export class CustomCursorEngine {
       this.currentX = this.targetX = e.clientX;
       this.currentY = this.targetY = e.clientY;
       this.isFirstMove = false;
-          this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+      this.container.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
       const target = document.elementFromPoint(e.clientX, e.clientY);
       if (target) {
         this.lastHoverTarget = target;

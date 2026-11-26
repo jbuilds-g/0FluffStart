@@ -305,7 +305,6 @@ export function installQuickLinksDragEngine({
     };
   }
 
-
   // Mobile uses row-major grid ordering and never inserts a live placeholder
   // into the grid while measuring targets. This keeps touch targeting stable.
   function resolveMobileTarget(x, y, activeSession) {
@@ -319,11 +318,18 @@ export function installQuickLinksDragEngine({
         rect: card.getBoundingClientRect(),
       }))
       .filter((entry) => entry.rect.width > 0 && entry.rect.height > 0);
-    const cards = allCards.filter((entry) => entry.card !== activeSession.source);
+    const cards = allCards.filter(
+      (entry) => entry.card !== activeSession.source,
+    );
 
     for (const addCard of grid.querySelectorAll(addSelector)) {
       const rect = addCard.getBoundingClientRect();
-      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+      if (
+        x >= rect.left &&
+        x <= rect.right &&
+        y >= rect.top &&
+        y <= rect.bottom
+      ) {
         const anchorSelector = addCard.classList.contains("quick-link-add-link")
           ? ".quick-link-add-link"
           : ".quick-link-add-folder";
@@ -334,8 +340,9 @@ export function installQuickLinksDragEngine({
       }
     }
 
-    const hovered = cards.find(({ rect }) =>
-      x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+    const hovered = cards.find(
+      ({ rect }) =>
+        x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom,
     );
     if (hovered) {
       const link = (getLinks() || []).find((item) => item.id === hovered.id);
@@ -343,12 +350,19 @@ export function installQuickLinksDragEngine({
         const rx = (x - hovered.rect.left) / Math.max(1, hovered.rect.width);
         const ry = (y - hovered.rect.top) / Math.max(1, hovered.rect.height);
         if (rx >= 0.2 && rx <= 0.8 && ry >= 0.2 && ry <= 0.8) {
-          return { target: { id: hovered.id, position: "inside" }, feedbackCard: hovered.card };
+          return {
+            target: { id: hovered.id, position: "inside" },
+            feedbackCard: hovered.card,
+          };
         }
       }
     }
 
-    if (!allCards.length) return { target: makeEndTarget(".quick-link-add-folder"), feedbackCard: null };
+    if (!allCards.length)
+      return {
+        target: makeEndTarget(".quick-link-add-folder"),
+        feedbackCard: null,
+      };
 
     const rows = makeRows(allCards);
     // Pick the row nearest the finger vertically. In the gap between rows,
@@ -367,8 +381,14 @@ export function installQuickLinksDragEngine({
     const row = rows[rowIndex];
     const nextRow = rows[rowIndex + 1];
     if (nextRow && y > row.bottom && y >= (row.bottom + nextRow.top) / 2) {
-      const first = nextRow.entries.find((entry) => entry.card !== activeSession.source);
-      if (first) return { target: { id: first.id, position: "before" }, feedbackCard: first.card };
+      const first = nextRow.entries.find(
+        (entry) => entry.card !== activeSession.source,
+      );
+      if (first)
+        return {
+          target: { id: first.id, position: "before" },
+          feedbackCard: first.card,
+        };
     }
 
     const next = row.entries.find(
@@ -376,23 +396,40 @@ export function installQuickLinksDragEngine({
     );
     if (next) {
       if (next.card !== activeSession.source) {
-        return { target: { id: next.id, position: "before" }, feedbackCard: next.card };
+        return {
+          target: { id: next.id, position: "before" },
+          feedbackCard: next.card,
+        };
       }
       // The source's cell is still part of the grid. Resolve it to the next
       // real item in DOM order, or to the end if the source was last.
-      const sourceIndex = allCards.findIndex((entry) => entry.card === activeSession.source);
-      const following = allCards.slice(sourceIndex + 1).find(
-        (entry) => entry.card !== activeSession.source,
+      const sourceIndex = allCards.findIndex(
+        (entry) => entry.card === activeSession.source,
       );
+      const following = allCards
+        .slice(sourceIndex + 1)
+        .find((entry) => entry.card !== activeSession.source);
       if (following) {
-        return { target: { id: following.id, position: "before" }, feedbackCard: following.card };
+        return {
+          target: { id: following.id, position: "before" },
+          feedbackCard: following.card,
+        };
       }
-      return { target: makeEndTarget(".quick-link-add-folder"), feedbackCard: cards[cards.length - 1]?.card || null };
+      return {
+        target: makeEndTarget(".quick-link-add-folder"),
+        feedbackCard: cards[cards.length - 1]?.card || null,
+      };
     }
 
     if (nextRow) {
-      const nextFirst = nextRow.entries.find((entry) => entry.card !== activeSession.source);
-      if (nextFirst) return { target: { id: nextFirst.id, position: "before" }, feedbackCard: nextFirst.card };
+      const nextFirst = nextRow.entries.find(
+        (entry) => entry.card !== activeSession.source,
+      );
+      if (nextFirst)
+        return {
+          target: { id: nextFirst.id, position: "before" },
+          feedbackCard: nextFirst.card,
+        };
     }
     return {
       target: makeEndTarget(".quick-link-add-folder"),
@@ -522,9 +559,18 @@ export function installQuickLinksDragEngine({
           clientX: activeSession.lastX,
           clientY: activeSession.lastY,
         });
-        const resolved = activeSession.pointerType === "touch"
-          ? resolveMobileTarget(activeSession.lastX, activeSession.lastY, activeSession)
-          : resolveTarget(activeSession.lastX, activeSession.lastY, activeSession);
+        const resolved =
+          activeSession.pointerType === "touch"
+            ? resolveMobileTarget(
+                activeSession.lastX,
+                activeSession.lastY,
+                activeSession,
+              )
+            : resolveTarget(
+                activeSession.lastX,
+                activeSession.lastY,
+                activeSession,
+              );
         activeSession.resolved = resolved?.target || null;
         updateFeedbackIfChanged(
           activeSession,
@@ -546,7 +592,8 @@ export function installQuickLinksDragEngine({
     activeSession.finished = true;
     if (activeSession.autoScrollFrame)
       cancelAnimationFrame(activeSession.autoScrollFrame);
-    if (activeSession.longPressTimer) clearTimeout(activeSession.longPressTimer);
+    if (activeSession.longPressTimer)
+      clearTimeout(activeSession.longPressTimer);
     activeSession.source.classList.remove("is-long-pressing");
 
     window.removeEventListener("pointermove", activeSession.onMove);
@@ -588,7 +635,12 @@ export function installQuickLinksDragEngine({
     // button/menu, which must remain tappable. Desktop still starts on the icon.
     if (!card || !grid.contains(card)) return;
     if (isTouch) {
-      if (event.target.closest?.(".quick-link-desktop-menu-button, .quick-link-desktop-action-menu")) return;
+      if (
+        event.target.closest?.(
+          ".quick-link-desktop-menu-button, .quick-link-desktop-action-menu",
+        )
+      )
+        return;
     } else if (!event.target.closest?.(".link-icon-circle")) {
       return;
     }
@@ -604,7 +656,9 @@ export function installQuickLinksDragEngine({
       lastX: event.clientX,
       lastY: event.clientY,
       offsetX: isTouch ? rect.width / 2 : event.clientX - rect.left,
-      offsetY: isTouch ? Math.min(24, rect.height / 3) : event.clientY - rect.top,
+      offsetY: isTouch
+        ? Math.min(24, rect.height / 3)
+        : event.clientY - rect.top,
       started: false,
       scrolling: false,
       finished: false,
@@ -618,7 +672,13 @@ export function installQuickLinksDragEngine({
     session = activeSession;
 
     const startDrag = () => {
-      if (session !== activeSession || activeSession.finished || activeSession.started || activeSession.scrolling) return;
+      if (
+        session !== activeSession ||
+        activeSession.finished ||
+        activeSession.started ||
+        activeSession.scrolling
+      )
+        return;
       activeSession.longPressTimer = 0;
       activeSession.started = true;
       grid.classList.add("quick-links-grid-drag-active");
@@ -626,7 +686,10 @@ export function installQuickLinksDragEngine({
       card.classList.add("is-drag-source");
       card.classList.remove("is-long-pressing");
       window.customCursorInstance?.setDragState(true);
-      updatePreview(activeSession, { clientX: activeSession.lastX, clientY: activeSession.lastY });
+      updatePreview(activeSession, {
+        clientX: activeSession.lastX,
+        clientY: activeSession.lastY,
+      });
     };
 
     try {
@@ -636,14 +699,23 @@ export function installQuickLinksDragEngine({
     }
 
     activeSession.onMove = (moveEvent) => {
-      if (session !== activeSession || activeSession.finished || moveEvent.pointerId !== activeSession.pointerId) return;
+      if (
+        session !== activeSession ||
+        activeSession.finished ||
+        moveEvent.pointerId !== activeSession.pointerId
+      )
+        return;
       const previousY = activeSession.lastY;
       activeSession.lastX = moveEvent.clientX;
       activeSession.lastY = moveEvent.clientY;
-      const distance = Math.hypot(moveEvent.clientX - activeSession.startX, moveEvent.clientY - activeSession.startY);
+      const distance = Math.hypot(
+        moveEvent.clientX - activeSession.startX,
+        moveEvent.clientY - activeSession.startY,
+      );
 
       if (isTouch && !activeSession.started && distance > 10) {
-        if (activeSession.longPressTimer) clearTimeout(activeSession.longPressTimer);
+        if (activeSession.longPressTimer)
+          clearTimeout(activeSession.longPressTimer);
         activeSession.longPressTimer = 0;
         activeSession.scrolling = true;
         card.classList.remove("is-long-pressing");
@@ -665,7 +737,11 @@ export function installQuickLinksDragEngine({
       moveEvent.preventDefault();
       updatePreview(activeSession, moveEvent);
       const resolved = isTouch
-        ? resolveMobileTarget(moveEvent.clientX, moveEvent.clientY, activeSession)
+        ? resolveMobileTarget(
+            moveEvent.clientX,
+            moveEvent.clientY,
+            activeSession,
+          )
         : resolveTarget(moveEvent.clientX, moveEvent.clientY, activeSession);
       activeSession.resolved = resolved?.target || null;
       updateFeedbackIfChanged(activeSession, resolved, isTouch);
@@ -673,7 +749,12 @@ export function installQuickLinksDragEngine({
     };
 
     activeSession.onUp = async (upEvent) => {
-      if (session !== activeSession || activeSession.finished || upEvent.pointerId !== activeSession.pointerId) return;
+      if (
+        session !== activeSession ||
+        activeSession.finished ||
+        upEvent.pointerId !== activeSession.pointerId
+      )
+        return;
       let target = null;
       if (activeSession.started) {
         const resolved = isTouch
@@ -693,18 +774,29 @@ export function installQuickLinksDragEngine({
       }
     };
 
-    activeSession.onCancel = () => cleanup(activeSession, { suppressClick: activeSession.started });
+    activeSession.onCancel = () =>
+      cleanup(activeSession, { suppressClick: activeSession.started });
     activeSession.onScroll = () => {
       if (session !== activeSession || !activeSession.started) return;
       const resolved = isTouch
-        ? resolveMobileTarget(activeSession.lastX, activeSession.lastY, activeSession)
-        : resolveTarget(activeSession.lastX, activeSession.lastY, activeSession);
+        ? resolveMobileTarget(
+            activeSession.lastX,
+            activeSession.lastY,
+            activeSession,
+          )
+        : resolveTarget(
+            activeSession.lastX,
+            activeSession.lastY,
+            activeSession,
+          );
       activeSession.resolved = resolved?.target || null;
       updateFeedbackIfChanged(activeSession, resolved, isTouch);
       refreshAppendFeedback(activeSession);
     };
 
-    window.addEventListener("pointermove", activeSession.onMove, { passive: false });
+    window.addEventListener("pointermove", activeSession.onMove, {
+      passive: false,
+    });
     window.addEventListener("pointerup", activeSession.onUp);
     window.addEventListener("pointercancel", activeSession.onCancel);
     window.addEventListener("blur", activeSession.onCancel);
