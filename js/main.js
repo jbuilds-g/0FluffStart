@@ -35,13 +35,6 @@ import {
 } from "./links.js";
 import { CustomCursorEngine } from "./cursor.js";
 
-// --- THEME INITIALIZATION (Synchronous to prevent FOUC) ---
-(function() {
-  try {
-    const savedTheme = localStorage.getItem("theme") || "dark";
-    document.documentElement.classList.add(savedTheme);
-  } catch (e) {}
-})();
 
 function syncExpressiveSlider(input) {
   const container = input.closest(".slider");
