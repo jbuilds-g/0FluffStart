@@ -5,6 +5,7 @@ const { execSync } = require("child_process");
 const ignoreList = [
   "dist",
   "node_modules",
+  "scripts",
   ".git",
   ".vscode",
   "build.js",
