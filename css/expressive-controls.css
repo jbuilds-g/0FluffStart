@@ -557,11 +557,11 @@ body .field {
   min-width: 0;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: 8px;
   background: color-mix(in srgb, var(--card-hover) 82%, var(--bg));
   box-shadow: none;
-  transition: border-color 180ms ease, background-color 180ms ease;
+  transition: background-color 180ms ease;
 }
 body .field > input {
   display: block;
@@ -606,9 +606,6 @@ body .field:focus-within > label,
 body .field:has(> input:not(:placeholder-shown)) > label {
   translate: 0 -10px;
   font-size: 0.7rem;
-}
-body .field:focus-within {
-  border-color: var(--accent);
 }
 body .field:focus-within > label {
   color: var(--accent);
