@@ -70,15 +70,19 @@
       content="black-translucent"
     />
 
-    <link rel="stylesheet" href="css/core.css?v=4" />
+    <link rel="stylesheet" href="css/core.css" />
+
     <script>
-      try {
-        const savedTheme = localStorage.getItem("theme") || "dark";
-        document.documentElement.classList.add(savedTheme);
-      } catch (e) {}
+      (function() {
+        try {
+          const savedTheme = localStorage.getItem("theme") || "dark";
+          document.documentElement.classList.add(savedTheme);
+          document.body.classList.add(savedTheme);
+        } catch (e) {}
+      })();
     </script>
   </head>
-  <body class="dark">
+  <body>
     <div class="search-backdrop"></div>
     <div id="bgOverlay" class="bg-overlay"></div>
     <div id="bgImage" class="bg-image hidden"></div>
