@@ -142,122 +142,7 @@ h1 {
 
 /* Mobile touch & header overrides managed in mobile.css */
 
-/* --- MORPHING DASHBOARD PAGE NAVIGATION --- */
-.floating-settings {
-  pointer-events: auto;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0;
-  box-sizing: border-box;
-  width: max-content;
-  max-width: 36px;
-  height: 36px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--bg);
-  box-shadow: var(--shadow-md);
-  transition:
-    max-width 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    height 200ms ease,
-    background-color 180ms ease;
-}
-.floating-settings > #settingsToggleBtn {
-  order: 2;
-  flex: 0 0 34px;
-  min-width: 0;
-  width: 34px;
-  height: 34px;
-  box-sizing: border-box;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  transition:
-    flex-basis 180ms ease,
-    opacity 140ms ease,
-    transform 180ms ease;
-}
-.dashboard-navigation {
-  order: 1;
-  display: flex !important;
-  flex: 0 0 auto;
-  flex-direction: row;
-  align-items: center;
-  gap: 3px;
-  width: max-content;
-  max-width: 0;
-  overflow: hidden;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    max-width 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 140ms ease 50ms,
-    visibility 140ms ease;
-}
-.floating-settings:hover,
-.floating-settings:focus-within {
-  max-width: min(320px, calc(100vw - 32px));
-  height: 46px;
-  padding: 4px;
-  background: color-mix(in srgb, var(--card) 94%, transparent);
-}
-.floating-settings:hover > #settingsToggleBtn,
-.floating-settings:focus-within > #settingsToggleBtn {
-  flex: 0 0 0;
-  min-width: 0;
-  width: 0;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  opacity: 0;
-  transform: scale(0.7);
-  pointer-events: none;
-}
-.floating-settings:hover .dashboard-navigation,
-.floating-settings:focus-within .dashboard-navigation {
-  max-width: 282px;
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-.dashboard-navigation a {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  min-height: 34px;
-  padding: 0 12px;
-  border: 1px solid transparent;
-  border-radius: max(6px, calc(var(--radius) * 0.65));
-  color: var(--dim);
-  text-decoration: none;
-  white-space: nowrap;
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  transition:
-    color 140ms ease,
-    background-color 140ms ease,
-    border-color 140ms ease;
-}
-.dashboard-navigation a:hover,
-.dashboard-navigation a:focus-visible {
-  color: var(--text);
-  background: color-mix(in srgb, var(--accent) 10%, var(--card));
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
-  outline: none;
-}
-.dashboard-navigation a[aria-current="page"] {
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, var(--card));
-  border-color: color-mix(in srgb, var(--accent) 28%, var(--border));
-}
-
-/* Touch devices keep the original single Settings shortcut. */
+/* Keep the Settings shortcut comfortable on touch screens. */
 @media (max-width: 850px) and (pointer: coarse) {
   body:not(.force-desktop-mode) .floating-settings {
     display: block;
@@ -284,15 +169,10 @@ h1 {
     background: var(--bg);
     box-shadow: var(--shadow-md);
   }
-  body:not(.force-desktop-mode) .dashboard-navigation {
-    display: none !important;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   .floating-settings,
-  .floating-settings > #settingsToggleBtn,
-  .dashboard-navigation,
-  .dashboard-navigation a {
+  .floating-settings > #settingsToggleBtn {
     transition: none;
   }
 }
