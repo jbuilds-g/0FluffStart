@@ -5,7 +5,7 @@ import { generateId } from "./utils.js";
 const isExtensionContext =
   typeof chrome !== "undefined" && chrome?.storage?.local;
 
-const DEFAULT_SETTINGS = {
+export const DEFAULT_SETTINGS = {
   theme: "dark",
   clockStyle: "default",
   clockFormat: "24h",
