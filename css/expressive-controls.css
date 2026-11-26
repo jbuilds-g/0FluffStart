@@ -673,3 +673,318 @@ body .field:has(> input:disabled) {
     transition: none !important;
   }
 }
+
+
+/* Shared theme-adaptive expressive controls. */
+body {
+  --control-shape: min(9999px, max(0px, var(--radius, 12px)));
+  --control-motion: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Inputs use the same filled floating-label field in every theme. */
+body .field {
+  border: 0;
+  border-radius: 4px 4px 0 0;
+  background: color-mix(in srgb, var(--card-hover) 82%, var(--bg));
+  box-shadow: inset 0 -1px 0 var(--dim);
+}
+body .field > input {
+  min-height: 56px;
+  height: 56px;
+  padding: 24px 16px 8px;
+  border: 0 !important;
+  border-radius: inherit;
+  outline: none;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body .field > label {
+  top: 18px;
+  left: 16px;
+  margin: 0;
+}
+body .field::after {
+  inset: auto 0 0;
+  border-radius: 0;
+}
+body.material-you .field {
+  border-radius: 4px 4px 0 0;
+  box-shadow: inset 0 -1px 0 var(--dim);
+}
+body.material-you .field::after {
+  inset: auto 0 0;
+}
+
+/* The shadow value field shares the floating-label treatment without
+   changing the slider's grid or its interaction. */
+body .setting-slider-row .slider-number-field {
+  width: 68px;
+  min-width: 0;
+}
+body .setting-slider-row .slider-number-field > input {
+  padding: 24px 8px 8px;
+  text-align: center;
+}
+body .setting-slider-row .slider-number-field > label {
+  left: 8px;
+  max-width: calc(100% - 16px);
+  right: 8px;
+  text-align: center;
+}
+@media (max-width: 520px) {
+  body .setting-slider-row .slider-number-field {
+    width: 58px;
+  }
+}
+
+/* Theme-adaptive connected navigation. The theme's radius controls its
+   geometry, while the active segment keeps the same connected behavior. */
+body .page-navigation,
+body .dashboard-navigation {
+  gap: 2px;
+}
+body .page-navigation {
+  border-radius: min(var(--radius, 12px), 24px);
+}
+body .page-navigation a,
+body .dashboard-navigation a {
+  --segment-inner-radius: min(var(--radius, 12px), 8px);
+  --segment-outer-radius: min(var(--radius, 12px), 24px);
+  min-height: 40px;
+  padding-inline: 16px;
+  border: 0;
+  border-radius: var(--segment-left, var(--segment-inner-radius))
+    var(--segment-right, var(--segment-inner-radius))
+    var(--segment-right, var(--segment-inner-radius))
+    var(--segment-left, var(--segment-inner-radius));
+  color: var(--dim);
+  background: var(--card-hover);
+  transition:
+    border-radius 300ms var(--control-motion),
+    background-color 180ms ease,
+    color 180ms ease;
+}
+body .page-navigation a:first-child,
+body .dashboard-navigation a:first-child {
+  --segment-left: var(--segment-outer-radius);
+}
+body .page-navigation a:last-child,
+body .dashboard-navigation a:last-child {
+  --segment-right: var(--segment-outer-radius);
+}
+body .page-navigation a:hover,
+body .dashboard-navigation a:hover {
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 12%, var(--card-hover));
+  border-color: transparent;
+}
+body .page-navigation a[aria-current="page"],
+body .dashboard-navigation a[aria-current="page"] {
+  --segment-left: var(--segment-outer-radius);
+  --segment-right: var(--segment-outer-radius);
+  color: var(--bg);
+  background: var(--accent);
+}
+body .page-navigation a:active,
+body .dashboard-navigation a:active {
+  --segment-left: var(--segment-inner-radius);
+  --segment-right: var(--segment-inner-radius);
+}
+body .page-navigation a:focus-visible,
+body .dashboard-navigation a:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+body.material-you .page-navigation,
+body.material-you .dashboard-navigation {
+  gap: 2px;
+}
+body.material-you .page-navigation a,
+body.material-you .dashboard-navigation a {
+  --segment-inner-radius: min(var(--radius, 12px), 8px);
+  --segment-outer-radius: min(var(--radius, 12px), 24px);
+  min-height: 40px;
+  padding-inline: 16px;
+  border: 0;
+  border-radius: var(--segment-left, var(--segment-inner-radius))
+    var(--segment-right, var(--segment-inner-radius))
+    var(--segment-right, var(--segment-inner-radius))
+    var(--segment-left, var(--segment-inner-radius));
+  color: var(--dim);
+  background: var(--card-hover);
+}
+body.material-you .page-navigation a[aria-current="page"],
+body.material-you .dashboard-navigation a[aria-current="page"] {
+  color: var(--bg);
+  background: var(--accent);
+}
+@media (max-width: 520px) {
+  body .page-navigation a {
+    min-height: 38px;
+    padding-inline: 12px;
+    font-size: 0.76rem;
+  }
+}
+
+/* Shared expressive switches. Shape follows each theme's radius token. */
+body .switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+body .switch-track {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 52px;
+  width: 52px;
+  height: 32px;
+  box-sizing: border-box;
+  align-items: center;
+  border: 2px solid var(--border);
+  border-radius: var(--control-shape);
+  background: var(--card-hover);
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+body .switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  display: grid;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  place-items: center;
+  transform: translateY(-50%);
+  border-radius: min(50%, var(--control-shape));
+  background: var(--dim);
+  color: var(--bg);
+  transition:
+    width 260ms var(--control-motion),
+    height 260ms var(--control-motion),
+    left 260ms var(--control-motion),
+    background-color 220ms ease;
+}
+body .switch-thumb .icon-check {
+  width: 14px;
+  height: 14px;
+  background: currentColor;
+  opacity: 0;
+  transform: scale(0.65);
+  transition:
+    opacity 120ms ease,
+    transform 220ms var(--control-motion);
+}
+body .switch:has(input:checked) .switch-track {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+body .switch:has(input:checked) .switch-thumb {
+  left: 24px;
+  width: 24px;
+  height: 24px;
+  background: var(--bg);
+}
+body .switch:has(input:checked) .switch-thumb .icon-check {
+  opacity: 1;
+  transform: scale(1);
+}
+body .switch:active .switch-thumb {
+  left: 2px;
+  width: 28px;
+  height: 28px;
+}
+body .switch:has(input:checked):active .switch-thumb {
+  left: 22px;
+}
+body .switch:has(input:focus-visible) .switch-track {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 3px;
+}
+body .switch:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+body .switch input[type="checkbox"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  position: absolute !important;
+  top: 50% !important;
+  right: 0 !important;
+  left: auto !important;
+  z-index: 2;
+  transform: translateY(-50%);
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+  cursor: pointer;
+}
+body .switch input[type="checkbox"]::before,
+body .switch input[type="checkbox"]::after {
+  content: none !important;
+  display: none !important;
+}
+body .engine-item-actions .switch {
+  width: 52px;
+  min-height: 32px;
+  flex: 0 0 52px;
+  gap: 0;
+}
+body.material-you .switch,
+body.material-you .switch-track,
+body.material-you .switch-thumb,
+body.material-you .switch-thumb .icon-check,
+body.material-you .switch input[type="checkbox"] {
+  /* Equal-specificity overrides keep Material You on the shared behavior. */
+}
+body.material-you .switch-track {
+  border-color: var(--border);
+  border-radius: var(--control-shape);
+  background: var(--card-hover);
+}
+body.material-you .switch:has(input:checked) .switch-track {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+body.material-you .switch-thumb {
+  border-radius: min(50%, var(--control-shape));
+  background: var(--dim);
+}
+body.material-you .switch:has(input:checked) .switch-thumb {
+  background: var(--bg);
+}
+@media (prefers-reduced-motion: reduce) {
+  body .switch-track,
+  body .switch-thumb,
+  body .switch-thumb .icon-check,
+  body .page-navigation a,
+  body .dashboard-navigation a,
+  body .field,
+  body .field > label,
+  body .field::after {
+    transition: none !important;
+  }
+}
