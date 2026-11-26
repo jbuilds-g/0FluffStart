@@ -432,10 +432,9 @@ body.material-you .dashboard-navigation a:focus-visible {
 
 
 
-/* Shared compact dotted slider. Keep the existing XS-scale geometry:
-   16px track, 4x44px handle and a 44px interaction target. */
-body .slider,
-body.material-you .slider {
+/* Shared compact expressive slider, restored from the original Material You
+   implementation. The track stays solid with a single end-stop indicator. */
+body .slider {
   --v: 50%;
   position: relative;
   width: 100%;
@@ -444,41 +443,32 @@ body.material-you .slider {
   isolation: isolate;
 }
 body .slider-track-active,
-body .slider-track-inactive,
-body.material-you .slider-track-active,
-body.material-you .slider-track-inactive {
+body .slider-track-inactive {
   position: absolute;
   top: 14px;
   height: 16px;
   box-sizing: border-box;
   pointer-events: none;
 }
-body .slider-track-active,
-body.material-you .slider-track-active {
+body .slider-track-active {
   left: 0;
   width: max(0px, calc(var(--v) - 6px));
   border-radius: 8px 2px 2px 8px;
-  background-color: var(--accent);
-  background-image: radial-gradient(circle, var(--dim) 2px, transparent 2.5px);
-  background-size: 20px 100%;
-  background-position: 10px center;
-  background-repeat: repeat-x;
+  background: var(--accent);
 }
-body .slider-track-inactive,
-body.material-you .slider-track-inactive {
+body .slider-track-inactive {
   left: calc(var(--v) + 6px);
   right: 0;
   border-radius: 2px 8px 8px 2px;
   background-color: var(--card-hover);
-  background-image: radial-gradient(circle, var(--text) 2px, transparent 2.5px);
-  background-size: 20px 100%;
-  background-position: 10px center;
-  background-repeat: repeat-x;
+  background-image: radial-gradient(
+    circle at calc(100% - 8px) 50%,
+    var(--accent) 2px,
+    transparent 2.5px
+  );
 }
-body .slider-thumb,
-body.material-you .slider-thumb {
+body .slider-thumb {
   position: absolute;
-  z-index: 1;
   top: 0;
   left: var(--v);
   width: 4px;
@@ -486,23 +476,19 @@ body.material-you .slider-thumb {
   transform: translateX(-50%);
   border-radius: 9999px;
   background: var(--accent);
-  box-shadow: none;
   pointer-events: none;
   transition: width 150ms ease;
 }
-body .slider:has(input:active) .slider-thumb,
-body.material-you .slider:has(input:active) .slider-thumb {
+body .slider:has(input:active) .slider-thumb {
   width: 2px;
 }
-body .slider:has(input:focus-visible) .slider-thumb,
-body.material-you .slider:has(input:focus-visible) .slider-thumb {
-  outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+body .slider:has(input:focus-visible) .slider-thumb {
+  outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
   outline-offset: 3px;
 }
-body .slider input[type="range"],
-body.material-you .slider input[type="range"] {
+body .slider input[type="range"] {
   position: absolute !important;
-  z-index: 2;
+  z-index: 1;
   inset: 0;
   width: 100% !important;
   height: 100% !important;
@@ -517,13 +503,11 @@ body.material-you .slider input[type="range"] {
   background: transparent !important;
   outline: none;
 }
-body .slider input[type="range"]::-webkit-slider-runnable-track,
-body.material-you .slider input[type="range"]::-webkit-slider-runnable-track {
+body .slider input[type="range"]::-webkit-slider-runnable-track {
   height: 44px;
   background: transparent;
 }
-body .slider input[type="range"]::-webkit-slider-thumb,
-body.material-you .slider input[type="range"]::-webkit-slider-thumb {
+body .slider input[type="range"]::-webkit-slider-thumb {
   width: 44px;
   height: 44px;
   margin: 0;
@@ -532,13 +516,11 @@ body.material-you .slider input[type="range"]::-webkit-slider-thumb {
   background: transparent;
   box-shadow: none;
 }
-body .slider input[type="range"]::-moz-range-track,
-body.material-you .slider input[type="range"]::-moz-range-track {
+body .slider input[type="range"]::-moz-range-track {
   height: 44px;
   background: transparent;
 }
-body .slider input[type="range"]::-moz-range-thumb,
-body.material-you .slider input[type="range"]::-moz-range-thumb {
+body .slider input[type="range"]::-moz-range-thumb {
   width: 44px;
   height: 44px;
   border: 0;
