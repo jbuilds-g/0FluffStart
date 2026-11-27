@@ -39,8 +39,8 @@ html.settings-page::-webkit-scrollbar,
 .settings-page-shell .link-manager-list::-webkit-scrollbar,
 .settings-page-shell .select-dropdown::-webkit-scrollbar,
 .settings-page .modal-content::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 9px;
+  height: 9px;
 }
 
 html.settings-page::-webkit-scrollbar-track,
@@ -58,7 +58,9 @@ html.settings-page::-webkit-scrollbar-thumb,
 .settings-page .modal-content::-webkit-scrollbar-thumb {
   min-height: 34px;
   background: var(--settings-scrollbar-thumb);
+  border: 2px solid transparent;
   border-radius: 999px;
+  background-clip: padding-box;
 }
 
 html.settings-page::-webkit-scrollbar-thumb:hover,
@@ -67,6 +69,7 @@ html.settings-page::-webkit-scrollbar-thumb:hover,
 .settings-page-shell .select-dropdown::-webkit-scrollbar-thumb:hover,
 .settings-page .modal-content::-webkit-scrollbar-thumb:hover {
   background: var(--settings-scrollbar-thumb-hover);
+  border-width: 1px;
 }
 
 html.settings-page::-webkit-scrollbar-corner,
@@ -75,26 +78,6 @@ html.settings-page::-webkit-scrollbar-corner,
 .settings-page-shell .select-dropdown::-webkit-scrollbar-corner,
 .settings-page .modal-content::-webkit-scrollbar-corner {
   background: transparent;
-}
-
-/* Chromium must use the custom scrollbar rather than native overlay styling.
-   Firefox retains its native thin, themed scrollbar fallback. */
-@supports selector(::-webkit-scrollbar) {
-  html.settings-page,
-  html.settings-page .settings-page-shell .engine-selection-list,
-  html.settings-page .settings-page-shell .link-manager-list,
-  html.settings-page .settings-page-shell .select-dropdown,
-  html.settings-page .modal-content {
-    scrollbar-width: auto;
-    scrollbar-color: auto;
-  }
-}
-
-/* Keep scrolling content and scrollbar paint below solid floating controls. */
-html.settings-page body > .page-navigation,
-html.settings-page body > .settings-modal-scroll-anchor {
-  background: var(--card);
-  isolation: isolate;
 }
 
 body > .bg-overlay,
