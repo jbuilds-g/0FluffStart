@@ -1,4 +1,4 @@
-const CACHE_NAME = "0fluffstart-cache-v2.0.35";
+const CACHE_NAME = "0fluffstart-cache-v2.0.36";
 
 const CORE_APP_SHELL = [
   "./",
@@ -9,6 +9,8 @@ const CORE_APP_SHELL = [
   "./icon.png",
 
   "./css/core.css",
+  "./css/page-navigation.css",
+  "./css/expressive-controls.css",
   "./css/base.css",
   "./css/cursor.css",
   "./css/layout.css",
@@ -32,6 +34,10 @@ const CORE_APP_SHELL = [
   "./js/suggestions.js",
   "./js/links.js",
   "./js/storage.js",
+  "./js/indexed-db.js",
+  "./js/restore-point.js",
+  "./js/settings-search.js",
+  "./js/quick-links-drag.js",
   "./js/cursor.js",
   "./js/custom-scrollbar.js",
   "./js/material-you-engine.js",
@@ -102,7 +108,15 @@ self.addEventListener("fetch", (event) => {
           }
           return networkResponse;
         })
-        .catch(() => caches.match(event.request)),
+        .catch(() =>
+          caches
+            .match(event.request)
+            .then(
+              (cachedResponse) =>
+                cachedResponse ||
+                caches.match(event.request, { ignoreSearch: true }),
+            ),
+        ),
     );
   } else {
     // Stale-While-Revalidate Strategy for Dynamic JS Modules, CSS, and SVG Assets
