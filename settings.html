@@ -258,15 +258,25 @@
                         aria-label="Shadow depth"
                       />
                     </div>
-                    <input
-                      type="number"
-                      id="shadowInputNumber"
-                      min="0"
-                      max="200"
-                      value="100"
-                      class="slider-number-input"
-                      aria-label="Shadow intensity"
-                    />
+                    <div class="shadow-value-control">
+                      <input
+                        type="number"
+                        id="shadowInputNumber"
+                        min="0"
+                        max="200"
+                        value="100"
+                        class="slider-number-input"
+                        aria-label="Shadow intensity"
+                        aria-describedby="shadowInputError"
+                      />
+                      <span
+                        id="shadowInputError"
+                        class="shadow-input-error"
+                        role="alert"
+                        aria-live="polite"
+                        hidden
+                      ></span>
+                    </div>
                   </div>
                 </div>
                 <div
