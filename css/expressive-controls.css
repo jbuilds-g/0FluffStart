@@ -729,9 +729,13 @@ body .setting-slider-row .slider-number-field > input {
   text-align: center;
 }
 body .setting-slider-row .slider-number-field > label {
+  top: 4px;
   left: 8px;
-  max-width: calc(100% - 16px);
   right: 8px;
+  max-width: calc(100% - 16px);
+  font-size: 0.68rem;
+  line-height: 1.2;
+  translate: 0 0;
   text-align: center;
 }
 @media (max-width: 520px) {
