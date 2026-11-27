@@ -716,12 +716,32 @@ body.material-you .field::after {
 }
 
 /* Compact outlined value field used beside the shadow slider. */
-body .settings-page-shell .setting-slider-row > .slider-number-input {
+body .settings-page-shell .shadow-value-control {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+body .settings-page-shell .shadow-value-control > .slider-number-input {
   width: 100%;
   min-height: 36px;
   height: 36px;
   padding: 6px 4px;
   text-align: center;
+}
+body .settings-page-shell .shadow-input-error:not([hidden]) {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 5;
+  width: max-content;
+  max-width: 180px;
+  padding: 4px 7px;
+  border: 1px solid var(--danger, #c44);
+  border-radius: 4px;
+  background: var(--card);
+  color: var(--danger, #c44);
+  font-size: 0.7rem;
+  line-height: 1.3;
 }
 
 /* Theme-adaptive connected navigation. The theme's radius controls its
