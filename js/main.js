@@ -458,9 +458,29 @@ function bindStaticEvents() {
   const shadowInputNumber = document.getElementById("shadowInputNumber");
 
   if (shadowSlider && shadowInputNumber) {
+    const shadowInputError = document.getElementById("shadowInputError");
     const persistShadowSettings = debounce(() => {
       autoSaveSettings();
     }, 300);
+    let shadowInputTimer;
+
+    const clearShadowInputError = () => {
+      shadowInputNumber.setCustomValidity("");
+      shadowInputNumber.removeAttribute("aria-invalid");
+      if (shadowInputError) {
+        shadowInputError.textContent = "";
+        shadowInputError.hidden = true;
+      }
+    };
+
+    const showShadowInputError = (message) => {
+      shadowInputNumber.setCustomValidity(message);
+      shadowInputNumber.setAttribute("aria-invalid", "true");
+      if (shadowInputError) {
+        shadowInputError.textContent = message;
+        shadowInputError.hidden = false;
+      }
+    };
 
     const applyShadowValue = (value) => {
       const val = Math.max(0, Math.min(200, Number(value)));
@@ -475,20 +495,56 @@ function bindStaticEvents() {
       persistShadowSettings();
     };
 
+    const validateAndApplyShadowInput = () => {
+      const rawValue = shadowInputNumber.value.trim();
+      if (rawValue === "") return;
+
+      const value = Number(rawValue);
+      if (!Number.isInteger(value)) {
+        showShadowInputError("Enter a whole number between 0 and 200.");
+        return;
+      }
+      if (value < 0) {
+        showShadowInputError("Minimum value is 0.");
+        return;
+      }
+      if (value > 200) {
+        showShadowInputError("Maximum value is 200.");
+        return;
+      }
+
+      clearShadowInputError();
+      applyShadowValue(value);
+    };
+
     shadowSlider.addEventListener("input", () => {
+      clearTimeout(shadowInputTimer);
+      clearShadowInputError();
       applyShadowValue(shadowSlider.value);
     });
 
-    const syncNumberToSlider = () => {
-      let val = parseInt(shadowInputNumber.value, 10);
+    shadowInputNumber.addEventListener("input", () => {
+      clearTimeout(shadowInputTimer);
+      clearShadowInputError();
+      if (shadowInputNumber.value.trim() === "") return;
+      shadowInputTimer = setTimeout(validateAndApplyShadowInput, 450);
+    });
 
-      if (isNaN(val)) val = 100;
+    shadowInputNumber.addEventListener("blur", () => {
+      clearTimeout(shadowInputTimer);
+      const rawValue = shadowInputNumber.value.trim();
+      if (rawValue === "") {
+        clearShadowInputError();
+        shadowInputNumber.value = shadowSlider.value;
+        return;
+      }
 
-      applyShadowValue(val);
-    };
-
-    shadowInputNumber.addEventListener("change", syncNumberToSlider);
-    shadowInputNumber.addEventListener("blur", syncNumberToSlider);
+      validateAndApplyShadowInput();
+      if (shadowInputNumber.validity.customError) {
+        shadowInputNumber.value = shadowSlider.value;
+        clearShadowInputError();
+      }
+    });
   }
 
   const quickSuggestToggleBtn = document.getElementById(
