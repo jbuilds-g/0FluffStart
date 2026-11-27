@@ -527,7 +527,7 @@ function bindStaticEvents() {
       clearTimeout(shadowInputTimer);
       clearShadowInputError();
       if (shadowInputNumber.value.trim() === "") return;
-      shadowInputTimer = setTimeout(validateAndApplyShadowInput, 450);
+      shadowInputTimer = setTimeout(validateAndApplyShadowInput, 1000);
     });
 
     shadowInputNumber.addEventListener("blur", () => {
