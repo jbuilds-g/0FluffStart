@@ -188,6 +188,17 @@ export class CustomScrollbarManager {
     horizontalThumb.className = "custom-scrollbar-thumb";
     horizontal.append(horizontalThumb);
 
+    // Popup scrollbars must stay above their own overlay content.
+    // Ordinary page scrollbars belong below persistent floating controls.
+    const isOverlay =
+      host.closest(".modal") ||
+      (host.matches(".engine-dropdown, .suggestions-container, .select-dropdown") &&
+        !host.closest(".clock-style-picker"));
+    if (isOverlay) {
+      vertical.classList.add("custom-scrollbar-overlay");
+      horizontal.classList.add("custom-scrollbar-overlay");
+    }
+
     document.body.append(vertical, horizontal);
     return { vertical, horizontal, verticalThumb, horizontalThumb, host };
   }
@@ -195,7 +206,7 @@ export class CustomScrollbarManager {
   updateEntry(host, entry, metrics = this.getMetrics(host)) {
     const { rect, isRoot } = metrics;
     const inset = isRoot ? 4 : 2;
-    const thickness = 8;
+    const thickness = 5;
 
     this.positionTrack(
       entry.vertical,
