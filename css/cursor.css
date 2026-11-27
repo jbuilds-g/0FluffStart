@@ -103,13 +103,16 @@
 
 .custom-scrollbar {
   position: fixed;
-  z-index: 999998;
+  z-index: calc(var(--z-floating, 50) - 1);
   display: none;
   box-sizing: border-box;
   pointer-events: auto;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
+}
+.custom-scrollbar-overlay {
+  z-index: 999998;
 }
 .custom-scrollbar-vertical {
   padding: 1px 0;
