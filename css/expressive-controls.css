@@ -715,33 +715,13 @@ body.material-you .field::after {
   inset: auto 0 0;
 }
 
-/* The shadow value field shares the floating-label treatment without
-   changing the slider's grid or its interaction. */
-body .setting-slider-row .slider-number-field {
-  width: 68px;
-  height: 44px;
-  min-width: 0;
-}
-body .setting-slider-row .slider-number-field > input {
-  min-height: 44px;
-  height: 44px;
-  padding: 20px 8px 4px;
+/* Compact outlined value field used beside the shadow slider. */
+body .settings-page-shell .setting-slider-row > .slider-number-input {
+  width: 100%;
+  min-height: 36px;
+  height: 36px;
+  padding: 6px 4px;
   text-align: center;
-}
-body .setting-slider-row .slider-number-field > label {
-  top: 4px;
-  left: 8px;
-  right: 8px;
-  max-width: calc(100% - 16px);
-  font-size: 0.68rem;
-  line-height: 1.2;
-  translate: 0 0;
-  text-align: center;
-}
-@media (max-width: 520px) {
-  body .setting-slider-row .slider-number-field {
-    width: 58px;
-  }
 }
 
 /* Theme-adaptive connected navigation. The theme's radius controls its
