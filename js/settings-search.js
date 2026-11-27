@@ -36,9 +36,10 @@ function injectStyles() {
 
     @media (max-width:900px) {
       html.settings-page.settings-mobile-context body.settings-search-open { overflow:hidden; }
-      html.settings-page.settings-mobile-context .settings-section-nav { position:fixed; left:0; right:0; bottom:0; top:auto; z-index:45; width:100%; max-width:100vw; box-sizing:border-box; margin:0; padding:8px max(8px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); border-top:1px solid var(--border); border-bottom:0; background:var(--bg); box-shadow:0 -8px 24px rgba(0,0,0,.16); }
-      html.settings-page.settings-mobile-context .settings-section-nav a { min-height:38px; }
-      html.settings-page.settings-mobile-context .settings-page-shell { padding-bottom:96px; }
+      html.settings-page .settings-section-nav { position:fixed; left:0; right:0; bottom:0; top:auto; z-index:45; width:100%; max-width:100vw; box-sizing:border-box; margin:0; padding:8px max(8px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); border-top:1px solid var(--border); border-bottom:0; background:var(--bg); box-shadow:0 -8px 24px rgba(0,0,0,.16); }
+      html.settings-page .settings-section-nav a { min-height:38px; }
+      html.settings-page .settings-page-shell { padding-bottom:96px; }
+      html.settings-page.settings-desktop-context .settings-section-nav .settings-search-nav { display:none; }
       html.settings-page.settings-mobile-context .settings-search-desktop { display:none; }
       html.settings-page.settings-mobile-context .settings-search-mobile-trigger { position:fixed; right:16px; bottom:calc(68px + env(safe-area-inset-bottom)); z-index:100; display:inline-flex; align-items:center; gap:8px; width:auto; max-width:calc(100vw - 32px); box-sizing:border-box; min-height:40px; padding:8px 13px; border:1px solid var(--border); border-radius:999px; background:var(--card); color:var(--text); box-shadow:var(--shadow-lg); font:inherit; font-size:.8rem; font-weight:600; cursor:pointer; }
       html.settings-page.settings-mobile-context .settings-search-mobile-trigger.hidden { display:none; }
