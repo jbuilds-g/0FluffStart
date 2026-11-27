@@ -719,10 +719,13 @@ body.material-you .field::after {
    changing the slider's grid or its interaction. */
 body .setting-slider-row .slider-number-field {
   width: 68px;
+  height: 44px;
   min-width: 0;
 }
 body .setting-slider-row .slider-number-field > input {
-  padding: 24px 8px 8px;
+  min-height: 44px;
+  height: 44px;
+  padding: 20px 8px 4px;
   text-align: center;
 }
 body .setting-slider-row .slider-number-field > label {
